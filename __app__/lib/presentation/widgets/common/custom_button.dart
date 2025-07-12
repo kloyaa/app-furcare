@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/core/enums/text_enum.dart';
 
 class CustomButton extends StatelessWidget {
   final String text;
@@ -13,6 +14,7 @@ class CustomButton extends StatelessWidget {
   final IconData? icon;
   final bool isOutlined;
   final EdgeInsetsGeometry? padding;
+  final AppTextSize textSize;
 
   const CustomButton({
     super.key,
@@ -28,6 +30,7 @@ class CustomButton extends StatelessWidget {
     this.icon,
     this.isOutlined = false,
     this.padding,
+    this.textSize = AppTextSize.sm,
   });
 
   @override
@@ -110,7 +113,7 @@ class CustomButton extends StatelessWidget {
           Text(
             text,
             style: TextStyle(
-              fontSize: 16,
+              fontSize: textSize.size,
               fontWeight: FontWeight.w600,
               color: textColor,
             ),
@@ -122,7 +125,7 @@ class CustomButton extends StatelessWidget {
     return Text(
       text,
       style: TextStyle(
-        fontSize: 16,
+        fontSize: textSize.size,
         fontWeight: FontWeight.w600,
         color: textColor,
       ),

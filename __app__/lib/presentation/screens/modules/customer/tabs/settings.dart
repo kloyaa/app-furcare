@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/core/enums/text_enum.dart';
+import 'package:flutter_application_1/presentation/widgets/common/custom_button.dart';
+import 'package:flutter_application_1/presentation/widgets/common/custom_confirm_dialog.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_header.dart';
 import 'package:flutter_application_1/presentation/widgets/common/default_snackbar.dart';
 import 'package:go_router/go_router.dart';
@@ -70,8 +73,8 @@ class _SettingsTabScreenState extends State<SettingsTabScreen>
     _settingsItems = [
       SettingsItem(
         icon: Icons.person_outline,
-        title: 'Profile',
-        subtitle: 'Manage your basic information',
+        title: 'Account',
+        subtitle: 'Manage your account information',
         onTap: () => _handleNotificationsTap(),
         iconColor: Colors.pink,
       ),
@@ -201,6 +204,15 @@ class _SettingsTabScreenState extends State<SettingsTabScreen>
                   CustomHeader(
                     title: 'Settings',
                     subtitle: 'Manage your app preferences',
+                  ),
+                  SizedBox(height: 20),
+                  CustomButton(
+                    text: "Logout",
+                    height: 40,
+                    width: 120,
+                    textSize: AppTextSize.xs,
+                    icon: Icons.logout,
+                    onPressed: () => _handleLogout(),
                   ),
                 ],
               ),
@@ -355,6 +367,23 @@ class _SettingsTabScreenState extends State<SettingsTabScreen>
         ),
       ),
     );
+  }
+
+  void _handleLogout() async {
+    final confirmed = await ConfirmationDialog.show(
+      context: context,
+      title: "Confirm Logout",
+      message: "Are you sure you want to logout? This will end your session.",
+      confirmText: "Logout",
+      cancelText: "Cancel",
+      icon: Icons.logout,
+      confirmColor: Colors.red,
+    );
+
+    if (confirmed == true) {
+      if (!mounted) return;
+      context.go('/');
+    }
   }
 
   /// Handle notifications tap with error handling
