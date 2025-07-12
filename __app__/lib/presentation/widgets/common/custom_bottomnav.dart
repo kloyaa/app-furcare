@@ -1,0 +1,123 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_application_1/core/enums/text_enum.dart';
+
+// Bottom Navigation Item Model
+class BottomNavItem {
+  final IconData icon;
+  final IconData? activeIcon;
+  final String label;
+  final Widget screen;
+
+  BottomNavItem({
+    required this.icon,
+    this.activeIcon,
+    required this.label,
+    required this.screen,
+  });
+}
+
+// Custom Bottom Navigation Bar Widget
+class CustomBottomNavBar extends StatelessWidget {
+  final List<BottomNavItem> items;
+  final int currentIndex;
+  final Function(int) onTap;
+
+  const CustomBottomNavBar({
+    super.key,
+    required this.items,
+    required this.currentIndex,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    return Container(
+      decoration: BoxDecoration(
+        color:
+            theme.bottomNavigationBarTheme.backgroundColor ??
+            (isDark ? Colors.grey[900] : Colors.white),
+        boxShadow: [
+          BoxShadow(
+            // ignore: deprecated_member_use
+            color: isDark ? Colors.black26 : Colors.grey.withOpacity(0.2),
+            blurRadius: 10,
+            offset: const Offset(0, -5),
+          ),
+        ],
+      ),
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: items.asMap().entries.map((entry) {
+              final index = entry.key;
+              final item = entry.value;
+              final isSelected = index == currentIndex;
+
+              return GestureDetector(
+                onTap: () => onTap(index),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0,
+                    vertical: 8.0,
+                  ),
+                  decoration: BoxDecoration(
+                    color: isSelected
+                        // ignore: deprecated_member_use
+                        ? theme.primaryColor.withOpacity(0.1)
+                        : Colors.transparent,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 200),
+                        child: Icon(
+                          isSelected
+                              ? (item.activeIcon ?? item.icon)
+                              : item.icon,
+                          key: ValueKey(isSelected),
+                          color: isSelected
+                              // ignore: deprecated_member_use
+                              ? theme.colorScheme.primary.withOpacity(1)
+                              // ignore: deprecated_member_use
+                              : theme.colorScheme.primary.withOpacity(0.1),
+                          size: 24,
+                        ),
+                      ),
+                      if (isSelected) ...[
+                        const SizedBox(width: 8),
+                        AnimatedOpacity(
+                          duration: const Duration(milliseconds: 200),
+                          opacity: isSelected ? 1.0 : 0.0,
+                          child: Text(
+                            item.label,
+                            style: TextStyle(
+                              color: isSelected
+                                  // ignore: deprecated_member_use
+                                  ? theme.colorScheme.primary.withOpacity(1)
+                                  // ignore: deprecated_member_use
+                                  : theme.colorScheme.primary.withOpacity(0.1),
+                              fontWeight: AppFontWeight.bold.value,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+      ),
+    );
+  }
+}

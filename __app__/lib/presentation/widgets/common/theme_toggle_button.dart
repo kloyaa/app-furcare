@@ -13,12 +13,15 @@ class ThemeToggleButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      icon: Icon(
-        ThemeNotifier.isDarkMode.value ? Icons.dark_mode : Icons.light_mode,
-      ),
-      onPressed: () {
-        ThemeNotifier.toggleTheme();
+    return ValueListenableBuilder<bool>(
+      valueListenable: ThemeNotifier.isDarkMode,
+      builder: (context, isDarkMode, _) {
+        return IconButton(
+          icon: Icon(isDarkMode ? Icons.dark_mode : Icons.light_mode),
+          onPressed: () {
+            ThemeNotifier.toggleTheme();
+          },
+        );
       },
     );
   }

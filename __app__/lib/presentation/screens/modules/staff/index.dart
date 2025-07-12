@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/components/theme_toggle_button.dart';
+import 'package:flutter_application_1/presentation/widgets/common/theme_toggle_button.dart';
 
-class AdminMainScreen extends StatelessWidget {
-  const AdminMainScreen({super.key});
+class StaffMainScreen extends StatelessWidget {
+  const StaffMainScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
