@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/presentation/screens/modules/customer/home.dart';
-import 'package:flutter_application_1/presentation/screens/modules/customer/index.dart';
+import 'package:flutter_application_1/presentation/screens/modules/customer/login.dart';
 import 'package:flutter_application_1/presentation/screens/modules/customer/registration.dart';
 import 'package:flutter_application_1/presentation/screens/shared/change_theme.dart';
+import 'package:flutter_application_1/presentation/screens/shared/splash_screen.dart';
 import 'package:go_router/go_router.dart';
 
 final GoRouter customerRouter = GoRouter(
@@ -10,9 +11,15 @@ final GoRouter customerRouter = GoRouter(
     GoRoute(
       path: '/',
       builder: (BuildContext context, GoRouterState state) {
-        return const CustomerMainScreen();
+        return const SplashScreen();
       },
       routes: <RouteBase>[
+        GoRoute(
+          path: '/login',
+          builder: (BuildContext context, GoRouterState state) {
+            return const CustomerLoginScreen();
+          },
+        ),
         GoRoute(
           path: '/registration',
           builder: (BuildContext context, GoRouterState state) {

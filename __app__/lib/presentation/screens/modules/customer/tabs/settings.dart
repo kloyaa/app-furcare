@@ -360,7 +360,7 @@ class _SettingsTabScreenState extends State<SettingsTabScreen>
 
     if (confirmed == true) {
       if (!mounted) return;
-      context.go('/');
+      context.go('/login');
     }
   }
 

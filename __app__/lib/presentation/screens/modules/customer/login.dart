@@ -7,14 +7,14 @@ import 'package:flutter_application_1/presentation/widgets/common/custom_fields.
 import 'package:flutter_application_1/presentation/widgets/common/custom_header.dart';
 import 'package:go_router/go_router.dart';
 
-class CustomerMainScreen extends StatefulWidget {
-  const CustomerMainScreen({super.key});
+class CustomerLoginScreen extends StatefulWidget {
+  const CustomerLoginScreen({super.key});
 
   @override
-  State<CustomerMainScreen> createState() => _CustomerMainScreenState();
+  State<CustomerLoginScreen> createState() => _CustomerLoginScreenState();
 }
 
-class _CustomerMainScreenState extends State<CustomerMainScreen> {
+class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();

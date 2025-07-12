@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/config/dependency_injection.dart';
+import 'package:flutter_application_1/presentation/providers/auth_provider.dart';
 import 'package:flutter_application_1/presentation/routes/customer_router.dart';
 import 'package:flutter_application_1/presentation/widgets/common/theme_toggle_button.dart';
+import 'package:provider/provider.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await setupDependencyInjection(); // Add this line to initialize GetIt
   runApp(const MainApp());
 }
 
@@ -14,12 +19,18 @@ class MainApp extends StatelessWidget {
     return ValueListenableBuilder<bool>(
       valueListenable: ThemeNotifier.isDarkMode,
       builder: (context, isDarkMode, _) {
-        return MaterialApp.router(
-          theme: isDarkMode ? ThemeData.dark() : ThemeData.light(),
-          routerConfig: customerRouter,
-          // routerConfig: customerRouter,
-          // routerConfig: customerRouter,
-          debugShowCheckedModeBanner: false,
+        return MultiProvider(
+          providers: [
+            ChangeNotifierProvider(create: (_) => getIt<AuthProvider>()),
+            // Add other providers here as needed
+          ],
+          child: MaterialApp.router(
+            theme: isDarkMode ? ThemeData.dark() : ThemeData.light(),
+            routerConfig: customerRouter,
+            // routerConfig: customerRouter,
+            // routerConfig: customerRouter,
+            debugShowCheckedModeBanner: false,
+          ),
         );
       },
     );

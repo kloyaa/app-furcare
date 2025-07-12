@@ -19,6 +19,38 @@ project-root/
 └── README.md
 ```
 
+```
+__app__
+├── .dart_tool
+├── .idea
+├── android
+├── build
+├── ios
+├── lib
+│   ├── config
+│   ├── core
+│   │   ├── constants
+│   │   ├── enums
+│   │   ├── errors
+│   │   ├── helpers
+│   │   ├── network
+│   │   └── theme
+│   ├── data
+│   │   ├── datasources
+│   │   │   ├── local
+│   │   │   └── remote
+│   │   ├── models
+│   │   └── repositories
+│   ├── presentation
+│   │   ├── providers
+│   │   ├── routes
+│   │   ├── screens
+│   │   └── widgets
+│   └── main.dart
+├── linux
+└── macos
+```
+
 ## Getting Started
 
 ### Running the Server
