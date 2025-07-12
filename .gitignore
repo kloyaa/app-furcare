@@ -1,2 +1,4 @@
-__app__
-__server__
+__app__/build
+__server__/node_modules
+__server__/dist
+__server__/.env

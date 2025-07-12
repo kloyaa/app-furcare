@@ -1,0 +1,5 @@
+.git
+node_modules
+dist  # Exclude the dist folder before the build (it will be created inside the container)
+.DS_Store
+.env
