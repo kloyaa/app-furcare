@@ -9,7 +9,7 @@
 
 ```
 project-root/
-├── server/
+├── __server__/
 │   ├── src/
 │   │   └── index.ts
 │   ├── package.json
