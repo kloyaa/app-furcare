@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/core/constants/padding_constant.dart';
 import 'package:flutter_application_1/core/enums/text_enum.dart';
-import 'package:flutter_application_1/presentation/widgets/common/custom_appbar.dart';
+import 'package:flutter_application_1/core/helpers/validate.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_button.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_fields.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_header.dart';
@@ -24,26 +25,6 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
     _usernameController.dispose();
     _passwordController.dispose();
     super.dispose();
-  }
-
-  String? _validateUsername(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter your username';
-    }
-    if (value.length < 3) {
-      return 'Username must be at least 3 characters';
-    }
-    return null;
-  }
-
-  String? _validatePassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter your password';
-    }
-    if (value.length < 6) {
-      return 'Password must be at least 6 characters';
-    }
-    return null;
   }
 
   Future<void> _handleLogin() async {
@@ -71,7 +52,7 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
       backgroundColor: theme.colorScheme.surface,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
+          padding: kDefaultBodyPadding,
           child: Form(
             key: _formKey,
             child: Column(
@@ -95,7 +76,7 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
                   controller: _usernameController,
                   prefixIcon: Icons.person_outline,
                   keyboardType: TextInputType.text,
-                  validator: _validateUsername,
+                  validator: validateUsername,
                 ),
                 const SizedBox(height: 24),
 
@@ -106,7 +87,7 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
                   controller: _passwordController,
                   isPassword: true,
                   prefixIcon: Icons.lock_outline,
-                  validator: _validatePassword,
+                  validator: validatePassword,
                 ),
                 const SizedBox(height: 16),
 
@@ -141,7 +122,7 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
                 CustomButton(
                   text: 'Create Account',
                   onPressed: () {
-                    // Handle create account
+                    context.go("/registration");
                   },
                   isOutlined: true,
                   icon: Icons.person_add_outlined,
@@ -157,9 +138,8 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
                       child: Text(
                         'Or continue with',
                         style: TextStyle(
-                          color: theme.colorScheme.onBackground.withOpacity(
-                            0.6,
-                          ),
+                          // ignore: deprecated_member_use
+                          color: theme.colorScheme.onSurface.withOpacity(0.6),
                           fontSize: 14,
                         ),
                       ),
@@ -170,33 +150,15 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
                 const SizedBox(height: 24),
 
                 // Social Buttons
-                Row(
-                  children: [
-                    Expanded(
-                      child: CustomButton(
-                        text: 'Google',
-                        onPressed: () {
-                          // Handle Google login
-                        },
-                        backgroundColor: theme.colorScheme.surface,
-                        textColor: theme.colorScheme.onSurface,
-                        icon: Icons.g_mobiledata,
-                        isOutlined: true,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: CustomButton(
-                        text: 'Apple',
-                        onPressed: () {
-                          // Handle Apple login
-                        },
-                        backgroundColor: theme.colorScheme.onSurface,
-                        textColor: theme.colorScheme.surface,
-                        icon: Icons.apple,
-                      ),
-                    ),
-                  ],
+                CustomButton(
+                  text: 'Google',
+                  onPressed: () {
+                    // Handle Google login
+                  },
+                  backgroundColor: theme.colorScheme.surface,
+                  textColor: theme.colorScheme.onSurface,
+                  icon: Icons.g_mobiledata,
+                  isOutlined: true,
                 ),
                 const SizedBox(height: 24),
               ],

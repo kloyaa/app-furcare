@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/core/constants/padding_constant.dart';
 import 'package:flutter_application_1/core/enums/text_enum.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_button.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_confirm_dialog.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_header.dart';
+import 'package:flutter_application_1/presentation/widgets/common/custom_text.dart';
 import 'package:flutter_application_1/presentation/widgets/common/default_snackbar.dart';
 import 'package:go_router/go_router.dart';
 
@@ -143,26 +145,30 @@ class _SettingsTabScreenState extends State<SettingsTabScreen>
     return Scaffold(
       backgroundColor: colorScheme.surface,
       body: SafeArea(
-        child: CustomScrollView(
-          physics: const BouncingScrollPhysics(),
-          slivers: [
-            // Animated header section
-            SliverToBoxAdapter(child: _buildAnimatedHeader(theme)),
-            // Settings items list with staggered animation
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) => _buildAnimatedSettingsItem(
-                  context,
-                  _settingsItems[index],
-                  index,
+        child: Container(
+          padding: kDefaultBodyPadding,
+          child: CustomScrollView(
+            physics: const BouncingScrollPhysics(),
+            slivers: [
+              // Animated header section
+              SliverToBoxAdapter(child: _buildAnimatedHeader(theme)),
+              SliverToBoxAdapter(child: SizedBox(height: 20.0)),
+              // Settings items list with staggered animation
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) => _buildAnimatedSettingsItem(
+                    context,
+                    _settingsItems[index],
+                    index,
+                  ),
+                  childCount: _settingsItems.length,
                 ),
-                childCount: _settingsItems.length,
               ),
-            ),
 
-            // Bottom padding for better scrolling experience
-            const SliverToBoxAdapter(child: SizedBox(height: 32)),
-          ],
+              // Bottom padding for better scrolling experience
+              const SliverToBoxAdapter(child: SizedBox(height: 32)),
+            ],
+          ),
         ),
       ),
     );
@@ -195,27 +201,24 @@ class _SettingsTabScreenState extends State<SettingsTabScreen>
           position: slideAnimation,
           child: FadeTransition(
             opacity: fadeAnimation,
-            child: Container(
-              padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Main title with proper null safety
-                  CustomHeader(
-                    title: 'Settings',
-                    subtitle: 'Manage your app preferences',
-                  ),
-                  SizedBox(height: 20),
-                  CustomButton(
-                    text: "Logout",
-                    height: 40,
-                    width: 120,
-                    textSize: AppTextSize.xs,
-                    icon: Icons.logout,
-                    onPressed: () => _handleLogout(),
-                  ),
-                ],
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Main title with proper null safety
+                CustomHeader(
+                  title: 'Settings',
+                  subtitle: 'Manage your app preferences',
+                ),
+                SizedBox(height: 20),
+                CustomButton(
+                  text: "Logout",
+                  height: 40,
+                  width: 120,
+                  textSize: AppTextSize.xs,
+                  icon: Icons.logout,
+                  onPressed: () => _handleLogout(),
+                ),
+              ],
             ),
           ),
         );
@@ -264,10 +267,7 @@ class _SettingsTabScreenState extends State<SettingsTabScreen>
           position: slideAnimation,
           child: FadeTransition(
             opacity: animationValue,
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-              child: _buildSettingsCard(context, item),
-            ),
+            child: Container(child: _buildSettingsCard(context, item)),
           ),
         );
       },
@@ -298,7 +298,7 @@ class _SettingsTabScreenState extends State<SettingsTabScreen>
           // ignore: deprecated_member_use
           highlightColor: colorScheme.primary.withOpacity(0.05),
           child: Container(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(18.0),
             child: Row(
               children: [
                 // Icon with background circle and proper theming
@@ -324,31 +324,9 @@ class _SettingsTabScreenState extends State<SettingsTabScreen>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        item.title,
-                        style:
-                            (theme.textTheme.titleMedium ?? const TextStyle())
-                                .copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: item.isEnabled
-                                      ? colorScheme.onSurface
-                                      : colorScheme.onSurface.withOpacity(0.5),
-                                ),
-                      ),
-
+                      CustomText.body(item.title, size: AppTextSize.md),
                       const SizedBox(height: 4),
-
-                      Text(
-                        item.subtitle,
-                        style: (theme.textTheme.bodyMedium ?? const TextStyle())
-                            .copyWith(
-                              color: item.isEnabled
-                                  ? colorScheme.onSurface.withOpacity(0.7)
-                                  : colorScheme.onSurface.withOpacity(0.4),
-                            ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                      CustomText.subtitle(item.subtitle, size: AppTextSize.xs),
                     ],
                   ),
                 ),

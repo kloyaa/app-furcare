@@ -9,6 +9,7 @@ class CustomInputField extends StatefulWidget {
   final TextEditingController controller;
   final IconData? prefixIcon;
   final IconData? suffixIcon;
+  final bool withSuffixIcon;
   final VoidCallback? onSuffixIconTap;
   final TextInputType keyboardType;
   final String? Function(String?)? validator;
@@ -23,6 +24,7 @@ class CustomInputField extends StatefulWidget {
     this.isPassword = false,
     this.prefixIcon,
     this.suffixIcon,
+    this.withSuffixIcon = false,
     this.onSuffixIconTap,
     this.keyboardType = TextInputType.text,
     this.validator,
@@ -75,7 +77,7 @@ class _CustomInputFieldState extends State<CustomInputField> {
                     size: 20,
                   )
                 : null,
-            suffixIcon: widget.isPassword
+            suffixIcon: widget.isPassword && widget.withSuffixIcon
                 ? IconButton(
                     icon: Icon(
                       _obscureText ? Icons.visibility_off : Icons.visibility,
