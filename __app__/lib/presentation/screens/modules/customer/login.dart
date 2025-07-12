@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/constants/padding_constant.dart';
 import 'package:flutter_application_1/core/enums/text_enum.dart';
 import 'package:flutter_application_1/core/helpers/validate.dart';
+import 'package:flutter_application_1/presentation/providers/auth_provider.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_button.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_fields.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_header.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class CustomerLoginScreen extends StatefulWidget {
   const CustomerLoginScreen({super.key});
@@ -27,21 +29,23 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
     super.dispose();
   }
 
-  Future<void> _handleLogin() async {
+  Future<void> _handleLogin(AuthProvider authProvider) async {
     if (_formKey.currentState?.validate() ?? false) {
       setState(() {
         _isLoading = true;
       });
 
-      // Simulate API call
-      await Future.delayed(const Duration(seconds: 2));
+      authProvider.login(
+        username: _usernameController.text.trim(),
+        password: _passwordController.text,
+      );
 
       setState(() {
         _isLoading = false;
       });
 
       if (!mounted) return;
-      context.go('/home');
+      // context.go('/home');
     }
   }
 
@@ -50,121 +54,155 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
     final theme = Theme.of(context);
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: kDefaultBodyPadding,
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Logo Section (Optional)
-                const SizedBox(height: 40),
-                // Header
-                const CustomHeader(
-                  title: 'Welcome Back to Furcare',
-                  subtitle: 'Please sign in to your account',
-                  subtitleSize: AppTextSize.sm,
-                  titleSize: AppTextSize.lg,
-                ),
-                const SizedBox(height: 48),
-
-                // Username Field
-                CustomInputField(
-                  label: 'Username',
-                  hintText: 'Enter your username',
-                  controller: _usernameController,
-                  prefixIcon: Icons.person_outline,
-                  keyboardType: TextInputType.text,
-                  validator: validateUsername,
-                ),
-                const SizedBox(height: 24),
-
-                // Password Field
-                CustomInputField(
-                  label: 'Password',
-                  hintText: 'Enter your password',
-                  controller: _passwordController,
-                  isPassword: true,
-                  prefixIcon: Icons.lock_outline,
-                  validator: validatePassword,
-                ),
-                const SizedBox(height: 16),
-
-                // Forgot Password
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () {
-                      // Handle forgot password
-                    },
-                    child: Text(
-                      'Forgot Password?',
-                      style: TextStyle(
-                        color: theme.colorScheme.primary,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
+      body: Consumer<AuthProvider>(
+        builder: (context, authProvider, child) {
+          print('authProvider: ${authProvider.errorMessage}');
+          // Show error message if exists
+          if (authProvider.errorMessage != null) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(authProvider.errorMessage!),
+                  backgroundColor: Colors.red,
+                  action: SnackBarAction(
+                    label: 'Dismiss',
+                    onPressed: () => authProvider.clearError(),
                   ),
                 ),
-                const SizedBox(height: 32),
+              );
+            });
+          }
 
-                // Login Button
-                CustomButton(
-                  text: 'Sign In',
-                  onPressed: _handleLogin,
-                  isLoading: _isLoading,
-                  icon: Icons.login,
-                ),
-                const SizedBox(height: 16),
+          // Navigate to home if authenticated
+          if (authProvider.isAuthenticated) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              context.go("/home");
+            });
+          }
 
-                // Secondary Button (Optional)
-                CustomButton(
-                  text: 'Create Account',
-                  onPressed: () {
-                    context.go("/registration");
-                  },
-                  isOutlined: true,
-                  icon: Icons.person_add_outlined,
-                ),
-                const SizedBox(height: 32),
-
-                // Social Login Section (Optional)
-                Row(
+          return SafeArea(
+            child: SingleChildScrollView(
+              padding: kDefaultBodyPadding,
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(child: Divider(color: theme.colorScheme.outline)),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Text(
-                        'Or continue with',
-                        style: TextStyle(
-                          // ignore: deprecated_member_use
-                          color: theme.colorScheme.onSurface.withOpacity(0.6),
-                          fontSize: 14,
+                    // Logo Section (Optional)
+                    const SizedBox(height: 40),
+                    // Header
+                    const CustomHeader(
+                      title: 'Welcome Back to Furcare',
+                      subtitle: 'Please sign in to your account',
+                      subtitleSize: AppTextSize.sm,
+                      titleSize: AppTextSize.lg,
+                    ),
+                    const SizedBox(height: 48),
+
+                    // Username Field
+                    CustomInputField(
+                      label: 'Username',
+                      hintText: 'Enter your username',
+                      controller: _usernameController,
+                      prefixIcon: Icons.person_outline,
+                      keyboardType: TextInputType.text,
+                      validator: validateUsername,
+                    ),
+                    const SizedBox(height: 24),
+
+                    // Password Field
+                    CustomInputField(
+                      label: 'Password',
+                      hintText: 'Enter your password',
+                      controller: _passwordController,
+                      isPassword: true,
+                      prefixIcon: Icons.lock_outline,
+                      validator: validatePassword,
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Forgot Password
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: () {
+                          // Handle forgot password
+                        },
+                        child: Text(
+                          'Forgot Password?',
+                          style: TextStyle(
+                            color: theme.colorScheme.primary,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
                     ),
-                    Expanded(child: Divider(color: theme.colorScheme.outline)),
+                    const SizedBox(height: 32),
+
+                    // Login Button
+                    CustomButton(
+                      text: 'Sign In',
+                      onPressed: () => _handleLogin(authProvider),
+                      isLoading: _isLoading,
+                      icon: Icons.login,
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Secondary Button (Optional)
+                    CustomButton(
+                      text: 'Create Account',
+                      onPressed: () {
+                        context.go("/registration");
+                      },
+                      isOutlined: true,
+                      icon: Icons.person_add_outlined,
+                    ),
+                    const SizedBox(height: 32),
+
+                    // Social Login Section (Optional)
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Divider(color: theme.colorScheme.outline),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Text(
+                            'Or continue with',
+                            style: TextStyle(
+                              // ignore: deprecated_member_use
+                              color: theme.colorScheme.onSurface.withOpacity(
+                                0.6,
+                              ),
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Divider(color: theme.colorScheme.outline),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
+
+                    // Social Buttons
+                    CustomButton(
+                      text: 'Google',
+                      onPressed: () {
+                        // Handle Google login
+                      },
+                      backgroundColor: theme.colorScheme.surface,
+                      textColor: theme.colorScheme.onSurface,
+                      icon: Icons.g_mobiledata,
+                      isOutlined: true,
+                    ),
+                    const SizedBox(height: 24),
                   ],
                 ),
-                const SizedBox(height: 24),
-
-                // Social Buttons
-                CustomButton(
-                  text: 'Google',
-                  onPressed: () {
-                    // Handle Google login
-                  },
-                  backgroundColor: theme.colorScheme.surface,
-                  textColor: theme.colorScheme.onSurface,
-                  icon: Icons.g_mobiledata,
-                  isOutlined: true,
-                ),
-                const SizedBox(height: 24),
-              ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }

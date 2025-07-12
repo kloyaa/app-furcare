@@ -5,8 +5,8 @@ class ApiConstants {
   static const String baseUrl = AppConfig.generatedBaseUrl;
 
   // Auth endpoints
-  static const String login = '/api/auth/v1/login';
-  static const String register = '/api/auth/v1/register';
+  static const String login = '$baseUrl/auth/v1/login';
+  static const String register = '$baseUrl/auth/v1/register';
 
   // Headers
   static const String userOrigin = 'nodex-user-origin';
