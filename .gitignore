@@ -1,4 +1,4 @@
-__app__/build
+__app__
 __server__/node_modules
 __server__/dist
 __server__/.env

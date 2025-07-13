@@ -13,7 +13,7 @@ void showCustomSnackBar(
         backgroundColor: isError ? theme.errorContainer : theme.surface,
         content: CustomText.body(
           message,
-          color: isError ? theme.error : theme.surfaceBright,
+          color: isError ? theme.error : theme.primary,
         ),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
