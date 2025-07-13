@@ -8,6 +8,8 @@ class ApiConstants {
   static const String login = '$baseUrl/auth/v1/login';
   static const String register = '$baseUrl/auth/v1/register';
 
+  // Client endpoints
+  static const String clientProfile = '$baseUrl/user/v1/profile';
   // Headers
   static const String userOrigin = 'nodex-user-origin';
   static const String accessKey = 'nodex-access-key';

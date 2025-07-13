@@ -1,0 +1,38 @@
+import 'package:dartz/dartz.dart';
+import 'package:flutter_application_1/core/constants/api_constants.dart';
+import 'package:flutter_application_1/core/errors/exceptions.dart';
+import 'package:flutter_application_1/core/errors/failures.dart';
+import 'package:flutter_application_1/data/datasources/remote/auth_local_datasource.dart';
+import 'package:flutter_application_1/data/datasources/remote/client_romote_datasource.dart';
+import 'package:flutter_application_1/data/models/client_models.dart';
+
+abstract class ClientRepository {
+  Future<Either<Failure, Client?>> getProfile();
+}
+
+class ClientRepositoryImpl implements ClientRepository {
+  final ClientRemoteDataSource _remoteDataSource;
+  final AuthLocalDataSource _localDataSource;
+
+  ClientRepositoryImpl({
+    required ClientRemoteDataSource remoteDataSource,
+    required AuthLocalDataSource localDataSource,
+  }) : _remoteDataSource = remoteDataSource,
+       _localDataSource = localDataSource;
+
+  @override
+  Future<Either<Failure, Client>> getProfile() async {
+    try {
+      final response = await _remoteDataSource.getProfile();
+      return Right(response);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message, code: e.code));
+    } on NetworkException catch (e) {
+      return Left(NetworkFailure(message: e.message));
+    } on CacheException catch (e) {
+      return Left(CacheFailure(message: e.message));
+    } catch (e) {
+      return Left(ServerFailure(message: 'An unexpected error occurred'));
+    }
+  }
+}

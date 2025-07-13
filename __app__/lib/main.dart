@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/config/dependency_injection.dart';
 import 'package:flutter_application_1/presentation/providers/auth_provider.dart';
+import 'package:flutter_application_1/presentation/providers/client_provider.dart';
 import 'package:flutter_application_1/presentation/routes/customer_router.dart';
 import 'package:flutter_application_1/presentation/widgets/common/theme_toggle_button.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +23,7 @@ class MainApp extends StatelessWidget {
         return MultiProvider(
           providers: [
             ChangeNotifierProvider(create: (_) => getIt<AuthProvider>()),
-            // Add other providers here as needed
+            ChangeNotifierProvider(create: (_) => getIt<ClientProvider>()),
           ],
           child: MaterialApp.router(
             theme: isDarkMode ? ThemeData.dark() : ThemeData.light(),

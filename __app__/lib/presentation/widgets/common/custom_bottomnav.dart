@@ -87,7 +87,7 @@ class CustomBottomNavBar extends StatelessWidget {
                               // ignore: deprecated_member_use
                               ? theme.colorScheme.primary.withOpacity(1)
                               // ignore: deprecated_member_use
-                              : theme.colorScheme.primary.withOpacity(0.1),
+                              : theme.colorScheme.primary.withOpacity(0.5),
                           size: 24,
                         ),
                       ),
@@ -103,7 +103,7 @@ class CustomBottomNavBar extends StatelessWidget {
                                   // ignore: deprecated_member_use
                                   ? theme.colorScheme.primary.withOpacity(1)
                                   // ignore: deprecated_member_use
-                                  : theme.colorScheme.primary.withOpacity(0.1),
+                                  : theme.colorScheme.primary.withOpacity(0.5),
                               fontWeight: AppFontWeight.bold.value,
                               fontSize: 12,
                             ),

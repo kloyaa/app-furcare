@@ -6,6 +6,8 @@ import { UserRole } from '../../schema/user_role.schema';
 
 export const authorize = (...allowedRoles: RoleName[]) => {
   return async (req: TRequest, res: Response, next: NextFunction) => {
+
+    console.log('req.user', req.user);
     try {
       if (!req.user || !req.user.id) {
         return res.status(401).json(statuses['10020']);

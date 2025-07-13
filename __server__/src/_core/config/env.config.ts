@@ -22,7 +22,7 @@ export const getEnv = async (): Promise<IEnvironmentVariables> => {
 
   // Check if any property is undefined or null
   const missingVariables = Object.entries(env).filter(
-    ([, value]) => value === undefined || value === null || value === 'null',
+    ([, value]) => value === undefined || value === null || value === 'null' || value === 'undefined' || value === '',
   );
 
   if (missingVariables.length > 0) {
