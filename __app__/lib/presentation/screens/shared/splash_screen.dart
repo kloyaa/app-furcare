@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/presentation/providers/auth_provider.dart';
 import 'package:go_router/go_router.dart';
@@ -36,49 +37,21 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: Colors.blue,
+      backgroundColor: theme.colorScheme.surface,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // App Logo
-            Container(
-              width: 120,
-              height: 120,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
+            FadeIn(
+              duration: const Duration(seconds: 2),
+              child: Image.asset(
+                "assets/furcare_logo.png",
+                width: 320.0,
+                height: 320.0,
               ),
-              child: const Icon(
-                Icons.mobile_friendly,
-                size: 60,
-                color: Colors.blue,
-              ),
-            ),
-            const SizedBox(height: 24),
-
-            // App Name
-            const Text(
-              'Your App Name',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(height: 8),
-
-            // Tagline
-            const Text(
-              'Welcome to the future',
-              style: TextStyle(fontSize: 16, color: Colors.white70),
-            ),
-            const SizedBox(height: 48),
-
-            // Loading indicator
-            const CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
             ),
           ],
         ),
