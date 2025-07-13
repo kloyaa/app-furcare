@@ -3,10 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/constants/padding_constant.dart';
 import 'package:flutter_application_1/core/enums/text_enum.dart';
 import 'package:flutter_application_1/core/helpers/validate.dart';
+import 'package:flutter_application_1/presentation/providers/auth_provider.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_button.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_fields.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_header.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_text.dart';
+import 'package:flutter_application_1/presentation/widgets/common/default_snackbar.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
@@ -25,6 +29,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   bool _isLoading = false;
 
   @override
+  void initState() {
+    _emailController.text = 'kolya01@gmail.com';
+    _usernameController.text = 'kolya01';
+    _passwordController.text = 'Password@123';
+    _confirmPasswordController.text = 'Password@123';
+
+    super.initState();
+  }
+
+  @override
   void dispose() {
     _emailController.dispose();
     _usernameController.dispose();
@@ -33,14 +47,17 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     super.dispose();
   }
 
-  void _handleRegistration() async {
+  void _handleRegistration(AuthProvider authProvider) async {
     if (_formKey.currentState!.validate()) {
       setState(() {
         _isLoading = true;
       });
 
-      // Simulate API call delay
-      await Future.delayed(const Duration(seconds: 2));
+      await authProvider.register(
+        username: _usernameController.text.trim(),
+        password: _passwordController.text,
+        email: _emailController.text.trim(),
+      );
 
       // Create the JSON data that would be sent to API
       final registrationData = {
@@ -57,18 +74,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       setState(() {
         _isLoading = false;
       });
-
-      // Show success message
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Registration successful!'),
-            backgroundColor: Colors.green,
-          ),
-        );
-      }
-      // Here you would typically navigate to next screen or handle success
-      // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
     }
   }
 
@@ -78,147 +83,187 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: kDefaultBodyPadding,
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(height: 32),
+      body: Consumer<AuthProvider>(
+        builder: (context, authProvider, child) {
+          final hasError = authProvider.errorMessage != null;
+          final errorCode = authProvider.errorCode;
 
-                // Header
-                const CustomHeader(
-                  title: 'Welcome to Furcare',
-                  subtitle: 'Create your account to get started',
-                  subtitleSize: AppTextSize.sm,
-                  titleSize: AppTextSize.lg,
-                ),
-                const SizedBox(height: 48),
+          if (errorCode == "0052") {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              authProvider.clearError();
+              context.go(
+                "/pre-login",
+                extra: {"username": _usernameController.text.trim()},
+              );
+            });
+          }
 
-                // Email Field
-                CustomInputField(
-                  label: 'Email Address',
-                  hintText: 'Enter your email address',
-                  controller: _emailController,
-                  prefixIcon: Icons.email_outlined,
-                  keyboardType: TextInputType.emailAddress,
-                  validator: validateEmail,
-                ),
-                const SizedBox(height: 20),
+          if (hasError && errorCode != "0052") {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              showCustomSnackBar(
+                context,
+                authProvider.errorMessage!,
+                isError: true,
+              );
+            });
+          }
 
-                // Username Field
-                CustomInputField(
-                  label: 'Username',
-                  hintText: 'Enter your username',
-                  controller: _usernameController,
-                  prefixIcon: Icons.person_outline,
-                  keyboardType: TextInputType.text,
-                  validator: validateUsername,
-                ),
-                const SizedBox(height: 20),
-
-                // Password Field
-                CustomInputField(
-                  label: 'Password',
-                  hintText: 'Enter your password',
-                  controller: _passwordController,
-                  isPassword: true,
-                  withSuffixIcon: true,
-                  prefixIcon: Icons.lock_outline,
-                  validator: validatePassword,
-                ),
-                const SizedBox(height: 20),
-
-                // Confirm Password Field
-                CustomInputField(
-                  label: 'Confirm Password',
-                  hintText: 'Confirm your password',
-                  controller: _confirmPasswordController,
-                  prefixIcon: Icons.lock_outline,
-                  isPassword: true,
-                  validator: (value) =>
-                      validateConfirmPassword(_passwordController.text, value),
-                ),
-                const SizedBox(height: 32),
-
-                // Registration Button
-                CustomButton(
-                  text: _isLoading ? 'Creating Account...' : 'Create Account',
-                  onPressed: _isLoading ? null : _handleRegistration,
-                  icon: _isLoading ? null : Icons.person_add_outlined,
-                  isLoading: _isLoading,
-                ),
-                const SizedBox(height: 16),
-
-                // Login Link
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+          // Navigate to home if authenticated
+          if (authProvider.isAuthenticated) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              context.go("/me/profile");
+            });
+          }
+          return SafeArea(
+            child: SingleChildScrollView(
+              padding: kDefaultBodyPadding,
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    CustomText.body(
-                      'Already have an account?',
-                      fontWeight: AppFontWeight.normal.value,
-                      size: AppTextSize.sm,
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        // Navigate to login screen
-                        Navigator.pop(context);
-                      },
-                      child: CustomText.body(
-                        'Sign In',
-                        fontWeight: AppFontWeight.bold.value,
-                        color: theme.colorScheme.primary,
-                        size: AppTextSize.sm,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 32),
+                    const SizedBox(height: 32),
 
-                // Terms and Privacy
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: RichText(
-                    textAlign: TextAlign.center,
-                    text: TextSpan(
-                      style: TextStyle(
-                        color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
-                        fontSize: AppTextSize.xs.size,
-                        height: 1.5,
+                    // Header
+                    const CustomHeader(
+                      title: 'Welcome to Furcare',
+                      subtitle: 'Create your account to get started',
+                      subtitleSize: AppTextSize.sm,
+                      titleSize: AppTextSize.lg,
+                    ),
+                    const SizedBox(height: 48),
+
+                    // Email Field
+                    CustomInputField(
+                      label: 'Email Address',
+                      hintText: 'Enter your email address',
+                      controller: _emailController,
+                      prefixIcon: Icons.email_outlined,
+                      keyboardType: TextInputType.emailAddress,
+                      validator: validateEmail,
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Username Field
+                    CustomInputField(
+                      label: 'Username',
+                      hintText: 'Enter your username',
+                      controller: _usernameController,
+                      prefixIcon: Icons.person_outline,
+                      keyboardType: TextInputType.text,
+                      validator: validateUsername,
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Password Field
+                    CustomInputField(
+                      label: 'Password',
+                      hintText: 'Enter your password',
+                      controller: _passwordController,
+                      isPassword: true,
+                      withSuffixIcon: true,
+                      prefixIcon: Icons.lock_outline,
+                      validator: validatePassword,
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Confirm Password Field
+                    CustomInputField(
+                      label: 'Confirm Password',
+                      hintText: 'Confirm your password',
+                      controller: _confirmPasswordController,
+                      prefixIcon: Icons.lock_outline,
+                      isPassword: true,
+                      validator: (value) => validateConfirmPassword(
+                        _passwordController.text,
+                        value,
                       ),
+                    ),
+                    const SizedBox(height: 32),
+
+                    // Registration Button
+                    CustomButton(
+                      text: _isLoading
+                          ? 'Creating Account...'
+                          : 'Create Account',
+                      onPressed: _isLoading
+                          ? null
+                          : () => _handleRegistration(authProvider),
+                      icon: _isLoading ? null : Icons.person_add_outlined,
+                      isLoading: _isLoading,
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Login Link
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const TextSpan(
-                          text: 'By creating an account, you agree to our ',
+                        CustomText.body(
+                          'Already have an account?',
+                          fontWeight: AppFontWeight.normal.value,
+                          size: AppTextSize.sm,
                         ),
-                        TextSpan(
-                          text: 'Terms of Service',
-                          style: TextStyle(
-                            color: isDarkMode
-                                ? Colors.blue[300]
-                                : Colors.blue[700],
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const TextSpan(text: ' and '),
-                        TextSpan(
-                          text: 'Privacy Policy',
-                          style: TextStyle(
-                            color: isDarkMode
-                                ? Colors.blue[300]
-                                : Colors.blue[700],
-                            fontWeight: FontWeight.w600,
+                        TextButton(
+                          onPressed: () {
+                            context.go('/login');
+                          },
+                          child: CustomText.body(
+                            'Sign In',
+                            fontWeight: AppFontWeight.bold.value,
+                            color: theme.colorScheme.primary,
+                            size: AppTextSize.sm,
                           ),
                         ),
                       ],
                     ),
-                  ),
+                    const SizedBox(height: 32),
+
+                    // Terms and Privacy
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(
+                          style: TextStyle(
+                            color: isDarkMode
+                                ? Colors.grey[400]
+                                : Colors.grey[600],
+                            fontSize: AppTextSize.xs.size,
+                            height: 1.5,
+                          ),
+                          children: [
+                            const TextSpan(
+                              text: 'By creating an account, you agree to our ',
+                            ),
+                            TextSpan(
+                              text: 'Terms of Service',
+                              style: TextStyle(
+                                color: isDarkMode
+                                    ? Colors.blue[300]
+                                    : Colors.blue[700],
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const TextSpan(text: ' and '),
+                            TextSpan(
+                              text: 'Privacy Policy',
+                              style: TextStyle(
+                                color: isDarkMode
+                                    ? Colors.blue[300]
+                                    : Colors.blue[700],
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }

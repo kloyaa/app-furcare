@@ -6,26 +6,25 @@ import 'package:flutter_application_1/presentation/providers/auth_provider.dart'
 import 'package:flutter_application_1/presentation/widgets/common/custom_button.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_fields.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_header.dart';
+import 'package:flutter_application_1/presentation/widgets/common/custom_text.dart';
 import 'package:flutter_application_1/presentation/widgets/common/default_snackbar.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-class CustomerLoginScreen extends StatefulWidget {
-  const CustomerLoginScreen({super.key});
+class CustomerPreLoginScreen extends StatefulWidget {
+  const CustomerPreLoginScreen({super.key});
 
   @override
-  State<CustomerLoginScreen> createState() => _CustomerLoginScreenState();
+  State<CustomerPreLoginScreen> createState() => _CustomerPreLoginScreenState();
 }
 
-class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
+class _CustomerPreLoginScreenState extends State<CustomerPreLoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isLoading = false;
 
   @override
   void initState() {
-    _usernameController.text = 'kolya01';
     _passwordController.text = 'Password@123';
 
     super.initState();
@@ -33,19 +32,18 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
 
   @override
   void dispose() {
-    _usernameController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
-  Future<void> _handleLogin(AuthProvider authProvider) async {
+  Future<void> _handleLogin(AuthProvider authProvider, String username) async {
     if (_formKey.currentState?.validate() ?? false) {
       setState(() {
         _isLoading = true;
       });
 
       await authProvider.login(
-        username: _usernameController.text.trim(),
+        username: username,
         password: _passwordController.text,
       );
 
@@ -58,6 +56,10 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
+    final extras = GoRouterState.of(context).extra as Map<String, dynamic>?;
+    final passedUsername = extras?['username'] ?? '';
+
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,
       body: Consumer<AuthProvider>(
@@ -77,6 +79,7 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
           // Navigate to home if authenticated
           if (authProvider.isAuthenticated) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
+              authProvider.clearError();
               context.go("/home");
             });
           }
@@ -91,26 +94,23 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
                   children: [
                     // Logo Section (Optional)
                     const SizedBox(height: 40),
-                    // Header
-                    const CustomHeader(
-                      title: 'Welcome Back to Furcare',
-                      subtitle: 'Please sign in to your account',
-                      subtitleSize: AppTextSize.sm,
-                      titleSize: AppTextSize.lg,
-                    ),
-                    const SizedBox(height: 48),
 
-                    // Username Field
-                    CustomInputField(
-                      label: 'Username',
-                      hintText: 'Enter your username',
-                      controller: _usernameController,
-                      prefixIcon: Icons.person_outline,
-                      keyboardType: TextInputType.text,
-                      error: hasError,
-                      validator: validateUsername,
+                    CustomText.subtitle(
+                      "Welcome back to Furcare",
+                      size: AppTextSize.md,
+                      fontWeight: AppFontWeight.normal.value,
+                      color: theme.colorScheme.onSurface,
                     ),
-                    const SizedBox(height: 24),
+                    CustomText.title(
+                      passedUsername,
+                      size: passedUsername.toString().length < 9
+                          ? AppTextSize.xl
+                          : AppTextSize.lg,
+                      fontWeight: AppFontWeight.bold.value,
+                      color: theme.colorScheme.onSurface,
+                    ),
+
+                    const SizedBox(height: 20),
 
                     // Password Field
                     CustomInputField(
@@ -145,63 +145,25 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
                     // Login Button
                     CustomButton(
                       text: 'Sign In',
-                      onPressed: () => _handleLogin(authProvider),
+                      onPressed: () =>
+                          _handleLogin(authProvider, passedUsername),
                       isLoading: _isLoading,
-                      icon: Icons.login,
+                      icon: Icons.person_outline,
                       isEnabled: !_isLoading,
                     ),
                     const SizedBox(height: 16),
 
                     // Secondary Button (Optional)
                     CustomButton(
-                      text: 'Create Account',
+                      text: 'Sign in as another user',
                       onPressed: () {
-                        context.go("/registration");
+                        context.go("/login");
                       },
                       isOutlined: true,
-                      icon: Icons.person_add_outlined,
+                      icon: Icons.login,
                       isEnabled: !_isLoading,
                     ),
                     const SizedBox(height: 32),
-
-                    // Social Login Section (Optional)
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Divider(color: theme.colorScheme.outline),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Text(
-                            'Or continue with',
-                            style: TextStyle(
-                              // ignore: deprecated_member_use
-                              color: theme.colorScheme.onSurface.withOpacity(
-                                0.6,
-                              ),
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Divider(color: theme.colorScheme.outline),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 24),
-
-                    // Social Buttons
-                    CustomButton(
-                      text: 'Google',
-                      onPressed: () {
-                        // Handle Google login
-                      },
-                      backgroundColor: theme.colorScheme.surface,
-                      textColor: theme.colorScheme.onSurface,
-                      icon: Icons.g_mobiledata,
-                      isOutlined: true,
-                    ),
-                    const SizedBox(height: 24),
                   ],
                 ),
               ),

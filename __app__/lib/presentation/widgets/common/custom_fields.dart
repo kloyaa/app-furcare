@@ -15,6 +15,8 @@ class CustomInputField extends StatefulWidget {
   final String? Function(String?)? validator;
   final bool enabled;
   final int maxLines;
+  final bool error; // New error parameter
+  final String? errorText; // Optional error message
 
   const CustomInputField({
     super.key,
@@ -30,6 +32,8 @@ class CustomInputField extends StatefulWidget {
     this.validator,
     this.enabled = true,
     this.maxLines = 1,
+    this.error = false, // Default to false
+    this.errorText,
   });
 
   @override
@@ -43,6 +47,7 @@ class _CustomInputFieldState extends State<CustomInputField> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final hasError = widget.error;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,7 +56,9 @@ class _CustomInputFieldState extends State<CustomInputField> {
           widget.label,
           size: AppTextSize.xs,
           fontWeight: AppFontWeight.normal.value,
-          color: theme.colorScheme.onSurface,
+          color: hasError
+              ? theme.colorScheme.error
+              : theme.colorScheme.onSurface,
         ),
         const SizedBox(height: 8),
         TextFormField(
@@ -61,19 +68,26 @@ class _CustomInputFieldState extends State<CustomInputField> {
           validator: widget.validator,
           enabled: widget.enabled,
           maxLines: widget.maxLines,
-          style: TextStyle(fontSize: 16, color: theme.colorScheme.onSurface),
+          style: TextStyle(
+            fontSize: 16,
+            color: hasError
+                ? theme.colorScheme.error
+                : theme.colorScheme.onSurface,
+          ),
           decoration: InputDecoration(
             hintText: widget.hintText,
             hintStyle: TextStyle(
-              // ignore: deprecated_member_use
-              color: theme.colorScheme.onSurface.withOpacity(0.5),
+              color: hasError
+                  ? theme.colorScheme.error.withOpacity(0.7)
+                  : theme.colorScheme.onSurface.withOpacity(0.5),
               fontSize: AppTextSize.sm.size,
             ),
             prefixIcon: widget.prefixIcon != null
                 ? Icon(
                     widget.prefixIcon,
-                    // ignore: deprecated_member_use
-                    color: theme.colorScheme.onSurface.withOpacity(0.6),
+                    color: hasError
+                        ? theme.colorScheme.error.withOpacity(0.8)
+                        : theme.colorScheme.onSurface.withOpacity(0.6),
                     size: 20,
                   )
                 : null,
@@ -81,8 +95,9 @@ class _CustomInputFieldState extends State<CustomInputField> {
                 ? IconButton(
                     icon: Icon(
                       _obscureText ? Icons.visibility_off : Icons.visibility,
-                      // ignore: deprecated_member_use
-                      color: theme.colorScheme.onSurface.withOpacity(0.6),
+                      color: hasError
+                          ? theme.colorScheme.error.withOpacity(0.8)
+                          : theme.colorScheme.onSurface.withOpacity(0.6),
                       size: 20,
                     ),
                     onPressed: () {
@@ -95,36 +110,47 @@ class _CustomInputFieldState extends State<CustomInputField> {
                       ? IconButton(
                           icon: Icon(
                             widget.suffixIcon,
-                            // ignore: deprecated_member_use
-                            color: theme.colorScheme.onSurface.withOpacity(0.6),
+                            color: hasError
+                                ? theme.colorScheme.error.withOpacity(0.8)
+                                : theme.colorScheme.onSurface.withOpacity(0.6),
                             size: 20,
                           ),
                           onPressed: widget.onSuffixIconTap,
                         )
                       : null),
+            errorText: hasError ? widget.errorText : null,
             filled: true,
-            fillColor: isDark
-                ? theme.colorScheme.surface
-                // ignore: deprecated_member_use
-                : theme.colorScheme.surfaceContainerHighest.withOpacity(0.3),
+            fillColor: hasError
+                ? theme.colorScheme.errorContainer.withOpacity(0.1)
+                : (isDark
+                      ? theme.colorScheme.surface
+                      : theme.colorScheme.surfaceContainerHighest.withOpacity(
+                          0.3,
+                        )),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(
-                color: theme.colorScheme.outline,
+                color: hasError
+                    ? theme.colorScheme.error
+                    : theme.colorScheme.outline,
                 width: 1,
               ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(
-                color: theme.colorScheme.outline,
+                color: hasError
+                    ? theme.colorScheme.error
+                    : theme.colorScheme.outline,
                 width: 1,
               ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(
-                color: theme.colorScheme.primary,
+                color: hasError
+                    ? theme.colorScheme.error
+                    : theme.colorScheme.primary,
                 width: 2,
               ),
             ),

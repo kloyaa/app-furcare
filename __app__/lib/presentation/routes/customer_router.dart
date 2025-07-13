@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/presentation/screens/modules/customer/home.dart';
 import 'package:flutter_application_1/presentation/screens/modules/customer/login.dart';
+import 'package:flutter_application_1/presentation/screens/modules/customer/pre-login.dart';
 import 'package:flutter_application_1/presentation/screens/modules/customer/registration.dart';
 import 'package:flutter_application_1/presentation/screens/shared/change_theme.dart';
 import 'package:flutter_application_1/presentation/screens/shared/splash_screen.dart';
@@ -15,6 +16,12 @@ final GoRouter customerRouter = GoRouter(
       },
       routes: <RouteBase>[
         GoRoute(
+          path: '/pre-login',
+          builder: (BuildContext context, GoRouterState state) {
+            return const CustomerPreLoginScreen();
+          },
+        ),
+        GoRoute(
           path: '/login',
           builder: (BuildContext context, GoRouterState state) {
             return const CustomerLoginScreen();
@@ -28,6 +35,12 @@ final GoRouter customerRouter = GoRouter(
         ),
         GoRoute(
           path: '/home',
+          builder: (BuildContext context, GoRouterState state) {
+            return const CustomerHomeScreen();
+          },
+        ),
+        GoRoute(
+          path: '/me/profile',
           builder: (BuildContext context, GoRouterState state) {
             return const CustomerHomeScreen();
           },

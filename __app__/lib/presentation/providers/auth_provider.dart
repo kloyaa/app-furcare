@@ -12,6 +12,7 @@ class AuthProvider extends ChangeNotifier {
   User? _user;
   String? _accessToken;
   String? _errorMessage;
+  String? _errorCode;
 
   AuthProvider({required AuthRepository authRepository})
     : _authRepository = authRepository;
@@ -21,6 +22,7 @@ class AuthProvider extends ChangeNotifier {
   User? get user => _user;
   String? get accessToken => _accessToken;
   String? get errorMessage => _errorMessage;
+  String? get errorCode => _errorCode;
   bool get isAuthenticated => _state == AuthState.authenticated;
   bool get isLoading => _state == AuthState.loading;
 
@@ -109,6 +111,7 @@ class AuthProvider extends ChangeNotifier {
   // Clear error message
   void clearError() {
     _errorMessage = null;
+    _errorCode = null;
     notifyListeners();
   }
 
@@ -139,6 +142,7 @@ class AuthProvider extends ChangeNotifier {
   // Handle failure
   void _handleFailure(Failure failure) {
     _errorMessage = failure.message;
+    _errorCode = failure.code;
     _setState(AuthState.error);
   }
 

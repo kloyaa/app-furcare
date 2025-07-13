@@ -67,7 +67,7 @@ async function runApp(): Promise<void> {
 
   // delay route
   app.use(async (req, res, next) => {
-    await delay(5_000)
+    await delay(2_000)
     next()
   })
 
