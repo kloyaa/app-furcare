@@ -35,7 +35,7 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
         _isLoading = true;
       });
 
-      authProvider.login(
+      await authProvider.login(
         username: _usernameController.text.trim(),
         password: _passwordController.text,
       );
@@ -43,9 +43,6 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
       setState(() {
         _isLoading = false;
       });
-
-      if (!mounted) return;
-      // context.go('/home');
     }
   }
 
@@ -56,7 +53,6 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
       backgroundColor: theme.colorScheme.surface,
       body: Consumer<AuthProvider>(
         builder: (context, authProvider, child) {
-          print('authProvider: ${authProvider.errorMessage}');
           // Show error message if exists
           if (authProvider.errorMessage != null) {
             WidgetsBinding.instance.addPostFrameCallback((_) {

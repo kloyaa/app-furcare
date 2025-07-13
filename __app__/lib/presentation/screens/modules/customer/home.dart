@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/presentation/screens/modules/customer/tabs/home.dart';
 import 'package:flutter_application_1/presentation/screens/modules/customer/tabs/settings.dart';
-import 'package:flutter_application_1/presentation/widgets/common/custom_appbar.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_bottomnav.dart';
 
 class CustomerHomeScreen extends StatefulWidget {

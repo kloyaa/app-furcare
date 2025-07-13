@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/constants/padding_constant.dart';
 import 'package:flutter_application_1/core/enums/text_enum.dart';
+import 'package:flutter_application_1/presentation/providers/auth_provider.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_button.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_confirm_dialog.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_header.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_text.dart';
 import 'package:flutter_application_1/presentation/widgets/common/default_snackbar.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 /// Model class representing a settings item with all necessary properties
 class SettingsItem {
@@ -360,6 +362,8 @@ class _SettingsTabScreenState extends State<SettingsTabScreen>
 
     if (confirmed == true) {
       if (!mounted) return;
+      // Call logout on the provider and navigate to login screen
+      context.read<AuthProvider>().logout();
       context.go('/login');
     }
   }
