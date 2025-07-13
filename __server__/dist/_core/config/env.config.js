@@ -1,0 +1,31 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.getEnv = void 0;
+require('dotenv').config();
+const getEnv = async () => {
+    const env = {
+        ENVIRONMENT: process.env.ENVIRONMENT,
+        ENVIRONMENT_MAINTENANCE: process.env.ENVIRONMENT_MAINTENANCE,
+        PORT: process.env.PORT,
+        DB_CONNECTION_STRING: process.env.DB_CONNECTION_STRING,
+        AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
+        AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
+        AWS_SECRET_NAME: process.env.AWS_SECRET_NAME,
+        JWT_EXPIRY: process.env.JWT_EXPIRY,
+        JWT_SECRET_KEY: process.env.JWT_SECRET_KEY,
+        NODEX_ACCESS_KEY: process.env.NODEX_ACCESS_KEY,
+        NODEX_SECRET_KEY: process.env.NODEX_SECRET_KEY,
+        NODEX_CRYPTO_KEY: process.env.NODEX_CRYPTO_KEY,
+        CLOUDINARY_NAME: process.env.CLOUDINARY_NAME,
+        CLOUDINARY_KEY: process.env.CLOUDINARY_KEY,
+        CLOUDINARY_SECRET: process.env.CLOUDINARY_SECRET,
+    };
+    // Check if any property is undefined or null
+    const missingVariables = Object.entries(env).filter(([, value]) => value === undefined || value === null || value === 'null');
+    if (missingVariables.length > 0) {
+        const missingProps = missingVariables.map(([key]) => key).join(', ');
+        throw new Error(`Missing environment variables: ${missingProps}`);
+    }
+    return env;
+};
+exports.getEnv = getEnv;

@@ -1,4 +1,7 @@
-__app__
+__app__/build
+
 __server__/node_modules
-__server__/dist
+__server__/src
+__server__/.vscode
+__server__/public
 __server__/.env

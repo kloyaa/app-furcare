@@ -1,0 +1,5 @@
+# TODO List
+
+1. CustomerHomeScreen should display spinner or loader and fetch the necessary data
+    [ ] If no profile it should navigate to create profile screen
+    [ ] If has profile it should render the entire screen
