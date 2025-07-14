@@ -1,5 +1,4 @@
 import 'package:dartz/dartz.dart';
-import 'package:flutter_application_1/core/constants/api_constants.dart';
 import 'package:flutter_application_1/core/errors/exceptions.dart';
 import 'package:flutter_application_1/core/errors/failures.dart';
 import 'package:flutter_application_1/data/datasources/remote/auth_local_datasource.dart';

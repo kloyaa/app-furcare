@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/presentation/screens/modules/customer/home.dart';
 import 'package:flutter_application_1/presentation/screens/modules/customer/login.dart';
-import 'package:flutter_application_1/presentation/screens/modules/customer/pre-login.dart';
+import 'package:flutter_application_1/presentation/screens/modules/customer/pre_login.dart';
 import 'package:flutter_application_1/presentation/screens/modules/customer/registration.dart';
 import 'package:flutter_application_1/presentation/screens/shared/change_theme.dart';
 import 'package:flutter_application_1/presentation/screens/shared/splash_screen.dart';
