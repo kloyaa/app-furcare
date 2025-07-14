@@ -15,20 +15,16 @@ export interface IPassword extends Document {
 
 export interface IProfile extends Document {
   user: Types.ObjectId;
-  firstName: string;
-  lastName: string;
-  middleName: string;
-  birthdate: Date;
-  address: {
-    present: string;
-    permanent: string;
-  };
+  fullName: string;
+  address: string;
   contact: {
-    email: string;
-    number: string;
+    facebookUrl: string;
+    messengerUrl: string;
+    phoneNumber: string;
   };
-  gender: string;
-  isActive: false;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface IRequestLog extends Document {

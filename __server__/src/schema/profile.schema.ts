@@ -8,50 +8,31 @@ const profileSchema = new Schema<IProfile>(
       ref: 'User',
       required: true,
     },
-    firstName: {
+    fullName: {
       type: String,
-      required: true,
-    },
-    lastName: {
-      type: String,
-      required: true,
-    },
-    middleName: {
-      type: String,
-      required: false,
-    },
-    birthdate: {
-      type: Date,
       required: true,
     },
     address: {
-      present: {
-        type: String,
-        required: true,
-      },
-      permanent: {
+      type: String,
+      required: true,
+    },
+    contact: {
+      facebookUrl: {
         type: String,
         required: false,
       },
-    },
-    contact: {
-      email: {
+      messengerUrl: {
+        type: String,
+        required: false,
+      },
+      phoneNumber: {
         type: String,
         required: true,
       },
-      number: {
-        type: String,
-        required: true,
-      },
-    },
-    gender: {
-      type: String,
-      enum: ['male', 'female', 'other'],
-      required: true,
     },
     isActive: {
       type: Boolean,
-      default: false,
+      default: true,
     },
   },
   { timestamps: true },

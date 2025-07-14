@@ -2,23 +2,18 @@ import Joi from 'joi';
 
 export const validateCreateProfile = (body: any) => {
   const schema = Joi.object({
-    firstName: Joi.string().trim().min(2).max(50).required(),
-    lastName: Joi.string().trim().min(2).max(50).required(),
-    middleName: Joi.string().trim().min(2).max(50).required(),
-    birthdate: Joi.date().iso().required(),
-    address: Joi.object({
-      present: Joi.string().trim().min(5).max(255).required(),
-      permanent: Joi.string().trim().min(5).max(255).optional().allow(null),
-    }).required(),
+    fullName: Joi.string().trim().min(2).max(100).required(),
+    address: Joi.string().trim().min(5).max(255).required(),
     contact: Joi.object({
-      email: Joi.string().trim().email().required(),
-      number: Joi.string()
+      facebookUrl: Joi.string().uri().optional().allow(''),
+      messengerUrl: Joi.string().uri().optional().allow(''),
+      phoneNumber: Joi.string()
         .trim()
-        .pattern(/^09\d{9}$/) // Pattern for a valid Philippine mobile number starting with '09'
+        .pattern(/^09\d{9}$/) // Philippine mobile format
         .messages({ 'string.pattern.base': 'Invalid Mobile No. format' })
         .required(),
     }).required(),
-    gender: Joi.string().valid('male', 'female', 'other').required(),
+    isActive: Joi.boolean().optional(), // optional since defaults in schema
   });
 
   const { error } = schema.validate(body);

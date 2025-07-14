@@ -1,56 +1,61 @@
 import 'package:equatable/equatable.dart';
 
-class Address extends Equatable {
-  final String? present;
-  final String? permanent;
+class ClientRequest extends Equatable {
+  final String fullName;
+  final String address;
+  final Contact contact;
 
-  const Address({this.present, this.permanent});
-
-  factory Address.fromJson(Map<String, dynamic> json) {
-    return Address(
-      present: json['present'] as String?,
-      permanent: json['permanent'] as String?,
-    );
-  }
+  const ClientRequest({
+    required this.fullName,
+    required this.address,
+    required this.contact,
+  });
 
   Map<String, dynamic> toJson() {
-    return {'present': present, 'permanent': permanent};
-  }
-
-  Address copyWith({String? present, String? permanent}) {
-    return Address(
-      present: present ?? this.present,
-      permanent: permanent ?? this.permanent,
-    );
+    return {'fullName': fullName, 'address': address, 'contact': contact};
   }
 
   @override
-  List<Object?> get props => [present, permanent];
+  List<Object?> get props => [fullName, address, contact];
 }
 
 class Contact extends Equatable {
-  final String? email;
-  final String? number;
+  final String? facebookUrl;
+  final String? messengerUrl;
+  final String? phoneNumber;
 
-  const Contact({this.email, this.number});
+  const Contact({this.facebookUrl, this.messengerUrl, this.phoneNumber});
 
   factory Contact.fromJson(Map<String, dynamic> json) {
     return Contact(
-      email: json['email'] as String?,
-      number: json['number'] as String?,
+      facebookUrl: json['facebookUrl'] as String?,
+      messengerUrl: json['messengerUrl'] as String?,
+      phoneNumber: json['phoneNumber'] as String?,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'email': email, 'number': number};
+    return {
+      'facebookUrl': facebookUrl,
+      'messengerUrl': messengerUrl,
+      'phoneNumber': phoneNumber,
+    };
   }
 
-  Contact copyWith({String? email, String? number}) {
-    return Contact(email: email ?? this.email, number: number ?? this.number);
+  Contact copyWith({
+    String? facebookUrl,
+    String? messengerUrl,
+    String? phoneNumber,
+  }) {
+    return Contact(
+      facebookUrl: facebookUrl ?? this.facebookUrl,
+      messengerUrl: messengerUrl ?? this.messengerUrl,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+    );
   }
 
   @override
-  List<Object?> get props => [email, number];
+  List<Object?> get props => [facebookUrl, messengerUrl, phoneNumber];
 }
 
 class Others extends Equatable {
@@ -82,57 +87,43 @@ class Others extends Equatable {
 }
 
 class Client extends Equatable {
+  final Contact? contact;
   final String? id;
   final String? user;
-  final String? firstName;
-  final String? lastName;
-  final String? middleName;
-  final String? birthdate;
-  final String? gender;
+  final String? fullName;
+  final String? address;
   final bool? isActive;
   final String? createdAt;
   final String? updatedAt;
-  final int? version;
-  final Address? address;
-  final Contact? contact;
+  final int? v;
   final Others? others;
 
   const Client({
+    this.contact,
     this.id,
     this.user,
-    this.firstName,
-    this.lastName,
-    this.middleName,
-    this.birthdate,
-    this.gender,
+    this.fullName,
+    this.address,
     this.isActive,
     this.createdAt,
     this.updatedAt,
-    this.version,
-    this.address,
-    this.contact,
+    this.v,
     this.others,
   });
 
   factory Client.fromJson(Map<String, dynamic> json) {
     return Client(
-      id: json['_id'] as String?,
-      user: json['user'] as String?,
-      firstName: json['firstName'] as String?,
-      lastName: json['lastName'] as String?,
-      middleName: json['middleName'] as String?,
-      birthdate: json['birthdate'] as String?,
-      gender: json['gender'] as String?,
-      isActive: json['isActive'] as bool?,
-      createdAt: json['createdAt'] as String?,
-      updatedAt: json['updatedAt'] as String?,
-      version: json['__v'] as int?,
-      address: json['address'] != null
-          ? Address.fromJson(json['address'] as Map<String, dynamic>)
-          : null,
       contact: json['contact'] != null
           ? Contact.fromJson(json['contact'] as Map<String, dynamic>)
           : null,
+      id: json['_id'] as String?,
+      user: json['user'] as String?,
+      fullName: json['fullName'] as String?,
+      address: json['address'] as String?,
+      isActive: json['isActive'] as bool?,
+      createdAt: json['createdAt'] as String?,
+      updatedAt: json['updatedAt'] as String?,
+      v: json['__v'] as int?,
       others: json['others'] != null
           ? Others.fromJson(json['others'] as Map<String, dynamic>)
           : null,
@@ -141,72 +132,56 @@ class Client extends Equatable {
 
   Map<String, dynamic> toJson() {
     return {
+      'contact': contact?.toJson(),
       '_id': id,
       'user': user,
-      'firstName': firstName,
-      'lastName': lastName,
-      'middleName': middleName,
-      'birthdate': birthdate,
-      'gender': gender,
+      'fullName': fullName,
+      'address': address,
       'isActive': isActive,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
-      '__v': version,
-      'address': address?.toJson(),
-      'contact': contact?.toJson(),
+      '__v': v,
       'others': others?.toJson(),
     };
   }
 
   Client copyWith({
+    Contact? contact,
     String? id,
     String? user,
-    String? firstName,
-    String? lastName,
-    String? middleName,
-    String? birthdate,
-    String? gender,
+    String? fullName,
+    String? address,
     bool? isActive,
     String? createdAt,
     String? updatedAt,
-    int? version,
-    Address? address,
-    Contact? contact,
+    int? v,
     Others? others,
   }) {
     return Client(
+      contact: contact ?? this.contact,
       id: id ?? this.id,
       user: user ?? this.user,
-      firstName: firstName ?? this.firstName,
-      lastName: lastName ?? this.lastName,
-      middleName: middleName ?? this.middleName,
-      birthdate: birthdate ?? this.birthdate,
-      gender: gender ?? this.gender,
+      fullName: fullName ?? this.fullName,
+      address: address ?? this.address,
       isActive: isActive ?? this.isActive,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
-      version: version ?? this.version,
-      address: address ?? this.address,
-      contact: contact ?? this.contact,
+      v: v ?? this.v,
       others: others ?? this.others,
     );
   }
 
   @override
   List<Object?> get props => [
+    contact,
     id,
     user,
-    firstName,
-    lastName,
-    middleName,
-    birthdate,
-    gender,
+    fullName,
+    address,
     isActive,
     createdAt,
     updatedAt,
-    version,
-    address,
-    contact,
+    v,
     others,
   ];
 }

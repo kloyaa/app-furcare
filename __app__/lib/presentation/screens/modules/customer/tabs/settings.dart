@@ -79,7 +79,7 @@ class _SettingsTabScreenState extends State<SettingsTabScreen>
         icon: Icons.person_outline,
         title: 'Account',
         subtitle: 'Manage your account information',
-        onTap: () => _handleNotificationsTap(),
+        onTap: () => _handleAccountTap(),
         iconColor: Colors.pink,
       ),
       SettingsItem(
@@ -379,6 +379,10 @@ class _SettingsTabScreenState extends State<SettingsTabScreen>
     }
   }
 
+  void _handleAccountTap() {
+    context.push('/me/profile');
+  }
+
   /// Handle privacy settings tap
   void _handlePrivacyTap() {
     try {
@@ -391,13 +395,7 @@ class _SettingsTabScreenState extends State<SettingsTabScreen>
 
   /// Handle theme settings tap
   void _handleThemeTap() {
-    try {
-      context.go('/settings/theme', extra: {"from": "/settings/theme"});
-      // showCustomSnackBar('Theme settings opened');
-      // Navigate to theme settings
-    } catch (e) {
-      _handleError('Failed to open theme settings', e);
-    }
+    context.push('/settings/theme');
   }
 
   /// Handle help settings tap

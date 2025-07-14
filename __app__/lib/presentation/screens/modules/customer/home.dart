@@ -3,6 +3,7 @@ import 'package:flutter_application_1/presentation/providers/client_provider.dar
 import 'package:flutter_application_1/presentation/screens/modules/customer/tabs/home.dart';
 import 'package:flutter_application_1/presentation/screens/modules/customer/tabs/settings.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_bottomnav.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class CustomerHomeScreen extends StatefulWidget {
@@ -23,9 +24,9 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      print("Fetching client profile...");
       context.read<ClientProvider>().getProfile();
     });
+
     _navItems = [
       BottomNavItem(
         icon: Icons.home_outlined,
@@ -62,6 +63,12 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
         builder: (context, clientProvider, child) {
           if (clientProvider.isLoading) {
             return Center(child: CircularProgressIndicator());
+          }
+
+          if (clientProvider.errorCode == "02") {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              context.push("/me/profile/create");
+            });
           }
 
           return IndexedStack(

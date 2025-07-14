@@ -20,21 +20,32 @@ class ClientProvider with ChangeNotifier {
     : _clientRepository = clientRepository;
 
   Future<void> getProfile() async {
-    print("Fetching client profile...");
     _setLoading(true);
     final result = await _clientRepository.getProfile();
 
     result.fold(
       (failure) {
-        print("CLIENT ERROR: ${failure.message}");
-
         _setLoading(false);
         _handleFailure(failure);
       },
       (client) {
         _client = client;
+        _setLoading(false);
+        notifyListeners();
+      },
+    );
+  }
 
-        print("CLIENT: ${_client?.toJson()}");
+  Future<void> createProfile(ClientRequest request) async {
+    _setLoading(true);
+    final result = await _clientRepository.createProfile(request);
+
+    result.fold(
+      (failure) {
+        _setLoading(false);
+        _handleFailure(failure);
+      },
+      (client) {
         _setLoading(false);
         notifyListeners();
       },

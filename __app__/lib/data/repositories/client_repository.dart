@@ -7,6 +7,7 @@ import 'package:flutter_application_1/data/models/client_models.dart';
 
 abstract class ClientRepository {
   Future<Either<Failure, Client?>> getProfile();
+  Future<Either<Failure, Client>> createProfile(ClientRequest request);
 }
 
 class ClientRepositoryImpl implements ClientRepository {
@@ -23,6 +24,22 @@ class ClientRepositoryImpl implements ClientRepository {
   Future<Either<Failure, Client>> getProfile() async {
     try {
       final response = await _remoteDataSource.getProfile();
+      return Right(response);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message, code: e.code));
+    } on NetworkException catch (e) {
+      return Left(NetworkFailure(message: e.message));
+    } on CacheException catch (e) {
+      return Left(CacheFailure(message: e.message));
+    } catch (e) {
+      return Left(ServerFailure(message: 'An unexpected error occurred'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Client>> createProfile(ClientRequest request) async {
+    try {
+      final response = await _remoteDataSource.createProfile(request);
       return Right(response);
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message, code: e.code));

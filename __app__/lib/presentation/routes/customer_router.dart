@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/presentation/screens/modules/customer/home.dart';
 import 'package:flutter_application_1/presentation/screens/modules/customer/login.dart';
 import 'package:flutter_application_1/presentation/screens/modules/customer/pre_login.dart';
+import 'package:flutter_application_1/presentation/screens/modules/customer/profile/customer_profile.dart';
+import 'package:flutter_application_1/presentation/screens/modules/customer/profile/customer_profile_creation.dart';
 import 'package:flutter_application_1/presentation/screens/modules/customer/registration.dart';
 import 'package:flutter_application_1/presentation/screens/shared/change_theme.dart';
 import 'package:flutter_application_1/presentation/screens/shared/splash_screen.dart';
@@ -42,7 +44,13 @@ final GoRouter customerRouter = GoRouter(
         GoRoute(
           path: '/me/profile',
           builder: (BuildContext context, GoRouterState state) {
-            return const CustomerHomeScreen();
+            return const CustomerProfileScreen();
+          },
+        ),
+        GoRoute(
+          path: '/me/profile/create',
+          builder: (BuildContext context, GoRouterState state) {
+            return const CustomerProfileCreationScreen();
           },
         ),
         GoRoute(

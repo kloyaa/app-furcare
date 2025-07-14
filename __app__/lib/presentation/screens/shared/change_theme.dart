@@ -288,7 +288,7 @@ class _ThemeToggleScreenState extends State<ThemeToggleScreen>
                           child: FadeTransition(
                             opacity: _textFade,
                             child: GestureDetector(
-                              onTap: () => context.pushReplacement("/home"),
+                              onTap: () => context.pop(),
                               child: Container(
                                 padding: const EdgeInsets.all(12),
                                 decoration: BoxDecoration(
@@ -302,7 +302,7 @@ class _ThemeToggleScreenState extends State<ThemeToggleScreen>
                                   ),
                                 ),
                                 child: Icon(
-                                  Icons.home_outlined,
+                                  Icons.arrow_back_ios_new_outlined,
                                   size: 24,
                                   color: isDarkMode
                                       // ignore: deprecated_member_use
