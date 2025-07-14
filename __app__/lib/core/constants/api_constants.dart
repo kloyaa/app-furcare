@@ -10,6 +10,10 @@ class ApiConstants {
 
   // Client endpoints
   static const String clientProfile = '$baseUrl/user/v1/profile';
+
+  // Others
+  static const String activities = '$baseUrl/activity/v1';
+
   // Headers
   static const String userOrigin = 'nodex-user-origin';
   static const String accessKey = 'nodex-access-key';

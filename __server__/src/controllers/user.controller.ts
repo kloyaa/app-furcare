@@ -56,6 +56,49 @@ export const createProfile = async (req: TRequest, res: Response): Promise<void 
 };
 
 /**
+ * Updates an existing profile for a user.
+ *
+ * @param {TRequest} req - The request object containing the updated profile data.
+ * @param {Response} res - The response object used to send the response.
+ * @return {Promise<void>} A promise that resolves when the profile is updated successfully or rejects with an error.
+ */
+export const editProfile = async (req: TRequest, res: Response): Promise<void | Response> => {
+  const error = validateCreateProfile(req.body);
+  if (error) {
+    return res.status(400).json({
+      ...statuses['501'],
+      message: error.details[0].message.replace(/['"]/g, ''),
+    });
+  }
+
+  try {
+    const { fullName, address, contact } = req.body;
+    const profile = await Profile.findOne({ user: req.user.id });
+
+    if (!profile) {
+      return res.status(404).json(statuses['0104']); // Not Found
+    }
+
+    profile.fullName = fullName;
+    profile.address = address;
+    profile.contact = contact;
+
+    const updatedProfile = await profile.save();
+
+    emitter.emit(EventName.ACTIVITY, {
+      user: req.user.id as any,
+      description: ActivityType.PROFILE_UPDATED,
+    } as IActivity);
+
+    return res.status(200).json(updatedProfile);
+  } catch (error) {
+    console.log('@editProfile error', error);
+    return res.status(500).json(statuses['0900']);
+  }
+};
+
+
+/**
  * Retrieves the user profile associated with the access token provided in the request.
  *
  * @param {TRequest} req - The request object containing the access token.

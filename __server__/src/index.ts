@@ -16,6 +16,7 @@ import authRoute from './routes/auth.route';
 import userRoute from './routes/user.route';
 import uploadRoute from './routes/upload.route';
 import auxiliaryRoute from './routes/auxiliary.route';
+import activityRoute from './routes/activity.route';
 
 import {
   logNetworBody,
@@ -76,6 +77,7 @@ async function runApp(): Promise<void> {
   app.use('/api', userRoute);
   app.use('/api', uploadRoute);
   app.use('/api', auxiliaryRoute);
+  app.use('/api', activityRoute);
 
   // Swagger setup
   app.use("/api-docs", swaggerUi.serve);

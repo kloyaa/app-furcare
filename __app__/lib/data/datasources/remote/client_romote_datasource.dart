@@ -8,6 +8,7 @@ import 'package:flutter_application_1/data/models/client_models.dart';
 abstract class ClientRemoteDataSource {
   Future<Client> getProfile();
   Future<Client> createProfile(ClientRequest request);
+  Future<Client> updateProfile(ClientRequest request);
 }
 
 class ClientRemoteDataSourceImpl implements ClientRemoteDataSource {
@@ -54,6 +55,31 @@ class ClientRemoteDataSourceImpl implements ClientRemoteDataSource {
       );
 
       if (response.statusCode == 201) {
+        return Client.fromJson(response.data);
+      } else {
+        throw ServerException(
+          message: response.data?['message'] ?? 'Profile creation failed',
+          code: response.data?['code'],
+        );
+      }
+    } catch (e) {
+      if (e is ServerException || e is NetworkException) {
+        rethrow;
+      }
+      throw ServerException(message: 'An error occurred during login');
+    }
+  }
+
+  @override
+  Future<Client> updateProfile(ClientRequest request) async {
+    try {
+      final response = await _networkService.put(
+        ApiConstants.clientProfile,
+        data: request,
+        options: Options(headers: await _authHeaderProvider.getHeaders()),
+      );
+
+      if (response.statusCode == 200) {
         return Client.fromJson(response.data);
       } else {
         throw ServerException(

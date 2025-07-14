@@ -104,6 +104,13 @@ class _SettingsTabScreenState extends State<SettingsTabScreen>
         iconColor: Colors.purple,
       ),
       SettingsItem(
+        icon: Icons.history_outlined,
+        title: 'Activities',
+        subtitle: 'View your activities and logs',
+        onTap: () => _handleActivityTap(),
+        iconColor: Colors.brown,
+      ),
+      SettingsItem(
         icon: Icons.help_outline,
         title: 'Help & Support',
         subtitle: 'Get help and contact support',
@@ -408,7 +415,9 @@ class _SettingsTabScreenState extends State<SettingsTabScreen>
     }
   }
 
-  /// Show snackbar with proper error handling
+  void _handleActivityTap() {
+    context.push("/settings/activity-log");
+  }
 
   /// Handle errors gracefully with logging
   void _handleError(String message, Object error) {

@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/presentation/screens/modules/customer/home.dart';
 import 'package:flutter_application_1/presentation/screens/modules/customer/login.dart';
 import 'package:flutter_application_1/presentation/screens/modules/customer/pre_login.dart';
+import 'package:flutter_application_1/presentation/screens/modules/customer/profile/customer_edit_profile.dart';
 import 'package:flutter_application_1/presentation/screens/modules/customer/profile/customer_profile.dart';
 import 'package:flutter_application_1/presentation/screens/modules/customer/profile/customer_profile_creation.dart';
 import 'package:flutter_application_1/presentation/screens/modules/customer/registration.dart';
+import 'package:flutter_application_1/presentation/screens/shared/activity_log.dart';
 import 'package:flutter_application_1/presentation/screens/shared/change_theme.dart';
 import 'package:flutter_application_1/presentation/screens/shared/splash_screen.dart';
 import 'package:go_router/go_router.dart';
@@ -54,9 +56,23 @@ final GoRouter customerRouter = GoRouter(
           },
         ),
         GoRoute(
+          path: '/me/profile/update',
+          builder: (BuildContext context, GoRouterState state) {
+            return const CustomerUpdateProfileScreen();
+          },
+        ),
+
+        // Shared routes
+        GoRoute(
           path: '/settings/theme',
           builder: (BuildContext context, GoRouterState state) {
             return const ThemeToggleScreen();
+          },
+        ),
+        GoRoute(
+          path: '/settings/activity-log',
+          builder: (BuildContext context, GoRouterState state) {
+            return const ActivityLogScreen();
           },
         ),
       ],

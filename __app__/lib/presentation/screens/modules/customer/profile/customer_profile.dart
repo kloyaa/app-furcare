@@ -7,6 +7,7 @@ import 'package:flutter_application_1/data/models/client_models.dart';
 import 'package:flutter_application_1/presentation/providers/client_provider.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_appbar.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_text.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class CustomerProfileScreen extends StatefulWidget {
@@ -40,10 +41,7 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              // Handle edit action
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Edit profile tapped')),
-              );
+              context.push('/me/profile/update');
             },
             icon: const Icon(Icons.edit),
             tooltip: 'Edit Profile',
@@ -82,10 +80,14 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                       CircleAvatar(
                         radius: 40,
                         backgroundColor: colorScheme.primary,
-                        child: CustomText.title('XA'),
+                        child: CustomText.title(
+                          getInitials(client.fullName ?? 'Unknown'),
+                          size: AppTextSize.lg,
+                          color: colorScheme.onPrimaryContainer,
+                        ),
                       ),
                       const SizedBox(height: 16),
-                      CustomText.subtitle('xxa2'),
+                      CustomText.subtitle(client.fullName!),
                       const SizedBox(height: 8),
                       Container(
                         padding: const EdgeInsets.symmetric(

@@ -52,6 +52,22 @@ class ClientProvider with ChangeNotifier {
     );
   }
 
+  Future<void> updateProfile(ClientRequest request) async {
+    _setLoading(true);
+    final result = await _clientRepository.updateProfile(request);
+
+    result.fold(
+      (failure) {
+        _setLoading(false);
+        _handleFailure(failure);
+      },
+      (client) {
+        _setLoading(false);
+        notifyListeners();
+      },
+    );
+  }
+
   void _handleFailure(Failure failure) {
     _errorMessage = failure.message;
     _errorCode = failure.code;
