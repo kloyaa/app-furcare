@@ -105,3 +105,28 @@ bool isValidDate(String input, {String format = 'yyyy-MM-dd'}) {
     return false;
   }
 }
+
+String? validateCurrentPassword(String? value) {
+  if (value == null || value.isEmpty) {
+    return 'Please enter your current password';
+  }
+  return null;
+}
+
+String? validateNewPassword(String? value) {
+  if (value == null || value.isEmpty) {
+    return 'Please enter a new password';
+  }
+  if (value.length < 6) {
+    return 'Password must be at least 6 characters long';
+  }
+  if (value.length > 255) {
+    return 'Password must be no more than 255 characters long';
+  }
+  if (!RegExp(
+    r'^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])',
+  ).hasMatch(value)) {
+    return 'Password must contain at least 1 uppercase letter, 1 number, and 1 special character.';
+  }
+  return null;
+}

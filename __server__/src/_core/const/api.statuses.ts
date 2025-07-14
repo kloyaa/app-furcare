@@ -80,7 +80,7 @@ export const statuses = {
     code: '0062',
   },
   '0063': {
-    message: 'Password does not match.',
+    message: 'Current password is incorrect. Please try again.',
     code: '0063',
   },
   '0064': {

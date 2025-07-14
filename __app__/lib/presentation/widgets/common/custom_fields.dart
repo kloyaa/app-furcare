@@ -17,6 +17,7 @@ class CustomInputField extends StatefulWidget {
   final int maxLines;
   final bool error; // New error parameter
   final String? errorText; // Optional error message
+  final Function(String)? onChanged; // Optional onChange callback
 
   const CustomInputField({
     super.key,
@@ -34,6 +35,7 @@ class CustomInputField extends StatefulWidget {
     this.maxLines = 1,
     this.error = false, // Default to false
     this.errorText,
+    this.onChanged, // Optional onChange parameter
   });
 
   @override
@@ -68,6 +70,7 @@ class _CustomInputFieldState extends State<CustomInputField> {
           validator: widget.validator,
           enabled: widget.enabled,
           maxLines: widget.maxLines,
+          onChanged: widget.onChanged, // Add onChange callback
           style: TextStyle(
             fontSize: 16,
             color: hasError

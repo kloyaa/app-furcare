@@ -24,6 +24,7 @@ class AuthProvider extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
   String? get errorCode => _errorCode;
   bool get isAuthenticated => _state == AuthState.authenticated;
+  bool get isUnauthenticated => _state == AuthState.unauthenticated;
   bool get isLoading => _state == AuthState.loading;
 
   // Login
@@ -31,6 +32,7 @@ class AuthProvider extends ChangeNotifier {
     required String username,
     required String password,
   }) async {
+    clearError(); // Clear previous error
     _setState(AuthState.loading);
 
     final request = LoginRequest(username: username, password: password);
@@ -60,6 +62,26 @@ class AuthProvider extends ChangeNotifier {
     result.fold(
       (failure) => _handleFailure(failure),
       (response) => _handleRegisterSuccess(response, email, username),
+    );
+  }
+
+  // Change password
+  Future<void> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    clearError(); // Clear previous error
+    _setState(AuthState.loading);
+
+    final request = ChangePasswordRequest(
+      currentPassword: currentPassword,
+      newPassword: newPassword,
+    );
+    final result = await _authRepository.changePassword(request);
+
+    result.fold(
+      (failure) => _handleFailure(failure),
+      (response) async => await _handleChangePasswordSuccess(),
     );
   }
 
@@ -137,6 +159,11 @@ class AuthProvider extends ChangeNotifier {
     _accessToken = response.accessToken;
     _errorMessage = null;
     _setState(AuthState.authenticated);
+  }
+
+  Future<void> _handleChangePasswordSuccess() async {
+    await logout();
+    _setState(AuthState.unauthenticated);
   }
 
   // Handle failure

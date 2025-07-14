@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/constants/padding_constant.dart';
 import 'package:flutter_application_1/core/enums/text_enum.dart';
 import 'package:flutter_application_1/presentation/providers/auth_provider.dart';
+import 'package:flutter_application_1/presentation/widgets/common/custom_appbar.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_button.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_confirm_dialog.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_header.dart';
@@ -30,14 +31,14 @@ class SettingsItem {
 }
 
 /// Enhanced Settings Tab Screen with animations, theme support, and error handling
-class SettingsTabScreen extends StatefulWidget {
-  const SettingsTabScreen({super.key});
+class PrivacyScreen extends StatefulWidget {
+  const PrivacyScreen({super.key});
 
   @override
-  State<SettingsTabScreen> createState() => _SettingsTabScreenState();
+  State<PrivacyScreen> createState() => _PrivacyScreenState();
 }
 
-class _SettingsTabScreenState extends State<SettingsTabScreen>
+class _PrivacyScreenState extends State<PrivacyScreen>
     with TickerProviderStateMixin {
   /// Animation controller for staggered list animations
   late AnimationController _animationController;
@@ -76,46 +77,11 @@ class _SettingsTabScreenState extends State<SettingsTabScreen>
   void _initializeSettingsItems() {
     _settingsItems = [
       SettingsItem(
-        icon: Icons.person_outline,
-        title: 'Account',
-        subtitle: 'Manage your account information',
-        onTap: () => _handleAccountTap(),
+        icon: Icons.lock_outline,
+        title: 'Change Password',
+        subtitle: 'Update your account password',
+        onTap: () => _handleChangePassword(),
         iconColor: Colors.pink,
-      ),
-      SettingsItem(
-        icon: Icons.notifications_outlined,
-        title: 'Notifications',
-        subtitle: 'Manage your notification preferences',
-        onTap: () => _handleNotificationsTap(),
-        iconColor: Colors.orange,
-      ),
-      SettingsItem(
-        icon: Icons.security_outlined,
-        title: 'Security',
-        subtitle: 'Control your security settings',
-        onTap: () => _handlePrivacyTap(),
-        iconColor: Colors.green,
-      ),
-      SettingsItem(
-        icon: Icons.palette_outlined,
-        title: 'Theme',
-        subtitle: 'Choose your preferred theme',
-        onTap: () => _handleThemeTap(),
-        iconColor: Colors.purple,
-      ),
-      SettingsItem(
-        icon: Icons.history_outlined,
-        title: 'Activities',
-        subtitle: 'View your activities and logs',
-        onTap: () => _handleActivityTap(),
-        iconColor: Colors.brown,
-      ),
-      SettingsItem(
-        icon: Icons.help_outline,
-        title: 'Help & Support',
-        subtitle: 'Get help and contact support',
-        onTap: () => _handleHelpTap(),
-        iconColor: Colors.blue,
       ),
     ];
   }
@@ -152,7 +118,11 @@ class _SettingsTabScreenState extends State<SettingsTabScreen>
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: colorScheme.surface,
+      appBar: CustomAppBar(
+        backgroundColor: colorScheme.surface,
+        foregroundColor: colorScheme.primary,
+        showThemeToggle: false,
+      ),
       body: SafeArea(
         child: Container(
           padding: kDefaultBodyPadding,
@@ -213,19 +183,9 @@ class _SettingsTabScreenState extends State<SettingsTabScreen>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Main title with proper null safety
                 CustomHeader(
-                  title: 'Settings',
-                  subtitle: 'Manage your app preferences',
-                ),
-                SizedBox(height: 20),
-                CustomButton(
-                  text: "Logout",
-                  height: 40,
-                  width: 120,
-                  textSize: AppTextSize.xs,
-                  icon: Icons.logout,
-                  onPressed: () => _handleLogout(),
+                  title: 'Security',
+                  subtitle: 'Control your security settings',
                 ),
               ],
             ),
@@ -356,70 +316,7 @@ class _SettingsTabScreenState extends State<SettingsTabScreen>
     );
   }
 
-  void _handleLogout() async {
-    final confirmed = await ConfirmationDialog.show(
-      context: context,
-      title: "Confirm Logout",
-      message: "Are you sure you want to logout? This will end your session.",
-      confirmText: "Logout",
-      cancelText: "Cancel",
-      icon: Icons.logout,
-      confirmColor: Colors.red,
-    );
-
-    if (confirmed == true) {
-      if (!mounted) return;
-      // Call logout on the provider and navigate to login screen
-      context.read<AuthProvider>().logout();
-      context.go('/login');
-    }
-  }
-
-  /// Handle notifications tap with error handling
-  void _handleNotificationsTap() {
-    try {
-      // Add haptic feedback for better UX
-      showCustomSnackBar(context, 'Notifications settings opened');
-      // Navigate to notifications settings
-    } catch (e) {
-      _handleError('Failed to open notifications settings', e);
-    }
-  }
-
-  void _handleAccountTap() {
-    context.push('/me/profile');
-  }
-
-  /// Handle privacy settings tap
-  void _handlePrivacyTap() {
-    context.push("/settings/privacy");
-  }
-
-  /// Handle theme settings tap
-  void _handleThemeTap() {
-    context.push('/settings/theme');
-  }
-
-  /// Handle help settings tap
-  void _handleHelpTap() {
-    try {
-      showCustomSnackBar(context, 'Help & Support opened');
-      // Navigate to help settings
-    } catch (e) {
-      _handleError('Failed to open help settings', e);
-    }
-  }
-
-  void _handleActivityTap() {
-    context.push("/settings/activity-log");
-  }
-
-  /// Handle errors gracefully with logging
-  void _handleError(String message, Object error) {
-    debugPrint('Settings Screen Error: $message - $error');
-
-    if (mounted) {
-      showCustomSnackBar(context, 'Something went wrong. Please try again.');
-    }
+  void _handleChangePassword() {
+    context.push('/settings/privacy/change-password');
   }
 }

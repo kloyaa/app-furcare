@@ -7,6 +7,8 @@ class ApiConstants {
   // Auth endpoints
   static const String login = '$baseUrl/auth/v1/login';
   static const String register = '$baseUrl/auth/v1/register';
+  static const String changePassword =
+      '$baseUrl/auth/v1/account/change-password';
 
   // Client endpoints
   static const String clientProfile = '$baseUrl/user/v1/profile';

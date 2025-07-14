@@ -30,7 +30,10 @@ Future<void> setupDependencyInjection() async {
   );
 
   getIt.registerLazySingleton<AuthRemoteDataSource>(
-    () => AuthRemoteDataSourceImpl(networkService: getIt()),
+    () => AuthRemoteDataSourceImpl(
+      networkService: getIt(),
+      authHeaderProvider: getIt(),
+    ),
   );
 
   getIt.registerLazySingleton<AuthHeaderProvider>(

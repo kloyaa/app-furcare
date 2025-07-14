@@ -33,6 +33,23 @@ class RegisterRequest extends Equatable {
   List<Object?> get props => [email, username, password];
 }
 
+class ChangePasswordRequest extends Equatable {
+  final String currentPassword;
+  final String newPassword;
+
+  const ChangePasswordRequest({
+    required this.currentPassword,
+    required this.newPassword,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {'currentPassword': currentPassword, 'newPassword': newPassword};
+  }
+
+  @override
+  List<Object?> get props => [currentPassword, newPassword];
+}
+
 class AuthResponse extends Equatable {
   final String message;
   final String code;

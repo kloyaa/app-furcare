@@ -21,12 +21,11 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
-  bool _isLoading = false;
 
   @override
   void initState() {
     _usernameController.text = 'kolya_06';
-    _passwordController.text = 'Password@123';
+    _passwordController.text = 'Password@001';
 
     super.initState();
   }
@@ -40,18 +39,10 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
 
   Future<void> _handleLogin(AuthProvider authProvider) async {
     if (_formKey.currentState?.validate() ?? false) {
-      setState(() {
-        _isLoading = true;
-      });
-
       await authProvider.login(
         username: _usernameController.text.trim(),
         password: _passwordController.text,
       );
-
-      setState(() {
-        _isLoading = false;
-      });
     }
   }
 
@@ -120,6 +111,7 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
                       isPassword: true,
                       prefixIcon: Icons.lock_outline,
                       error: hasError,
+                      withSuffixIcon: true,
                       validator: validatePassword,
                     ),
                     const SizedBox(height: 16),
@@ -146,9 +138,9 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
                     CustomButton(
                       text: 'Sign In',
                       onPressed: () => _handleLogin(authProvider),
-                      isLoading: _isLoading,
+                      isLoading: authProvider.isLoading,
                       icon: Icons.login,
-                      isEnabled: !_isLoading,
+                      isEnabled: !authProvider.isLoading,
                     ),
                     const SizedBox(height: 16),
 
@@ -160,7 +152,7 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
                       },
                       isOutlined: true,
                       icon: Icons.person_add_outlined,
-                      isEnabled: !_isLoading,
+                      isEnabled: !authProvider.isLoading,
                     ),
                     const SizedBox(height: 32),
 

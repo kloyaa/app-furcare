@@ -4,10 +4,15 @@ import 'package:flutter_application_1/core/errors/failures.dart';
 import 'package:flutter_application_1/data/datasources/remote/auth_local_datasource.dart';
 import 'package:flutter_application_1/data/datasources/remote/auth_remote_datasource.dart';
 import 'package:flutter_application_1/data/models/auth_models.dart';
+import 'package:flutter_application_1/data/models/default_models.dart';
 
 abstract class AuthRepository {
   Future<Either<Failure, AuthResponse>> login(LoginRequest request);
   Future<Either<Failure, AuthResponse>> register(RegisterRequest request);
+  Future<Either<Failure, DefaultResponse>> changePassword(
+    ChangePasswordRequest request,
+  );
+
   Future<Either<Failure, User?>> getCurrentUser();
   Future<Either<Failure, String?>> getAccessToken();
   Future<Either<Failure, void>> logout();
@@ -67,6 +72,24 @@ class AuthRepositoryImpl implements AuthRepository {
       await _localDataSource.saveUser(user);
       await _localDataSource.saveAccessToken(response.accessToken);
 
+      return Right(response);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message, code: e.code));
+    } on NetworkException catch (e) {
+      return Left(NetworkFailure(message: e.message));
+    } on CacheException catch (e) {
+      return Left(CacheFailure(message: e.message));
+    } catch (e) {
+      return Left(ServerFailure(message: 'An unexpected error occurred'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, DefaultResponse>> changePassword(
+    ChangePasswordRequest request,
+  ) async {
+    try {
+      final response = await _remoteDataSource.changePassword(request);
       return Right(response);
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message, code: e.code));
