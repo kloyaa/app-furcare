@@ -40,19 +40,6 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
         label: 'Settings',
         screen: const SettingsTabScreen(),
       ),
-      // Add more items easily:
-      // BottomNavItem(
-      //   icon: Icons.favorite_outline,
-      //   activeIcon: Icons.favorite,
-      //   label: 'Favorites',
-      //   screen: const FavoritesTabScreen(),
-      // ),
-      // BottomNavItem(
-      //   icon: Icons.person_outline,
-      //   activeIcon: Icons.person,
-      //   label: 'Profile',
-      //   screen: const ProfileTabScreen(),
-      // ),
     ];
   }
 
@@ -73,7 +60,14 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
 
           return IndexedStack(
             index: _currentIndex,
-            children: _navItems.map((item) => item.screen).toList(),
+            children: _navItems
+                .map(
+                  (item) => KeyedSubtree(
+                    key: ValueKey(_currentIndex == _navItems.indexOf(item)),
+                    child: item.screen,
+                  ),
+                )
+                .toList(),
           );
         },
       ),

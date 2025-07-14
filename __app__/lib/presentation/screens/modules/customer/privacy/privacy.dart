@@ -63,12 +63,12 @@ class _PrivacyScreenState extends State<PrivacyScreen>
   /// Initialize animation controllers with proper durations
   void _initializeAnimations() {
     _animationController = AnimationController(
-      duration: const Duration(milliseconds: 1500),
+      duration: const Duration(milliseconds: 1000),
       vsync: this,
     );
 
     _headerAnimationController = AnimationController(
-      duration: const Duration(milliseconds: 2100),
+      duration: const Duration(milliseconds: 2000),
       vsync: this,
     );
   }
@@ -92,7 +92,7 @@ class _PrivacyScreenState extends State<PrivacyScreen>
       if (!_isDisposed) {
         _headerAnimationController.forward();
         // Add slight delay before starting list animation
-        Future.delayed(const Duration(milliseconds: 1000), () {
+        Future.delayed(const Duration(milliseconds: 500), () {
           if (!_isDisposed) {
             _animationController.forward();
           }
