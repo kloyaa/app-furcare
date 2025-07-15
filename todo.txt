@@ -1,5 +1,9 @@
 # TODO List
 
 1. CustomerHomeScreen should display spinner or loader and fetch the necessary data
-    [ ] If no profile it should navigate to create profile screen
-    [ ] If has profile it should render the entire screen
+    [x] If no profile it should navigate to create profile screen
+    [x] If has profile it should render the entire screen
+
+
+2. RegistrationScreen does not redirect to home screen upon successful registration
+    [ ] Ensure to navigate in home after successfull registration
