@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/enums/text_enum.dart';
+import 'package:flutter_application_1/core/helpers/theme.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_text.dart';
 
 class CustomInputField extends StatefulWidget {
@@ -48,7 +49,7 @@ class _CustomInputFieldState extends State<CustomInputField> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final isDark = ThemeHelper.isDarkMode(context);
     final hasError = widget.error;
 
     return Column(

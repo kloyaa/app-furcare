@@ -1,12 +1,5 @@
 import 'package:flutter/material.dart';
-
-class ThemeNotifier {
-  static ValueNotifier<bool> isDarkMode = ValueNotifier(false);
-
-  static void toggleTheme() {
-    isDarkMode.value = !isDarkMode.value;
-  }
-}
+import 'package:flutter_application_1/core/theme/theme_notifier.dart';
 
 class ThemeToggleButton extends StatelessWidget {
   const ThemeToggleButton({super.key});

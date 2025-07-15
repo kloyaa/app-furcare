@@ -30,12 +30,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   @override
   void initState() {
+    super.initState();
+
     _emailController.text = 'kolya01@gmail.com';
     _usernameController.text = 'kolya01';
     _passwordController.text = 'Password@123';
     _confirmPasswordController.text = 'Password@123';
-
-    super.initState();
   }
 
   @override
@@ -44,6 +44,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     _usernameController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
+
     super.dispose();
   }
 

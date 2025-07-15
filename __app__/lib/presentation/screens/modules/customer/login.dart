@@ -24,16 +24,17 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
 
   @override
   void initState() {
+    super.initState();
+
     _usernameController.text = 'kolya_06';
     _passwordController.text = 'Password@001';
-
-    super.initState();
   }
 
   @override
   void dispose() {
     _usernameController.dispose();
     _passwordController.dispose();
+
     super.dispose();
   }
 

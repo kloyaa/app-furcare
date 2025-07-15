@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/constants/padding_constant.dart';
 import 'package:flutter_application_1/core/enums/text_enum.dart';
+import 'package:flutter_application_1/core/helpers/theme.dart';
 import 'package:flutter_application_1/presentation/providers/activity_provider.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_appbar.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_text.dart';
@@ -24,8 +25,7 @@ class _ActivityLogScreenState extends State<ActivityLogScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final isDark = ThemeHelper.isDarkMode(context);
 
     return Scaffold(
       appBar: CustomAppBar(),

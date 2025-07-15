@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/constants/padding_constant.dart';
 import 'package:flutter_application_1/core/enums/text_enum.dart';
+import 'package:flutter_application_1/data/models/settings_item.model.dart';
 import 'package:flutter_application_1/presentation/providers/auth_provider.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_button.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_confirm_dialog.dart';
@@ -9,25 +10,6 @@ import 'package:flutter_application_1/presentation/widgets/common/custom_text.da
 import 'package:flutter_application_1/presentation/widgets/common/default_snackbar.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-
-/// Model class representing a settings item with all necessary properties
-class SettingsItem {
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final VoidCallback? onTap;
-  final Color? iconColor;
-  final bool isEnabled;
-
-  const SettingsItem({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-    this.onTap,
-    this.iconColor,
-    this.isEnabled = true,
-  });
-}
 
 /// Enhanced Settings Tab Screen with animations, theme support, and error handling
 class SettingsTabScreen extends StatefulWidget {
@@ -54,9 +36,19 @@ class _SettingsTabScreenState extends State<SettingsTabScreen>
   @override
   void initState() {
     super.initState();
+
     _initializeAnimations();
     _initializeSettingsItems();
     _startAnimations();
+  }
+
+  @override
+  void dispose() {
+    _isDisposed = true;
+    _animationController.dispose();
+    _headerAnimationController.dispose();
+
+    super.dispose();
   }
 
   /// Initialize animation controllers with proper durations
@@ -138,12 +130,66 @@ class _SettingsTabScreenState extends State<SettingsTabScreen>
     }
   }
 
-  @override
-  void dispose() {
-    _isDisposed = true;
-    _animationController.dispose();
-    _headerAnimationController.dispose();
-    super.dispose();
+  void _handleLogout() async {
+    final confirmed = await ConfirmationDialog.show(
+      context: context,
+      title: "Confirm Logout",
+      message: "Are you sure you want to logout? This will end your session.",
+      confirmText: "Logout",
+      cancelText: "Cancel",
+      icon: Icons.logout,
+      confirmColor: Colors.red,
+    );
+
+    if (confirmed == true) {
+      if (!mounted) return;
+      // Call logout on the provider and navigate to login screen
+      context.read<AuthProvider>().logout();
+      context.go('/login');
+    }
+  }
+
+  void _handleNotificationsTap() {
+    try {
+      // Add haptic feedback for better UX
+      showCustomSnackBar(context, 'Notifications settings opened');
+      // Navigate to notifications settings
+    } catch (e) {
+      _handleError('Failed to open notifications settings', e);
+    }
+  }
+
+  void _handleAccountTap() {
+    context.push('/me/profile');
+  }
+
+  void _handlePrivacyTap() {
+    context.push("/settings/privacy");
+  }
+
+  void _handleThemeTap() {
+    context.push('/settings/theme');
+  }
+
+  void _handleHelpTap() {
+    try {
+      showCustomSnackBar(context, 'Help & Support opened');
+      // Navigate to help settings
+    } catch (e) {
+      _handleError('Failed to open help settings', e);
+    }
+  }
+
+  void _handleActivityTap() {
+    context.push("/settings/activity-log");
+  }
+
+  void _handleError(String message, Object error) {
+    debugPrint('Settings Screen Error: $message - $error');
+
+    if (mounted) {
+      showCustomSnackBar(context, 'Something went wrong. Please try again.');
+    }
   }
 
   @override
@@ -354,72 +400,5 @@ class _SettingsTabScreenState extends State<SettingsTabScreen>
         ),
       ),
     );
-  }
-
-  void _handleLogout() async {
-    final confirmed = await ConfirmationDialog.show(
-      context: context,
-      title: "Confirm Logout",
-      message: "Are you sure you want to logout? This will end your session.",
-      confirmText: "Logout",
-      cancelText: "Cancel",
-      icon: Icons.logout,
-      confirmColor: Colors.red,
-    );
-
-    if (confirmed == true) {
-      if (!mounted) return;
-      // Call logout on the provider and navigate to login screen
-      context.read<AuthProvider>().logout();
-      context.go('/login');
-    }
-  }
-
-  /// Handle notifications tap with error handling
-  void _handleNotificationsTap() {
-    try {
-      // Add haptic feedback for better UX
-      showCustomSnackBar(context, 'Notifications settings opened');
-      // Navigate to notifications settings
-    } catch (e) {
-      _handleError('Failed to open notifications settings', e);
-    }
-  }
-
-  void _handleAccountTap() {
-    context.push('/me/profile');
-  }
-
-  /// Handle privacy settings tap
-  void _handlePrivacyTap() {
-    context.push("/settings/privacy");
-  }
-
-  /// Handle theme settings tap
-  void _handleThemeTap() {
-    context.push('/settings/theme');
-  }
-
-  /// Handle help settings tap
-  void _handleHelpTap() {
-    try {
-      showCustomSnackBar(context, 'Help & Support opened');
-      // Navigate to help settings
-    } catch (e) {
-      _handleError('Failed to open help settings', e);
-    }
-  }
-
-  void _handleActivityTap() {
-    context.push("/settings/activity-log");
-  }
-
-  /// Handle errors gracefully with logging
-  void _handleError(String message, Object error) {
-    debugPrint('Settings Screen Error: $message - $error');
-
-    if (mounted) {
-      showCustomSnackBar(context, 'Something went wrong. Please try again.');
-    }
   }
 }

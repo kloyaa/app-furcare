@@ -1,36 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/constants/padding_constant.dart';
 import 'package:flutter_application_1/core/enums/text_enum.dart';
-import 'package:flutter_application_1/presentation/providers/auth_provider.dart';
+import 'package:flutter_application_1/data/models/settings_item.model.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_appbar.dart';
-import 'package:flutter_application_1/presentation/widgets/common/custom_button.dart';
-import 'package:flutter_application_1/presentation/widgets/common/custom_confirm_dialog.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_header.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_text.dart';
-import 'package:flutter_application_1/presentation/widgets/common/default_snackbar.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 
-/// Model class representing a settings item with all necessary properties
-class SettingsItem {
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final VoidCallback? onTap;
-  final Color? iconColor;
-  final bool isEnabled;
-
-  const SettingsItem({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-    this.onTap,
-    this.iconColor,
-    this.isEnabled = true,
-  });
-}
-
-/// Enhanced Settings Tab Screen with animations, theme support, and error handling
 class PrivacyScreen extends StatefulWidget {
   const PrivacyScreen({super.key});
 
@@ -55,9 +31,19 @@ class _PrivacyScreenState extends State<PrivacyScreen>
   @override
   void initState() {
     super.initState();
+
     _initializeAnimations();
     _initializeSettingsItems();
     _startAnimations();
+  }
+
+  @override
+  void dispose() {
+    _isDisposed = true;
+    _animationController.dispose();
+    _headerAnimationController.dispose();
+
+    super.dispose();
   }
 
   /// Initialize animation controllers with proper durations
@@ -104,12 +90,8 @@ class _PrivacyScreenState extends State<PrivacyScreen>
     }
   }
 
-  @override
-  void dispose() {
-    _isDisposed = true;
-    _animationController.dispose();
-    _headerAnimationController.dispose();
-    super.dispose();
+  void _handleChangePassword() {
+    context.push('/settings/privacy/change-password');
   }
 
   @override
@@ -314,9 +296,5 @@ class _PrivacyScreenState extends State<PrivacyScreen>
         ),
       ),
     );
-  }
-
-  void _handleChangePassword() {
-    context.push('/settings/privacy/change-password');
   }
 }

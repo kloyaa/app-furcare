@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/enums/text_enum.dart';
+import 'package:flutter_application_1/core/helpers/theme.dart';
 
 // Bottom Navigation Item Model
 class BottomNavItem {
@@ -32,7 +33,7 @@ class CustomBottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final isDark = ThemeHelper.isDarkMode(context);
 
     return Container(
       decoration: BoxDecoration(

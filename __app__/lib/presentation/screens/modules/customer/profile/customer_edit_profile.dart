@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/constants/padding_constant.dart';
 import 'package:flutter_application_1/core/helpers/validate.dart';
 import 'package:flutter_application_1/data/models/client_models.dart';
-import 'package:flutter_application_1/presentation/providers/auth_provider.dart';
 import 'package:flutter_application_1/presentation/providers/client_provider.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_appbar.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_button.dart';
-import 'package:flutter_application_1/presentation/widgets/common/custom_confirm_dialog.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_fields.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_text.dart';
 import 'package:flutter_application_1/presentation/widgets/common/default_snackbar.dart';
@@ -25,7 +23,6 @@ class _CustomerUpdateProfileScreenState
     extends State<CustomerUpdateProfileScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  // Controllers
   final _fullNameController = TextEditingController();
   final _addressController = TextEditingController();
   final _facebookUrlController = TextEditingController();
@@ -39,6 +36,7 @@ class _CustomerUpdateProfileScreenState
     _facebookUrlController.dispose();
     _messengerUrlController.dispose();
     _phoneNumberController.dispose();
+
     super.dispose();
   }
 
@@ -70,7 +68,25 @@ class _CustomerUpdateProfileScreenState
     }
   }
 
-  @override
+  // Add this method to initialize controllers with existing data
+  void _initializeControllers(Client client) {
+    if (_fullNameController.text.isEmpty) {
+      _fullNameController.text = client.fullName ?? '';
+    }
+    if (_addressController.text.isEmpty) {
+      _addressController.text = client.address ?? '';
+    }
+    if (_phoneNumberController.text.isEmpty) {
+      _phoneNumberController.text = client.contact?.phoneNumber ?? '';
+    }
+    if (_facebookUrlController.text.isEmpty) {
+      _facebookUrlController.text = client.contact?.facebookUrl ?? '';
+    }
+    if (_messengerUrlController.text.isEmpty) {
+      _messengerUrlController.text = client.contact?.messengerUrl ?? '';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -203,24 +219,5 @@ class _CustomerUpdateProfileScreenState
         },
       ),
     );
-  }
-
-  // Add this method to initialize controllers with existing data
-  void _initializeControllers(Client client) {
-    if (_fullNameController.text.isEmpty) {
-      _fullNameController.text = client.fullName ?? '';
-    }
-    if (_addressController.text.isEmpty) {
-      _addressController.text = client.address ?? '';
-    }
-    if (_phoneNumberController.text.isEmpty) {
-      _phoneNumberController.text = client.contact?.phoneNumber ?? '';
-    }
-    if (_facebookUrlController.text.isEmpty) {
-      _facebookUrlController.text = client.contact?.facebookUrl ?? '';
-    }
-    if (_messengerUrlController.text.isEmpty) {
-      _messengerUrlController.text = client.contact?.messengerUrl ?? '';
-    }
   }
 }

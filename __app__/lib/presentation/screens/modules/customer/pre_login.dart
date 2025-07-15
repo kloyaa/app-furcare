@@ -24,14 +24,15 @@ class _CustomerPreLoginScreenState extends State<CustomerPreLoginScreen> {
 
   @override
   void initState() {
-    _passwordController.text = 'Password@123';
-
     super.initState();
+
+    _passwordController.text = 'Password@123';
   }
 
   @override
   void dispose() {
     _passwordController.dispose();
+
     super.dispose();
   }
 
