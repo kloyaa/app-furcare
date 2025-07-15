@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/config/dependency_injection.dart';
+import 'package:flutter_application_1/config/activity_dependency_injection.dart';
+import 'package:flutter_application_1/config/auth_dependency_injection.dart';
+import 'package:flutter_application_1/config/client_dependency_injection.dart';
+import 'package:flutter_application_1/config/core_dependency_injection.dart';
+import 'package:flutter_application_1/config/dependency_instance.dart';
 import 'package:flutter_application_1/presentation/providers/activity_provider.dart';
 import 'package:flutter_application_1/presentation/providers/auth_provider.dart';
 import 'package:flutter_application_1/presentation/providers/client_provider.dart';
@@ -9,7 +13,10 @@ import 'package:provider/provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await setupDependencyInjection(); // Add this line to initialize GetIt
+  await coreDependencyInjection();
+  await authDependencyInjection();
+  await clientDependencyInjection();
+  await activityDependencyInjection();
   runApp(const MainApp());
 }
 
