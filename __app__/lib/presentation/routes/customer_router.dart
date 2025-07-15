@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/presentation/screens/modules/customer/appointments.dart';
 import 'package:flutter_application_1/presentation/screens/modules/customer/home.dart';
 import 'package:flutter_application_1/presentation/screens/modules/customer/login.dart';
 import 'package:flutter_application_1/presentation/screens/modules/customer/pre_login.dart';
@@ -43,6 +44,12 @@ final GoRouter customerRouter = GoRouter(
           path: '/home',
           builder: (BuildContext context, GoRouterState state) {
             return const CustomerHomeScreen();
+          },
+        ),
+        GoRoute(
+          path: '/appointments',
+          builder: (BuildContext context, GoRouterState state) {
+            return const AppointmentsScreen();
           },
         ),
         GoRoute(

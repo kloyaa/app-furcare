@@ -123,6 +123,7 @@ class _CustomInputFieldState extends State<CustomInputField> {
                         )
                       : null),
             errorText: hasError ? widget.errorText : null,
+            errorMaxLines: 3, // Allow error text to wrap up to 3 lines
             filled: true,
             fillColor: hasError
                 ? theme.colorScheme.errorContainer.withOpacity(0.1)

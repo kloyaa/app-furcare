@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemeNotifier {
@@ -39,6 +40,7 @@ class ThemeNotifier {
   // Get current light theme
   static ThemeData get lightTheme {
     return ThemeData(
+      textTheme: GoogleFonts.latoTextTheme(),
       useMaterial3: true,
       brightness: Brightness.light,
       colorScheme: ColorScheme.fromSeed(
@@ -61,6 +63,7 @@ class ThemeNotifier {
         foregroundColor: Colors.white,
       ),
       progressIndicatorTheme: ProgressIndicatorThemeData(
+        strokeWidth: 2.0,
         color: selectedColor.value.lightColor,
       ),
       checkboxTheme: CheckboxThemeData(
@@ -79,6 +82,7 @@ class ThemeNotifier {
   // Get current dark theme
   static ThemeData get darkTheme {
     return ThemeData(
+      textTheme: GoogleFonts.latoTextTheme(),
       useMaterial3: true,
       brightness: Brightness.dark,
       colorScheme: ColorScheme.fromSeed(

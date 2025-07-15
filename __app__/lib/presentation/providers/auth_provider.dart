@@ -151,6 +151,7 @@ class AuthProvider extends ChangeNotifier {
     String email,
     String username,
   ) {
+    clearError(); // Clear previous error
     _user = User(
       email: email,
       username: username,

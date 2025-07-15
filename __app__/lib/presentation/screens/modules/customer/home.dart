@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/core/helpers/theme.dart';
 import 'package:flutter_application_1/presentation/providers/client_provider.dart';
-import 'package:flutter_application_1/presentation/screens/modules/customer/tabs/home.dart';
+import 'package:flutter_application_1/presentation/screens/modules/customer/tabs/appoimtents.dart';
 import 'package:flutter_application_1/presentation/screens/modules/customer/tabs/settings.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_bottomnav.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -29,10 +31,10 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
 
     _navItems = [
       BottomNavItem(
-        icon: Icons.home_outlined,
-        activeIcon: Icons.home,
-        label: 'Home',
-        screen: const HomeTabScreen(),
+        icon: Icons.calendar_month_outlined,
+        activeIcon: Icons.calendar_month,
+        label: 'Appointments',
+        screen: const AppointmentTabScreen(),
       ),
       BottomNavItem(
         icon: Icons.settings_outlined,
@@ -45,20 +47,27 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Consumer<ClientProvider>(
-        builder: (context, clientProvider, child) {
-          if (clientProvider.isLoading) {
-            return Center(child: CircularProgressIndicator());
-          }
+    return Consumer<ClientProvider>(
+      builder: (context, clientProvider, child) {
+        if (clientProvider.isLoading) {
+          return Scaffold(
+            body: Center(
+              child: SpinKitThreeBounce(
+                color: ThemeHelper.getOnBackgroundTextColor(context),
+                size: 24.0,
+              ),
+            ),
+          );
+        }
 
-          if (clientProvider.errorCode == "02") {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              context.push("/me/profile/create");
-            });
-          }
+        if (clientProvider.errorCode == "02") {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            context.push("/me/profile/create");
+          });
+        }
 
-          return IndexedStack(
+        return Scaffold(
+          body: IndexedStack(
             index: _currentIndex,
             children: _navItems
                 .map(
@@ -68,18 +77,18 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
                   ),
                 )
                 .toList(),
-          );
-        },
-      ),
-      bottomNavigationBar: CustomBottomNavBar(
-        items: _navItems,
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-      ),
+          ),
+          bottomNavigationBar: CustomBottomNavBar(
+            items: _navItems,
+            currentIndex: _currentIndex,
+            onTap: (index) {
+              setState(() {
+                _currentIndex = index;
+              });
+            },
+          ),
+        );
+      },
     );
   }
 }

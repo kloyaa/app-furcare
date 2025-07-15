@@ -24,7 +24,7 @@ class ThemeHelper {
 
   /// Gets the background color of the current theme
   static Color getBackgroundColor(BuildContext context) {
-    return Theme.of(context).colorScheme.background;
+    return Theme.of(context).colorScheme.surface;
   }
 
   /// Gets the surface color of the current theme
@@ -35,5 +35,25 @@ class ThemeHelper {
   /// Gets the text theme of the current theme
   static TextTheme getTextTheme(BuildContext context) {
     return Theme.of(context).textTheme;
+  }
+
+  /// Gets the primary text color (typically for body text)
+  static Color getPrimaryTextColor(BuildContext context) {
+    return Theme.of(context).colorScheme.onSurface;
+  }
+
+  /// Gets the secondary text color (typically for less prominent text)
+  static Color getSecondaryTextColor(BuildContext context) {
+    return Theme.of(context).colorScheme.onSurface.withOpacity(0.6);
+  }
+
+  /// Gets text color for content on background
+  static Color getOnBackgroundTextColor(BuildContext context) {
+    return Theme.of(context).colorScheme.onSurface;
+  }
+
+  /// Gets text color for content on primary color
+  static Color getOnPrimaryTextColor(BuildContext context) {
+    return Theme.of(context).colorScheme.onPrimary;
   }
 }

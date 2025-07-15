@@ -13,6 +13,7 @@ class CustomText extends StatelessWidget {
   final TextDecoration? decoration;
   final double? letterSpacing;
   final double? lineHeight;
+  final TextStyle? style;
 
   const CustomText(
     this.text, {
@@ -27,6 +28,7 @@ class CustomText extends StatelessWidget {
     this.decoration,
     this.letterSpacing,
     this.lineHeight,
+    this.style,
   });
 
   // Factory constructors for common text styles
@@ -38,6 +40,12 @@ class CustomText extends StatelessWidget {
     Color? color,
     double? opacity,
     TextAlign? textAlign,
+    int? maxLines,
+    TextOverflow? overflow,
+    TextDecoration? decoration,
+    double? letterSpacing,
+    double? lineHeight,
+    TextStyle? style,
   }) {
     return CustomText(
       text,
@@ -47,6 +55,12 @@ class CustomText extends StatelessWidget {
       color: color,
       opacity: opacity,
       textAlign: textAlign,
+      maxLines: maxLines,
+      overflow: overflow,
+      decoration: decoration,
+      letterSpacing: letterSpacing,
+      lineHeight: lineHeight,
+      style: style,
     );
   }
 
@@ -58,6 +72,12 @@ class CustomText extends StatelessWidget {
     Color? color,
     double? opacity = 0.6,
     TextAlign? textAlign,
+    int? maxLines,
+    TextOverflow? overflow,
+    TextDecoration? decoration,
+    double? letterSpacing,
+    double? lineHeight,
+    TextStyle? style,
   }) {
     return CustomText(
       text,
@@ -67,6 +87,12 @@ class CustomText extends StatelessWidget {
       color: color,
       opacity: opacity,
       textAlign: textAlign,
+      maxLines: maxLines,
+      overflow: overflow,
+      decoration: decoration,
+      letterSpacing: letterSpacing,
+      lineHeight: lineHeight,
+      style: style,
     );
   }
 
@@ -80,6 +106,10 @@ class CustomText extends StatelessWidget {
     TextAlign? textAlign,
     int? maxLines,
     TextOverflow? overflow,
+    TextDecoration? decoration,
+    double? letterSpacing,
+    double? lineHeight,
+    TextStyle? style,
   }) {
     return CustomText(
       text,
@@ -91,6 +121,10 @@ class CustomText extends StatelessWidget {
       textAlign: textAlign,
       maxLines: maxLines,
       overflow: overflow,
+      decoration: decoration,
+      letterSpacing: letterSpacing,
+      lineHeight: lineHeight,
+      style: style,
     );
   }
 
@@ -102,6 +136,12 @@ class CustomText extends StatelessWidget {
     Color? color,
     double? opacity = 0.7,
     TextAlign? textAlign,
+    int? maxLines,
+    TextOverflow? overflow,
+    TextDecoration? decoration,
+    double? letterSpacing,
+    double? lineHeight,
+    TextStyle? style,
   }) {
     return CustomText(
       text,
@@ -111,6 +151,12 @@ class CustomText extends StatelessWidget {
       color: color,
       opacity: opacity,
       textAlign: textAlign,
+      maxLines: maxLines,
+      overflow: overflow,
+      decoration: decoration,
+      letterSpacing: letterSpacing,
+      lineHeight: lineHeight,
+      style: style,
     );
   }
 
@@ -123,16 +169,22 @@ class CustomText extends StatelessWidget {
         ? textColor.withOpacity(opacity!)
         : textColor;
 
+    // Create base style from individual properties
+    final baseStyle = TextStyle(
+      fontSize: size.size,
+      fontWeight: fontWeight,
+      color: finalColor,
+      decoration: decoration,
+      letterSpacing: letterSpacing,
+      height: lineHeight,
+    );
+
+    // Merge with optional style parameter
+    final finalStyle = style != null ? baseStyle.merge(style) : baseStyle;
+
     return Text(
       text,
-      style: TextStyle(
-        fontSize: size.size,
-        fontWeight: fontWeight,
-        color: finalColor,
-        decoration: decoration,
-        letterSpacing: letterSpacing,
-        height: lineHeight,
-      ),
+      style: finalStyle,
       textAlign: textAlign,
       maxLines: maxLines,
       overflow: overflow,

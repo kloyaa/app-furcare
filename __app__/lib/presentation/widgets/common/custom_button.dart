@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/enums/text_enum.dart';
+import 'package:flutter_application_1/core/helpers/theme.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class CustomButton extends StatelessWidget {
   final String text;
@@ -88,18 +90,10 @@ class CustomButton extends StatelessWidget {
   }
 
   Widget _buildButtonContent(BuildContext context, Color textColor) {
-    final theme = Theme.of(context);
-
     if (isLoading) {
-      return SizedBox(
-        width: 20,
-        height: 20,
-        child: CircularProgressIndicator(
-          strokeWidth: 2,
-          color: isOutlined
-              ? theme.colorScheme.primary
-              : theme.colorScheme.onPrimary,
-        ),
+      return SpinKitThreeBounce(
+        color: ThemeHelper.getOnBackgroundTextColor(context),
+        size: 12.0,
       );
     }
 

@@ -8,6 +8,7 @@ import 'package:flutter_application_1/presentation/widgets/common/custom_appbar.
 import 'package:flutter_application_1/presentation/widgets/common/custom_button.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_confirm_dialog.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_fields.dart';
+import 'package:flutter_application_1/presentation/widgets/common/custom_text.dart';
 import 'package:flutter_application_1/presentation/widgets/common/default_snackbar.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -112,12 +113,12 @@ class _CustomerProfileCreationScreenState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Header section
-                  const Text(
+                  CustomText.title(
                     'Personal Information',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
-                  Text(
+                  CustomText.body(
                     'Please fill in your details to create your profile',
                     style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                   ),
@@ -147,12 +148,12 @@ class _CustomerProfileCreationScreenState
                   const SizedBox(height: 30),
 
                   // Contact Information Section
-                  const Text(
+                  CustomText.title(
                     'Contact Information',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
-                  Text(
+                  CustomText.body(
                     'Phone number is required. Social media links are optional.',
                     style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                   ),

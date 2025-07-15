@@ -117,14 +117,14 @@ class _CustomerUpdateProfileScreenState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Header section
-                  const Text(
+                  CustomText.title(
                     'Edit Profile',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
-                  Text(
+                  CustomText.body(
                     'Update your profile information',
-                    style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                   ),
                   const SizedBox(height: 30),
 
@@ -152,12 +152,12 @@ class _CustomerUpdateProfileScreenState
                   const SizedBox(height: 30),
 
                   // Contact Information Section
-                  const Text(
+                  CustomText.title(
                     'Contact Information',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
-                  Text(
+                  CustomText.body(
                     'Phone number is required. Social media links are optional.',
                     style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                   ),

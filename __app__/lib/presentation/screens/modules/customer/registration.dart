@@ -99,7 +99,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             });
           }
 
-          if (hasError && errorCode != "0052") {
+          if (hasError) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               showCustomSnackBar(
                 context,

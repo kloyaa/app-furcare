@@ -323,12 +323,12 @@ class _ThemeToggleScreenState extends State<ThemeToggleScreen>
                                                   BoxShadow(
                                                     color: isDarkMode
                                                         ? Colors.amber
-                                                              .withOpacity(0.3)
+                                                              .withOpacity(0.5)
                                                         : _currentThemeColor
                                                               .lightColor
-                                                              .withOpacity(0.3),
-                                                    blurRadius: 20,
-                                                    spreadRadius: 5,
+                                                              .withOpacity(0.5),
+                                                    blurRadius: 50,
+                                                    spreadRadius: 10,
                                                   ),
                                                 ],
                                               ),
@@ -387,9 +387,10 @@ class _ThemeToggleScreenState extends State<ThemeToggleScreen>
                                               'Tap to switch between\nlight and dark themes',
                                               textAlign: TextAlign.center,
                                               size: AppTextSize.sm,
-                                              color: isDark
-                                                  ? Colors.grey.shade300
-                                                  : Colors.grey.shade800,
+                                              color:
+                                                  ThemeHelper.getPrimaryTextColor(
+                                                    context,
+                                                  ),
                                             ),
                                           ),
 
