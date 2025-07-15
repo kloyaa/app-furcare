@@ -26,8 +26,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
-  bool _isLoading = false;
-
   @override
   void initState() {
     super.initState();
@@ -50,10 +48,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   void _handleRegistration(AuthProvider authProvider) async {
     if (_formKey.currentState!.validate()) {
-      setState(() {
-        _isLoading = true;
-      });
-
       await authProvider.register(
         username: _usernameController.text.trim(),
         password: _passwordController.text,
@@ -71,10 +65,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       if (kDebugMode) {
         print('Registration Data: $registrationData');
       }
-
-      setState(() {
-        _isLoading = false;
-      });
     }
   }
 
@@ -89,6 +79,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           final hasError = authProvider.errorMessage != null;
           final errorCode = authProvider.errorCode;
 
+          print('hasError: $hasError');
+          print('errorCode: $errorCode');
+          print('errorMessage: ${authProvider.errorMessage}');
+
+          // Handle specific error codes
           if (errorCode == "0052") {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               authProvider.clearError();
@@ -112,7 +107,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           // Navigate to home if authenticated
           if (authProvider.isAuthenticated) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              context.go("/me/profile");
+              context.go("/me/profile/create");
             });
           }
           return SafeArea(
@@ -184,14 +179,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
                     // Registration Button
                     CustomButton(
-                      text: _isLoading
+                      text: authProvider.isLoading
                           ? 'Creating Account...'
                           : 'Create Account',
-                      onPressed: _isLoading
-                          ? null
-                          : () => _handleRegistration(authProvider),
-                      icon: _isLoading ? null : Icons.person_add_outlined,
-                      isLoading: _isLoading,
+                      onPressed: () => _handleRegistration(authProvider),
+                      isEnabled: !authProvider.isLoading,
+                      icon: Icons.person_add_outlined,
+                      isLoading: authProvider.isLoading,
                     ),
                     const SizedBox(height: 16),
 

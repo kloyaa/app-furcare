@@ -55,13 +55,7 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
             return _buildSkeletonLoader(context);
           }
 
-          final Client? client = clientProvider.client;
-
-          if (client == null) {
-            return Center(child: CustomText.body('No profile data available'));
-          }
-
-          // Ensure client is not null before accessing
+          final Client client = clientProvider.client;
 
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
@@ -82,13 +76,13 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                         radius: 40,
                         backgroundColor: colorScheme.primary,
                         child: CustomText.title(
-                          getInitials(client.fullName ?? 'Unknown'),
+                          getInitials(clientProvider.client.fullName),
                           size: AppTextSize.lg,
                           color: colorScheme.onPrimaryContainer,
                         ),
                       ),
                       const SizedBox(height: 16),
-                      CustomText.subtitle(client.fullName!),
+                      CustomText.subtitle(client.fullName),
                       const SizedBox(height: 8),
                       Container(
                         padding: const EdgeInsets.symmetric(
@@ -101,9 +95,7 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: CustomText.caption(
-                          client.isActive != null && client.isActive!
-                              ? 'Active'
-                              : 'Inactive',
+                          client.isActive == true ? 'Active' : 'Inactive',
                           color: Colors.green,
                           fontWeight: FontWeight.bold,
                         ),
@@ -122,21 +114,21 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                   [
                     _buildInfoRow(
                       'Phone',
-                      client.contact!.phoneNumber ?? "Not provided",
+                      client.contact.phoneNumber,
                       Icons.phone,
                     ),
                     _buildInfoRow(
                       'Facebook',
-                      client.contact?.facebookUrl?.isEmpty == true
+                      client.contact.facebookUrl?.isEmpty == true
                           ? "Not provided"
-                          : client.contact?.facebookUrl ?? "Not provided",
+                          : client.contact.facebookUrl ?? "Not provided",
                       Icons.facebook,
                     ),
                     _buildInfoRow(
                       'Messenger',
-                      client.contact?.messengerUrl?.isEmpty == true
+                      client.contact.messengerUrl?.isEmpty == true
                           ? "Not provided"
-                          : client.contact?.messengerUrl ?? "Not provided",
+                          : client.contact.messengerUrl ?? "Not provided",
                       Icons.message,
                     ),
                   ],
@@ -145,11 +137,7 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                 const SizedBox(height: 16),
 
                 _buildInfoCard(context, 'Personal Details', Icons.person, [
-                  _buildInfoRow(
-                    'Address',
-                    client.address ?? "Not provided",
-                    Icons.location_on,
-                  ),
+                  _buildInfoRow('Address', client.address, Icons.location_on),
                   _buildInfoRow(
                     'Member Since',
                     formatDateToLong(DateTime.parse(client.createdAt!)),
@@ -162,14 +150,14 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                 _buildInfoCard(context, 'Account Activity', Icons.history, [
                   _buildInfoRow(
                     'Last Login',
-                    client.others!.lastLogin!,
+                    client.others.lastLogin,
                     Icons.login,
                   ),
                   _buildInfoRow(
                     'Last Password Change',
-                    isValidDate(client.others!.lastChangePassword!)
+                    isValidDate(client.others.lastChangePassword)
                         ? formatDateToLong(
-                            DateTime.parse(client.others!.lastChangePassword!),
+                            DateTime.parse(client.others.lastChangePassword),
                           )
                         : "N/A",
                     Icons.lock,

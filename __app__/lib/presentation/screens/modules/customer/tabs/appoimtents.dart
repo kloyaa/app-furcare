@@ -1,49 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/constants/padding_constant.dart';
 import 'package:flutter_application_1/core/enums/text_enum.dart';
+import 'package:flutter_application_1/core/helpers/content.dart';
 import 'package:flutter_application_1/core/helpers/formatters.dart';
+import 'package:flutter_application_1/data/models/pet_service.models.dart';
+import 'package:flutter_application_1/presentation/providers/pet_service_provider.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_text.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
-class AppointmentTabScreen extends StatelessWidget {
+class AppointmentTabScreen extends StatefulWidget {
   const AppointmentTabScreen({super.key});
 
-  // Mock data representing the API response
-  final List<Map<String, dynamic>> petServices = const [
-    {
-      "key": "PET_GROOMING",
-      "name": "Grooming",
-      "description":
-          "Professional grooming services for your pets including bathing, haircut, and nail trimming.",
-      "available": true,
-      "imageUrl": "https://example.com/images/pet-grooming.jpg",
-    },
-    {
-      "key": "PET_BOARDING",
-      "name": "Boarding",
-      "description":
-          "Safe and comfortable boarding facilities for your pets while you are away.",
-      "available": true,
-      "imageUrl": "https://example.com/images/pet-boarding.jpg",
-    },
-    {
-      "key": "HOME_SERVICE",
-      "name": "Home Service",
-      "description":
-          "Pet care services delivered right at your doorstep for convenience.",
-      "available": true,
-      "imageUrl": "https://example.com/images/home-service.jpg",
-    },
-    {
-      "key": "PET_TRAINING",
-      "name": "Training",
-      "description":
-          "Basic obedience and advanced training programs for dogs and cats.",
-      "available": true,
-      "imageUrl": "https://example.com/images/pet-training.jpg",
-    },
-  ];
+  @override
+  State<AppointmentTabScreen> createState() => _AppointmentTabScreenState();
+}
+
+class _AppointmentTabScreenState extends State<AppointmentTabScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _glowController;
+  late Animation<double> _glowAnimation;
+  late String _currentFunFact; // Store the fun fact so it doesn't change
 
   // Mock booking counts for each service
   final Map<String, int> bookingCounts = const {
@@ -51,7 +29,7 @@ class AppointmentTabScreen extends StatelessWidget {
     "PET_BOARDING": 1,
     "HOME_SERVICE": 2,
     "BRANCH_LOCATION": 0,
-    "PET_TRAINING": 1,
+    "PET_TRAINING": 0,
   };
 
   // Mock recent bookings data
@@ -129,6 +107,36 @@ class AppointmentTabScreen extends StatelessWidget {
   ];
 
   @override
+  void initState() {
+    super.initState();
+
+    // Get the fun fact ONCE and store it
+    _currentFunFact = PetMessages.getRandomFunFact();
+
+    // Initialize the glow animation controller
+    _glowController = AnimationController(
+      duration: const Duration(milliseconds: 1500),
+      vsync: this,
+    );
+
+    // Create a smooth in-out animation
+    _glowAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _glowController, curve: Curves.easeInOut),
+    );
+
+    // Start the repeating animation
+    _glowController.repeat(reverse: true);
+
+    context.read<PetServiceProvider>().getPetServices();
+  }
+
+  @override
+  void dispose() {
+    _glowController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
@@ -137,7 +145,6 @@ class AppointmentTabScreen extends StatelessWidget {
       backgroundColor: colorScheme.surface,
       body: Container(
         padding: kDefaultBodyPadding,
-
         child: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
@@ -225,7 +232,7 @@ class AppointmentTabScreen extends StatelessWidget {
                                       size: AppTextSize.lg,
                                     ),
                                     CustomText.body(
-                                      'Your furry friends deserve the best',
+                                      PetMessages.getRandomPetMessage(),
                                       size: AppTextSize.xs,
                                       fontWeight: AppFontWeight.normal.value,
                                     ),
@@ -244,132 +251,167 @@ class AppointmentTabScreen extends StatelessWidget {
                               ),
                               const SizedBox(width: 8),
                               CustomText.body(
-                                'Active Bookings',
+                                'My Appointments',
                                 size: AppTextSize.sm,
                                 fontWeight: AppFontWeight.bold.value,
                               ),
                             ],
                           ),
-                          GridView.count(
-                            crossAxisCount: 2,
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            crossAxisSpacing: 12,
-                            mainAxisSpacing: 12,
-                            childAspectRatio: 2.0,
-                            children: petServices
-                                .where(
-                                  (service) =>
-                                      service['key'] != 'BRANCH_LOCATION',
-                                )
-                                .map((service) {
-                                  final count =
-                                      bookingCounts[service['key']] ?? 0;
-                                  return Container(
-                                    decoration: BoxDecoration(
-                                      color: count > 0
-                                          ? colorScheme.primaryContainer
-                                                .withOpacity(0.8)
-                                          : colorScheme.surfaceContainerLow,
-                                      borderRadius: BorderRadius.circular(16),
-                                      border: Border.all(
-                                        color: count > 0
-                                            ? colorScheme.primary.withOpacity(
-                                                0.4,
-                                              )
-                                            : colorScheme.outline.withOpacity(
-                                                0.2,
-                                              ),
-                                        width: 1.5,
-                                      ),
-                                      boxShadow: count > 0
-                                          ? [
-                                              BoxShadow(
-                                                color: colorScheme.primary
-                                                    .withOpacity(0.2),
-                                                spreadRadius: 1,
-                                                blurRadius: 4,
-                                                offset: const Offset(0, 2),
-                                              ),
-                                            ]
-                                          : null,
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(10),
-                                      child: Row(
-                                        children: [
-                                          Container(
-                                            padding: const EdgeInsets.all(8),
-                                            decoration: BoxDecoration(
+                          Consumer<PetServiceProvider>(
+                            builder: (context, petServiceProvider, child) {
+                              if (petServiceProvider.isLoading) {
+                                print("RENDERED THE LOADING");
+                                return ServicesGridSkeleton();
+                              }
+
+                              List<PetService> petServices =
+                                  petServiceProvider.petServices;
+
+                              print("RENDERED THE CONTENT FIRST");
+
+                              return GridView.count(
+                                crossAxisCount: 2,
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                crossAxisSpacing: 12,
+                                mainAxisSpacing: 12,
+                                childAspectRatio: 2.0,
+                                children: petServices
+                                    .where(
+                                      (service) =>
+                                          service.code != 'BRANCH_LOCATION',
+                                    )
+                                    .map((service) {
+                                      final count =
+                                          bookingCounts[service.code] ?? 0;
+                                      return Opacity(
+                                        opacity: service.available ? 1.0 : 0.3,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: count > 0
+                                                ? colorScheme.primaryContainer
+                                                      .withOpacity(0.8)
+                                                : colorScheme
+                                                      .surfaceContainerLow,
+                                            borderRadius: BorderRadius.circular(
+                                              16,
+                                            ),
+                                            border: Border.all(
                                               color: count > 0
                                                   ? colorScheme.primary
-                                                        .withOpacity(0.2)
-                                                  : colorScheme
-                                                        .surfaceContainerHigh,
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
+                                                        .withOpacity(0.4)
+                                                  : colorScheme.outline
+                                                        .withOpacity(0.2),
+                                              width: 1.5,
                                             ),
-                                            child: Icon(
-                                              _getServiceIcon(service['key']),
-                                              size: 16,
-                                              color: count > 0
-                                                  ? colorScheme.primary
-                                                  : colorScheme
-                                                        .onSurfaceVariant,
-                                            ),
+                                            boxShadow: count > 0
+                                                ? [
+                                                    BoxShadow(
+                                                      color: colorScheme.primary
+                                                          .withOpacity(0.2),
+                                                      spreadRadius: 1,
+                                                      blurRadius: 4,
+                                                      offset: const Offset(
+                                                        0,
+                                                        2,
+                                                      ),
+                                                    ),
+                                                  ]
+                                                : null,
                                           ),
-                                          const SizedBox(width: 8),
-                                          Expanded(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(10),
+                                            child: Row(
                                               children: [
-                                                CustomText.body(
-                                                  service['name'],
-                                                  size: AppTextSize.xs,
-                                                  fontWeight:
-                                                      AppFontWeight.bold.value,
-                                                  maxLines: 2,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
+                                                Container(
+                                                  padding: const EdgeInsets.all(
+                                                    8,
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    color: count > 0
+                                                        ? colorScheme.primary
+                                                              .withOpacity(0.2)
+                                                        : colorScheme
+                                                              .surfaceContainerHigh,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          8,
+                                                        ),
+                                                  ),
+                                                  child: Icon(
+                                                    _getServiceIcon(
+                                                      service.code,
+                                                    ),
+                                                    size: 16,
+                                                    color: count > 0
+                                                        ? colorScheme.primary
+                                                        : colorScheme
+                                                              .onSurfaceVariant,
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 8),
+                                                Expanded(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      CustomText.body(
+                                                        service.name,
+                                                        size: AppTextSize.xs,
+                                                        fontWeight:
+                                                            AppFontWeight
+                                                                .bold
+                                                                .value,
+                                                        maxLines: 2,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      ),
+                                                      if (count > 0)
+                                                        CustomText.body(
+                                                          '$count Active',
+                                                          size: AppTextSize.xss,
+                                                        ),
+                                                    ],
+                                                  ),
                                                 ),
                                                 if (count > 0)
-                                                  CustomText.body(
-                                                    '$count Active',
-                                                    size: AppTextSize.xss,
+                                                  Container(
+                                                    padding:
+                                                        const EdgeInsets.symmetric(
+                                                          horizontal: 6,
+                                                          vertical: 2,
+                                                        ),
+                                                    decoration: BoxDecoration(
+                                                      color: colorScheme.error,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            8,
+                                                          ),
+                                                    ),
+                                                    child: Text(
+                                                      count.toString(),
+                                                      style: TextStyle(
+                                                        fontSize: 10,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color:
+                                                            colorScheme.onError,
+                                                      ),
+                                                    ),
                                                   ),
                                               ],
                                             ),
                                           ),
-                                          if (count > 0)
-                                            Container(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                    horizontal: 6,
-                                                    vertical: 2,
-                                                  ),
-                                              decoration: BoxDecoration(
-                                                color: colorScheme.error,
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                              ),
-                                              child: Text(
-                                                count.toString(),
-                                                style: TextStyle(
-                                                  fontSize: 10,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: colorScheme.onError,
-                                                ),
-                                              ),
-                                            ),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                })
-                                .toList(),
+                                        ),
+                                      );
+                                    })
+                                    .toList(),
+                              );
+                            },
                           ),
                         ],
                       ),
@@ -379,139 +421,86 @@ class AppointmentTabScreen extends StatelessWidget {
               ),
             ),
             SliverToBoxAdapter(child: SizedBox(height: 24)),
-
-            // Services List with enhanced design
             SliverToBoxAdapter(
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: colorScheme.outline.withOpacity(0.15),
-                    width: 1,
-                  ),
-                ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(20),
-                    onTap: () {},
-                    child: Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Row(
-                        children: [
-                          // Enhanced Service Icon
-                          Container(
-                            width: 70,
-                            height: 70,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  colorScheme.primaryContainer,
-                                  colorScheme.primaryContainer.withOpacity(0.7),
-                                ],
-                              ),
-                              borderRadius: BorderRadius.circular(18),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: colorScheme.primary.withOpacity(0.2),
-                                  spreadRadius: 1,
-                                  blurRadius: 6,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ],
-                            ),
-                            child: Icon(
-                              _getServiceIcon('BRANCH_LOCATION'),
-                              size: 36,
-                              color: colorScheme.primary,
-                            ),
-                          ),
-                          const SizedBox(width: 20),
-                          // Enhanced Service Info
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Branch Location",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: colorScheme.onSurface,
-                                    letterSpacing: 0.5,
-                                  ),
-                                ),
-                                const SizedBox(height: 12),
-                                Text(
-                                  "Visit our physical branches to avail our wide range of pet services.",
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: colorScheme.onSurfaceVariant,
-                                    height: 1.5,
-                                  ),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                const SizedBox(height: 12),
-                                Row(
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 8,
-                                        vertical: 4,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: colorScheme.primary.withOpacity(
-                                          0.1,
-                                        ),
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Icon(
-                                            Icons.check_circle,
-                                            size: 14,
-                                            color: colorScheme.primary,
-                                          ),
-                                          const SizedBox(width: 4),
-                                          Text(
-                                            "Open Now",
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w600,
-                                              color: colorScheme.primary,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    const Spacer(),
-                                    Container(
-                                      padding: const EdgeInsets.all(8),
-                                      decoration: BoxDecoration(
-                                        color: colorScheme.primaryContainer
-                                            .withOpacity(0.3),
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      child: Icon(
-                                        Icons.arrow_forward_ios,
-                                        size: 14,
-                                        color: colorScheme.primary,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+              child: AnimatedBuilder(
+                animation: _glowController,
+                builder: (context, child) {
+                  return Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.surface,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.outline.withOpacity(0.2),
+                        width: 1,
                       ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.shadow.withOpacity(0.1),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                        // Glowing shadow that pulses
+                        BoxShadow(
+                          color: Theme.of(context).colorScheme.primary
+                              .withOpacity(0.3 * _glowAnimation.value),
+                          blurRadius: 15 * _glowAnimation.value,
+                          spreadRadius: 2 * _glowAnimation.value,
+                          offset: const Offset(0, 0),
+                        ),
+                      ],
                     ),
-                  ),
-                ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.primaryContainer,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Icon(
+                            Icons.lightbulb_outline,
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onPrimaryContainer,
+                            size: 24,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CustomText.body(
+                                'Fun Fact',
+                                style: Theme.of(context).textTheme.titleSmall
+                                    ?.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.primary,
+                                    ),
+                              ),
+                              const SizedBox(height: 4),
+                              CustomText.body(
+                                _currentFunFact,
+                                size: AppTextSize.xs,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
             ),
             SliverToBoxAdapter(child: SizedBox(height: 24)),
@@ -687,5 +676,178 @@ class AppointmentTabScreen extends StatelessWidget {
       default:
         return colorScheme.onSurfaceVariant;
     }
+  }
+}
+
+// Shimmer effect widget
+class ShimmerEffect extends StatefulWidget {
+  final Widget child;
+  final Color? baseColor;
+  final Color? highlightColor;
+
+  const ShimmerEffect({
+    super.key,
+    required this.child,
+    this.baseColor,
+    this.highlightColor,
+  });
+
+  @override
+  State<ShimmerEffect> createState() => _ShimmerEffectState();
+}
+
+class _ShimmerEffectState extends State<ShimmerEffect>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 1500),
+      vsync: this,
+    );
+    _animation = Tween<double>(
+      begin: -1.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+    _controller.repeat();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final baseColor =
+        widget.baseColor ??
+        theme.colorScheme.surfaceContainerHigh.withOpacity(0.3);
+    final highlightColor =
+        widget.highlightColor ?? theme.colorScheme.surface.withOpacity(0.8);
+
+    return AnimatedBuilder(
+      animation: _animation,
+      builder: (context, child) {
+        return ShaderMask(
+          shaderCallback: (bounds) {
+            return LinearGradient(
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: [baseColor, highlightColor, baseColor],
+              stops: [0.0, 0.5, 1.0],
+              transform: GradientRotation(_animation.value * 0.5),
+            ).createShader(bounds);
+          },
+          child: widget.child,
+        );
+      },
+    );
+  }
+}
+
+// Individual skeleton item for the grid
+class ServiceSkeletonItem extends StatelessWidget {
+  const ServiceSkeletonItem({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: colorScheme.outline.withOpacity(0.2),
+          width: 1.5,
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Row(
+          children: [
+            // Icon skeleton
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: colorScheme.surfaceContainerHigh,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: ShimmerEffect(
+                child: Container(
+                  width: 16,
+                  height: 16,
+                  decoration: BoxDecoration(
+                    color: colorScheme.surfaceContainerHigh,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+            // Text skeleton
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Service name skeleton
+                  ShimmerEffect(
+                    child: Container(
+                      height: 12,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: colorScheme.surfaceContainerHigh,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  // Secondary text skeleton
+                  ShimmerEffect(
+                    child: Container(
+                      height: 8,
+                      width: 60,
+                      decoration: BoxDecoration(
+                        color: colorScheme.surfaceContainerHigh,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// Grid skeleton for the services
+class ServicesGridSkeleton extends StatelessWidget {
+  final int itemCount;
+
+  const ServicesGridSkeleton({super.key, this.itemCount = 4});
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.count(
+      crossAxisCount: 2,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      crossAxisSpacing: 12,
+      mainAxisSpacing: 12,
+      childAspectRatio: 2.0,
+      children: List.generate(
+        itemCount,
+        (index) => const ServiceSkeletonItem(),
+      ),
+    );
   }
 }

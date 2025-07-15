@@ -6,13 +6,24 @@ import 'package:flutter_application_1/data/repositories/client_repository.dart';
 class ClientProvider with ChangeNotifier {
   final ClientRepository _clientRepository;
 
-  Client? _client;
+  Client _client = Client(
+    fullName: 'John Doe',
+    contact: Contact(facebookUrl: '', messengerUrl: '', phoneNumber: ''),
+    address: '123 Main St',
+    isActive: true,
+    others: Others(lastLogin: '', lastChangePassword: ''),
+    createdAt: '',
+    updatedAt: '',
+    v: 0,
+    user: '',
+  );
+
   bool _isLoading = false;
   String? _errorMessage;
   String? _errorCode;
 
   bool get isLoading => _isLoading;
-  Client? get client => _client;
+  Client get client => _client;
   String? get error => _errorMessage;
   String? get errorCode => _errorCode;
 
@@ -29,7 +40,9 @@ class ClientProvider with ChangeNotifier {
         _handleFailure(failure);
       },
       (client) {
-        _client = client;
+        if (client != null) {
+          _client = client;
+        }
         _setLoading(false);
         notifyListeners();
       },

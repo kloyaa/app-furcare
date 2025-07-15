@@ -22,15 +22,19 @@ class ClientRequest extends Equatable {
 class Contact extends Equatable {
   final String? facebookUrl;
   final String? messengerUrl;
-  final String? phoneNumber;
+  final String phoneNumber;
 
-  const Contact({this.facebookUrl, this.messengerUrl, this.phoneNumber});
+  const Contact({
+    this.facebookUrl,
+    this.messengerUrl,
+    required this.phoneNumber,
+  });
 
   factory Contact.fromJson(Map<String, dynamic> json) {
     return Contact(
       facebookUrl: json['facebookUrl'] as String?,
       messengerUrl: json['messengerUrl'] as String?,
-      phoneNumber: json['phoneNumber'] as String?,
+      phoneNumber: json['phoneNumber'] as String? ?? '',
     );
   }
 
@@ -59,15 +63,15 @@ class Contact extends Equatable {
 }
 
 class Others extends Equatable {
-  final String? lastLogin;
-  final String? lastChangePassword;
+  final String lastLogin;
+  final String lastChangePassword;
 
-  const Others({this.lastLogin, this.lastChangePassword});
+  const Others({required this.lastLogin, required this.lastChangePassword});
 
   factory Others.fromJson(Map<String, dynamic> json) {
     return Others(
-      lastLogin: json['lastLogin'] as String?,
-      lastChangePassword: json['lastChangePassword'] as String?,
+      lastLogin: json['lastLogin'] as String? ?? '',
+      lastChangePassword: json['lastChangePassword'] as String? ?? '',
     );
   }
 
@@ -87,52 +91,48 @@ class Others extends Equatable {
 }
 
 class Client extends Equatable {
-  final Contact? contact;
+  final Contact contact;
   final String? id;
-  final String? user;
-  final String? fullName;
-  final String? address;
-  final bool? isActive;
+  final String user;
+  final String fullName;
+  final String address;
+  final bool isActive;
   final String? createdAt;
   final String? updatedAt;
   final int? v;
-  final Others? others;
+  final Others others;
 
   const Client({
-    this.contact,
+    required this.contact,
     this.id,
-    this.user,
-    this.fullName,
-    this.address,
-    this.isActive,
+    required this.user,
+    required this.fullName,
+    required this.address,
+    required this.isActive,
     this.createdAt,
     this.updatedAt,
     this.v,
-    this.others,
+    required this.others,
   });
 
   factory Client.fromJson(Map<String, dynamic> json) {
     return Client(
-      contact: json['contact'] != null
-          ? Contact.fromJson(json['contact'] as Map<String, dynamic>)
-          : null,
+      contact: Contact.fromJson(json['contact'] as Map<String, dynamic>),
       id: json['_id'] as String?,
-      user: json['user'] as String?,
-      fullName: json['fullName'] as String?,
-      address: json['address'] as String?,
-      isActive: json['isActive'] as bool?,
+      user: json['user'] as String? ?? '',
+      fullName: json['fullName'] as String? ?? '',
+      address: json['address'] as String? ?? '',
+      isActive: json['isActive'] as bool? ?? false,
       createdAt: json['createdAt'] as String?,
       updatedAt: json['updatedAt'] as String?,
       v: json['__v'] as int?,
-      others: json['others'] != null
-          ? Others.fromJson(json['others'] as Map<String, dynamic>)
-          : null,
+      others: Others.fromJson(json['others'] as Map<String, dynamic>),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'contact': contact?.toJson(),
+      'contact': contact.toJson(),
       '_id': id,
       'user': user,
       'fullName': fullName,
@@ -141,7 +141,7 @@ class Client extends Equatable {
       'createdAt': createdAt,
       'updatedAt': updatedAt,
       '__v': v,
-      'others': others?.toJson(),
+      'others': others.toJson(),
     };
   }
 

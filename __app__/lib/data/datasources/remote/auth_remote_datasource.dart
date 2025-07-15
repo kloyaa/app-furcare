@@ -56,7 +56,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         options: Options(headers: ApiConstants.registerHeaders),
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         return AuthResponse.fromJson(response.data);
       } else {
         throw ServerException(

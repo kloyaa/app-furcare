@@ -141,7 +141,8 @@ class AuthProvider extends ChangeNotifier {
   void _handleLoginSuccess(AuthResponse response, String username) {
     _user = User(username: username, accessToken: response.accessToken);
     _accessToken = response.accessToken;
-    _errorMessage = null;
+
+    clearError(); // Clear previous error
     _setState(AuthState.authenticated);
   }
 
@@ -169,8 +170,7 @@ class AuthProvider extends ChangeNotifier {
 
   // Handle failure
   void _handleFailure(Failure failure) {
-    _errorMessage = failure.message;
-    _errorCode = failure.code;
+    clearError(); // Clear previous error
     _setState(AuthState.error);
   }
 

@@ -77,7 +77,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: theme.colorScheme.background,
+      backgroundColor: theme.colorScheme.surface,
       appBar: CustomAppBar(
         backgroundColor: colorScheme.surface,
         foregroundColor: colorScheme.primary,

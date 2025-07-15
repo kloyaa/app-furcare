@@ -71,19 +71,19 @@ class _CustomerUpdateProfileScreenState
   // Add this method to initialize controllers with existing data
   void _initializeControllers(Client client) {
     if (_fullNameController.text.isEmpty) {
-      _fullNameController.text = client.fullName ?? '';
+      _fullNameController.text = client.fullName;
     }
     if (_addressController.text.isEmpty) {
-      _addressController.text = client.address ?? '';
+      _addressController.text = client.address;
     }
     if (_phoneNumberController.text.isEmpty) {
-      _phoneNumberController.text = client.contact?.phoneNumber ?? '';
+      _phoneNumberController.text = client.contact.phoneNumber;
     }
     if (_facebookUrlController.text.isEmpty) {
-      _facebookUrlController.text = client.contact?.facebookUrl ?? '';
+      _facebookUrlController.text = client.contact.facebookUrl ?? '';
     }
     if (_messengerUrlController.text.isEmpty) {
-      _messengerUrlController.text = client.contact?.messengerUrl ?? '';
+      _messengerUrlController.text = client.contact.messengerUrl ?? '';
     }
   }
 
@@ -93,10 +93,7 @@ class _CustomerUpdateProfileScreenState
       appBar: CustomAppBar(leading: SizedBox()),
       body: Consumer<ClientProvider>(
         builder: (context, clientProvider, child) {
-          final Client? client = clientProvider.client;
-          if (client == null) {
-            return Center(child: CustomText.body('No profile data available'));
-          }
+          final Client client = clientProvider.client;
 
           _initializeControllers(client);
 

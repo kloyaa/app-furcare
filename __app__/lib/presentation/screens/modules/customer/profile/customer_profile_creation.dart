@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/constants/padding_constant.dart';
+import 'package:flutter_application_1/core/helpers/theme.dart';
 import 'package:flutter_application_1/core/helpers/validate.dart';
 import 'package:flutter_application_1/data/models/client_models.dart';
 import 'package:flutter_application_1/presentation/providers/auth_provider.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_application_1/presentation/widgets/common/custom_confirm
 import 'package:flutter_application_1/presentation/widgets/common/custom_fields.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_text.dart';
 import 'package:flutter_application_1/presentation/widgets/common/default_snackbar.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -31,6 +33,9 @@ class _CustomerProfileCreationScreenState
   final _facebookUrlController = TextEditingController();
   final _messengerUrlController = TextEditingController();
   final _phoneNumberController = TextEditingController();
+
+  // Loading state for auto-fill
+  bool _isAutoFillLoading = false;
 
   @override
   void dispose() {
@@ -67,6 +72,39 @@ class _CustomerProfileCreationScreenState
       if (mounted) {
         context.go("/home");
       }
+    }
+  }
+
+  void _handleAutoFillLocation() async {
+    setState(() {
+      _isAutoFillLoading = true;
+    });
+
+    // Simulate loading delay for better UX
+    await Future.delayed(const Duration(milliseconds: 2500));
+
+    if (mounted) {
+      _addressController.text =
+          "Cagayan de Oro City, 9000, Misamis Oriental, Philippines";
+
+      setState(() {
+        _isAutoFillLoading = false;
+      });
+
+      // Show success feedback
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.check_circle, color: Colors.white, size: 20),
+              const SizedBox(width: 8),
+              Text('Location auto-filled successfully'),
+            ],
+          ),
+          backgroundColor: Colors.green,
+          duration: const Duration(seconds: 2),
+        ),
+      );
     }
   }
 
@@ -144,6 +182,52 @@ class _CustomerProfileCreationScreenState
                     keyboardType: TextInputType.streetAddress,
                     validator: validateAddress,
                     maxLines: 3,
+                  ),
+                  const SizedBox(height: 12),
+
+                  // Auto-fill Location Button
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      onPressed: _isAutoFillLoading
+                          ? null
+                          : _handleAutoFillLocation,
+                      icon: _isAutoFillLoading
+                          ? SizedBox(
+                              width: 26,
+                              height: 16,
+                              child: SpinKitThreeBounce(
+                                color: ThemeHelper.getOnBackgroundTextColor(
+                                  context,
+                                ),
+                                size: 12.0,
+                              ),
+                            )
+                          : Icon(Icons.my_location_outlined),
+                      label: Text(
+                        _isAutoFillLoading
+                            ? 'Getting location...'
+                            : 'Use My Current Location',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 12,
+                          horizontal: 16,
+                        ),
+                        side: BorderSide(
+                          color: Theme.of(
+                            context,
+                          ).primaryColor.withOpacity(0.3),
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 30),
 

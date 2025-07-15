@@ -3,7 +3,6 @@ import 'package:flutter_application_1/core/errors/exceptions.dart';
 import 'package:flutter_application_1/core/errors/failures.dart';
 import 'package:flutter_application_1/data/datasources/remote/activity_remote_datasource.dart';
 import 'package:flutter_application_1/data/models/activity_log_models.dart';
-import 'package:flutter_application_1/data/models/client_models.dart';
 
 abstract class ActivityRepository {
   Future<Either<Failure, List<ActivityLog>>> getActivities();

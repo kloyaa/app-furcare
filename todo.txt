@@ -6,4 +6,9 @@
 
 
 2. RegistrationScreen does not redirect to home screen upon successful registration
-    [ ] Ensure to navigate in home after successfull registration
+    [x] Ensure to navigate in home after successfull registration
+
+3. AppointmentTabScreen should be able to book appointments
+    [ ] Create a grooming screen 
+    [ ] Create a boarding screen
+    [ ] Create a home service screen
