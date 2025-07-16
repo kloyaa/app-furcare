@@ -106,6 +106,12 @@ class _AppointmentTabScreenState extends State<AppointmentTabScreen>
     },
   ];
 
+  void _handleNavigateToPetServices(String code) {
+    if (code == "PET_GROOMING") {
+      context.push('/appointments/grooming');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -284,126 +290,137 @@ class _AppointmentTabScreenState extends State<AppointmentTabScreen>
                                     .map((service) {
                                       final count =
                                           bookingCounts[service.code] ?? 0;
-                                      return Opacity(
-                                        opacity: service.available ? 1.0 : 0.3,
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: count > 0
-                                                ? colorScheme.primaryContainer
-                                                      .withOpacity(0.8)
-                                                : colorScheme
-                                                      .surfaceContainerLow,
-                                            borderRadius: BorderRadius.circular(
-                                              16,
+                                      return GestureDetector(
+                                        onTap: () =>
+                                            _handleNavigateToPetServices(
+                                              service.code,
                                             ),
-                                            border: Border.all(
+                                        child: Opacity(
+                                          opacity: service.available
+                                              ? 1.0
+                                              : 0.3,
+                                          child: Container(
+                                            decoration: BoxDecoration(
                                               color: count > 0
-                                                  ? colorScheme.primary
-                                                        .withOpacity(0.4)
-                                                  : colorScheme.outline
-                                                        .withOpacity(0.2),
-                                              width: 1.5,
-                                            ),
-                                            boxShadow: count > 0
-                                                ? [
-                                                    BoxShadow(
-                                                      color: colorScheme.primary
+                                                  ? colorScheme.primaryContainer
+                                                        .withOpacity(0.8)
+                                                  : colorScheme
+                                                        .surfaceContainerLow,
+                                              borderRadius:
+                                                  BorderRadius.circular(16),
+                                              border: Border.all(
+                                                color: count > 0
+                                                    ? colorScheme.primary
+                                                          .withOpacity(0.4)
+                                                    : colorScheme.outline
                                                           .withOpacity(0.2),
-                                                      spreadRadius: 1,
-                                                      blurRadius: 4,
-                                                      offset: const Offset(
-                                                        0,
-                                                        2,
-                                                      ),
-                                                    ),
-                                                  ]
-                                                : null,
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(10),
-                                            child: Row(
-                                              children: [
-                                                Container(
-                                                  padding: const EdgeInsets.all(
-                                                    8,
-                                                  ),
-                                                  decoration: BoxDecoration(
-                                                    color: count > 0
-                                                        ? colorScheme.primary
-                                                              .withOpacity(0.2)
-                                                        : colorScheme
-                                                              .surfaceContainerHigh,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          8,
+                                                width: 1.5,
+                                              ),
+                                              boxShadow: count > 0
+                                                  ? [
+                                                      BoxShadow(
+                                                        color: colorScheme
+                                                            .primary
+                                                            .withOpacity(0.2),
+                                                        spreadRadius: 1,
+                                                        blurRadius: 4,
+                                                        offset: const Offset(
+                                                          0,
+                                                          2,
                                                         ),
-                                                  ),
-                                                  child: Icon(
-                                                    _getServiceIcon(
-                                                      service.code,
-                                                    ),
-                                                    size: 16,
-                                                    color: count > 0
-                                                        ? colorScheme.primary
-                                                        : colorScheme
-                                                              .onSurfaceVariant,
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 8),
-                                                Expanded(
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      CustomText.body(
-                                                        service.name,
-                                                        size: AppTextSize.xs,
-                                                        fontWeight:
-                                                            AppFontWeight
-                                                                .bold
-                                                                .value,
-                                                        maxLines: 2,
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
                                                       ),
-                                                      if (count > 0)
-                                                        CustomText.body(
-                                                          '$count Active',
-                                                          size: AppTextSize.xss,
-                                                        ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                if (count > 0)
+                                                    ]
+                                                  : null,
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(10),
+                                              child: Row(
+                                                children: [
                                                   Container(
                                                     padding:
-                                                        const EdgeInsets.symmetric(
-                                                          horizontal: 6,
-                                                          vertical: 2,
-                                                        ),
+                                                        const EdgeInsets.all(8),
                                                     decoration: BoxDecoration(
-                                                      color: colorScheme.error,
+                                                      color: count > 0
+                                                          ? colorScheme.primary
+                                                                .withOpacity(
+                                                                  0.2,
+                                                                )
+                                                          : colorScheme
+                                                                .surfaceContainerHigh,
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                             8,
                                                           ),
                                                     ),
-                                                    child: Text(
-                                                      count.toString(),
-                                                      style: TextStyle(
-                                                        fontSize: 10,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color:
-                                                            colorScheme.onError,
+                                                    child: Icon(
+                                                      _getServiceIcon(
+                                                        service.code,
                                                       ),
+                                                      size: 16,
+                                                      color: count > 0
+                                                          ? colorScheme.primary
+                                                          : colorScheme
+                                                                .onSurfaceVariant,
                                                     ),
                                                   ),
-                                              ],
+                                                  const SizedBox(width: 8),
+                                                  Expanded(
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        CustomText.body(
+                                                          service.name,
+                                                          size: AppTextSize.xs,
+                                                          fontWeight:
+                                                              AppFontWeight
+                                                                  .bold
+                                                                  .value,
+                                                          maxLines: 2,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                        ),
+                                                        if (count > 0)
+                                                          CustomText.body(
+                                                            '$count Active',
+                                                            size:
+                                                                AppTextSize.xss,
+                                                          ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  if (count > 0)
+                                                    Container(
+                                                      padding:
+                                                          const EdgeInsets.symmetric(
+                                                            horizontal: 6,
+                                                            vertical: 2,
+                                                          ),
+                                                      decoration: BoxDecoration(
+                                                        color:
+                                                            colorScheme.error,
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              8,
+                                                            ),
+                                                      ),
+                                                      child: Text(
+                                                        count.toString(),
+                                                        style: TextStyle(
+                                                          fontSize: 10,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: colorScheme
+                                                              .onError,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ),

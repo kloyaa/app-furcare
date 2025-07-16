@@ -66,12 +66,8 @@ class ThemeNotifier {
         strokeWidth: 2.0,
         color: selectedColor.value.lightColor,
       ),
-      checkboxTheme: CheckboxThemeData(
-        fillColor: WidgetStateProperty.all(selectedColor.value.lightColor),
-      ),
-      radioTheme: RadioThemeData(
-        fillColor: WidgetStateProperty.all(selectedColor.value.lightColor),
-      ),
+      checkboxTheme: CheckboxThemeData(),
+      radioTheme: RadioThemeData(),
       switchTheme: SwitchThemeData(
         thumbColor: WidgetStateProperty.all(selectedColor.value.lightColor),
         trackColor: WidgetStateProperty.all(selectedColor.value.accentColor),
@@ -107,12 +103,8 @@ class ThemeNotifier {
       progressIndicatorTheme: ProgressIndicatorThemeData(
         color: selectedColor.value.darkColor,
       ),
-      checkboxTheme: CheckboxThemeData(
-        fillColor: WidgetStateProperty.all(selectedColor.value.darkColor),
-      ),
-      radioTheme: RadioThemeData(
-        fillColor: WidgetStateProperty.all(selectedColor.value.darkColor),
-      ),
+      checkboxTheme: CheckboxThemeData(),
+      radioTheme: RadioThemeData(),
       switchTheme: SwitchThemeData(
         thumbColor: WidgetStateProperty.all(selectedColor.value.darkColor),
         trackColor: WidgetStateProperty.all(

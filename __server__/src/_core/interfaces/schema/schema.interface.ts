@@ -120,3 +120,10 @@ export interface IUserRole extends Document {
   user: Types.ObjectId;
   role: typeof Role;
 }
+
+export interface IPet extends Document {
+  user: Types.ObjectId;
+  name: string;
+  gender: string;
+  specie: string;
+}

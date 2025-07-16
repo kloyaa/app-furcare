@@ -2,24 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/constants/padding_constant.dart';
 import 'package:flutter_application_1/core/enums/text_enum.dart';
 import 'package:flutter_application_1/data/models/settings_item.model.dart';
-import 'package:flutter_application_1/presentation/providers/auth_provider.dart';
-import 'package:flutter_application_1/presentation/widgets/common/custom_button.dart';
-import 'package:flutter_application_1/presentation/widgets/common/custom_confirm_dialog.dart';
+import 'package:flutter_application_1/presentation/widgets/common/custom_appbar.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_header.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_text.dart';
-import 'package:flutter_application_1/presentation/widgets/common/default_snackbar.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 
-/// Enhanced Settings Tab Screen with animations, theme support, and error handling
-class SettingsTabScreen extends StatefulWidget {
-  const SettingsTabScreen({super.key});
+class AccountsScreen extends StatefulWidget {
+  const AccountsScreen({super.key});
 
   @override
-  State<SettingsTabScreen> createState() => _SettingsTabScreenState();
+  State<AccountsScreen> createState() => _PrivacyScreenState();
 }
 
-class _SettingsTabScreenState extends State<SettingsTabScreen>
+class _PrivacyScreenState extends State<AccountsScreen>
     with TickerProviderStateMixin {
   /// Animation controller for staggered list animations
   late AnimationController _animationController;
@@ -51,7 +46,6 @@ class _SettingsTabScreenState extends State<SettingsTabScreen>
     super.dispose();
   }
 
-  /// Initialize animation controllers with proper durations
   void _initializeAnimations() {
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 1000),
@@ -64,50 +58,21 @@ class _SettingsTabScreenState extends State<SettingsTabScreen>
     );
   }
 
-  /// Initialize the settings items list
   void _initializeSettingsItems() {
     _settingsItems = [
       SettingsItem(
-        icon: Icons.pets_outlined,
-        title: 'Account and Pets',
-        subtitle: 'Manage your account and pets',
-        onTap: () => _handleAccountTap(),
-        iconColor: Colors.pink,
-      ),
-      SettingsItem(
-        icon: Icons.notifications_outlined,
-        title: 'Notifications',
-        subtitle: 'Manage your notification preferences',
-        onTap: () => _handleNotificationsTap(),
+        icon: Icons.person_outlined,
+        title: 'Profile',
+        subtitle: 'Manage your profile settings',
+        onTap: () => _handleProfileTap(),
         iconColor: Colors.orange,
       ),
       SettingsItem(
-        icon: Icons.security_outlined,
-        title: 'Security',
-        subtitle: 'Control your security settings',
-        onTap: () => _handlePrivacyTap(),
-        iconColor: Colors.green,
-      ),
-      SettingsItem(
-        icon: Icons.palette_outlined,
-        title: 'Theme',
-        subtitle: 'Choose your preferred theme',
-        onTap: () => _handleThemeTap(),
-        iconColor: Colors.purple,
-      ),
-      SettingsItem(
-        icon: Icons.history_outlined,
-        title: 'Activities',
-        subtitle: 'View your activities and logs',
-        onTap: () => _handleActivityTap(),
-        iconColor: Colors.brown,
-      ),
-      SettingsItem(
-        icon: Icons.help_outline,
-        title: 'Help & Support',
-        subtitle: 'Get help and contact support',
-        onTap: () => _handleHelpTap(),
-        iconColor: Colors.blue,
+        icon: Icons.pets_outlined,
+        title: 'Pets',
+        subtitle: 'Manage your pets',
+        onTap: () => _handlePetTap(),
+        iconColor: Colors.pink,
       ),
     ];
   }
@@ -130,66 +95,12 @@ class _SettingsTabScreenState extends State<SettingsTabScreen>
     }
   }
 
-  void _handleLogout() async {
-    final confirmed = await ConfirmationDialog.show(
-      context: context,
-      title: "Confirm Logout",
-      message: "Are you sure you want to logout? This will end your session.",
-      confirmText: "Logout",
-      cancelText: "Cancel",
-      icon: Icons.logout,
-      confirmColor: Colors.red,
-    );
-
-    if (confirmed == true) {
-      if (!mounted) return;
-      // Call logout on the provider and navigate to login screen
-      context.read<AuthProvider>().logout();
-      context.go('/login');
-    }
+  void _handleProfileTap() {
+    context.push('/me/profile');
   }
 
-  void _handleNotificationsTap() {
-    try {
-      // Add haptic feedback for better UX
-      showCustomSnackBar(context, 'Notifications settings opened');
-      // Navigate to notifications settings
-    } catch (e) {
-      _handleError('Failed to open notifications settings', e);
-    }
-  }
-
-  void _handleAccountTap() {
-    context.push('/settings/accounts');
-  }
-
-  void _handlePrivacyTap() {
-    context.push("/settings/privacy");
-  }
-
-  void _handleThemeTap() {
-    context.push('/settings/theme');
-  }
-
-  void _handleHelpTap() {
-    try {
-      showCustomSnackBar(context, 'Help & Support opened');
-      // Navigate to help settings
-    } catch (e) {
-      _handleError('Failed to open help settings', e);
-    }
-  }
-
-  void _handleActivityTap() {
-    context.push("/settings/activity-log");
-  }
-
-  void _handleError(String message, Object error) {
-    debugPrint('Settings Screen Error: $message - $error');
-
-    if (mounted) {
-      showCustomSnackBar(context, 'Something went wrong. Please try again.');
-    }
+  void _handlePetTap() {
+    context.push('/me/pets');
   }
 
   @override
@@ -198,7 +109,11 @@ class _SettingsTabScreenState extends State<SettingsTabScreen>
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: colorScheme.surface,
+      appBar: CustomAppBar(
+        backgroundColor: colorScheme.surface,
+        foregroundColor: colorScheme.primary,
+        showThemeToggle: false,
+      ),
       body: SafeArea(
         child: Container(
           padding: kDefaultBodyPadding,
@@ -259,19 +174,9 @@ class _SettingsTabScreenState extends State<SettingsTabScreen>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Main title with proper null safety
                 CustomHeader(
-                  title: 'Settings',
-                  subtitle: 'Manage your app preferences',
-                ),
-                SizedBox(height: 20),
-                CustomButton(
-                  text: "Logout",
-                  height: 40,
-                  width: 120,
-                  textSize: AppTextSize.xs,
-                  icon: Icons.logout,
-                  onPressed: () => _handleLogout(),
+                  title: 'Account and Pets',
+                  subtitle: 'Manage your account and pets',
                 ),
               ],
             ),

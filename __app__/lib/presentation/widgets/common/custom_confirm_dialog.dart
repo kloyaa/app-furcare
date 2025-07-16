@@ -31,15 +31,17 @@ class ConfirmationDialog {
               : null,
           content: message != null ? CustomText.body(message) : null,
           actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: CustomText.caption(cancelText),
-            ),
+            if (cancelText != "")
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: CustomText.caption(cancelText),
+              ),
+
             TextButton(
               onPressed: () => Navigator.of(context).pop(true),
               child: CustomText.caption(
                 confirmText,
-                color: Colors.red,
+                color: confirmColor,
                 fontWeight: AppFontWeight.bold.value,
               ),
             ),

@@ -17,7 +17,7 @@ import userRoute from './routes/user.route';
 import uploadRoute from './routes/upload.route';
 import auxiliaryRoute from './routes/auxiliary.route';
 import activityRoute from './routes/activity.route';
-import petServicesRoute from './routes/pet.route';
+import petServicesRoute from './routes/pet_services.route';
 
 import {
   logNetworBody,

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/presentation/screens/modules/customer/accounts/accounts.dart';
 import 'package:flutter_application_1/presentation/screens/modules/customer/appointments.dart';
+import 'package:flutter_application_1/presentation/screens/modules/customer/appointments/grooming.dart';
 import 'package:flutter_application_1/presentation/screens/modules/customer/home.dart';
 import 'package:flutter_application_1/presentation/screens/modules/customer/login.dart';
 import 'package:flutter_application_1/presentation/screens/modules/customer/pre_login.dart';
@@ -53,6 +55,13 @@ final GoRouter customerRouter = GoRouter(
           },
         ),
         GoRoute(
+          path: '/appointments/grooming',
+          builder: (BuildContext context, GoRouterState state) {
+            return const GroomingAppointmentScreen();
+          },
+        ),
+
+        GoRoute(
           path: '/me/profile',
           builder: (BuildContext context, GoRouterState state) {
             return const CustomerProfileScreen();
@@ -71,6 +80,12 @@ final GoRouter customerRouter = GoRouter(
           },
         ),
 
+        GoRoute(
+          path: '/settings/accounts',
+          builder: (BuildContext context, GoRouterState state) {
+            return const AccountsScreen();
+          },
+        ),
         // Privacy screen
         GoRoute(
           path: '/settings/privacy',
