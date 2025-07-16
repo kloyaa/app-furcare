@@ -56,6 +56,7 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
         builder: (context, authProvider, child) {
           final hasError = authProvider.errorMessage != null;
 
+          print('hasError: $hasError');
           if (hasError) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               showCustomSnackBar(

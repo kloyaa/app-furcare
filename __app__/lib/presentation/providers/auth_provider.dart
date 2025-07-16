@@ -118,6 +118,7 @@ class AuthProvider extends ChangeNotifier {
 
   // Logout
   Future<void> logout() async {
+    clearError(); // Clear previous error
     _setState(AuthState.loading);
 
     final result = await _authRepository.logout();
@@ -153,13 +154,13 @@ class AuthProvider extends ChangeNotifier {
     String username,
   ) {
     clearError(); // Clear previous error
+
     _user = User(
       email: email,
       username: username,
       accessToken: response.accessToken,
     );
     _accessToken = response.accessToken;
-    _errorMessage = null;
     _setState(AuthState.authenticated);
   }
 
@@ -170,8 +171,9 @@ class AuthProvider extends ChangeNotifier {
 
   // Handle failure
   void _handleFailure(Failure failure) {
-    clearError(); // Clear previous error
     _setState(AuthState.error);
+    _errorMessage = failure.message;
+    _errorCode = failure.code;
   }
 
   // Set state and notify listeners

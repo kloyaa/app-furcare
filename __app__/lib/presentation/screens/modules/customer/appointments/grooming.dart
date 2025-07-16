@@ -402,7 +402,7 @@ class _GroomingAppointmentScreenState extends State<GroomingAppointmentScreen> {
                 : null,
             title: CustomText.body(
               option.name,
-              style: const TextStyle(fontWeight: FontWeight.w600),
+              fontWeight: AppFontWeight.semibold.value,
             ),
             subtitle: CustomText.body(
               'PHP ${option.price}',
@@ -450,6 +450,7 @@ class _GroomingAppointmentScreenState extends State<GroomingAppointmentScreen> {
                 ? CustomText.body(
                     'PHP ${preference.price}',
                     size: AppTextSize.xs,
+                    fontWeight: AppFontWeight.semibold.value,
                   )
                 : const Text('Free', style: TextStyle(color: Colors.green)),
             controlAffinity: ListTileControlAffinity.trailing,
