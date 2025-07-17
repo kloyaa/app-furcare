@@ -10,6 +10,8 @@
 
 3. AppointmentTabScreen should be able to book appointments
     [x] Create a grooming screen
+        [x] should have pet selection
+        [ ] should have schedule selection
         [ ] Integrate appointment boooking
     [ ] Create a boarding screen
         [ ] Integrate appointment boooking

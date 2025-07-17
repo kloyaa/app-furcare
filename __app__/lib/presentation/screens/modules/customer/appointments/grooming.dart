@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/constants/padding_constant.dart';
 import 'package:flutter_application_1/core/enums/text_enum.dart';
 import 'package:flutter_application_1/core/helpers/theme.dart';
-import 'package:flutter_application_1/data/models/pet_models.dart';
+import 'package:flutter_application_1/presentation/providers/pet_provider.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_appbar.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_button.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_confirm_dialog.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_text.dart';
+import 'package:provider/provider.dart';
 
 class GroomingAppointmentScreen extends StatefulWidget {
   const GroomingAppointmentScreen({super.key});
@@ -99,22 +100,6 @@ class _GroomingAppointmentScreenState extends State<GroomingAppointmentScreen> {
     ),
   ];
 
-  final List<Pet> pets = [
-    Pet(
-      id: "66b1f3e8c9d4a5b2f1234567",
-      name: "Buddy",
-      specie: "Dog",
-      gender: '',
-    ),
-    Pet(
-      id: "66b1f3e8c9d4a5b2f1234568",
-      name: "Whiskers",
-      specie: "Cat",
-      gender: '',
-    ),
-    Pet(id: "66b1f3e8c9d4a5b2f1234569", name: "Max", specie: "Dog", gender: ''),
-  ];
-
   // Selection states
   String? selectedSchedule;
   Set<String> selectedGroomingOptions = {};
@@ -123,6 +108,26 @@ class _GroomingAppointmentScreenState extends State<GroomingAppointmentScreen> {
   bool? hasAllergy;
   bool? isOnMedication;
   bool? hasAntiRabbiesVaccination;
+
+  // Accordion state
+  bool isPetAccordionExpanded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Set the first pet as initially selected
+
+    Future.microtask(() {
+      if (mounted) {
+        context.read<PetProvider>().getPets();
+
+        final pets = context.read<PetProvider>().pets;
+        if (pets.isEmpty) {
+          selectedPet = pets.first.id;
+        }
+      }
+    });
+  }
 
   double get totalPrice {
     double total = 0;
@@ -214,12 +219,7 @@ class _GroomingAppointmentScreenState extends State<GroomingAppointmentScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Pet Selection Section
-            _buildSectionCard(
-              title: "Select Your Pet",
-              icon: Icons.pets,
-              child: _buildPetSelection(),
-              theme: theme,
-            ),
+            _buildPetAccordionCard(theme),
             const SizedBox(height: 16),
 
             // Schedule Selection Section
@@ -266,6 +266,76 @@ class _GroomingAppointmentScreenState extends State<GroomingAppointmentScreen> {
     );
   }
 
+  Widget _buildPetAccordionCard(ThemeData theme) {
+    final ThemeHelper themeHelper = ThemeHelper();
+    final pets = context.read<PetProvider>().pets;
+
+    final selectedPetData = pets.firstWhere(
+      (pet) => pet.id == selectedPet,
+      orElse: () => pets.first,
+    );
+
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Accordion Header
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  isPetAccordionExpanded = !isPetAccordionExpanded;
+                });
+              },
+              child: Row(
+                children: [
+                  Icon(Icons.pets),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CustomText.title("Companion", size: AppTextSize.md),
+                        if (!isPetAccordionExpanded) ...[
+                          const SizedBox(height: 4),
+                          CustomText.body(
+                            "${selectedPetData.name} (${selectedPetData.specie})",
+                            size: AppTextSize.sm,
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.primary.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    child: Icon(
+                      isPetAccordionExpanded
+                          ? Icons.keyboard_arrow_up
+                          : Icons.keyboard_arrow_down,
+                      color: theme.colorScheme.primary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Accordion Content
+            if (isPetAccordionExpanded) ...[
+              const SizedBox(height: 16),
+              _buildPetSelection(),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildSectionCard({
     required String title,
     required IconData icon,
@@ -296,46 +366,57 @@ class _GroomingAppointmentScreenState extends State<GroomingAppointmentScreen> {
   }
 
   Widget _buildPetSelection() {
-    return Column(
-      children: pets.map((pet) {
-        return Container(
-          margin: const EdgeInsets.only(bottom: 8),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: selectedPet == pet.id
-                  ? Theme.of(context).primaryColor
-                  : Colors.grey.withOpacity(0.3),
-              width: selectedPet == pet.id ? 2 : 1,
-            ),
-          ),
-          child: ListTile(
-            leading: CircleAvatar(
-              backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
-              child: Icon(Icons.pets),
-            ),
-            title: CustomText.body(
-              pet.name,
-              style: const TextStyle(fontWeight: FontWeight.w600),
-            ),
-            subtitle: CustomText.body(pet.specie, size: AppTextSize.xs),
-            trailing: Radio<String>(
-              value: pet.id,
-              groupValue: selectedPet,
-              onChanged: (value) {
-                setState(() {
-                  selectedPet = value;
-                });
-              },
-            ),
-            onTap: () {
-              setState(() {
-                selectedPet = pet.id;
-              });
-            },
-          ),
+    return Consumer<PetProvider>(
+      builder: (context, petProvider, child) {
+        final pets = petProvider.pets;
+        return Column(
+          children: pets.map((pet) {
+            return Container(
+              margin: const EdgeInsets.only(bottom: 8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: selectedPet == pet.id
+                      ? Theme.of(context).primaryColor
+                      : Colors.grey.withOpacity(0.3),
+                  width: selectedPet == pet.id ? 2 : 1,
+                ),
+              ),
+              child: ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: Theme.of(
+                    context,
+                  ).primaryColor.withOpacity(0.1),
+                  child: Icon(Icons.pets),
+                ),
+                title: CustomText.body(
+                  pet.name,
+                  style: const TextStyle(fontWeight: FontWeight.w600),
+                ),
+                subtitle: CustomText.body(pet.specie, size: AppTextSize.xs),
+                trailing: Radio<String>(
+                  value: pet.id,
+                  groupValue: selectedPet,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedPet = value;
+                      isPetAccordionExpanded =
+                          false; // Close accordion after selection
+                    });
+                  },
+                ),
+                onTap: () {
+                  setState(() {
+                    selectedPet = pet.id;
+                    isPetAccordionExpanded =
+                        false; // Close accordion after selection
+                  });
+                },
+              ),
+            );
+          }).toList(),
         );
-      }).toList(),
+      },
     );
   }
 

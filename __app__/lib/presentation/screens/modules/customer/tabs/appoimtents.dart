@@ -429,8 +429,6 @@ class _AppointmentTabScreenState extends State<AppointmentTabScreen>
                                     .toList(),
                               );
                             },
-                            key: Key('services-grid-'),
-                            child: ServicesGridSkeleton(),
                           ),
                         ],
                       ),
