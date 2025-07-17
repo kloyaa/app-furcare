@@ -10,10 +10,12 @@ void showCustomSnackBar(
   try {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        backgroundColor: isError ? theme.errorContainer : theme.surface,
+        backgroundColor: isError
+            ? theme.errorContainer
+            : theme.primaryContainer,
         content: CustomText.body(
           message,
-          color: isError ? theme.error : theme.primary,
+          color: isError ? theme.error : theme.onPrimaryContainer,
         ),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),

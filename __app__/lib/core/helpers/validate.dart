@@ -130,3 +130,27 @@ String? validateNewPassword(String? value) {
   }
   return null;
 }
+
+String? validateSpecie(String? value) {
+  if (value == null || value.isEmpty) {
+    return 'Species is required';
+  }
+  if (value.length < 3) {
+    return 'Species must be at least 3 characters';
+  }
+  return null;
+}
+
+String? validateCompanionName(String? value) {
+  if (value == null || value.isEmpty) {
+    return 'Name is required';
+  }
+  if (value.length < 2) {
+    return 'Name must be at least 2 characters';
+  }
+
+  if (value.length > 24) {
+    return 'Name must be no more than 24 characters long';
+  }
+  return null;
+}

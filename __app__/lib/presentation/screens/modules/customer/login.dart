@@ -26,8 +26,8 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
   void initState() {
     super.initState();
 
-    _usernameController.text = 'kolya_06';
-    _passwordController.text = 'Password@001';
+    _usernameController.text = 'testuser1';
+    _passwordController.text = 'Test@Password1';
   }
 
   @override
@@ -55,8 +55,6 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
       body: Consumer<AuthProvider>(
         builder: (context, authProvider, child) {
           final hasError = authProvider.errorMessage != null;
-
-          print('hasError: $hasError');
           if (hasError) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               showCustomSnackBar(

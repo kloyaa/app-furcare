@@ -69,8 +69,8 @@ class _SettingsTabScreenState extends State<SettingsTabScreen>
     _settingsItems = [
       SettingsItem(
         icon: Icons.pets_outlined,
-        title: 'Account and Pets',
-        subtitle: 'Manage your account and pets',
+        title: 'Account and Companions',
+        subtitle: 'Manage your account and companions',
         onTap: () => _handleAccountTap(),
         iconColor: Colors.pink,
       ),

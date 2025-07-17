@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/constants/padding_constant.dart';
 import 'package:flutter_application_1/core/enums/text_enum.dart';
 import 'package:flutter_application_1/core/helpers/theme.dart';
+import 'package:flutter_application_1/data/models/pet_models.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_appbar.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_button.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_confirm_dialog.dart';
@@ -99,9 +100,19 @@ class _GroomingAppointmentScreenState extends State<GroomingAppointmentScreen> {
   ];
 
   final List<Pet> pets = [
-    Pet(id: "66b1f3e8c9d4a5b2f1234567", name: "Buddy", specie: "Dog"),
-    Pet(id: "66b1f3e8c9d4a5b2f1234568", name: "Whiskers", specie: "Cat"),
-    Pet(id: "66b1f3e8c9d4a5b2f1234569", name: "Max", specie: "Dog"),
+    Pet(
+      id: "66b1f3e8c9d4a5b2f1234567",
+      name: "Buddy",
+      specie: "Dog",
+      gender: '',
+    ),
+    Pet(
+      id: "66b1f3e8c9d4a5b2f1234568",
+      name: "Whiskers",
+      specie: "Cat",
+      gender: '',
+    ),
+    Pet(id: "66b1f3e8c9d4a5b2f1234569", name: "Max", specie: "Dog", gender: ''),
   ];
 
   // Selection states
@@ -602,12 +613,4 @@ class GroomingPreference {
     required this.price,
     required this.available,
   });
-}
-
-class Pet {
-  final String id;
-  final String name;
-  final String specie;
-
-  Pet({required this.id, required this.name, required this.specie});
 }

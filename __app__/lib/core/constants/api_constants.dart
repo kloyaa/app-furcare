@@ -13,6 +13,9 @@ class ApiConstants {
   // Client endpoints
   static const String clientProfile = '$baseUrl/user/v1/profile';
 
+  // Pets
+  static const String pets = '$baseUrl/pet/v1';
+
   // Others
   static const String activities = '$baseUrl/activity/v1';
   static const String petServices = '$baseUrl/pet-services/v1';

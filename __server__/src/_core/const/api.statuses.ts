@@ -128,6 +128,15 @@ export const statuses = {
     code: '0104',
   },
 
+  /**
+ * @alias Companion
+ * @description from 0100 - 0200
+ */
+  '0200': {
+    message: 'Companion already exist. Try a different name.',
+    code: '0200',
+  },
+
   '0900': {
     message: 'Something went wrong. Please try again later.',
     code: '0900',

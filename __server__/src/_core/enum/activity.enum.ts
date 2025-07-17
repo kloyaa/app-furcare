@@ -11,4 +11,8 @@ export enum ActivityType {
   SEED_USER_ACCOUNT = 'Seeded user account successfully',
   PROFILE_CREATED = 'Profile created',
   PROFILE_UPDATED = 'Profile updated',
+
+  PET_ADDED = 'Companion added',
+  PET_UPDATED = 'Companion updated',
+  PET_DELETED = 'Companion removed',
 }

@@ -69,8 +69,8 @@ class _PrivacyScreenState extends State<AccountsScreen>
       ),
       SettingsItem(
         icon: Icons.pets_outlined,
-        title: 'Pets',
-        subtitle: 'Manage your pets',
+        title: 'My Companions',
+        subtitle: 'Manage your Companions',
         onTap: () => _handlePetTap(),
         iconColor: Colors.pink,
       ),
@@ -175,8 +175,9 @@ class _PrivacyScreenState extends State<AccountsScreen>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CustomHeader(
-                  title: 'Account and Pets',
-                  subtitle: 'Manage your account and pets',
+                  title: 'Account & Companions',
+                  titleSize: AppTextSize.lg,
+                  subtitle: 'Manage your account and companions',
                 ),
               ],
             ),

@@ -133,7 +133,11 @@ class _AppointmentTabScreenState extends State<AppointmentTabScreen>
     // Start the repeating animation
     _glowController.repeat(reverse: true);
 
-    context.read<PetServiceProvider>().getPetServices();
+    Future.microtask(() {
+      if (mounted) {
+        context.read<PetServiceProvider>().getPetServices();
+      }
+    });
   }
 
   @override
@@ -265,16 +269,12 @@ class _AppointmentTabScreenState extends State<AppointmentTabScreen>
                           ),
                           Consumer<PetServiceProvider>(
                             builder: (context, petServiceProvider, child) {
-                              if (petServiceProvider.isLoading) {
-                                print("RENDERED THE LOADING");
+                              if (petServiceProvider.isInitial ||
+                                  petServiceProvider.isFetching) {
                                 return ServicesGridSkeleton();
                               }
-
                               List<PetService> petServices =
                                   petServiceProvider.petServices;
-
-                              print("RENDERED THE CONTENT FIRST");
-
                               return GridView.count(
                                 crossAxisCount: 2,
                                 shrinkWrap: true,
@@ -429,6 +429,8 @@ class _AppointmentTabScreenState extends State<AppointmentTabScreen>
                                     .toList(),
                               );
                             },
+                            key: Key('services-grid-'),
+                            child: ServicesGridSkeleton(),
                           ),
                         ],
                       ),

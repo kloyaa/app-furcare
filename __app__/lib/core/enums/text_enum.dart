@@ -5,6 +5,7 @@ enum AppTextSize {
   xs(12),
   sm(14),
   md(16),
+  mlg(24),
   lg(32),
   xl(64);
 
