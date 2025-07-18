@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/config/activity_dependency_injection.dart';
+import 'package:flutter_application_1/config/appointment_injection.dart';
 import 'package:flutter_application_1/config/auth_dependency_injection.dart';
+import 'package:flutter_application_1/config/branch_injection.dart';
 import 'package:flutter_application_1/config/client_dependency_injection.dart';
 import 'package:flutter_application_1/config/core_dependency_injection.dart';
 import 'package:flutter_application_1/config/dependency_instance.dart';
@@ -8,7 +10,9 @@ import 'package:flutter_application_1/config/pet_dependency_injectioN.dart';
 import 'package:flutter_application_1/config/pet_service_dependency_injection.dart';
 import 'package:flutter_application_1/core/theme/theme_notifier.dart';
 import 'package:flutter_application_1/presentation/providers/activity_provider.dart';
+import 'package:flutter_application_1/presentation/providers/application_provider.dart';
 import 'package:flutter_application_1/presentation/providers/auth_provider.dart';
+import 'package:flutter_application_1/presentation/providers/branch_provider.dart';
 import 'package:flutter_application_1/presentation/providers/client_provider.dart';
 import 'package:flutter_application_1/presentation/providers/pet_provider.dart';
 import 'package:flutter_application_1/presentation/providers/pet_service_provider.dart';
@@ -25,6 +29,8 @@ Future<void> main() async {
   await activityDependencyInjection();
   await petServiceDependencyInjection();
   await petDependencyInjection();
+  await appointmentDependencyInjection();
+  await branchDependencyInjection();
 
   runApp(const MainApp());
 }
@@ -51,6 +57,10 @@ class MainApp extends StatelessWidget {
                   create: (_) => getIt<PetServiceProvider>(),
                 ),
                 ChangeNotifierProvider(create: (_) => getIt<PetProvider>()),
+                ChangeNotifierProvider(
+                  create: (_) => getIt<AppointmentProvider>(),
+                ),
+                ChangeNotifierProvider(create: (_) => getIt<BranchProvider>()),
               ],
               child: MaterialApp.router(
                 theme: ThemeNotifier.lightTheme,

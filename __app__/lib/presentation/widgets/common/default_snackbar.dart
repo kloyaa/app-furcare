@@ -22,7 +22,5 @@ void showCustomSnackBar(
         duration: const Duration(seconds: 2),
       ),
     );
-  } catch (e) {
-    debugPrint('Failed to show snackbar: $e');
-  }
+  } catch (e) {}
 }

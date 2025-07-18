@@ -90,7 +90,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         );
       }
     } catch (e) {
-      print('changePassword: $e');
       if (e is ServerException || e is NetworkException) {
         rethrow;
       }

@@ -1,11 +1,14 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_application_1/core/errors/exceptions.dart';
 import 'package:flutter_application_1/core/errors/failures.dart';
-import 'package:flutter_application_1/data/datasources/remote/pet_service_remode_datasource.dart';
+import 'package:flutter_application_1/data/datasources/remote/pet_service_remote_datasource.dart';
 import 'package:flutter_application_1/data/models/pet_service.models.dart';
 
 abstract class PetServiceRepository {
   Future<Either<Failure, List<PetService>>> getPetServices();
+  Future<Either<Failure, List<GroomingSchedule>>> getGroomingSchedules();
+  Future<Either<Failure, List<GroomingOptions>>> getGroomingOptions();
+  Future<Either<Failure, List<GroomingPreference>>> getGroomingPreferences();
 }
 
 class PetServiceRepositoryImpl implements PetServiceRepository {
@@ -19,6 +22,56 @@ class PetServiceRepositoryImpl implements PetServiceRepository {
   Future<Either<Failure, List<PetService>>> getPetServices() async {
     try {
       final response = await _remoteDataSource.getPetServices();
+      return Right(response);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message, code: e.code));
+    } on NetworkException catch (e) {
+      return Left(NetworkFailure(message: e.message));
+    } on CacheException catch (e) {
+      return Left(CacheFailure(message: e.message));
+    } catch (e) {
+      return Left(ServerFailure(message: 'An unexpected error occurred'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<GroomingSchedule>>> getGroomingSchedules() async {
+    try {
+      final response = await _remoteDataSource.getGroomingSchedules();
+      return Right(response);
+    } on ServerException catch (e) {
+      print(e.message);
+      return Left(ServerFailure(message: e.message, code: e.code));
+    } on NetworkException catch (e) {
+      return Left(NetworkFailure(message: e.message));
+    } on CacheException catch (e) {
+      return Left(CacheFailure(message: e.message));
+    } catch (e) {
+      return Left(ServerFailure(message: 'An unexpected error occurred'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<GroomingOptions>>> getGroomingOptions() async {
+    try {
+      final response = await _remoteDataSource.getGroomingOptions();
+      return Right(response);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message, code: e.code));
+    } on NetworkException catch (e) {
+      return Left(NetworkFailure(message: e.message));
+    } on CacheException catch (e) {
+      return Left(CacheFailure(message: e.message));
+    } catch (e) {
+      return Left(ServerFailure(message: 'An unexpected error occurred'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<GroomingPreference>>>
+  getGroomingPreferences() async {
+    try {
+      final response = await _remoteDataSource.getGroomingPreferences();
       return Right(response);
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message, code: e.code));

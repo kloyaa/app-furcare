@@ -15,4 +15,9 @@ export enum ActivityType {
   PET_ADDED = 'Companion added',
   PET_UPDATED = 'Companion updated',
   PET_DELETED = 'Companion removed',
+
+
+  APPLICATION_GROOMING_SUBMITTED = 'Grooming application submitted',
+  APPLICATION_GROOMING_UPDATED = 'Grooming application updated',
+  APPLICATION_GROOMING_DELETED = 'Grooming application deleted',
 }

@@ -16,9 +16,15 @@ class ApiConstants {
   // Pets
   static const String pets = '$baseUrl/pet/v1';
 
+  // Appointments
+  static const String appointment = '$baseUrl/application/v1';
+
   // Others
   static const String activities = '$baseUrl/activity/v1';
   static const String petServices = '$baseUrl/pet-services/v1';
+
+  // Branches
+  static const String branches = '$baseUrl/branch/v1';
 
   // Headers
   static const String userOrigin = 'nodex-user-origin';

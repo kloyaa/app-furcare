@@ -53,18 +53,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         password: _passwordController.text,
         email: _emailController.text.trim(),
       );
-
-      // Create the JSON data that would be sent to API
-      final registrationData = {
-        "email": _emailController.text.trim(),
-        "username": _usernameController.text.trim(),
-        "password": _passwordController.text,
-      };
-
-      // Print the JSON data (for demonstration)
-      if (kDebugMode) {
-        print('Registration Data: $registrationData');
-      }
     }
   }
 
@@ -78,11 +66,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         builder: (context, authProvider, child) {
           final hasError = authProvider.errorMessage != null;
           final errorCode = authProvider.errorCode;
-
-          print('hasError: $hasError');
-          print('errorCode: $errorCode');
-          print('errorMessage: ${authProvider.errorMessage}');
-
           // Handle specific error codes
           if (errorCode == "0052") {
             WidgetsBinding.instance.addPostFrameCallback((_) {

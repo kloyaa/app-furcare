@@ -1,5 +1,5 @@
 import 'package:flutter_application_1/config/dependency_instance.dart';
-import 'package:flutter_application_1/data/datasources/remote/pet_service_remode_datasource.dart';
+import 'package:flutter_application_1/data/datasources/remote/pet_service_remote_datasource.dart';
 import 'package:flutter_application_1/data/repositories/pet_service_repository.dart';
 import 'package:flutter_application_1/presentation/providers/pet_service_provider.dart';
 

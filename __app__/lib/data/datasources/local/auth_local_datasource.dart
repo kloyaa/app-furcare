@@ -67,6 +67,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
     try {
       await _sharedPreferences.remove(_keyUser);
       await _sharedPreferences.remove(_keyAccessToken);
+      await _sharedPreferences.remove('selected_branch_id');
     } catch (e) {
       throw CacheException(message: 'Failed to clear user data');
     }

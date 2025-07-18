@@ -89,10 +89,7 @@ class _PrivacyScreenState extends State<AccountsScreen>
           }
         });
       }
-    } catch (e) {
-      // Handle animation errors gracefully
-      debugPrint('Animation error: $e');
-    }
+    } catch (e) {}
   }
 
   void _handleProfileTap() {

@@ -17,37 +17,36 @@ enum PetState {
 class PetProvider with ChangeNotifier {
   final PetRepository _petRepository;
 
-  PetState _state = PetState.initial;
   PetState _createPetState = PetState.initial;
+  PetState _fetchPetsState = PetState.initial;
 
   List<Pet> _pets = [];
   String? _errorMessage;
   String? _errorCode;
 
   List<Pet> get pets => _pets;
-  PetState get state => _state;
-
   String? get error => _errorMessage;
   String? get errorCode => _errorCode;
 
   bool get isCreatingPet => _createPetState == PetState.loading;
+  bool get isFetchingPets => _fetchPetsState == PetState.loading;
 
   PetProvider({required PetRepository petRepository})
     : _petRepository = petRepository;
 
   Future<void> getPets() async {
-    _setState(PetState.loading);
+    clearError();
+    _setFetchingState(PetState.loading);
     final result = await _petRepository.getPets();
 
     result.fold(
       (failure) {
-        _setState(PetState.error);
+        _setFetchingState(PetState.error);
         _handleFailure(failure);
       },
       (pets) {
         _pets = pets;
-        _setState(PetState.fetched);
-        notifyListeners();
+        _setFetchingState(PetState.fetched);
       },
     );
   }
@@ -99,21 +98,19 @@ class PetProvider with ChangeNotifier {
     _errorCode = failure.code;
   }
 
-  // Clear error message
   void clearError() {
     _errorMessage = null;
     _errorCode = null;
     notifyListeners();
   }
 
-  // Set state and notify listeners
-  void _setState(PetState newState) {
-    _state = newState;
+  void _setCreatePetState(PetState newState) {
+    _createPetState = newState;
     notifyListeners();
   }
 
-  void _setCreatePetState(PetState newState) {
-    _createPetState = newState;
+  void _setFetchingState(PetState newState) {
+    _fetchPetsState = newState;
     notifyListeners();
   }
 }

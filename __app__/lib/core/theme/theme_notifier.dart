@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ThemeNotifier {
   static final ValueNotifier<bool> isDarkMode = ValueNotifier(false);
   static final ValueNotifier<ThemeColorData> selectedColor = ValueNotifier(
-    ThemeColorData.brown, // Default to brown
+    ThemeColorData.blue, // Default to brown
   );
 
   static const String _darkModeKey = 'isDarkMode';

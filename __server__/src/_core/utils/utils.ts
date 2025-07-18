@@ -43,3 +43,9 @@ export const delay = (ms: number) => {
   console.log(`Delay started ${ms}`)
   return new Promise(resolve => setTimeout(resolve, ms));
 };
+
+export const generateRandomNumber = (length: number): string => {
+  if (length <= 0) return '';
+
+  return Array.from({ length }, () => Math.floor(Math.random() * 10)).join('');
+};

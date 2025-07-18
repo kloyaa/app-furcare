@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/constants/padding_constant.dart';
 import 'package:flutter_application_1/core/enums/text_enum.dart';
 import 'package:flutter_application_1/core/helpers/theme.dart';
+import 'package:flutter_application_1/core/helpers/widget_helpers.dart';
 import 'package:flutter_application_1/data/models/pet_models.dart';
 import 'package:flutter_application_1/presentation/providers/pet_provider.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_appbar.dart';
@@ -23,8 +24,10 @@ class _PetsScreenState extends State<PetsScreen> {
   void initState() {
     super.initState();
     // Load pets when screen initializes
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<PetProvider>().getPets();
+    Future.microtask(() {
+      if (mounted) {
+        context.read<PetProvider>().getPets();
+      }
     });
   }
 
@@ -351,7 +354,7 @@ class _PetsScreenState extends State<PetsScreen> {
                                         await _processPetRemoval(pet);
                                         // Only pop after successful completion
                                         if (context.mounted) {
-                                          Navigator.of(context).pop();
+                                          context.pop();
                                         }
                                       } catch (e) {
                                         // Handle error if needed
@@ -426,66 +429,27 @@ class _PetsScreenState extends State<PetsScreen> {
       ),
       body: Consumer<PetProvider>(
         builder: (context, petProvider, child) {
-          return _buildBody(context, petProvider, theme, isDark);
+          if (petProvider.isFetchingPets) {
+            return _buildLoadingSkeletonState(theme);
+          }
+          return RefreshIndicator(
+            onRefresh: () => context.read<PetProvider>().getPets(),
+            child: ListView.builder(
+              padding: kDefaultBodyPadding,
+              itemCount: petProvider.pets.length,
+              itemBuilder: (context, index) {
+                final pet = petProvider.pets[index];
+                return _buildPetCard(pet, theme, isDark);
+              },
+            ),
+          );
         },
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _handleNavigateCompanionCreationScreen(),
         icon: const Icon(Icons.add),
-        label: const Text('Add Pet'),
+        label: const Text('Companion'),
         backgroundColor: theme.colorScheme.primary,
-      ),
-    );
-  }
-
-  Widget _buildBody(
-    BuildContext context,
-    PetProvider petProvider,
-    ThemeData theme,
-    bool isDark,
-  ) {
-    switch (petProvider.state) {
-      case PetState.initial:
-        return _buildInitialState(theme);
-      case PetState.loading:
-        return _buildLoadingSkeletonState(theme);
-      case PetState.error:
-        return _buildErrorState(context, theme);
-      case PetState.fetched:
-      case PetState.success:
-        return _buildSuccessState(petProvider, theme, isDark);
-      default:
-        return _buildInitialState(theme);
-    }
-  }
-
-  Widget _buildInitialState(ThemeData theme) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.pets_rounded,
-            size: 64,
-            color: theme.colorScheme.primary.withOpacity(0.6),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Welcome to Pet Manager',
-            style: theme.textTheme.headlineSmall?.copyWith(
-              color: theme.colorScheme.onSurface,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Pull to refresh or tap the refresh button to load your pets',
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurface.withOpacity(0.7),
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
       ),
     );
   }
@@ -621,114 +585,6 @@ class _PetsScreenState extends State<PetsScreen> {
     );
   }
 
-  Widget _buildErrorState(BuildContext context, ThemeData theme) {
-    return Center(
-      child: Padding(
-        padding: kDefaultBodyPadding,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.errorContainer,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(
-                Icons.error_outline_rounded,
-                size: 48,
-                color: theme.colorScheme.onErrorContainer,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Oops! Something went wrong',
-              style: theme.textTheme.headlineSmall?.copyWith(
-                color: theme.colorScheme.onSurface,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'We couldn\'t load your pets. Please try again.',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.7),
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton.icon(
-              onPressed: () => context.read<PetProvider>().getPets(),
-              icon: const Icon(Icons.refresh_rounded),
-              label: const Text('Try Again'),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 12,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSuccessState(
-    PetProvider petProvider,
-    ThemeData theme,
-    bool isDark,
-  ) {
-    if (petProvider.pets.isEmpty) {
-      return _buildEmptyState(theme);
-    }
-
-    return RefreshIndicator(
-      onRefresh: () => context.read<PetProvider>().getPets(),
-      child: ListView.builder(
-        padding: kDefaultBodyPadding,
-        itemCount: petProvider.pets.length,
-        itemBuilder: (context, index) {
-          final pet = petProvider.pets[index];
-          return _buildPetCard(pet, theme, isDark);
-        },
-      ),
-    );
-  }
-
-  Widget _buildEmptyState(ThemeData theme) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.pets_outlined,
-            size: 64,
-            color: theme.colorScheme.onSurface.withOpacity(0.4),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'No pets found',
-            style: theme.textTheme.headlineSmall?.copyWith(
-              color: theme.colorScheme.onSurface,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Add your first pet to get started!',
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurface.withOpacity(0.7),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildPetCard(Pet pet, ThemeData theme, bool isDark) {
     final colorScheme = theme.colorScheme;
     return Container(
@@ -803,7 +659,7 @@ class _PetsScreenState extends State<PetsScreen> {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Icon(
-        _getSpecieIcon(pet.specie),
+        getSpecieIcon(pet.specie),
         size: 32,
         color: theme.colorScheme.onPrimaryContainer,
       ),
@@ -832,23 +688,6 @@ class _PetsScreenState extends State<PetsScreen> {
         ],
       ),
     );
-  }
-
-  IconData _getSpecieIcon(String specie) {
-    switch (specie.toLowerCase()) {
-      case 'dog':
-        return Icons.pets_rounded;
-      case 'cat':
-        return Icons.pets_outlined;
-      case 'bird':
-        return Icons.flutter_dash_outlined;
-      case 'fish':
-        return Icons.set_meal_outlined;
-      case 'rabbit':
-        return Icons.cruelty_free_outlined;
-      default:
-        return Icons.pets_rounded;
-    }
   }
 
   IconData _getGenderIcon(String gender) {

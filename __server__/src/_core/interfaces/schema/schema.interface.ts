@@ -127,3 +127,37 @@ export interface IPet extends Document {
   gender: string;
   specie: string;
 }
+
+// applicationStatusEnum
+
+export interface IGroomingApplication {
+  user: Types.ObjectId; // Reference to User
+  pet: Types.ObjectId;  // Reference to Pet
+  branch: Types.ObjectId; // Reference to Branch
+
+  scheduleCode: string;
+
+  groomingOptions: string[];
+  groomingPreferences: string[];
+
+  hasAllergy: boolean;
+  isOnMedication: boolean;
+  hasAntiRabbiesVaccination: boolean;
+
+  totalPrice: number;
+
+  status: string;
+
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface IBranch {
+  name: string;
+  address: string;
+  phone: string;
+  open: boolean;
+
+  createdAt?: Date;
+  updatedAt?: Date;
+}

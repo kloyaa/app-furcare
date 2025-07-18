@@ -84,10 +84,7 @@ class _PrivacyScreenState extends State<PrivacyScreen>
           }
         });
       }
-    } catch (e) {
-      // Handle animation errors gracefully
-      debugPrint('Animation error: $e');
-    }
+    } catch (e) {}
   }
 
   void _handleChangePassword() {

@@ -124,10 +124,7 @@ class _SettingsTabScreenState extends State<SettingsTabScreen>
           }
         });
       }
-    } catch (e) {
-      // Handle animation errors gracefully
-      debugPrint('Animation error: $e');
-    }
+    } catch (e) {}
   }
 
   void _handleLogout() async {
@@ -185,8 +182,6 @@ class _SettingsTabScreenState extends State<SettingsTabScreen>
   }
 
   void _handleError(String message, Object error) {
-    debugPrint('Settings Screen Error: $message - $error');
-
     if (mounted) {
       showCustomSnackBar(context, 'Something went wrong. Please try again.');
     }

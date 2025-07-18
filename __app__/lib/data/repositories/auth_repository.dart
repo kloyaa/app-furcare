@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_application_1/core/errors/exceptions.dart';
 import 'package:flutter_application_1/core/errors/failures.dart';
-import 'package:flutter_application_1/data/datasources/remote/auth_local_datasource.dart';
+import 'package:flutter_application_1/data/datasources/local/auth_local_datasource.dart';
 import 'package:flutter_application_1/data/datasources/remote/auth_remote_datasource.dart';
 import 'package:flutter_application_1/data/models/auth_models.dart';
 import 'package:flutter_application_1/data/models/default_models.dart';

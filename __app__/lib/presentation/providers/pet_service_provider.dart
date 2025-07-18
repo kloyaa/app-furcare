@@ -3,44 +3,111 @@ import 'package:flutter_application_1/core/errors/failures.dart';
 import 'package:flutter_application_1/data/models/pet_service.models.dart';
 import 'package:flutter_application_1/data/repositories/pet_service_repository.dart';
 
-enum FetchingState { initial, loading, done, error }
+enum PetServiceState { initial, loading, done, error }
 
 class PetServiceProvider with ChangeNotifier {
   final PetServiceRepository _petServiceRepository;
 
   List<PetService> _petServices = [];
-  FetchingState _state = FetchingState.initial;
+  List<GroomingOptions> _groomingOptions = [];
+  List<GroomingSchedule> _groomingSchedules = [];
+  List<GroomingPreference> _groomingPreferences = [];
 
-  bool _isLoading = true;
+  PetServiceState _state = PetServiceState.initial;
+  PetServiceState _fetchGroomingOptionsState = PetServiceState.initial;
+  PetServiceState _fetchGroomingPreferencesState = PetServiceState.initial;
+  PetServiceState _fetchGroomingSchedulesState = PetServiceState.initial;
+
   String? _errorMessage;
   String? _errorCode;
 
   List<PetService> get petServices => _petServices;
-  bool get isLoading => _isLoading;
 
   String? get error => _errorMessage;
   String? get errorCode => _errorCode;
 
-  bool get isInitial => _state == FetchingState.initial;
-  bool get isSuccess => _state == FetchingState.done;
-  bool get isFetching => _state == FetchingState.loading;
-  bool get isError => _state == FetchingState.error;
+  bool get isInitial => _state == PetServiceState.initial;
+  bool get isSuccess => _state == PetServiceState.done;
+  bool get isFetching => _state == PetServiceState.loading;
+  bool get isError => _state == PetServiceState.error;
+
+  bool get isFetchingGroomingOptions =>
+      _fetchGroomingOptionsState == PetServiceState.loading;
+  bool get isFetchingGroomingPreferences =>
+      _fetchGroomingPreferencesState == PetServiceState.loading;
+  bool get isFetchingGroomingSchedules =>
+      _fetchGroomingSchedulesState == PetServiceState.loading;
+
+  List<GroomingOptions> get groomingOptions => _groomingOptions;
+  List<GroomingSchedule> get groomingSchedules => _groomingSchedules;
+  List<GroomingPreference> get groomingPreferences => _groomingPreferences;
 
   PetServiceProvider({required PetServiceRepository petServiceRepository})
     : _petServiceRepository = petServiceRepository;
 
   Future<void> getPetServices() async {
-    _setFetchingState(FetchingState.loading);
+    _setFetchingState(PetServiceState.loading);
     final result = await _petServiceRepository.getPetServices();
 
     result.fold(
       (failure) {
-        _setFetchingState(FetchingState.error);
+        _setFetchingState(PetServiceState.error);
         _handleFailure(failure);
       },
       (services) {
         _petServices = services;
-        _setFetchingState(FetchingState.done);
+        _setFetchingState(PetServiceState.done);
+        notifyListeners();
+      },
+    );
+  }
+
+  Future<void> getGroomingSchedules() async {
+    _setGetGroomingSchedulesState(PetServiceState.loading);
+    final result = await _petServiceRepository.getGroomingSchedules();
+
+    result.fold(
+      (failure) {
+        _setGetGroomingSchedulesState(PetServiceState.error);
+        _handleFailure(failure);
+      },
+      (response) {
+        _setGetGroomingSchedulesState(PetServiceState.done);
+        _groomingSchedules = response;
+        notifyListeners();
+      },
+    );
+  }
+
+  Future<void> getGroomingOptions() async {
+    _setGetGroomingOptionsState(PetServiceState.loading);
+    final result = await _petServiceRepository.getGroomingOptions();
+
+    result.fold(
+      (failure) {
+        _setGetGroomingOptionsState(PetServiceState.error);
+        _handleFailure(failure);
+      },
+      (response) {
+        _groomingOptions = response;
+        _setGetGroomingOptionsState(PetServiceState.done);
+        notifyListeners();
+      },
+    );
+  }
+
+  Future<void> getGroomingPreferences() async {
+    _setGetGroomingPreferencesState(PetServiceState.loading);
+    final result = await _petServiceRepository.getGroomingPreferences();
+
+    result.fold(
+      (failure) {
+        _setGetGroomingPreferencesState(PetServiceState.error);
+        _handleFailure(failure);
+      },
+      (response) {
+        _groomingPreferences = response;
+        _setGetGroomingPreferencesState(PetServiceState.done);
         notifyListeners();
       },
     );
@@ -58,8 +125,23 @@ class PetServiceProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void _setFetchingState(FetchingState state) {
+  void _setFetchingState(PetServiceState state) {
     _state = state;
+    notifyListeners();
+  }
+
+  void _setGetGroomingSchedulesState(PetServiceState state) {
+    _fetchGroomingSchedulesState = state;
+    notifyListeners();
+  }
+
+  void _setGetGroomingPreferencesState(PetServiceState state) {
+    _fetchGroomingPreferencesState = state;
+    notifyListeners();
+  }
+
+  void _setGetGroomingOptionsState(PetServiceState state) {
+    _fetchGroomingOptionsState = state;
     notifyListeners();
   }
 }

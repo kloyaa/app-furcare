@@ -34,30 +34,30 @@ class NetworkService {
 
           // Log request
           if (kDebugMode) {
-            print('REQUEST[${options.method}] => PATH: ${options.path}');
-            print('Headers: ${options.headers}');
+            // print('REQUEST[${options.method}] => PATH: ${options.path}');
+            // print('Headers: ${options.headers}');
           }
           if (options.data != null) {
-            print('Data: ${options.data}');
+            // print('Data: ${options.data}');
           }
 
           return handler.next(options);
         },
         onResponse: (response, handler) {
           // Log response
-          print(
-            'RESPONSE[${response.statusCode}] => PATH: ${response.requestOptions.path}',
-          );
-          print('Data: ${response.data}');
+          // print(
+          //   'RESPONSE[${response.statusCode}] => PATH: ${response.requestOptions.path}',
+          // );
+          // print('Data: ${response.data}');
 
           return handler.next(response);
         },
         onError: (error, handler) {
           // Log error
-          print(
-            'ERROR[${error.response?.statusCode}] => PATH: ${error.requestOptions.path}',
-          );
-          print('Message: ${error.message}');
+          // print(
+          //   'ERROR[${error.response?.statusCode}] => PATH: ${error.requestOptions.path}',
+          // );
+          // print('Message: ${error.message}');
 
           return handler.next(error);
         },

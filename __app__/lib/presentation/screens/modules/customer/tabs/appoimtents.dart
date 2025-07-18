@@ -3,8 +3,10 @@ import 'package:flutter_application_1/core/constants/padding_constant.dart';
 import 'package:flutter_application_1/core/enums/text_enum.dart';
 import 'package:flutter_application_1/core/helpers/content.dart';
 import 'package:flutter_application_1/core/helpers/formatters.dart';
+import 'package:flutter_application_1/core/helpers/widget_helpers.dart';
 import 'package:flutter_application_1/data/models/pet_service.models.dart';
 import 'package:flutter_application_1/presentation/providers/pet_service_provider.dart';
+import 'package:flutter_application_1/presentation/screens/modules/customer/tabs/widgets/appointments/shimmer.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_text.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -353,7 +355,7 @@ class _AppointmentTabScreenState extends State<AppointmentTabScreen>
                                                           ),
                                                     ),
                                                     child: Icon(
-                                                      _getServiceIcon(
+                                                      getServiceIcon(
                                                         service.code,
                                                       ),
                                                       size: 16,
@@ -601,7 +603,7 @@ class _AppointmentTabScreenState extends State<AppointmentTabScreen>
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Icon(
-                                    _getServiceIcon(booking['serviceKey']),
+                                    getServiceIcon(booking['serviceKey']),
                                     size: 24,
                                     color: colorScheme.primary,
                                   ),
@@ -634,7 +636,7 @@ class _AppointmentTabScreenState extends State<AppointmentTabScreen>
                                     vertical: 4,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: _getStatusColor(
+                                    color: getStatusColor(
                                       booking['status'],
                                       colorScheme,
                                     ).withOpacity(0.1),
@@ -656,214 +658,10 @@ class _AppointmentTabScreenState extends State<AppointmentTabScreen>
                 ),
               ),
             ),
-
             // Bottom spacing
             const SliverToBoxAdapter(child: SizedBox(height: 24)),
           ],
         ),
-      ),
-    );
-  }
-
-  IconData _getServiceIcon(String serviceKey) {
-    switch (serviceKey) {
-      case 'PET_GROOMING':
-        return Icons.content_cut;
-      case 'PET_BOARDING':
-        return Icons.home;
-      case 'HOME_SERVICE':
-        return Icons.local_shipping;
-      case 'BRANCH_LOCATION':
-        return Icons.location_on;
-      case 'PET_TRAINING':
-        return Icons.school;
-      default:
-        return Icons.pets;
-    }
-  }
-
-  Color _getStatusColor(String status, ColorScheme colorScheme) {
-    switch (status) {
-      case 'completed':
-        return colorScheme.primary;
-      case 'active':
-        return const Color(0xFF4CAF50); // Green
-      case 'pending':
-        return const Color(0xFFFF9800); // Orange
-      default:
-        return colorScheme.onSurfaceVariant;
-    }
-  }
-}
-
-// Shimmer effect widget
-class ShimmerEffect extends StatefulWidget {
-  final Widget child;
-  final Color? baseColor;
-  final Color? highlightColor;
-
-  const ShimmerEffect({
-    super.key,
-    required this.child,
-    this.baseColor,
-    this.highlightColor,
-  });
-
-  @override
-  State<ShimmerEffect> createState() => _ShimmerEffectState();
-}
-
-class _ShimmerEffectState extends State<ShimmerEffect>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _animation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 1500),
-      vsync: this,
-    );
-    _animation = Tween<double>(
-      begin: -1.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
-    _controller.repeat();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final baseColor =
-        widget.baseColor ??
-        theme.colorScheme.surfaceContainerHigh.withOpacity(0.3);
-    final highlightColor =
-        widget.highlightColor ?? theme.colorScheme.surface.withOpacity(0.8);
-
-    return AnimatedBuilder(
-      animation: _animation,
-      builder: (context, child) {
-        return ShaderMask(
-          shaderCallback: (bounds) {
-            return LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-              colors: [baseColor, highlightColor, baseColor],
-              stops: [0.0, 0.5, 1.0],
-              transform: GradientRotation(_animation.value * 0.5),
-            ).createShader(bounds);
-          },
-          child: widget.child,
-        );
-      },
-    );
-  }
-}
-
-// Individual skeleton item for the grid
-class ServiceSkeletonItem extends StatelessWidget {
-  const ServiceSkeletonItem({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return Container(
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: colorScheme.outline.withOpacity(0.2),
-          width: 1.5,
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Row(
-          children: [
-            // Icon skeleton
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: colorScheme.surfaceContainerHigh,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: ShimmerEffect(
-                child: Container(
-                  width: 16,
-                  height: 16,
-                  decoration: BoxDecoration(
-                    color: colorScheme.surfaceContainerHigh,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(width: 8),
-            // Text skeleton
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Service name skeleton
-                  ShimmerEffect(
-                    child: Container(
-                      height: 12,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: colorScheme.surfaceContainerHigh,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  // Secondary text skeleton
-                  ShimmerEffect(
-                    child: Container(
-                      height: 8,
-                      width: 60,
-                      decoration: BoxDecoration(
-                        color: colorScheme.surfaceContainerHigh,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// Grid skeleton for the services
-class ServicesGridSkeleton extends StatelessWidget {
-  final int itemCount;
-
-  const ServicesGridSkeleton({super.key, this.itemCount = 4});
-
-  @override
-  Widget build(BuildContext context) {
-    return GridView.count(
-      crossAxisCount: 2,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      crossAxisSpacing: 12,
-      mainAxisSpacing: 12,
-      childAspectRatio: 2.0,
-      children: List.generate(
-        itemCount,
-        (index) => const ServiceSkeletonItem(),
       ),
     );
   }

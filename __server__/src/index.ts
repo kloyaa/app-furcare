@@ -19,6 +19,8 @@ import auxiliaryRoute from './routes/auxiliary.route';
 import activityRoute from './routes/activity.route';
 import petServicesRoute from './routes/pet_services.route';
 import petRoute from './routes/pet.route';
+import applicationRoute from './routes/application.route';
+import branchRoute from './routes/branch.route';
 
 import {
   logNetworBody,
@@ -82,6 +84,8 @@ async function runApp(): Promise<void> {
   app.use('/api', activityRoute);
   app.use('/api', petServicesRoute);
   app.use('/api', petRoute);
+  app.use('/api', applicationRoute);
+  app.use('/api', branchRoute);
 
   // Swagger setup
   app.use("/api-docs", swaggerUi.serve);

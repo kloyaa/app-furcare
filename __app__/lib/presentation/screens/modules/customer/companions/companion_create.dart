@@ -99,7 +99,7 @@ class _CompanionCreationScreenState extends State<CompanionCreationScreen> {
                 // Name Field
                 CustomInputField(
                   label: 'Name',
-                  hintText: 'Enter companio name',
+                  hintText: 'Enter companion name',
                   controller: _nameController,
                   prefixIcon: Icons.person_outline,
                   validator: validateCompanionName,

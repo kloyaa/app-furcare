@@ -3,36 +3,36 @@ import 'package:flutter_application_1/core/constants/api_constants.dart';
 import 'package:flutter_application_1/core/errors/exceptions.dart';
 import 'package:flutter_application_1/core/network/network_service.dart';
 import 'package:flutter_application_1/data/datasources/remote/auth_header_provider.dart';
-import 'package:flutter_application_1/data/models/pet_service.models.dart';
+import 'package:flutter_application_1/data/models/branch_models.dart';
 
-abstract class PetServiceRemoteDataSource {
-  Future<List<PetService>> getPetServices();
+abstract class BranchRemoteDataSource {
+  Future<List<Branch>> getBranches();
 }
 
-class PetServiceRemoteDataSourceImpl implements PetServiceRemoteDataSource {
+class BranchRemoteDataSourceImpl implements BranchRemoteDataSource {
   final NetworkService _networkService;
   final AuthHeaderProvider _authHeaderProvider;
 
-  PetServiceRemoteDataSourceImpl({
+  BranchRemoteDataSourceImpl({
     required NetworkService networkService,
     required AuthHeaderProvider authHeaderProvider,
   }) : _networkService = networkService,
        _authHeaderProvider = authHeaderProvider;
 
   @override
-  Future<List<PetService>> getPetServices() async {
+  Future<List<Branch>> getBranches() async {
     try {
       final response = await _networkService.get(
-        ApiConstants.petServices,
+        ApiConstants.branches,
         options: Options(headers: await _authHeaderProvider.getHeaders()),
       );
 
       if (response.statusCode == 200) {
         final List<dynamic> data = response.data;
-        return data.map((item) => PetService.fromJson(item)).toList();
+        return data.map((item) => Branch.fromJson(item)).toList();
       } else {
         throw ServerException(
-          message: response.data?['message'] ?? 'Error fetching pet services',
+          message: response.data?['message'] ?? 'Error fetching branches',
           code: response.data?['code'],
         );
       }
@@ -41,7 +41,7 @@ class PetServiceRemoteDataSourceImpl implements PetServiceRemoteDataSource {
         rethrow;
       }
       throw ServerException(
-        message: 'An error occurred during fetching pet services',
+        message: 'An error occurred during fetching pet branches',
       );
     }
   }

@@ -34,3 +34,98 @@ class PetService extends Equatable {
   @override
   List<Object?> get props => [code, name, description, available];
 }
+
+class GroomingSchedule extends Equatable {
+  final String code;
+  final String schedule;
+  final int price;
+  final bool available;
+
+  const GroomingSchedule({
+    required this.code,
+    required this.schedule,
+    required this.price,
+    required this.available,
+  });
+
+  factory GroomingSchedule.fromJson(Map<String, dynamic> json) {
+    return GroomingSchedule(
+      code: json['code'] as String,
+      schedule: json['schedule'] as String,
+      price: json['price'] as int,
+      available: json['available'] as bool,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'code': code,
+      'schedule': schedule,
+      'price': price,
+      'available': available,
+    };
+  }
+
+  @override
+  List<Object?> get props => [code, schedule, price, available];
+}
+
+class GroomingOptions extends Equatable {
+  final String code;
+  final String name;
+  final int price;
+  final bool available;
+
+  const GroomingOptions({
+    required this.code,
+    required this.name,
+    required this.price,
+    required this.available,
+  });
+
+  factory GroomingOptions.fromJson(Map<String, dynamic> json) {
+    return GroomingOptions(
+      code: json['code'] as String,
+      name: json['name'] as String,
+      price: json['price'] as int,
+      available: json['available'] as bool,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'code': code, 'name': name, 'price': price, 'available': available};
+  }
+
+  @override
+  List<Object?> get props => [code, name, price, available];
+}
+
+class GroomingPreference extends Equatable {
+  final String code;
+  final String name;
+  final int price;
+  final bool available;
+
+  const GroomingPreference({
+    required this.code,
+    required this.name,
+    required this.price,
+    required this.available,
+  });
+
+  factory GroomingPreference.fromJson(Map<String, dynamic> json) {
+    return GroomingPreference(
+      code: json['code'] as String,
+      name: json['name'] as String,
+      price: json['price'] as int,
+      available: json['available'] as bool,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'code': code, 'name': name, 'price': price, 'available': available};
+  }
+
+  @override
+  List<Object?> get props => [code, name, price, available];
+}

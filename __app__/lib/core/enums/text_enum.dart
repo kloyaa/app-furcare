@@ -17,7 +17,8 @@ enum AppFontWeight {
   thin(FontWeight.w100),
   normal(FontWeight.w400),
   semibold(FontWeight.w500),
-  bold(FontWeight.w600);
+  bold(FontWeight.w600),
+  black(FontWeight.w900);
 
   const AppFontWeight(this.value);
 
