@@ -5,7 +5,7 @@ import 'package:flutter_application_1/presentation/providers/client_provider.dar
 import 'package:flutter_application_1/presentation/screens/modules/customer/tabs/appoimtents.dart';
 import 'package:flutter_application_1/presentation/screens/modules/customer/tabs/settings.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_bottomnav.dart';
-import 'package:flutter_application_1/presentation/widgets/common/custom_branch_selection_modal.dart';
+import 'package:flutter_application_1/presentation/widgets/dialog/custom_branch_selection_dialog.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -100,7 +100,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => BranchSelectionModal(
+      builder: (context) => BranchSelectionDialog(
         onBranchSelected: () {
           // Optional: Add any additional logic after branch selection
           // For example, refresh data or show a success message

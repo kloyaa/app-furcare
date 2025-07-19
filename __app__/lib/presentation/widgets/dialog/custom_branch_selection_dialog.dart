@@ -7,16 +7,16 @@ import 'package:flutter_application_1/presentation/widgets/common/custom_text.da
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
-class BranchSelectionModal extends StatefulWidget {
+class BranchSelectionDialog extends StatefulWidget {
   final VoidCallback onBranchSelected;
 
-  const BranchSelectionModal({super.key, required this.onBranchSelected});
+  const BranchSelectionDialog({super.key, required this.onBranchSelected});
 
   @override
-  State<BranchSelectionModal> createState() => _BranchSelectionModalState();
+  State<BranchSelectionDialog> createState() => _BranchSelectionDialogState();
 }
 
-class _BranchSelectionModalState extends State<BranchSelectionModal>
+class _BranchSelectionDialogState extends State<BranchSelectionDialog>
     with TickerProviderStateMixin {
   late AnimationController _animationController;
   late AnimationController _pulseController;

@@ -12,6 +12,9 @@ class ConfirmationDialog {
     Color? confirmColor,
     Color? cancelColor,
     IconData? icon,
+
+    // callback
+    void Function()? onConfirm,
   }) {
     return showDialog<bool>(
       context: context,
@@ -38,7 +41,9 @@ class ConfirmationDialog {
               ),
 
             TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
+              onPressed: () => onConfirm != null
+                  ? onConfirm()
+                  : Navigator.of(context).pop(true),
               child: CustomText.caption(
                 confirmText,
                 color: confirmColor,

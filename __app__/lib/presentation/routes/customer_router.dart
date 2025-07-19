@@ -50,12 +50,7 @@ final GoRouter customerRouter = GoRouter(
             return const CustomerHomeScreen();
           },
         ),
-        GoRoute(
-          path: '/appointments',
-          builder: (BuildContext context, GoRouterState state) {
-            return const AppointmentsScreen();
-          },
-        ),
+
         GoRoute(
           path: '/appointments/grooming',
           builder: (BuildContext context, GoRouterState state) {
@@ -67,6 +62,13 @@ final GoRouter customerRouter = GoRouter(
           path: '/me/pets',
           builder: (BuildContext context, GoRouterState state) {
             return const PetsScreen();
+          },
+        ),
+
+        GoRoute(
+          path: '/me/appointments/grooming',
+          builder: (BuildContext context, GoRouterState state) {
+            return const AppointmentsScreen();
           },
         ),
         GoRoute(
