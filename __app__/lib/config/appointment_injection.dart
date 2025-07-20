@@ -1,7 +1,7 @@
 import 'package:flutter_application_1/config/dependency_instance.dart';
 import 'package:flutter_application_1/data/datasources/remote/appointment_remote_datasource.dart';
 import 'package:flutter_application_1/data/repositories/appointment_repository.dart';
-import 'package:flutter_application_1/presentation/providers/application_provider.dart';
+import 'package:flutter_application_1/presentation/providers/appointment_provider.dart';
 
 Future<void> appointmentDependencyInjection() async {
   // DataSource goes here

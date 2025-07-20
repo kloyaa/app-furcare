@@ -13,8 +13,11 @@
         [x] should have pet selection
         [X] should have schedule selection
         [X] Integrate appointment boooking
-        [ ] Should navigate to appointments after success booking
+        [x] Should navigate to appointments after success booking
     [ ] Create a boarding screen
         [ ] Integrate appointment boooking
     [ ] Create a home service screen
         [ ] Integrate appointment boooking
+
+
+4. GroomingAppointmentsScreen integration, should display grooming appointments

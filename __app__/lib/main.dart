@@ -10,7 +10,7 @@ import 'package:flutter_application_1/config/pet_dependency_injectioN.dart';
 import 'package:flutter_application_1/config/pet_service_dependency_injection.dart';
 import 'package:flutter_application_1/core/theme/theme_notifier.dart';
 import 'package:flutter_application_1/presentation/providers/activity_provider.dart';
-import 'package:flutter_application_1/presentation/providers/application_provider.dart';
+import 'package:flutter_application_1/presentation/providers/appointment_provider.dart';
 import 'package:flutter_application_1/presentation/providers/auth_provider.dart';
 import 'package:flutter_application_1/presentation/providers/branch_provider.dart';
 import 'package:flutter_application_1/presentation/providers/client_provider.dart';

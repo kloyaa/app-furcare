@@ -9,6 +9,8 @@ abstract class AppointmentRepository {
   Future<Either<Failure, DefaultResponse>> createGroomingAppointment(
     GroomingAppointmentRequest request,
   );
+
+  Future<Either<Failure, List<GroomingAppointment>>> getGroomingAppointments();
 }
 
 class AppointmentRepositoryImpl implements AppointmentRepository {
@@ -24,6 +26,23 @@ class AppointmentRepositoryImpl implements AppointmentRepository {
   ) async {
     try {
       final response = await _remoteDataSource.createGroomingAppointment(pet);
+      return Right(response);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message, code: e.code));
+    } on NetworkException catch (e) {
+      return Left(NetworkFailure(message: e.message));
+    } on CacheException catch (e) {
+      return Left(CacheFailure(message: e.message));
+    } catch (e) {
+      return Left(ServerFailure(message: 'An unexpected error occurred'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<GroomingAppointment>>>
+  getGroomingAppointments() async {
+    try {
+      final response = await _remoteDataSource.getGroomingAppointments();
       return Right(response);
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message, code: e.code));

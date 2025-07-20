@@ -5,7 +5,7 @@ import 'package:flutter_application_1/core/helpers/theme.dart';
 import 'package:flutter_application_1/data/models/appointment_models.dart';
 import 'package:flutter_application_1/data/models/pet_models.dart';
 import 'package:flutter_application_1/data/models/pet_service.models.dart';
-import 'package:flutter_application_1/presentation/providers/application_provider.dart';
+import 'package:flutter_application_1/presentation/providers/appointment_provider.dart';
 import 'package:flutter_application_1/presentation/providers/branch_provider.dart';
 import 'package:flutter_application_1/presentation/providers/pet_service_provider.dart';
 import 'package:flutter_application_1/presentation/widgets/dialog/custom_branch_selection_dialog.dart';

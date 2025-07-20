@@ -21,6 +21,9 @@ class AppointmentProvider with ChangeNotifier {
     : _appointmentRepository = appointmentRepository;
 
   AppointmentState _createApplicationState = AppointmentState.initial;
+  AppointmentState _isFetchingApplicationState = AppointmentState.initial;
+
+  List<GroomingAppointment> _groomingAppointments = [];
 
   String? _errorMessage;
   String? _errorCode;
@@ -30,6 +33,11 @@ class AppointmentProvider with ChangeNotifier {
 
   bool get isCreatingApplication =>
       _createApplicationState == AppointmentState.loading;
+
+  bool get isFetchingAppointments =>
+      _isFetchingApplicationState == AppointmentState.loading;
+
+  List<GroomingAppointment> get groomingAppointments => _groomingAppointments;
 
   Future<void> createGroomingAppointment(
     GroomingAppointmentRequest request,
@@ -55,8 +63,33 @@ class AppointmentProvider with ChangeNotifier {
     );
   }
 
+  Future<void> getGroomingAppointments() async {
+    _setGettGroomingAppointments(AppointmentState.loading);
+
+    final result = await _appointmentRepository.getGroomingAppointments();
+    result.fold(
+      (failure) {
+        clearError();
+        print('failure: $failure');
+        _setGettGroomingAppointments(AppointmentState.error);
+        _handleFailure(failure);
+      },
+      (response) {
+        _groomingAppointments = response;
+        print('response: $response');
+        _setGettGroomingAppointments(AppointmentState.fetched);
+        // getPets();
+      },
+    );
+  }
+
   void _setCreateGroomingAppointment(AppointmentState newState) {
     _createApplicationState = newState;
+    notifyListeners();
+  }
+
+  void _setGettGroomingAppointments(AppointmentState newState) {
+    _isFetchingApplicationState = newState;
     notifyListeners();
   }
 

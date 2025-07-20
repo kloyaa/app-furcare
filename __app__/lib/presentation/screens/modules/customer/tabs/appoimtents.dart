@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_application_1/core/constants/padding_constant.dart';
 import 'package:flutter_application_1/core/enums/text_enum.dart';
 import 'package:flutter_application_1/core/helpers/content.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_application_1/data/models/pet_service.models.dart';
 import 'package:flutter_application_1/presentation/providers/pet_service_provider.dart';
 import 'package:flutter_application_1/presentation/screens/modules/customer/tabs/widgets/appointments/shimmer.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_text.dart';
+import 'package:flutter_application_1/presentation/widgets/dialog/custom_my_appointments_dialog.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -263,7 +265,7 @@ class _AppointmentTabScreenState extends State<AppointmentTabScreen>
                               ),
                               const SizedBox(width: 8),
                               CustomText.body(
-                                'My Appointments',
+                                'New Appointments?',
                                 size: AppTextSize.sm,
                                 fontWeight: AppFontWeight.bold.value,
                               ),
@@ -662,6 +664,24 @@ class _AppointmentTabScreenState extends State<AppointmentTabScreen>
             const SliverToBoxAdapter(child: SizedBox(height: 24)),
           ],
         ),
+      ),
+
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          final petServices = context.read<PetServiceProvider>().petServices;
+
+          HapticFeedback.lightImpact();
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) =>
+                MyAppointmentsDialog(petServices: petServices),
+          );
+        },
+        icon: const Icon(Icons.bookmark_border_rounded),
+        label: const Text('My Appointments'),
+        backgroundColor: colorScheme.primary,
+        foregroundColor: colorScheme.onPrimary,
       ),
     );
   }

@@ -7,7 +7,7 @@ import 'package:flutter_application_1/data/models/pet_models.dart';
 import 'package:flutter_application_1/data/models/pet_service.models.dart';
 import 'package:flutter_application_1/presentation/providers/pet_provider.dart';
 import 'package:flutter_application_1/presentation/providers/pet_service_provider.dart';
-import 'package:flutter_application_1/presentation/screens/modules/customer/appointments/widgets/grooming/skeleton.dart';
+import 'package:flutter_application_1/presentation/screens/modules/customer/appointments/create/widgets/grooming/skeleton.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_appbar.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_button.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_text.dart';
@@ -379,6 +379,9 @@ class _GroomingAppointmentScreenState extends State<GroomingAppointmentScreen> {
                 selectedPetObject = selectedPetData;
                 selectedPet = selectedPetData.id;
               });
+
+              print('selectedPet: $selectedPet');
+              print('selectedPetObject: $selectedPetObject');
             }
           });
         }
@@ -498,6 +501,7 @@ class _GroomingAppointmentScreenState extends State<GroomingAppointmentScreen> {
                                   ),
                                   onTap: () {
                                     setState(() {
+                                      selectedPetObject = pet;
                                       selectedPet = pet.id;
                                       isPetAccordionExpanded =
                                           false; // Close accordion after selection
