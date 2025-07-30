@@ -37,7 +37,7 @@ function parseCommandLineArgs() {
 
 function generateBaseUrl(ip, env) {
     if (env === 'dev') {
-        return 'http://ec2-3-107-113-31.ap-southeast-2.compute.amazonaws.com:3432';
+        return 'http://ec2-3-107-113-31.ap-southeast-2.compute.amazonaws.com:3432/api';
     }
     return `http://${ip}:3432/api`;
 }
