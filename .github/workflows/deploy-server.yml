@@ -4,7 +4,7 @@ on:
   push:
     branches: [master]
     paths:
-      - "server/**"
+      - "__server__/**"
       - ".github/workflows/deploy-server.yml"
 
 jobs:
@@ -48,7 +48,7 @@ jobs:
             docker run -d \
               --name furcare-server \
               -p 3432:3432 \
-              -e DB_CONNECTION_STRING="${{ secrets.DB_CONNECTION_STRING }}" \
+              -e DB_CONNECTION_STRING="${{ secrets.DATABASE_URL }}" \
               -e API_KEY="${{ secrets.API_KEY }}" \
               --restart unless-stopped \
               furcare-server-image
