@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc",
     "start": "node dist/index.js",
     "start:dev": "nodemon --exec ts-node src/index.ts",
     "start:seeding": "ts-node --project tsconfig.json src/_core/seeders/index.ts",

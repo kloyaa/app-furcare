@@ -2,9 +2,9 @@
 const { exec } = require('child_process');
 const path = require('path');
 
-const serverDir = path.join(__dirname, '__server__');
+const serverDir = path.join(__dirname, 'server');
 
-console.log('Running build in __server__...');
+console.log('Running build in server...');
 
 exec('npm run build', { cwd: serverDir }, (error, stdout, stderr) => {
     if (error) {

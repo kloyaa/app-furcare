@@ -4,26 +4,26 @@ const { spawn } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 
-// Define the __server__ folder path
-const serverPath = path.join(__dirname, '__server__');
+// Define the server folder path
+const serverPath = path.join(__dirname, 'server');
 
-// Check if __server__ folder exists
+// Check if server folder exists
 if (!fs.existsSync(serverPath)) {
-    console.error('❌ Error: "__server__" folder not found in the current directory');
+    console.error('❌ Error: "server" folder not found in the current directory');
     process.exit(1);
 }
 
-// Check if package.json exists in __server__ folder
+// Check if package.json exists in server folder
 const packageJsonPath = path.join(serverPath, 'package.json');
 if (!fs.existsSync(packageJsonPath)) {
-    console.error('❌ Error: package.json not found in the __server__ folder');
+    console.error('❌ Error: package.json not found in the server folder');
     process.exit(1);
 }
 
-console.log('📦 Installing dependencies in __server__ folder...');
-console.log(`📁 __server__ path: ${serverPath}`);
+console.log('📦 Installing dependencies in server folder...');
+console.log(`📁 server path: ${serverPath}`);
 
-// Run npm install in the __server__ directory
+// Run npm install in the server directory
 const npmInstall = spawn('npm', ['install'], {
     cwd: serverPath,
     stdio: 'inherit', // This will show the npm install output in real-time
