@@ -83,3 +83,5 @@ __app__
 - If you get "command not found" errors, make sure you're in the project root directory
 - If the server fails to start, ensure all dependencies are installed by running `node install`
 - Check that your `server/package.json` has the correct `start:dev` script configuration
+
+..
