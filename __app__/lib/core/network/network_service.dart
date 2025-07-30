@@ -63,6 +63,22 @@ class NetworkService {
         },
       ),
     );
+
+    _dio.interceptors.add(
+      LogInterceptor(
+        request: true,
+        requestHeader: true,
+        requestBody: true,
+        responseHeader: true,
+        responseBody: true,
+        error: true,
+        logPrint: (object) {
+          if (kDebugMode) {
+            print(object);
+          }
+        },
+      ),
+    );
   }
 
   // Add custom headers for specific requests
@@ -122,6 +138,7 @@ class NetworkService {
         options: options,
       );
     } on DioException catch (e) {
+      print(e.requestOptions.baseUrl);
       throw _handleDioException(e);
     }
   }

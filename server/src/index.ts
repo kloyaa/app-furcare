@@ -53,7 +53,6 @@ async function runApp(): Promise<void> {
   app.use(helmet()); // Apply standard security headers
   app.use(
     cors({
-      origin: 'http://localhost:3432',
       exposedHeaders: ['X-Nodex-DateTime'],
     }),
   );
