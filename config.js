@@ -53,7 +53,7 @@ function generateDartConfig(baseUrl) {
 `;
 
     // Ensure the directory exists
-    const configDir = path.resolve(__dirname, '__app__/lib/core/constants/');
+    const configDir = path.resolve(__dirname, 'app/lib/core/constants/');
     fs.mkdirSync(configDir, { recursive: true });
 
     // Write the Dart configuration file
