@@ -1,45 +1,9 @@
-const os = require('os');
 const fs = require('fs');
 const path = require('path');
 
-function getLocalIPAddress() {
-    // Get all network interfaces
-    const networkInterfaces = os.networkInterfaces();
 
-    // Iterate through interfaces to find a suitable IP
-    for (const interfaceName in networkInterfaces) {
-        const interfaces = networkInterfaces[interfaceName];
-
-        for (const face of interfaces) {
-            // Skip loopback and non-IPv4 addresses
-            if (!face.internal && face.family === 'IPv4') {
-                return face.address;
-            }
-        }
-    }
-
-    // Fallback to localhost
-    return '127.0.0.1';
-}
-
-function parseCommandLineArgs() {
-    const args = process.argv.slice(2);
-    const config = {};
-
-    args.forEach(arg => {
-        if (arg.startsWith('--env=')) {
-            config.env = arg.split('=')[1];
-        }
-    });
-
-    return config;
-}
-
-function generateBaseUrl(ip, env) {
-    if (env === 'dev') {
-        return 'http://ec2-3-107-113-31.ap-southeast-2.compute.amazonaws.com:3432/api';
-    }
-    return `http://${ip}:3432/api`;
+function generateBaseUrl() {
+    return 'http://ec2-3-107-113-31.ap-southeast-2.compute.amazonaws.com:3432/api';
 }
 
 function generateDartConfig(baseUrl) {
@@ -66,14 +30,7 @@ function generateDartConfig(baseUrl) {
 
 function main() {
     try {
-        // Parse command line arguments
-        const args = parseCommandLineArgs();
-
-        // Get the local IP address
-        const localIp = getLocalIPAddress();
-
-        // Generate the base URL based on environment
-        const baseUrl = generateBaseUrl(localIp, args.env);
+        const baseUrl = generateBaseUrl();
 
         // Generate the Dart configuration file
         generateDartConfig(baseUrl);
