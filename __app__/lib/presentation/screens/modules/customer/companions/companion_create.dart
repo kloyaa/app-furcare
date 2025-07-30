@@ -103,6 +103,7 @@ class _CompanionCreationScreenState extends State<CompanionCreationScreen> {
                   controller: _nameController,
                   prefixIcon: Icons.person_outline,
                   validator: validateCompanionName,
+                  isRequired: true,
                 ),
 
                 const SizedBox(height: 20),
@@ -114,6 +115,7 @@ class _CompanionCreationScreenState extends State<CompanionCreationScreen> {
                   controller: _specieController,
                   prefixIcon: Icons.pets_outlined,
                   validator: validateSpecie,
+                  isRequired: true,
                 ),
 
                 const SizedBox(height: 20),

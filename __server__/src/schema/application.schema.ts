@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
-import { IGroomingApplication } from '../_core/interfaces/schema/schema.interface';
-import { applicationStatusEnum } from '../_core/enum/application.enum';
+import { IBoardingApplication, IGroomingApplication } from '../_core/interfaces/schema/schema.interface';
+import { ApplicationStatusEnum } from '../_core/enum/application.enum';
 
 const groomingApplicationSchema = new Schema<IGroomingApplication>(
     {
@@ -50,35 +50,67 @@ const groomingApplicationSchema = new Schema<IGroomingApplication>(
         status: {
             type: String,
             required: true,
-            enum: applicationStatusEnum,
+            enum: Object.values(ApplicationStatusEnum),
             default: 'pending',
         }
     },
     { timestamps: true },
 );
 
-const boardingApplicationSchema = new Schema(
+const boardingApplicationSchema = new Schema<IBoardingApplication>(
     {
-        petType: {
+        user: {
+            type: Schema.Types.ObjectId,
+            ref: 'User',
+            required: true,
+        },
+        pet: {
+            type: Schema.Types.ObjectId,
+            ref: 'Pet',
+            required: true,
+        },
+        cage: {
+            type: Schema.Types.ObjectId,
+            ref: 'PetCage',
+            required: true,
+        },
+        branch: {
+            type: Schema.Types.ObjectId,
+            ref: 'Branch',
+            required: true,
+        },
+        schedule: {
+            date: {
+                type: Date,
+                required: true,
+            },
+            time: {
+                type: String,
+                required: true,
+            },
+            days: {
+                type: String,
+                required: true,
+            },
+        },
+        instructions: {
             type: String,
             required: true,
         },
-        dailyRate: {
+        totalPrice: {
             type: Number,
             required: true,
         },
-        maxDays: {
-            type: Number,
-            required: true,
-        },
-        facilities: {
-            type: [String],
-            required: false,
-        },
-        isAvailable: {
+        requestAntiRabiesVaccination: {
             type: Boolean,
-            default: true,
+            required: true,
         },
+        status: {
+            type: String,
+            required: true,
+            enum: Object.values(ApplicationStatusEnum),
+            default: 'pending',
+        }
     },
     { timestamps: true },
 );

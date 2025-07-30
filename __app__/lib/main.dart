@@ -70,6 +70,7 @@ class MainApp extends StatelessWidget {
                 // routerConfig: customerRouter,
                 // routerConfig: customerRouter,
                 debugShowCheckedModeBanner: false,
+                title: 'Furcare',
               ),
             );
           },

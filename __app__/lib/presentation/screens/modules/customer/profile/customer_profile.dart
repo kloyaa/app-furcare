@@ -74,15 +74,18 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                     children: [
                       CircleAvatar(
                         radius: 40,
-                        backgroundColor: colorScheme.primary,
+                        backgroundColor: colorScheme.secondaryContainer,
                         child: CustomText.title(
                           getInitials(clientProvider.client.fullName),
                           size: AppTextSize.lg,
-                          color: colorScheme.onPrimaryContainer,
+                          color: colorScheme.onSecondaryContainer,
                         ),
                       ),
                       const SizedBox(height: 16),
-                      CustomText.subtitle(client.fullName),
+                      CustomText.subtitle(
+                        client.fullName,
+                        color: colorScheme.onPrimaryContainer,
+                      ),
                       const SizedBox(height: 8),
                       Container(
                         padding: const EdgeInsets.symmetric(

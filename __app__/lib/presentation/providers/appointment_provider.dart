@@ -51,14 +51,34 @@ class AppointmentProvider with ChangeNotifier {
 
     result.fold(
       (failure) {
-        print('failure: $failure');
         _setCreateGroomingAppointment(AppointmentState.error);
         _handleFailure(failure);
       },
       (response) {
-        print('response: $response');
         _setCreateGroomingAppointment(AppointmentState.created);
-        // getPets();
+      },
+    );
+  }
+
+  Future<void> createBoardingAppointment(
+    BoardingAppointmentRequest request,
+  ) async {
+    clearError();
+    _setCreateBoardingAppointment(AppointmentState.loading);
+
+    final result = await _appointmentRepository.createBoardingAppointment(
+      request,
+    );
+
+    result.fold(
+      (failure) {
+        print('failure: ${failure.message}');
+        _setCreateBoardingAppointment(AppointmentState.error);
+        _handleFailure(failure);
+      },
+      (response) {
+        print('response: $response');
+        _setCreateBoardingAppointment(AppointmentState.created);
       },
     );
   }
@@ -84,6 +104,11 @@ class AppointmentProvider with ChangeNotifier {
   }
 
   void _setCreateGroomingAppointment(AppointmentState newState) {
+    _createApplicationState = newState;
+    notifyListeners();
+  }
+
+  void _setCreateBoardingAppointment(AppointmentState newState) {
     _createApplicationState = newState;
     notifyListeners();
   }

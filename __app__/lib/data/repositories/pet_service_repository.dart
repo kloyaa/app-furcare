@@ -9,6 +9,7 @@ abstract class PetServiceRepository {
   Future<Either<Failure, List<GroomingSchedule>>> getGroomingSchedules();
   Future<Either<Failure, List<GroomingOptions>>> getGroomingOptions();
   Future<Either<Failure, List<GroomingPreference>>> getGroomingPreferences();
+  Future<Either<Failure, List<PetCage>>> getPetCages();
 }
 
 class PetServiceRepositoryImpl implements PetServiceRepository {
@@ -40,7 +41,6 @@ class PetServiceRepositoryImpl implements PetServiceRepository {
       final response = await _remoteDataSource.getGroomingSchedules();
       return Right(response);
     } on ServerException catch (e) {
-      print(e.message);
       return Left(ServerFailure(message: e.message, code: e.code));
     } on NetworkException catch (e) {
       return Left(NetworkFailure(message: e.message));
@@ -72,6 +72,22 @@ class PetServiceRepositoryImpl implements PetServiceRepository {
   getGroomingPreferences() async {
     try {
       final response = await _remoteDataSource.getGroomingPreferences();
+      return Right(response);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message, code: e.code));
+    } on NetworkException catch (e) {
+      return Left(NetworkFailure(message: e.message));
+    } on CacheException catch (e) {
+      return Left(CacheFailure(message: e.message));
+    } catch (e) {
+      return Left(ServerFailure(message: 'An unexpected error occurred'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<PetCage>>> getPetCages() async {
+    try {
+      final response = await _remoteDataSource.getPetCages();
       return Right(response);
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message, code: e.code));

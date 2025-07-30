@@ -129,3 +129,42 @@ class GroomingPreference extends Equatable {
   @override
   List<Object?> get props => [code, name, price, available];
 }
+
+class PetCage extends Equatable {
+  final String id;
+  final int price;
+  final String size;
+  final int occupant;
+  final int max;
+
+  const PetCage({
+    required this.id,
+    required this.price,
+    required this.size,
+    required this.occupant,
+    required this.max,
+  });
+
+  factory PetCage.fromJson(Map<String, dynamic> json) {
+    return PetCage(
+      id: json['_id'] as String,
+      price: json['price'] as int,
+      size: json['size'] as String,
+      occupant: json['occupant'] as int,
+      max: json['max'] as int,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'price': price,
+      'size': size,
+      'occupant': occupant,
+      'max': max,
+      '_id': id,
+    };
+  }
+
+  @override
+  List<Object?> get props => [price, size, occupant, max, id];
+}

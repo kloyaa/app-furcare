@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/constants/padding_constant.dart';
 import 'package:flutter_application_1/core/enums/text_enum.dart';
 import 'package:flutter_application_1/core/helpers/formatters.dart';
-import 'package:flutter_application_1/core/helpers/widget_helpers.dart';
 import 'package:flutter_application_1/data/models/pet_models.dart';
 import 'package:flutter_application_1/data/models/pet_service.models.dart';
 import 'package:flutter_application_1/presentation/providers/pet_provider.dart';
@@ -10,6 +9,7 @@ import 'package:flutter_application_1/presentation/providers/pet_service_provide
 import 'package:flutter_application_1/presentation/screens/modules/customer/appointments/create/widgets/grooming/skeleton.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_appbar.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_button.dart';
+import 'package:flutter_application_1/presentation/widgets/common/custom_pet_selection.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_text.dart';
 import 'package:flutter_application_1/presentation/widgets/dialog/custom_grooming_receipt_dialog.dart';
 import 'package:provider/provider.dart';
@@ -135,10 +135,23 @@ class _GroomingAppointmentScreenState extends State<GroomingAppointmentScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Pet Selection Section
-            _buildPetAccordionCard(theme),
+            PetSelectionAccordion(
+              selectedPet: selectedPet,
+              selectedPetObject: selectedPetObject,
+              isPetAccordionExpanded: isPetAccordionExpanded,
+              onPetSelected: (petId, petObject) {
+                setState(() {
+                  selectedPet = petId;
+                  selectedPetObject = petObject;
+                });
+              },
+              onAccordionToggle: (isExpanded) {
+                setState(() {
+                  isPetAccordionExpanded = isExpanded;
+                });
+              },
+            ),
             const SizedBox(height: 16),
-
-            // Schedule Selection Section
             _buildSectionCard(
               title: "Choose Schedule",
               icon: Icons.schedule,
@@ -201,8 +214,6 @@ class _GroomingAppointmentScreenState extends State<GroomingAppointmentScreen> {
               theme: theme,
             ),
             const SizedBox(height: 16),
-
-            // Grooming Options Section
             _buildSectionCard(
               title: "Grooming Options",
               icon: Icons.wash,
@@ -260,8 +271,6 @@ class _GroomingAppointmentScreenState extends State<GroomingAppointmentScreen> {
               theme: theme,
             ),
             const SizedBox(height: 16),
-
-            // Grooming Preferences Section
             _buildSectionCard(
               title: "Grooming Preferences",
               icon: Icons.content_cut,
@@ -326,8 +335,6 @@ class _GroomingAppointmentScreenState extends State<GroomingAppointmentScreen> {
               theme: theme,
             ),
             const SizedBox(height: 16),
-
-            // Health Information Section
             _buildSectionCard(
               title: "Health Information",
               icon: Icons.health_and_safety,
@@ -335,7 +342,6 @@ class _GroomingAppointmentScreenState extends State<GroomingAppointmentScreen> {
               theme: theme,
             ),
             const SizedBox(height: 24),
-
             // Price Summary and Book Button
             _buildPriceSummaryAndButton(theme),
           ],
@@ -345,7 +351,7 @@ class _GroomingAppointmentScreenState extends State<GroomingAppointmentScreen> {
   }
 
   void _showReceiptDialog() {
-    GroomingReceiptDialog.show(
+    return GroomingReceiptDialog.show(
       context: context,
       selectedPetObject: selectedPetObject,
       selectedSchedule: selectedSchedule,
@@ -354,173 +360,6 @@ class _GroomingAppointmentScreenState extends State<GroomingAppointmentScreen> {
       hasAllergy: hasAllergy,
       isOnMedication: isOnMedication,
       hasAntiRabbiesVaccination: hasAntiRabbiesVaccination,
-    );
-  }
-
-  Widget _buildPetAccordionCard(ThemeData theme) {
-    return Consumer<PetProvider>(
-      builder: (context, petProvider, child) {
-        Pet selectedPetData = Pet(id: "", name: "", specie: "", gender: "");
-        if (petProvider.isFetchingPets) {
-          return const CompanionSelectionSkeleton();
-        }
-
-        if (petProvider.pets.isNotEmpty) {
-          selectedPetData = petProvider.pets.firstWhere(
-            (pet) => pet.id == selectedPet,
-            orElse: () => petProvider.pets.first,
-          );
-        }
-
-        if (mounted && selectedPet != selectedPetData.id) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (mounted) {
-              setState(() {
-                selectedPetObject = selectedPetData;
-                selectedPet = selectedPetData.id;
-              });
-
-              print('selectedPet: $selectedPet');
-              print('selectedPetObject: $selectedPetObject');
-            }
-          });
-        }
-
-        return Card(
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Accordion Header
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      isPetAccordionExpanded = !isPetAccordionExpanded;
-                    });
-                  },
-                  child: Row(
-                    children: [
-                      Icon(getSpecieIcon(selectedPetData.specie)),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CustomText.title("Companion", size: AppTextSize.md),
-                            if (!isPetAccordionExpanded) ...[
-                              const SizedBox(height: 4),
-                              CustomText.body(
-                                "${selectedPetData.name} (${selectedPetData.specie})",
-                                size: AppTextSize.sm,
-                              ),
-                            ],
-                          ],
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.primary.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(100),
-                        ),
-                        child: AnimatedRotation(
-                          turns: isPetAccordionExpanded ? 0.5 : 0,
-                          duration: const Duration(milliseconds: 250),
-                          child: Icon(
-                            Icons.keyboard_arrow_down,
-                            color: theme.colorScheme.primary,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                // Animated Accordion Content - Top to Bottom Slide
-                ClipRect(
-                  child: AnimatedAlign(
-                    alignment: Alignment.topCenter,
-                    heightFactor: isPetAccordionExpanded ? 1.0 : 0.0,
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                    child: AnimatedOpacity(
-                      opacity: isPetAccordionExpanded ? 1.0 : 0.0,
-                      duration: Duration(
-                        milliseconds: isPetAccordionExpanded ? 350 : 200,
-                      ),
-                      curve: isPetAccordionExpanded
-                          ? Curves.easeIn
-                          : Curves.easeOut,
-                      child: Column(
-                        children: [
-                          const SizedBox(height: 16),
-                          Column(
-                            children: petProvider.pets.map((pet) {
-                              return Container(
-                                margin: const EdgeInsets.only(bottom: 8),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(
-                                    color: selectedPet == pet.id
-                                        ? Theme.of(context).primaryColor
-                                        : Colors.grey.withOpacity(0.3),
-                                    width: selectedPet == pet.id ? 2 : 1,
-                                  ),
-                                ),
-                                child: ListTile(
-                                  leading: CircleAvatar(
-                                    backgroundColor: Theme.of(
-                                      context,
-                                    ).primaryColor.withOpacity(0.1),
-                                    child: Icon(getSpecieIcon(pet.specie)),
-                                  ),
-                                  title: CustomText.body(
-                                    pet.name,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  subtitle: CustomText.body(
-                                    pet.specie,
-                                    size: AppTextSize.xs,
-                                  ),
-                                  trailing: Radio<String>(
-                                    value: pet.id,
-                                    groupValue: selectedPet,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        selectedPet = value;
-                                        isPetAccordionExpanded =
-                                            false; // Close accordion after selection
-                                      });
-                                    },
-                                  ),
-                                  onTap: () {
-                                    setState(() {
-                                      selectedPetObject = pet;
-                                      selectedPet = pet.id;
-                                      isPetAccordionExpanded =
-                                          false; // Close accordion after selection
-                                    });
-                                  },
-                                ),
-                              );
-                            }).toList(),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
     );
   }
 

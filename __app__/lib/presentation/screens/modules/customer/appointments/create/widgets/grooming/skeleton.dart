@@ -26,7 +26,9 @@ class CompanionSelectionSkeleton extends StatelessWidget {
                     width: 24,
                     height: 24,
                     decoration: BoxDecoration(
-                      color: colorScheme.surfaceContainerHigh,
+                      color: colorScheme.surfaceContainerHighest.withOpacity(
+                        0.3,
+                      ),
                       borderRadius: BorderRadius.circular(4),
                     ),
                   ),

@@ -10,6 +10,7 @@ abstract class PetServiceRemoteDataSource {
   Future<List<GroomingSchedule>> getGroomingSchedules();
   Future<List<GroomingOptions>> getGroomingOptions();
   Future<List<GroomingPreference>> getGroomingPreferences();
+  Future<List<PetCage>> getPetCages();
 }
 
 class PetServiceRemoteDataSourceImpl implements PetServiceRemoteDataSource {
@@ -68,8 +69,6 @@ class PetServiceRemoteDataSourceImpl implements PetServiceRemoteDataSource {
         );
       }
     } catch (e) {
-      print(e);
-
       if (e is ServerException || e is NetworkException) {
         rethrow;
       }
@@ -132,6 +131,33 @@ class PetServiceRemoteDataSourceImpl implements PetServiceRemoteDataSource {
       }
       throw ServerException(
         message: 'An error occurred during fetching grooming preferences',
+      );
+    }
+  }
+
+  @override
+  Future<List<PetCage>> getPetCages() async {
+    try {
+      final response = await _networkService.get(
+        "${ApiConstants.petServices}/cages",
+        options: Options(headers: await _authHeaderProvider.getHeaders()),
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = response.data;
+        return data.map((item) => PetCage.fromJson(item)).toList();
+      } else {
+        throw ServerException(
+          message: response.data?['message'] ?? 'Error fetching pet cages',
+          code: response.data?['code'],
+        );
+      }
+    } catch (e) {
+      if (e is ServerException || e is NetworkException) {
+        rethrow;
+      }
+      throw ServerException(
+        message: 'An error occurred during fetching pet cages',
       );
     }
   }

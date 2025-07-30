@@ -20,4 +20,9 @@ export enum ActivityType {
   APPLICATION_GROOMING_SUBMITTED = 'Grooming application submitted',
   APPLICATION_GROOMING_UPDATED = 'Grooming application updated',
   APPLICATION_GROOMING_DELETED = 'Grooming application deleted',
+
+
+  APPLICATION_BOARDING_SUBMITTED = 'Boarding application submitted',
+  APPLICATION_BOARDING_UPDATED = 'Boarding application updated',
+  APPLICATION_BOARDING_DELETED = 'Boarding application deleted',
 }

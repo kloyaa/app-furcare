@@ -11,6 +11,10 @@ abstract class AppointmentRemoteDatasource {
     GroomingAppointmentRequest request,
   );
 
+  Future<DefaultResponse> createBoardingAppointment(
+    BoardingAppointmentRequest request,
+  );
+
   Future<List<GroomingAppointment>> getGroomingAppointments();
 }
 
@@ -76,6 +80,34 @@ class AppointmentRemoteDatasourceImpl implements AppointmentRemoteDatasource {
       }
       throw ServerException(
         message: 'An error occurred during fetching appointments',
+      );
+    }
+  }
+
+  @override
+  Future<DefaultResponse> createBoardingAppointment(
+    BoardingAppointmentRequest request,
+  ) async {
+    try {
+      final response = await _networkService.post(
+        data: request.toJson(),
+        "${ApiConstants.appointment}/boarding",
+        options: Options(headers: await _authHeaderProvider.getHeaders()),
+      );
+      if (response.statusCode == 201) {
+        return DefaultResponse.fromJson(response.data);
+      } else {
+        throw ServerException(
+          message: response.data?['message'] ?? 'Error creating appointment',
+          code: response.data?['code'],
+        );
+      }
+    } catch (e) {
+      if (e is ServerException || e is NetworkException) {
+        rethrow;
+      }
+      throw ServerException(
+        message: 'An error occurred during creating appointment',
       );
     }
   }

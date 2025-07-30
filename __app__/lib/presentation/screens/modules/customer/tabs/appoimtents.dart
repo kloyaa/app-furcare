@@ -111,8 +111,18 @@ class _AppointmentTabScreenState extends State<AppointmentTabScreen>
   ];
 
   void _handleNavigateToPetServices(String code) {
+    print("code: $code");
     if (code == "PET_GROOMING") {
       context.push('/appointments/grooming');
+    }
+    if (code == "PET_BOARDING") {
+      context.push('/appointments/boarding');
+    }
+    if (code == "HOME_SERVICE") {
+      context.push('/appointments/home-service');
+    }
+    if (code == "PET_TRAINING") {
+      context.push('/appointments/training');
     }
   }
 

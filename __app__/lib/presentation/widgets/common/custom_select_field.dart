@@ -3,51 +3,53 @@ import 'package:flutter_application_1/core/enums/text_enum.dart';
 import 'package:flutter_application_1/core/helpers/theme.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_text.dart';
 
-class CustomInputField extends StatefulWidget {
+class CustomSelectField<T> extends StatefulWidget {
   final String label;
   final String hintText;
-  final bool isPassword;
-  final TextEditingController controller;
+  final List<T> options;
+  final T? selectedValue;
+  final Function(T?) onChanged;
   final IconData? prefixIcon;
   final IconData? suffixIcon;
-  final bool withSuffixIcon;
-  final VoidCallback? onSuffixIconTap;
-  final TextInputType keyboardType;
-  final String? Function(String?)? validator;
+  final String Function(T)?
+  displayText; // Custom display text for complex objects
+  final String? Function(T?)? validator;
   final bool enabled;
-  final int maxLines;
-  final bool error; // New error parameter
-  final String? errorText; // Optional error message
-  final Function(String)? onChanged; // Optional onChange callback
-  final bool isRequired;
+  final bool error;
+  final String? errorText;
+  final bool? isRequired;
+  final double? maxHeight; // Maximum height for dropdown
+  final EdgeInsets? margin; // Margin around the field
+  final double? width; // Custom width (if null, uses responsive width)
+  final int?
+  screenColumns; // Number of columns for responsive design (optional)
 
-  const CustomInputField({
+  const CustomSelectField({
     super.key,
     required this.label,
     required this.hintText,
-    required this.controller,
-    required this.isRequired,
-    this.isPassword = false,
+    required this.options,
+    required this.onChanged,
+    this.selectedValue,
     this.prefixIcon,
     this.suffixIcon,
-    this.withSuffixIcon = false,
-    this.onSuffixIconTap,
-    this.keyboardType = TextInputType.text,
+    this.displayText,
     this.validator,
     this.enabled = true,
-    this.maxLines = 1,
-    this.error = false, // Default to false
+    this.error = false,
     this.errorText,
-    this.onChanged, // Optional onChange parameter
+    this.isRequired,
+    this.maxHeight = 500,
+    this.margin,
+    this.width,
+    this.screenColumns,
   });
 
   @override
-  State<CustomInputField> createState() => _CustomInputFieldState();
+  State<CustomSelectField<T>> createState() => _CustomSelectFieldState<T>();
 }
 
-class _CustomInputFieldState extends State<CustomInputField> {
-  bool _obscureText = true;
-
+class _CustomSelectFieldState<T> extends State<CustomSelectField<T>> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -57,6 +59,7 @@ class _CustomInputFieldState extends State<CustomInputField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Label with optional asterisk
         Row(
           children: [
             CustomText.subtitle(
@@ -81,14 +84,25 @@ class _CustomInputFieldState extends State<CustomInputField> {
           ],
         ),
         const SizedBox(height: 8),
-        TextFormField(
-          controller: widget.controller,
-          obscureText: widget.isPassword ? _obscureText : false,
-          keyboardType: widget.keyboardType,
+        // Dropdown Field
+        DropdownButtonFormField<T>(
+          value: widget.selectedValue,
+          onChanged: widget.enabled ? widget.onChanged : null,
           validator: widget.validator,
-          enabled: widget.enabled,
-          maxLines: widget.maxLines,
-          onChanged: widget.onChanged, // Add onChange callback
+          items: widget.options.map((T option) {
+            return DropdownMenuItem<T>(
+              value: option,
+              child: Text(
+                widget.displayText != null
+                    ? widget.displayText!(option)
+                    : option.toString(),
+                style: TextStyle(
+                  fontSize: 16,
+                  color: theme.colorScheme.onPrimaryContainer,
+                ),
+              ),
+            );
+          }).toList(),
           style: TextStyle(
             fontSize: 16,
             color: hasError
@@ -103,44 +117,8 @@ class _CustomInputFieldState extends State<CustomInputField> {
                   : theme.colorScheme.onSurface.withOpacity(0.5),
               fontSize: AppTextSize.sm.size,
             ),
-            prefixIcon: widget.prefixIcon != null
-                ? Icon(
-                    widget.prefixIcon,
-                    color: hasError
-                        ? theme.colorScheme.error.withOpacity(0.8)
-                        : theme.colorScheme.onSurface.withOpacity(0.6),
-                    size: 20,
-                  )
-                : null,
-            suffixIcon: widget.isPassword && widget.withSuffixIcon
-                ? IconButton(
-                    icon: Icon(
-                      _obscureText ? Icons.visibility_off : Icons.visibility,
-                      color: hasError
-                          ? theme.colorScheme.error.withOpacity(0.8)
-                          : theme.colorScheme.onSurface.withOpacity(0.6),
-                      size: 20,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _obscureText = !_obscureText;
-                      });
-                    },
-                  )
-                : (widget.suffixIcon != null
-                      ? IconButton(
-                          icon: Icon(
-                            widget.suffixIcon,
-                            color: hasError
-                                ? theme.colorScheme.error.withOpacity(0.8)
-                                : theme.colorScheme.onSurface.withOpacity(0.6),
-                            size: 20,
-                          ),
-                          onPressed: widget.onSuffixIconTap,
-                        )
-                      : null),
             errorText: hasError ? widget.errorText : null,
-            errorMaxLines: 3, // Allow error text to wrap up to 3 lines
+            errorMaxLines: 3,
             filled: true,
             fillColor: hasError
                 ? theme.colorScheme.errorContainer.withOpacity(0.1)
@@ -189,6 +167,9 @@ class _CustomInputFieldState extends State<CustomInputField> {
               vertical: 16,
             ),
           ),
+          dropdownColor: theme.colorScheme.primaryContainer,
+          menuMaxHeight: widget.maxHeight,
+          borderRadius: BorderRadius.circular(12),
         ),
       ],
     );

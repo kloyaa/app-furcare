@@ -8,6 +8,7 @@ import 'package:flutter_application_1/data/models/pet_service.models.dart';
 import 'package:flutter_application_1/presentation/providers/appointment_provider.dart';
 import 'package:flutter_application_1/presentation/providers/branch_provider.dart';
 import 'package:flutter_application_1/presentation/providers/pet_service_provider.dart';
+import 'package:flutter_application_1/presentation/routes/customer_router.dart';
 import 'package:flutter_application_1/presentation/widgets/dialog/custom_branch_selection_dialog.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_button.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_confirm_dialog.dart';
@@ -98,8 +99,6 @@ class _GroomingReceiptDialogState extends State<GroomingReceiptDialog> {
         isOnMedication: widget.isOnMedication ?? false,
         scheduleCode: widget.selectedSchedule ?? "",
       );
-
-      print('Payload: $payload');
 
       if (mounted) {
         context.read<AppointmentProvider>().createGroomingAppointment(payload);
@@ -423,7 +422,7 @@ class _GroomingReceiptDialogState extends State<GroomingReceiptDialog> {
                             Navigator.of(context)
                               ..pop() // Close dialog
                               ..pop(); // Close booking screen
-                            context.push("/me/appointments/grooming");
+                            context.push(CustomerRoute.appointmentsGrooming);
                           },
                         );
                       }

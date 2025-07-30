@@ -120,6 +120,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       prefixIcon: Icons.email_outlined,
                       keyboardType: TextInputType.emailAddress,
                       validator: validateEmail,
+                      isRequired: true,
                     ),
                     const SizedBox(height: 20),
 
@@ -131,6 +132,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       prefixIcon: Icons.person_outline,
                       keyboardType: TextInputType.text,
                       validator: validateUsername,
+                      isRequired: true,
                     ),
                     const SizedBox(height: 20),
 
@@ -143,6 +145,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       withSuffixIcon: true,
                       prefixIcon: Icons.lock_outline,
                       validator: validatePassword,
+                      isRequired: true,
                     ),
                     const SizedBox(height: 20),
 
@@ -157,6 +160,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         _passwordController.text,
                         value,
                       ),
+                      isRequired: true,
                     ),
                     const SizedBox(height: 32),
 

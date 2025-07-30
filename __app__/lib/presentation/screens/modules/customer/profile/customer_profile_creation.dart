@@ -170,6 +170,7 @@ class _CustomerProfileCreationScreenState
                     prefixIcon: Icons.person_outline,
                     keyboardType: TextInputType.name,
                     validator: validateFullName,
+                    isRequired: true,
                   ),
                   const SizedBox(height: 20),
 
@@ -181,6 +182,8 @@ class _CustomerProfileCreationScreenState
                     prefixIcon: Icons.location_on_outlined,
                     keyboardType: TextInputType.streetAddress,
                     validator: validateAddress,
+                    isRequired: true,
+
                     maxLines: 3,
                   ),
                   const SizedBox(height: 12),
@@ -251,6 +254,7 @@ class _CustomerProfileCreationScreenState
                     prefixIcon: Icons.phone_outlined,
                     keyboardType: TextInputType.phone,
                     validator: validatePhoneNumber,
+                    isRequired: true,
                   ),
                   const SizedBox(height: 20),
 
@@ -262,6 +266,7 @@ class _CustomerProfileCreationScreenState
                     prefixIcon: Icons.facebook_outlined,
                     keyboardType: TextInputType.url,
                     validator: validateFacebookUrl,
+                    isRequired: false,
                   ),
                   const SizedBox(height: 20),
 
@@ -273,6 +278,7 @@ class _CustomerProfileCreationScreenState
                     prefixIcon: Icons.chat_outlined,
                     keyboardType: TextInputType.url,
                     validator: validateMessengerUrl,
+                    isRequired: false,
                   ),
                   const SizedBox(height: 40),
 

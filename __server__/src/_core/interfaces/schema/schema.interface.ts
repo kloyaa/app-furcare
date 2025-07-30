@@ -1,5 +1,6 @@
 import { Types } from 'mongoose';
 import { Role } from '../../../schema/role.schema';
+import { ApplicationStatusEnum } from '../../enum/application.enum';
 
 export interface IUser extends Document {
   username: string;
@@ -128,26 +129,36 @@ export interface IPet extends Document {
   specie: string;
 }
 
-// applicationStatusEnum
-
-export interface IGroomingApplication {
-  user: Types.ObjectId; // Reference to User
-  pet: Types.ObjectId;  // Reference to Pet
-  branch: Types.ObjectId; // Reference to Branch
-
+export interface IGroomingApplication extends Document {
+  user: Types.ObjectId;
+  pet: Types.ObjectId;
+  branch: Types.ObjectId;
   scheduleCode: string;
-
   groomingOptions: string[];
   groomingPreferences: string[];
-
   hasAllergy: boolean;
   isOnMedication: boolean;
   hasAntiRabbiesVaccination: boolean;
-
   totalPrice: number;
-
   status: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
 
+export interface IBoardingApplication extends Document {
+  user: Types.ObjectId;
+  pet: Types.ObjectId;
+  cage: Types.ObjectId;
+  branch: Types.ObjectId;
+  schedule: {
+    date: Date;
+    time: string;
+    days: string;
+  };
+  totalPrice: number;
+  requestAntiRabiesVaccination: boolean;
+  instructions: string;
+  status: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -160,4 +171,11 @@ export interface IBranch {
 
   createdAt?: Date;
   updatedAt?: Date;
+}
+
+export interface IPetCage extends Document {
+  price: number;
+  size: 'Small' | 'Medium' | 'Large';
+  occupant: number;
+  max: number;
 }

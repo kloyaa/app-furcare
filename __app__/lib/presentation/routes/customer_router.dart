@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/presentation/screens/modules/customer/accounts/accounts.dart';
+import 'package:flutter_application_1/presentation/screens/modules/customer/appointments/create/boarding_appointment.dart';
+import 'package:flutter_application_1/presentation/screens/modules/customer/appointments/get/boarding_appointment.dart'
+    as boarding;
 import 'package:flutter_application_1/presentation/screens/modules/customer/companions/companion_create.dart';
 import 'package:flutter_application_1/presentation/screens/modules/customer/companions/companions.dart';
-import 'package:flutter_application_1/presentation/screens/modules/customer/appointments/get/appointments.dart';
-import 'package:flutter_application_1/presentation/screens/modules/customer/appointments/create/appointment.dart';
+import 'package:flutter_application_1/presentation/screens/modules/customer/appointments/get/grooming_appointment.dart'
+    as grooming;
+import 'package:flutter_application_1/presentation/screens/modules/customer/appointments/create/grooming_appointment.dart';
 import 'package:flutter_application_1/presentation/screens/modules/customer/home.dart';
 import 'package:flutter_application_1/presentation/screens/modules/customer/login.dart';
 import 'package:flutter_application_1/presentation/screens/modules/customer/pre_login.dart';
@@ -18,94 +22,137 @@ import 'package:flutter_application_1/presentation/screens/shared/change_theme.d
 import 'package:flutter_application_1/presentation/screens/shared/splash_screen.dart';
 import 'package:go_router/go_router.dart';
 
+class CustomerRoute {
+  static const String root = '/';
+  static const String preLogin = '/pre-login';
+  static const String login = '/login';
+  static const String registration = '/registration';
+  static const String home = '/home';
+
+  // Appointments
+  static const String createGroomingAppointment = '/appointments/grooming';
+  static const String createBoardingppointment = '/appointments/boarding';
+
+  static const String appointmentsGrooming = '/me/appointments/grooming';
+  static const String appointmentsBoarding = '/me/appointments/boarding';
+
+  // Pets
+  static const String pets = '/me/pets';
+  static const String createPet = '/me/pets/create';
+
+  // Profile
+  static const String profile = '/me/profile';
+  static const String createProfile = '/me/profile/create';
+  static const String updateProfile = '/me/profile/update';
+
+  // Settings
+  static const String accountAndCompanions = '/settings/accounts';
+  static const String accountSecurity = '/settings/privacy';
+
+  // Shared
+  static const String settingsTheme = '/settings/theme';
+  static const String changePassword = '/settings/privacy/change-password';
+  static const String settingsActivityLog = '/settings/activity-log';
+}
+
 final GoRouter customerRouter = GoRouter(
   routes: <RouteBase>[
     GoRoute(
-      path: '/',
+      path: CustomerRoute.root,
       builder: (BuildContext context, GoRouterState state) {
         return const SplashScreen();
       },
       routes: <RouteBase>[
         GoRoute(
-          path: '/pre-login',
+          path: CustomerRoute.preLogin,
           builder: (BuildContext context, GoRouterState state) {
             return const CustomerPreLoginScreen();
           },
         ),
         GoRoute(
-          path: '/login',
+          path: CustomerRoute.login,
           builder: (BuildContext context, GoRouterState state) {
             return const CustomerLoginScreen();
           },
         ),
         GoRoute(
-          path: '/registration',
+          path: CustomerRoute.registration,
           builder: (BuildContext context, GoRouterState state) {
             return const RegistrationScreen();
           },
         ),
         GoRoute(
-          path: '/home',
+          path: CustomerRoute.home,
           builder: (BuildContext context, GoRouterState state) {
             return const CustomerHomeScreen();
           },
         ),
 
         GoRoute(
-          path: '/appointments/grooming',
+          path: CustomerRoute.createGroomingAppointment,
           builder: (BuildContext context, GoRouterState state) {
             return const GroomingAppointmentScreen();
           },
         ),
-
         GoRoute(
-          path: '/me/pets',
+          path: CustomerRoute.createBoardingppointment,
+          builder: (BuildContext context, GoRouterState state) {
+            return const BoardingAppointmentScreen();
+          },
+        ),
+        GoRoute(
+          path: CustomerRoute.pets,
           builder: (BuildContext context, GoRouterState state) {
             return const PetsScreen();
           },
         ),
 
         GoRoute(
-          path: '/me/appointments/grooming',
+          path: CustomerRoute.appointmentsGrooming,
           builder: (BuildContext context, GoRouterState state) {
-            return const GroomingAppointmentsScreen();
+            return const grooming.AppointmentsScreen();
+          },
+        ),
+
+        GoRoute(
+          path: CustomerRoute.appointmentsBoarding,
+          builder: (BuildContext context, GoRouterState state) {
+            return const boarding.AppointmentsScreen();
           },
         ),
         GoRoute(
-          path: '/me/pets/create',
+          path: CustomerRoute.createPet,
           builder: (BuildContext context, GoRouterState state) {
             return const CompanionCreationScreen();
           },
         ),
         GoRoute(
-          path: '/me/profile',
+          path: CustomerRoute.profile,
           builder: (BuildContext context, GoRouterState state) {
             return const CustomerProfileScreen();
           },
         ),
         GoRoute(
-          path: '/me/profile/create',
+          path: CustomerRoute.createProfile,
           builder: (BuildContext context, GoRouterState state) {
             return const CustomerProfileCreationScreen();
           },
         ),
         GoRoute(
-          path: '/me/profile/update',
+          path: CustomerRoute.updateProfile,
           builder: (BuildContext context, GoRouterState state) {
             return const CustomerUpdateProfileScreen();
           },
         ),
-
         GoRoute(
-          path: '/settings/accounts',
+          path: CustomerRoute.accountAndCompanions,
           builder: (BuildContext context, GoRouterState state) {
             return const AccountsScreen();
           },
         ),
-
         // Privacy screen
         GoRoute(
-          path: '/settings/privacy',
+          path: CustomerRoute.accountSecurity,
           builder: (BuildContext context, GoRouterState state) {
             return const PrivacyScreen();
           },
@@ -113,20 +160,20 @@ final GoRouter customerRouter = GoRouter(
 
         // Shared routes
         GoRoute(
-          path: '/settings/theme',
+          path: CustomerRoute.settingsTheme,
           builder: (BuildContext context, GoRouterState state) {
             return const ThemeToggleScreen();
           },
         ),
         GoRoute(
-          path: '/settings/activity-log',
+          path: CustomerRoute.settingsActivityLog,
           builder: (BuildContext context, GoRouterState state) {
             return const ActivityLogScreen();
           },
         ),
 
         GoRoute(
-          path: '/settings/privacy/change-password',
+          path: CustomerRoute.changePassword,
           builder: (BuildContext context, GoRouterState state) {
             return const ChangePasswordScreen();
           },

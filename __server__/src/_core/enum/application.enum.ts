@@ -25,3 +25,10 @@ export const groomingPreferencesEnum = [
     'LONG_TRIM',
     'SHORT_TRIM'
 ]
+export enum ApplicationStatusEnum {
+    PENDING = 'pending',
+    IN_PROGRESS = 'in-progress',
+    COMPLETED = 'completed',
+    CANCELLED = 'cancelled',
+    REJECTED = 'rejected',
+}

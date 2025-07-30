@@ -9,6 +9,7 @@ class PetServiceProvider with ChangeNotifier {
   final PetServiceRepository _petServiceRepository;
 
   List<PetService> _petServices = [];
+  List<PetCage> _petCages = [];
   List<GroomingOptions> _groomingOptions = [];
   List<GroomingSchedule> _groomingSchedules = [];
   List<GroomingPreference> _groomingPreferences = [];
@@ -17,6 +18,7 @@ class PetServiceProvider with ChangeNotifier {
   PetServiceState _fetchGroomingOptionsState = PetServiceState.initial;
   PetServiceState _fetchGroomingPreferencesState = PetServiceState.initial;
   PetServiceState _fetchGroomingSchedulesState = PetServiceState.initial;
+  PetServiceState _fetchPetCagesState = PetServiceState.initial;
 
   String? _errorMessage;
   String? _errorCode;
@@ -37,10 +39,12 @@ class PetServiceProvider with ChangeNotifier {
       _fetchGroomingPreferencesState == PetServiceState.loading;
   bool get isFetchingGroomingSchedules =>
       _fetchGroomingSchedulesState == PetServiceState.loading;
+  bool get isFetchingPetCages => _fetchPetCagesState == PetServiceState.loading;
 
   List<GroomingOptions> get groomingOptions => _groomingOptions;
   List<GroomingSchedule> get groomingSchedules => _groomingSchedules;
   List<GroomingPreference> get groomingPreferences => _groomingPreferences;
+  List<PetCage> get petCages => _petCages;
 
   PetServiceProvider({required PetServiceRepository petServiceRepository})
     : _petServiceRepository = petServiceRepository;
@@ -113,6 +117,23 @@ class PetServiceProvider with ChangeNotifier {
     );
   }
 
+  Future<void> getPetCages() async {
+    _setFetchingPetCagesState(PetServiceState.loading);
+    final result = await _petServiceRepository.getPetCages();
+
+    result.fold(
+      (failure) {
+        _setFetchingPetCagesState(PetServiceState.error);
+        _handleFailure(failure);
+      },
+      (cages) {
+        _petCages = cages;
+        _setFetchingPetCagesState(PetServiceState.done);
+        notifyListeners();
+      },
+    );
+  }
+
   void _handleFailure(Failure failure) {
     _errorMessage = failure.message;
     _errorCode = failure.code;
@@ -127,6 +148,11 @@ class PetServiceProvider with ChangeNotifier {
 
   void _setFetchingState(PetServiceState state) {
     _state = state;
+    notifyListeners();
+  }
+
+  void _setFetchingPetCagesState(PetServiceState state) {
+    _fetchPetCagesState = state;
     notifyListeners();
   }
 

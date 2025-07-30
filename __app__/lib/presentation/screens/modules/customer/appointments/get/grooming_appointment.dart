@@ -4,6 +4,7 @@ import 'package:flutter_application_1/core/helpers/formatters.dart';
 import 'package:flutter_application_1/core/helpers/widget_helpers.dart';
 import 'package:flutter_application_1/data/models/appointment_models.dart';
 import 'package:flutter_application_1/presentation/providers/appointment_provider.dart';
+import 'package:flutter_application_1/presentation/routes/customer_router.dart';
 import 'package:flutter_application_1/presentation/screens/modules/customer/appointments/create/widgets/grooming/skeleton.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_appbar.dart';
 import 'package:flutter_application_1/presentation/widgets/common/custom_text.dart';
@@ -11,15 +12,14 @@ import 'package:flutter_application_1/presentation/widgets/dialog/custom_groomin
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-class GroomingAppointmentsScreen extends StatefulWidget {
-  const GroomingAppointmentsScreen({super.key});
+class AppointmentsScreen extends StatefulWidget {
+  const AppointmentsScreen({super.key});
 
   @override
-  State<GroomingAppointmentsScreen> createState() =>
-      _GroomingAppointmentsScreenState();
+  State<AppointmentsScreen> createState() => _AppointmentsScreenState();
 }
 
-class _GroomingAppointmentsScreenState extends State<GroomingAppointmentsScreen>
+class _AppointmentsScreenState extends State<AppointmentsScreen>
     with TickerProviderStateMixin {
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
@@ -110,7 +110,7 @@ class _GroomingAppointmentsScreenState extends State<GroomingAppointmentsScreen>
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           HapticFeedback.lightImpact();
-          context.push("/appointments/grooming");
+          context.push(CustomerRoute.createGroomingAppointment);
         },
         icon: const Icon(Icons.add_rounded),
         label: const Text('New Appointment'),

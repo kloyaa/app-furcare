@@ -133,3 +133,39 @@ export const groomingOptions = [
         "available": true,
     },
 ];
+
+export const petCages = [
+    {
+        "price": 100,
+        "size": "Small",
+        "occupant": 0,
+        "max": 6
+    },
+    {
+        "price": 200,
+        "size": "Medium",
+        "occupant": 0,
+        "max": 6
+    },
+    {
+        "price": 500,
+        "size": "Large",
+        "occupant": 0,
+        "max": 6
+    }
+];
+
+export const boardingHours = [
+    "7:00 AM",
+    "8:00 AM",
+    "9:00 AM",
+    "10:00 AM",
+    "11:00 AM",
+    "12:00 PM",
+    "1:00 PM",
+    "2:00 PM",
+    "3:00 PM",
+    "4:00 PM",
+    "5:00 PM",
+    "6:00 PM",
+];

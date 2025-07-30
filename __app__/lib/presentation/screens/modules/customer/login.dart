@@ -100,6 +100,7 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
                       keyboardType: TextInputType.text,
                       error: hasError,
                       validator: validateUsername,
+                      isRequired: true,
                     ),
                     const SizedBox(height: 24),
 
@@ -113,6 +114,7 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
                       error: hasError,
                       withSuffixIcon: true,
                       validator: validatePassword,
+                      isRequired: true,
                     ),
                     const SizedBox(height: 16),
 

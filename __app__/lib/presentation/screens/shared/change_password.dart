@@ -132,7 +132,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       controller: _currentPasswordController,
                       prefixIcon: Icons.lock_outline,
                       validator: validateCurrentPassword,
-
+                      isRequired: true,
                       onChanged: (value) {
                         // Clear error when user starts typing
                         if (hasError) {
@@ -157,6 +157,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                           _lastShownErrorMessage = null;
                         }
                       },
+                      isRequired: true,
                     ),
                     const SizedBox(height: 16),
 
@@ -221,7 +222,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         value,
                         _newPasswordController.text,
                       ),
-
                       onChanged: (value) {
                         // Clear error when user starts typing
                         if (hasError) {
@@ -229,6 +229,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                           _lastShownErrorMessage = null;
                         }
                       },
+                      isRequired: true,
                     ),
                     const SizedBox(height: 40),
 

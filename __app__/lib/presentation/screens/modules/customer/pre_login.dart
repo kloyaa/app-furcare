@@ -121,6 +121,7 @@ class _CustomerPreLoginScreenState extends State<CustomerPreLoginScreen> {
                       prefixIcon: Icons.lock_outline,
                       error: hasError,
                       validator: validatePassword,
+                      isRequired: true,
                     ),
                     const SizedBox(height: 16),
 
