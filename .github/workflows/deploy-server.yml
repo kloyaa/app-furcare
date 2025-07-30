@@ -10,6 +10,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: EC2
 
     steps:
       - name: Checkout code
@@ -21,7 +22,6 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          env: "EC2"
           script: |
             # Navigate to home directory
             cd /home/ec2-user
