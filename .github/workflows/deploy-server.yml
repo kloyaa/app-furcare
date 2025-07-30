@@ -36,7 +36,7 @@ jobs:
             fi
 
             # Navigate to server directory
-            cd app-furcare/server
+            cd app-furcare/__server__
 
             # Stop existing container if running
             docker stop furcare-server || true

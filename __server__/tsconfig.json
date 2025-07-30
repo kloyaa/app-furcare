@@ -1,21 +1,21 @@
 {
   "compilerOptions": {
-    "target": "ES2021", // Set your target ECMAScript version
-    "module": "CommonJS", // Use CommonJS for module resolution
-    "outDir": "./dist", // Output directory for compiled files
-    "rootDir": "./src", // Source code directory
-    "strict": true, // Enable strict type checking
-    "esModuleInterop": true, // Allow default imports from modules using CommonJS
-    "skipLibCheck": true, // Skip type checking of declaration files
+    "target": "ES2021",
+    "module": "CommonJS",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "strictPropertyInitialization": false,
-    "resolveJsonModule": true,
+    "resolveJsonModule": true
   },
   "include": [
     "src/**/*.ts",
     "src/_core/seeders/address.seed.js"
-  ], // Files to include in compilation
+  ],
   "exclude": [
     "node_modules"
-  ] // Files to exclude from compilation
+  ]
 }
