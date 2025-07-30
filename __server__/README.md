@@ -94,4 +94,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 # Author
 Kolya Madridano <br/>
-madridano.kolya@gmail.com
+kolya.madridano@gmail.com
