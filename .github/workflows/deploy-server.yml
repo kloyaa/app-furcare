@@ -43,8 +43,7 @@ jobs:
             docker run -d \
               --name furcare-server \
               -p 3432:3432 \
+              -e DATABASE_URL="${{ secrets.DATABASE_URL }}" \
+              -e API_KEY="${{ secrets.API_KEY }}" \
               --restart unless-stopped \
               furcare-server-image
-
-            # Clean up unused images
-            docker image prune -f
