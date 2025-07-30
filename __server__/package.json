@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build": "tsc && cp package.json package-lock.json .env ../api-build",
+    "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js",
     "start:dev": "nodemon --exec ts-node src/index.ts",
     "start:seeding": "ts-node --project tsconfig.json src/_core/seeders/index.ts",

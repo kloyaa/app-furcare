@@ -22,11 +22,31 @@ function getLocalIPAddress() {
     return '127.0.0.1';
 }
 
-function generateDartConfig(ip) {
+function parseCommandLineArgs() {
+    const args = process.argv.slice(2);
+    const config = {};
+
+    args.forEach(arg => {
+        if (arg.startsWith('--env=')) {
+            config.env = arg.split('=')[1];
+        }
+    });
+
+    return config;
+}
+
+function generateBaseUrl(ip, env) {
+    if (env === 'dev') {
+        return 'http://ec2-13-54-215-55.ap-southeast-2.compute.amazonaws.com:3432/api';
+    }
+    return `http://${ip}:3432/api`;
+}
+
+function generateDartConfig(baseUrl) {
     const dartConfig = `
     // AUTO-GENERATED FILE - DO NOT EDIT MANUALLY
     class AppConfig {
-        static const String generatedBaseUrl = 'http://${ip}:3432/api';
+        static const String generatedBaseUrl = '${baseUrl}';
         static const String accessKeyValue = 'v7pb6wylg4m0xf0kx5zzoved';
         static const String secretKeyValue = 'glrvdwi46mq00fg1oqtdx3rg';
     }
@@ -40,17 +60,23 @@ function generateDartConfig(ip) {
     const configPath = path.resolve(configDir, '___generated.dart');
     fs.writeFileSync(configPath, dartConfig);
 
-    console.log(`Generated base URL: http://${ip}:3432/api`);
+    console.log(`Generated base URL: ${baseUrl}`);
     console.log(`Configuration saved to: ${configPath}`);
 }
 
 function main() {
     try {
+        // Parse command line arguments
+        const args = parseCommandLineArgs();
+
         // Get the local IP address
         const localIp = getLocalIPAddress();
 
+        // Generate the base URL based on environment
+        const baseUrl = generateBaseUrl(localIp, args.env);
+
         // Generate the Dart configuration file
-        generateDartConfig(localIp);
+        generateDartConfig(baseUrl);
     } catch (error) {
         console.error('Error generating base URL configuration:', error);
     }
