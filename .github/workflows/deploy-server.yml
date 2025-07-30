@@ -4,34 +4,38 @@ on:
   push:
     branches: [master]
     paths:
-      - "__server__/**"
+      - "server/**"
       - ".github/workflows/deploy-server.yml"
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: EC2 # environment
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Deploy Server to EC2
-        uses: appleboy/ssh-action@v0.1.5
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          debug: true
           script: |
-            # Navigate to your app directory
-            cd /home/ubuntu/app-furcare
+            # Navigate to home directory
+            cd /home/ec2-user
 
-            # Pull latest changes
-            git pull origin master  # Changed from main to master
+            # Clone repo if it doesn't exist, otherwise pull
+            if [ ! -d "app-furcare" ]; then
+              git clone git@github.com:kloyaa/app-furcare.git app-furcare
+            else
+              cd app-furcare
+              git pull origin master
+              cd ..
+            fi
 
             # Navigate to server directory
-            cd server
+            cd app-furcare/server
 
             # Stop existing container if running
             docker stop furcare-server || true
@@ -40,11 +44,14 @@ jobs:
             # Build new image
             docker build -t furcare-server-image .
 
-            # Run new container
+            # Run new container with environment variables
             docker run -d \
               --name furcare-server \
               -p 3432:3432 \
-              -e DATABASE_URL="${{ secrets.DATABASE_URL }}" \
+              -e DB_CONNECTION_STRING="${{ secrets.DB_CONNECTION_STRING }}" \
               -e API_KEY="${{ secrets.API_KEY }}" \
               --restart unless-stopped \
               furcare-server-image
+
+            # Clean up unused images
+            docker image prune -f
