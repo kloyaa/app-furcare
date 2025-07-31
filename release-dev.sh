@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # === CONFIGURATION ===
-SOURCE_DIR="__app__"
+SOURCE_DIR="app"
 TEMP_DIR="/tmp/repo2-push"
 TARGET_BRANCH="main"  # Change if needed
 TARGET_REMOTE="https://github.com/kloyaa/furcare-dev.git"  # <-- update this!
