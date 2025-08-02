@@ -1,10 +1,10 @@
 import 'package:dartz/dartz.dart';
-import 'package:flutter_application_1/core/errors/exceptions.dart';
-import 'package:flutter_application_1/core/errors/failures.dart';
-import 'package:flutter_application_1/data/datasources/local/auth_local_datasource.dart';
-import 'package:flutter_application_1/data/datasources/remote/auth_remote_datasource.dart';
-import 'package:flutter_application_1/data/models/auth_models.dart';
-import 'package:flutter_application_1/data/models/default_models.dart';
+import 'package:furcare_app/core/errors/exceptions.dart';
+import 'package:furcare_app/core/errors/failures.dart';
+import 'package:furcare_app/data/datasources/local/auth_local_datasource.dart';
+import 'package:furcare_app/data/datasources/remote/auth_remote_datasource.dart';
+import 'package:furcare_app/data/models/auth_models.dart';
+import 'package:furcare_app/data/models/default_models.dart';
 
 abstract class AuthRepository {
   Future<Either<Failure, AuthResponse>> login(LoginRequest request);

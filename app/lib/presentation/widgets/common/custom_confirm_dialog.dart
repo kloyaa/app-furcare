@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/core/enums/text_enum.dart';
-import 'package:flutter_application_1/presentation/widgets/common/custom_text.dart';
+import 'package:furcare_app/core/enums/text_enum.dart';
+import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
 
 class ConfirmationDialog {
   static Future<bool?> show({

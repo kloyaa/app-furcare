@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/core/errors/failures.dart';
-import 'package:flutter_application_1/data/models/pet_service.models.dart';
-import 'package:flutter_application_1/data/repositories/pet_service_repository.dart';
+import 'package:furcare_app/core/errors/failures.dart';
+import 'package:furcare_app/data/models/pet_service.models.dart';
+import 'package:furcare_app/data/repositories/pet_service_repository.dart';
 
 enum PetServiceState { initial, loading, done, error }
 

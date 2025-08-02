@@ -21,7 +21,7 @@ if (!fs.existsSync(packageJsonPath)) {
 }
 
 console.log('🚀 Starting development server...');
-console.log(`📁 __server__ path: ${serverPath}`);
+console.log(`📁 server path: ${serverPath}`);
 
 // Run npm run start:dev in the server directory
 const npmRun = spawn('npm', ['run', 'start:dev'], {

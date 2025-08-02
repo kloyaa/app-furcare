@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/core/enums/text_enum.dart';
-import 'package:flutter_application_1/data/models/branch_models.dart';
-import 'package:flutter_application_1/presentation/providers/branch_provider.dart';
-import 'package:flutter_application_1/presentation/widgets/common/custom_button.dart';
-import 'package:flutter_application_1/presentation/widgets/common/custom_text.dart';
+import 'package:furcare_app/core/enums/text_enum.dart';
+import 'package:furcare_app/data/models/branch_models.dart';
+import 'package:furcare_app/presentation/providers/branch_provider.dart';
+import 'package:furcare_app/presentation/widgets/common/custom_button.dart';
+import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 

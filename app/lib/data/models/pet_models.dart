@@ -33,7 +33,7 @@ class UpdatePet extends Equatable {
   });
 
   Map<String, dynamic> toJson() {
-    return {'_id': id, 'name': name, 'specie': specie, 'gender': gender};
+    return {'name': name, 'specie': specie, 'gender': gender};
   }
 
   @override

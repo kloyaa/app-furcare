@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
-import 'package:flutter_application_1/core/errors/exceptions.dart';
-import 'package:flutter_application_1/core/errors/failures.dart';
-import 'package:flutter_application_1/data/datasources/remote/pet_service_remote_datasource.dart';
-import 'package:flutter_application_1/data/models/pet_service.models.dart';
+import 'package:furcare_app/core/errors/exceptions.dart';
+import 'package:furcare_app/core/errors/failures.dart';
+import 'package:furcare_app/data/datasources/remote/pet_service_remote_datasource.dart';
+import 'package:furcare_app/data/models/pet_service.models.dart';
 
 abstract class PetServiceRepository {
   Future<Either<Failure, List<PetService>>> getPetServices();

@@ -1,4 +1,4 @@
-name: flutter_application_1
+name: furcare_app
 description: "A new Flutter project."
 publish_to: "none"
 version: 0.1.0
@@ -31,3 +31,9 @@ flutter:
 
   assets:
     - assets/furcare_logo.png
+    - assets/carousel_1.jpeg
+    - assets/carousel_2.jpeg
+    - assets/carousel_3.jpeg
+    - assets/carousel_4.jpeg
+    - assets/carousel_5.jpeg
+    - assets/carousel_6.jpeg

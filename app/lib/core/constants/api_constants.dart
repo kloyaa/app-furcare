@@ -1,5 +1,5 @@
 // lib/core/constants/api_constants.dart
-import 'package:flutter_application_1/core/constants/___generated.dart';
+import 'package:furcare_app/core/constants/___generated.dart';
 
 class ApiConstants {
   static const String baseUrl = AppConfig.generatedBaseUrl;

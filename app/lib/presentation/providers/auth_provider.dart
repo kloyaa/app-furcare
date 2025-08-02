@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_application_1/core/errors/failures.dart';
-import 'package:flutter_application_1/data/models/auth_models.dart';
-import 'package:flutter_application_1/data/repositories/auth_repository.dart';
+import 'package:furcare_app/core/errors/failures.dart';
+import 'package:furcare_app/data/models/auth_models.dart';
+import 'package:furcare_app/data/repositories/auth_repository.dart';
 
 enum AuthState { initial, loading, authenticated, unauthenticated, error }
 

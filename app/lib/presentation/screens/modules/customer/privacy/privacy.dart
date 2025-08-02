@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/core/constants/padding_constant.dart';
-import 'package:flutter_application_1/core/enums/text_enum.dart';
-import 'package:flutter_application_1/data/models/settings_item.model.dart';
-import 'package:flutter_application_1/presentation/widgets/common/custom_appbar.dart';
-import 'package:flutter_application_1/presentation/widgets/common/custom_header.dart';
-import 'package:flutter_application_1/presentation/widgets/common/custom_text.dart';
+import 'package:furcare_app/core/constants/padding_constant.dart';
+import 'package:furcare_app/core/enums/text_enum.dart';
+import 'package:furcare_app/data/models/settings_item.model.dart';
+import 'package:furcare_app/presentation/widgets/common/custom_appbar.dart';
+import 'package:furcare_app/presentation/widgets/common/custom_header.dart';
+import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
 import 'package:go_router/go_router.dart';
 
 class PrivacyScreen extends StatefulWidget {

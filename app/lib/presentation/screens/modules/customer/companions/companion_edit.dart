@@ -8,17 +8,17 @@ import 'package:furcare_app/presentation/widgets/common/custom_button.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_fields.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
 import 'package:furcare_app/presentation/widgets/common/default_snackbar.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-class CompanionCreationScreen extends StatefulWidget {
-  const CompanionCreationScreen({super.key});
+class CompanionEdit extends StatefulWidget {
+  const CompanionEdit({super.key});
 
   @override
-  State<CompanionCreationScreen> createState() =>
-      _CompanionCreationScreenState();
+  State<CompanionEdit> createState() => _CompanionEditState();
 }
 
-class _CompanionCreationScreenState extends State<CompanionCreationScreen> {
+class _CompanionEditState extends State<CompanionEdit> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _specieController = TextEditingController();
@@ -30,31 +30,52 @@ class _CompanionCreationScreenState extends State<CompanionCreationScreen> {
   String? _lastShownErrorMessage;
 
   @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _handleFetchPetInfo();
+    });
+  }
+
+  @override
   void dispose() {
     _nameController.dispose();
     _specieController.dispose();
     super.dispose();
   }
 
-  Future<void> _handleCreate(PetProvider petProvider) async {
+  Future<void> _handleFetchPetInfo() async {
+    final extras = GoRouterState.of(context).extra as Pet;
+    final pet = extras;
+
+    _nameController.value = TextEditingValue(text: pet.name);
+    _specieController.value = TextEditingValue(text: pet.specie);
+    setState(() {
+      _selectedGender = pet.gender;
+    });
+  }
+
+  Future<void> _handleEdit(PetProvider petProvider) async {
+    final extras = GoRouterState.of(context).extra as Pet;
+
     if (_formKey.currentState!.validate()) {
       _lastShownErrorMessage = null;
 
-      final RequestPet pet = RequestPet(
+      final UpdatePet pet = UpdatePet(
+        id: extras.id,
         name: _nameController.text,
         specie: _specieController.text,
         gender: _selectedGender,
       );
-      await petProvider.createPet(pet);
+      await petProvider.updatePet(pet);
 
       if (mounted) {
         showCustomSnackBar(
           context,
-          "${_nameController.text} was added successfully!",
+          "${_nameController.text} was updated successfully!",
         );
       }
-
-      _resetForm();
     }
   }
 
@@ -79,23 +100,19 @@ class _CompanionCreationScreenState extends State<CompanionCreationScreen> {
               children: [
                 // Header
                 CustomText.title(
-                  'New Companion',
+                  'Edit',
                   size: AppTextSize.lg,
                   fontWeight: AppFontWeight.semibold.value,
                   color: theme.colorScheme.onSurface,
                 ),
-
                 const SizedBox(height: 8),
-
                 CustomText.title(
-                  'Fill in the details below to add your companion',
+                  'Change your companion information',
                   size: AppTextSize.sm,
                   fontWeight: AppFontWeight.normal.value,
                   color: theme.colorScheme.onSurface.withOpacity(0.7),
                 ),
-
                 const SizedBox(height: 32),
-
                 // Name Field
                 CustomInputField(
                   label: 'Name',
@@ -185,10 +202,10 @@ class _CompanionCreationScreenState extends State<CompanionCreationScreen> {
                     }
                     return CustomButton(
                       text: "Submit",
-                      onPressed: () => _handleCreate(petProvider),
-                      isEnabled: true,
+                      onPressed: () => _handleEdit(petProvider),
+                      isEnabled: !petProvider.isUpdatingPet,
                       icon: Icons.pets_outlined,
-                      isLoading: petProvider.isCreatingPet,
+                      isLoading: petProvider.isUpdatingPet,
                     );
                   },
                 ),

@@ -1,29 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_application_1/core/constants/padding_constant.dart';
-import 'package:flutter_application_1/core/enums/text_enum.dart';
-import 'package:flutter_application_1/core/helpers/content.dart';
-import 'package:flutter_application_1/core/helpers/formatters.dart';
-import 'package:flutter_application_1/core/helpers/widget_helpers.dart';
-import 'package:flutter_application_1/data/models/pet_service.models.dart';
-import 'package:flutter_application_1/presentation/providers/pet_service_provider.dart';
-import 'package:flutter_application_1/presentation/screens/modules/customer/tabs/widgets/appointments/shimmer.dart';
-import 'package:flutter_application_1/presentation/widgets/common/custom_text.dart';
-import 'package:flutter_application_1/presentation/widgets/dialog/custom_my_appointments_dialog.dart';
+import 'package:furcare_app/core/constants/padding_constant.dart';
+import 'package:furcare_app/core/enums/text_enum.dart';
+import 'package:furcare_app/core/helpers/content.dart';
+import 'package:furcare_app/core/helpers/formatters.dart';
+import 'package:furcare_app/core/helpers/widget_helpers.dart';
+import 'package:furcare_app/data/models/pet_service.models.dart';
+import 'package:furcare_app/presentation/providers/pet_service_provider.dart';
+import 'package:furcare_app/presentation/screens/modules/customer/tabs/widgets/appointments/shimmer.dart';
+import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
+import 'package:furcare_app/presentation/widgets/dialog/custom_my_appointments_dialog.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class AppointmentTabScreen extends StatefulWidget {
-  const AppointmentTabScreen({super.key});
+class MainTabScreen extends StatefulWidget {
+  const MainTabScreen({super.key});
 
   @override
-  State<AppointmentTabScreen> createState() => _AppointmentTabScreenState();
+  State<MainTabScreen> createState() => _MainTabScreenState();
 }
 
-class _AppointmentTabScreenState extends State<AppointmentTabScreen>
+class _MainTabScreenState extends State<MainTabScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _glowController;
+  late CarouselController _carouselController;
   late Animation<double> _glowAnimation;
   late String _currentFunFact; // Store the fun fact so it doesn't change
 
@@ -147,6 +148,8 @@ class _AppointmentTabScreenState extends State<AppointmentTabScreen>
     // Start the repeating animation
     _glowController.repeat(reverse: true);
 
+    _carouselController = CarouselController();
+
     Future.microtask(() {
       if (mounted) {
         context.read<PetServiceProvider>().getPetServices();
@@ -157,6 +160,7 @@ class _AppointmentTabScreenState extends State<AppointmentTabScreen>
   @override
   void dispose() {
     _glowController.dispose();
+    _carouselController.dispose();
     super.dispose();
   }
 
@@ -532,6 +536,26 @@ class _AppointmentTabScreenState extends State<AppointmentTabScreen>
                     ),
                   );
                 },
+              ),
+            ),
+            SliverToBoxAdapter(child: SizedBox(height: 24)),
+            SliverToBoxAdapter(
+              child: SizedBox(
+                height: 400,
+                child: CarouselView(
+                  controller: _carouselController,
+                  scrollDirection: Axis.horizontal,
+                  itemExtent: 300,
+                  shrinkExtent: 200,
+                  children: [
+                    Image.asset('assets/carousel_1.jpeg'),
+                    Image.asset('assets/carousel_2.jpeg'),
+                    Image.asset('assets/carousel_3.jpeg'),
+                    Image.asset('assets/carousel_4.jpeg'),
+                    Image.asset('assets/carousel_5.jpeg'),
+                    Image.asset('assets/carousel_6.jpeg'),
+                  ],
+                ),
               ),
             ),
             SliverToBoxAdapter(child: SizedBox(height: 24)),

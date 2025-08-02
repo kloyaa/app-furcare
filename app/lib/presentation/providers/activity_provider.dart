@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/core/errors/failures.dart';
-import 'package:flutter_application_1/data/models/activity_log_models.dart';
-import 'package:flutter_application_1/data/repositories/activity_repository.dart';
+import 'package:furcare_app/core/errors/failures.dart';
+import 'package:furcare_app/data/models/activity_log_models.dart';
+import 'package:furcare_app/data/repositories/activity_repository.dart';
 
 class ActivityProvider with ChangeNotifier {
   final ActivityRepository _activityRepository;

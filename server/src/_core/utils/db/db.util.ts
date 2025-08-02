@@ -5,8 +5,8 @@ import { colors } from '../../const/common.const';
 export const connectDB = async () => {
   try {
     const env = await getEnv();
-    if (env?.DATABASE_URL) {
-      await mongoose.connect(env?.DATABASE_URL);
+    if (env?.DB_CONNECTION_STRING) {
+      await mongoose.connect(env?.DB_CONNECTION_STRING);
       console.log(`${colors.fg.cyan}[application] @connectDB Database connection success.`);
       return;
     }

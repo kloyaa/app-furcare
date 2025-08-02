@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/core/constants/padding_constant.dart';
-import 'package:flutter_application_1/core/enums/text_enum.dart';
-import 'package:flutter_application_1/core/helpers/validate.dart';
-import 'package:flutter_application_1/presentation/providers/auth_provider.dart';
-import 'package:flutter_application_1/presentation/widgets/common/custom_button.dart';
-import 'package:flutter_application_1/presentation/widgets/common/custom_fields.dart';
-import 'package:flutter_application_1/presentation/widgets/common/custom_header.dart';
-import 'package:flutter_application_1/presentation/widgets/common/default_snackbar.dart';
+import 'package:furcare_app/core/constants/padding_constant.dart';
+import 'package:furcare_app/core/enums/text_enum.dart';
+import 'package:furcare_app/core/helpers/validate.dart';
+import 'package:furcare_app/presentation/providers/auth_provider.dart';
+import 'package:furcare_app/presentation/widgets/common/custom_button.dart';
+import 'package:furcare_app/presentation/widgets/common/custom_fields.dart';
+import 'package:furcare_app/presentation/widgets/common/custom_header.dart';
+import 'package:furcare_app/presentation/widgets/common/default_snackbar.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 

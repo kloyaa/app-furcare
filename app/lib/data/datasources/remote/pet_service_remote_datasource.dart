@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_application_1/core/constants/api_constants.dart';
-import 'package:flutter_application_1/core/errors/exceptions.dart';
-import 'package:flutter_application_1/core/network/network_service.dart';
-import 'package:flutter_application_1/data/datasources/remote/auth_header_provider.dart';
-import 'package:flutter_application_1/data/models/pet_service.models.dart';
+import 'package:furcare_app/core/constants/api_constants.dart';
+import 'package:furcare_app/core/errors/exceptions.dart';
+import 'package:furcare_app/core/network/network_service.dart';
+import 'package:furcare_app/data/datasources/remote/auth_header_provider.dart';
+import 'package:furcare_app/data/models/pet_service.models.dart';
 
 abstract class PetServiceRemoteDataSource {
   Future<List<PetService>> getPetServices();

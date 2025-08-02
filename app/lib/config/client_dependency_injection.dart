@@ -1,7 +1,7 @@
-import 'package:flutter_application_1/config/dependency_instance.dart';
-import 'package:flutter_application_1/data/datasources/remote/client_romote_datasource.dart';
-import 'package:flutter_application_1/data/repositories/client_repository.dart';
-import 'package:flutter_application_1/presentation/providers/client_provider.dart';
+import 'package:furcare_app/config/dependency_instance.dart';
+import 'package:furcare_app/data/datasources/remote/client_romote_datasource.dart';
+import 'package:furcare_app/data/repositories/client_repository.dart';
+import 'package:furcare_app/presentation/providers/client_provider.dart';
 
 Future<void> clientDependencyInjection() async {
   // DataSource goes here

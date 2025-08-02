@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/core/helpers/theme.dart';
-import 'package:flutter_application_1/presentation/providers/branch_provider.dart';
-import 'package:flutter_application_1/presentation/providers/client_provider.dart';
-import 'package:flutter_application_1/presentation/screens/modules/customer/tabs/appoimtents.dart';
-import 'package:flutter_application_1/presentation/screens/modules/customer/tabs/settings.dart';
-import 'package:flutter_application_1/presentation/widgets/common/custom_bottomnav.dart';
-import 'package:flutter_application_1/presentation/widgets/dialog/custom_branch_selection_dialog.dart';
+import 'package:furcare_app/core/helpers/theme.dart';
+import 'package:furcare_app/presentation/providers/branch_provider.dart';
+import 'package:furcare_app/presentation/providers/client_provider.dart';
+import 'package:furcare_app/presentation/screens/modules/customer/tabs/home.dart';
+import 'package:furcare_app/presentation/screens/modules/customer/tabs/settings.dart';
+import 'package:furcare_app/presentation/widgets/common/custom_bottomnav.dart';
+import 'package:furcare_app/presentation/widgets/dialog/custom_branch_selection_dialog.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -42,7 +42,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
         icon: Icons.calendar_month_outlined,
         activeIcon: Icons.calendar_month,
         label: 'Appointments',
-        screen: const AppointmentTabScreen(),
+        screen: const MainTabScreen(),
       ),
       BottomNavItem(
         icon: Icons.settings_outlined,

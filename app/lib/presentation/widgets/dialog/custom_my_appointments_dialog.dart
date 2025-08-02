@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/data/models/pet_service.models.dart';
-import 'package:flutter_application_1/presentation/widgets/common/custom_text.dart';
+import 'package:furcare_app/data/models/pet_service.models.dart';
+import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
 import 'package:go_router/go_router.dart';
 
 class MyAppointmentsDialog extends StatefulWidget {

@@ -1,9 +1,9 @@
-import 'package:flutter_application_1/config/dependency_instance.dart';
-import 'package:flutter_application_1/data/datasources/remote/auth_header_provider.dart';
-import 'package:flutter_application_1/data/datasources/local/auth_local_datasource.dart';
-import 'package:flutter_application_1/data/datasources/remote/auth_remote_datasource.dart';
-import 'package:flutter_application_1/data/repositories/auth_repository.dart';
-import 'package:flutter_application_1/presentation/providers/auth_provider.dart';
+import 'package:furcare_app/config/dependency_instance.dart';
+import 'package:furcare_app/data/datasources/remote/auth_header_provider.dart';
+import 'package:furcare_app/data/datasources/local/auth_local_datasource.dart';
+import 'package:furcare_app/data/datasources/remote/auth_remote_datasource.dart';
+import 'package:furcare_app/data/repositories/auth_repository.dart';
+import 'package:furcare_app/presentation/providers/auth_provider.dart';
 
 Future<void> authDependencyInjection() async {
   // DataSource goes here

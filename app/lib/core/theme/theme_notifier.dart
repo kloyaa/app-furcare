@@ -172,6 +172,13 @@ class ThemeColorData {
     accentColor: Color(0xFFB2DFDB),
   );
 
+  static final red = ThemeColorData(
+    name: 'Red',
+    lightColor: Colors.red,
+    darkColor: Colors.red[800]!,
+    accentColor: Colors.redAccent,
+  );
+
   // Get all available colors
   static List<ThemeColorData> get allColors => [
     brown,
@@ -180,6 +187,7 @@ class ThemeColorData {
     green,
     orange,
     teal,
+    red,
   ];
 
   // Get color by name

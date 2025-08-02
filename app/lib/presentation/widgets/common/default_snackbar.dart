@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/presentation/widgets/common/custom_text.dart';
+import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
 
 void showCustomSnackBar(
   BuildContext context,

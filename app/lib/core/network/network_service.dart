@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_application_1/core/constants/api_constants.dart';
-import 'package:flutter_application_1/core/errors/exceptions.dart';
+import 'package:furcare_app/core/constants/api_constants.dart';
+import 'package:furcare_app/core/errors/exceptions.dart';
 
 class NetworkService {
   late final Dio _dio;

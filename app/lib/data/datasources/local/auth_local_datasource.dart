@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'package:flutter_application_1/core/errors/exceptions.dart';
-import 'package:flutter_application_1/data/models/auth_models.dart';
+import 'package:furcare_app/core/errors/exceptions.dart';
+import 'package:furcare_app/data/models/auth_models.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class AuthLocalDataSource {

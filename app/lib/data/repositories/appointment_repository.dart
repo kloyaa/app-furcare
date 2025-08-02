@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
-import 'package:flutter_application_1/core/errors/exceptions.dart';
-import 'package:flutter_application_1/core/errors/failures.dart';
-import 'package:flutter_application_1/data/datasources/remote/appointment_remote_datasource.dart';
-import 'package:flutter_application_1/data/models/appointment_models.dart';
-import 'package:flutter_application_1/data/models/default_models.dart';
+import 'package:furcare_app/core/errors/exceptions.dart';
+import 'package:furcare_app/core/errors/failures.dart';
+import 'package:furcare_app/data/datasources/remote/appointment_remote_datasource.dart';
+import 'package:furcare_app/data/models/appointment_models.dart';
+import 'package:furcare_app/data/models/default_models.dart';
 
 abstract class AppointmentRepository {
   Future<Either<Failure, DefaultResponse>> createGroomingAppointment(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/core/enums/text_enum.dart';
+import 'package:furcare_app/core/enums/text_enum.dart';
 
 class CustomText extends StatelessWidget {
   final String text;

@@ -1,5 +1,5 @@
-import 'package:flutter_application_1/config/dependency_instance.dart';
-import 'package:flutter_application_1/core/network/network_service.dart';
+import 'package:furcare_app/config/dependency_instance.dart';
+import 'package:furcare_app/core/network/network_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> coreDependencyInjection() async {

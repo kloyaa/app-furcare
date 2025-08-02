@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/core/enums/text_enum.dart';
-import 'package:flutter_application_1/core/helpers/formatters.dart';
-import 'package:flutter_application_1/data/models/appointment_models.dart';
-import 'package:flutter_application_1/presentation/widgets/common/custom_text.dart';
+import 'package:furcare_app/core/enums/text_enum.dart';
+import 'package:furcare_app/core/helpers/formatters.dart';
+import 'package:furcare_app/data/models/appointment_models.dart';
+import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
 
 class GroomingAppointmentPreviewDialog extends StatelessWidget {
   final GroomingAppointment appointment;

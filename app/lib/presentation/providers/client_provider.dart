@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/core/errors/failures.dart';
-import 'package:flutter_application_1/data/models/client_models.dart';
-import 'package:flutter_application_1/data/repositories/client_repository.dart';
+import 'package:furcare_app/core/errors/failures.dart';
+import 'package:furcare_app/data/models/client_models.dart';
+import 'package:furcare_app/data/repositories/client_repository.dart';
 
 class ClientProvider with ChangeNotifier {
   final ClientRepository _clientRepository;

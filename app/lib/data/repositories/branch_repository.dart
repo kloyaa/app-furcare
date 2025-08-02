@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
-import 'package:flutter_application_1/core/errors/exceptions.dart';
-import 'package:flutter_application_1/core/errors/failures.dart';
-import 'package:flutter_application_1/data/datasources/remote/branch_remote_datasource.dart';
-import 'package:flutter_application_1/data/models/branch_models.dart';
+import 'package:furcare_app/core/errors/exceptions.dart';
+import 'package:furcare_app/core/errors/failures.dart';
+import 'package:furcare_app/data/datasources/remote/branch_remote_datasource.dart';
+import 'package:furcare_app/data/models/branch_models.dart';
 
 abstract class BranchRepository {
   Future<Either<Failure, List<Branch>>> getBranches();

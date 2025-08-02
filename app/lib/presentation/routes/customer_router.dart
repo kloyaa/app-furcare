@@ -1,25 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/presentation/screens/modules/customer/accounts/accounts.dart';
-import 'package:flutter_application_1/presentation/screens/modules/customer/appointments/create/boarding_appointment.dart';
-import 'package:flutter_application_1/presentation/screens/modules/customer/appointments/get/boarding_appointment.dart'
+import 'package:furcare_app/presentation/screens/modules/customer/accounts/accounts.dart';
+import 'package:furcare_app/presentation/screens/modules/customer/appointments/create/boarding_appointment.dart';
+import 'package:furcare_app/presentation/screens/modules/customer/appointments/get/boarding_appointment.dart'
     as boarding;
-import 'package:flutter_application_1/presentation/screens/modules/customer/companions/companion_create.dart';
-import 'package:flutter_application_1/presentation/screens/modules/customer/companions/companions.dart';
-import 'package:flutter_application_1/presentation/screens/modules/customer/appointments/get/grooming_appointment.dart'
+import 'package:furcare_app/presentation/screens/modules/customer/companions/companion_create.dart';
+import 'package:furcare_app/presentation/screens/modules/customer/companions/companion_edit.dart';
+import 'package:furcare_app/presentation/screens/modules/customer/companions/companions.dart';
+import 'package:furcare_app/presentation/screens/modules/customer/appointments/get/grooming_appointment.dart'
     as grooming;
-import 'package:flutter_application_1/presentation/screens/modules/customer/appointments/create/grooming_appointment.dart';
-import 'package:flutter_application_1/presentation/screens/modules/customer/home.dart';
-import 'package:flutter_application_1/presentation/screens/modules/customer/login.dart';
-import 'package:flutter_application_1/presentation/screens/modules/customer/pre_login.dart';
-import 'package:flutter_application_1/presentation/screens/modules/customer/privacy/privacy.dart';
-import 'package:flutter_application_1/presentation/screens/modules/customer/profile/customer_edit_profile.dart';
-import 'package:flutter_application_1/presentation/screens/modules/customer/profile/customer_profile.dart';
-import 'package:flutter_application_1/presentation/screens/modules/customer/profile/customer_profile_creation.dart';
-import 'package:flutter_application_1/presentation/screens/modules/customer/registration.dart';
-import 'package:flutter_application_1/presentation/screens/shared/activity_log.dart';
-import 'package:flutter_application_1/presentation/screens/shared/change_password.dart';
-import 'package:flutter_application_1/presentation/screens/shared/change_theme.dart';
-import 'package:flutter_application_1/presentation/screens/shared/splash_screen.dart';
+import 'package:furcare_app/presentation/screens/modules/customer/appointments/create/grooming_appointment.dart';
+import 'package:furcare_app/presentation/screens/modules/customer/home.dart';
+import 'package:furcare_app/presentation/screens/modules/customer/login.dart';
+import 'package:furcare_app/presentation/screens/modules/customer/pre_login.dart';
+import 'package:furcare_app/presentation/screens/modules/customer/privacy/privacy.dart';
+import 'package:furcare_app/presentation/screens/modules/customer/profile/customer_edit_profile.dart';
+import 'package:furcare_app/presentation/screens/modules/customer/profile/customer_profile.dart';
+import 'package:furcare_app/presentation/screens/modules/customer/profile/customer_profile_creation.dart';
+import 'package:furcare_app/presentation/screens/modules/customer/registration.dart';
+import 'package:furcare_app/presentation/screens/shared/activity_log.dart';
+import 'package:furcare_app/presentation/screens/shared/change_password.dart';
+import 'package:furcare_app/presentation/screens/shared/change_theme.dart';
+import 'package:furcare_app/presentation/screens/shared/splash_screen.dart';
 import 'package:go_router/go_router.dart';
 
 class CustomerRoute {
@@ -39,6 +40,7 @@ class CustomerRoute {
   // Pets
   static const String pets = '/me/pets';
   static const String createPet = '/me/pets/create';
+  static const String editPet = '/me/pets/edit';
 
   // Profile
   static const String profile = '/me/profile';
@@ -107,6 +109,12 @@ final GoRouter customerRouter = GoRouter(
           },
         ),
 
+        GoRoute(
+          path: CustomerRoute.editPet,
+          builder: (BuildContext context, GoRouterState state) {
+            return const CompanionEdit();
+          },
+        ),
         GoRoute(
           path: CustomerRoute.appointmentsGrooming,
           builder: (BuildContext context, GoRouterState state) {

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/core/constants/padding_constant.dart';
-import 'package:flutter_application_1/core/enums/text_enum.dart';
-import 'package:flutter_application_1/core/helpers/theme.dart';
-import 'package:flutter_application_1/presentation/providers/activity_provider.dart';
-import 'package:flutter_application_1/presentation/widgets/common/custom_appbar.dart';
-import 'package:flutter_application_1/presentation/widgets/common/custom_text.dart';
+import 'package:furcare_app/core/constants/padding_constant.dart';
+import 'package:furcare_app/core/enums/text_enum.dart';
+import 'package:furcare_app/core/helpers/theme.dart';
+import 'package:furcare_app/presentation/providers/activity_provider.dart';
+import 'package:furcare_app/presentation/widgets/common/custom_appbar.dart';
+import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
 import 'package:provider/provider.dart';
 
 class ActivityLogScreen extends StatefulWidget {

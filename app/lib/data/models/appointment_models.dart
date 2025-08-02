@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter_application_1/data/models/branch_models.dart';
-import 'package:flutter_application_1/data/models/pet_models.dart';
-import 'package:flutter_application_1/data/models/pet_service.models.dart';
+import 'package:furcare_app/data/models/branch_models.dart';
+import 'package:furcare_app/data/models/pet_models.dart';
+import 'package:furcare_app/data/models/pet_service.models.dart';
 
 class GroomingAppointmentRequest extends Equatable {
   final String pet;

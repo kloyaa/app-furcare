@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/presentation/widgets/common/theme_toggle_button.dart';
+import 'package:furcare_app/presentation/widgets/common/theme_toggle_button.dart';
 
 class AdminMainScreen extends StatelessWidget {
   const AdminMainScreen({super.key});

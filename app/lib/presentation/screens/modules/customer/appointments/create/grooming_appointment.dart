@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/core/constants/padding_constant.dart';
-import 'package:flutter_application_1/core/enums/text_enum.dart';
-import 'package:flutter_application_1/core/helpers/formatters.dart';
-import 'package:flutter_application_1/data/models/pet_models.dart';
-import 'package:flutter_application_1/data/models/pet_service.models.dart';
-import 'package:flutter_application_1/presentation/providers/pet_provider.dart';
-import 'package:flutter_application_1/presentation/providers/pet_service_provider.dart';
-import 'package:flutter_application_1/presentation/screens/modules/customer/appointments/create/widgets/grooming/skeleton.dart';
-import 'package:flutter_application_1/presentation/widgets/common/custom_appbar.dart';
-import 'package:flutter_application_1/presentation/widgets/common/custom_button.dart';
-import 'package:flutter_application_1/presentation/widgets/common/custom_pet_selection.dart';
-import 'package:flutter_application_1/presentation/widgets/common/custom_text.dart';
-import 'package:flutter_application_1/presentation/widgets/dialog/custom_grooming_receipt_dialog.dart';
+import 'package:furcare_app/core/constants/padding_constant.dart';
+import 'package:furcare_app/core/enums/text_enum.dart';
+import 'package:furcare_app/core/helpers/formatters.dart';
+import 'package:furcare_app/data/models/pet_models.dart';
+import 'package:furcare_app/data/models/pet_service.models.dart';
+import 'package:furcare_app/presentation/providers/pet_provider.dart';
+import 'package:furcare_app/presentation/providers/pet_service_provider.dart';
+import 'package:furcare_app/presentation/screens/modules/customer/appointments/create/widgets/grooming/skeleton.dart';
+import 'package:furcare_app/presentation/widgets/common/custom_appbar.dart';
+import 'package:furcare_app/presentation/widgets/common/custom_button.dart';
+import 'package:furcare_app/presentation/widgets/common/custom_pet_selection.dart';
+import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
+import 'package:furcare_app/presentation/widgets/dialog/custom_grooming_receipt_dialog.dart';
 import 'package:provider/provider.dart';
 
 class GroomingAppointmentScreen extends StatefulWidget {

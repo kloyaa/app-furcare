@@ -1,7 +1,7 @@
-import 'package:flutter_application_1/config/dependency_instance.dart';
-import 'package:flutter_application_1/data/datasources/remote/activity_remote_datasource.dart';
-import 'package:flutter_application_1/data/repositories/activity_repository.dart';
-import 'package:flutter_application_1/presentation/providers/activity_provider.dart';
+import 'package:furcare_app/config/dependency_instance.dart';
+import 'package:furcare_app/data/datasources/remote/activity_remote_datasource.dart';
+import 'package:furcare_app/data/repositories/activity_repository.dart';
+import 'package:furcare_app/presentation/providers/activity_provider.dart';
 
 Future<void> activityDependencyInjection() async {
   // DataSource goes here

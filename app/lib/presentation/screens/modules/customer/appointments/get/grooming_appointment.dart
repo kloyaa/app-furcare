@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_application_1/core/helpers/formatters.dart';
-import 'package:flutter_application_1/core/helpers/widget_helpers.dart';
-import 'package:flutter_application_1/data/models/appointment_models.dart';
-import 'package:flutter_application_1/presentation/providers/appointment_provider.dart';
-import 'package:flutter_application_1/presentation/routes/customer_router.dart';
-import 'package:flutter_application_1/presentation/screens/modules/customer/appointments/create/widgets/grooming/skeleton.dart';
-import 'package:flutter_application_1/presentation/widgets/common/custom_appbar.dart';
-import 'package:flutter_application_1/presentation/widgets/common/custom_text.dart';
-import 'package:flutter_application_1/presentation/widgets/dialog/custom_grooming_details_dialog.dart';
+import 'package:furcare_app/core/helpers/formatters.dart';
+import 'package:furcare_app/core/helpers/widget_helpers.dart';
+import 'package:furcare_app/data/models/appointment_models.dart';
+import 'package:furcare_app/presentation/providers/appointment_provider.dart';
+import 'package:furcare_app/presentation/routes/customer_router.dart';
+import 'package:furcare_app/presentation/screens/modules/customer/appointments/create/widgets/grooming/skeleton.dart';
+import 'package:furcare_app/presentation/widgets/common/custom_appbar.dart';
+import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
+import 'package:furcare_app/presentation/widgets/dialog/custom_grooming_details_dialog.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 

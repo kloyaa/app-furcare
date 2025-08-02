@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/core/errors/failures.dart';
-import 'package:flutter_application_1/data/models/branch_models.dart';
-import 'package:flutter_application_1/data/repositories/branch_repository.dart';
+import 'package:furcare_app/core/errors/failures.dart';
+import 'package:furcare_app/data/models/branch_models.dart';
+import 'package:furcare_app/data/repositories/branch_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum BranchState {

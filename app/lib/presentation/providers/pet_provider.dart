@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/core/errors/failures.dart';
-import 'package:flutter_application_1/data/models/pet_models.dart';
-import 'package:flutter_application_1/data/repositories/pet_repository.dart';
+import 'package:furcare_app/core/errors/failures.dart';
+import 'package:furcare_app/data/models/pet_models.dart';
+import 'package:furcare_app/data/repositories/pet_repository.dart';
 
 enum PetState {
   initial,
@@ -19,6 +19,7 @@ class PetProvider with ChangeNotifier {
 
   PetState _createPetState = PetState.initial;
   PetState _fetchPetsState = PetState.initial;
+  PetState _updatePetState = PetState.initial;
 
   List<Pet> _pets = [];
   String? _errorMessage;
@@ -30,6 +31,7 @@ class PetProvider with ChangeNotifier {
 
   bool get isCreatingPet => _createPetState == PetState.loading;
   bool get isFetchingPets => _fetchPetsState == PetState.loading;
+  bool get isUpdatingPet => _updatePetState == PetState.loading;
 
   PetProvider({required PetRepository petRepository})
     : _petRepository = petRepository;
@@ -70,13 +72,18 @@ class PetProvider with ChangeNotifier {
   }
 
   Future<void> updatePet(UpdatePet request) async {
+    clearError();
+
+    _setUpdatePetState(PetState.loading);
     final result = await _petRepository.updatePet(request);
     result.fold(
       (failure) {
+        _setUpdatePetState(PetState.error);
         _handleFailure(failure);
       },
       (pet) {
-        notifyListeners();
+        _setUpdatePetState(PetState.created);
+        getPets();
       },
     );
   }
@@ -106,6 +113,11 @@ class PetProvider with ChangeNotifier {
 
   void _setCreatePetState(PetState newState) {
     _createPetState = newState;
+    notifyListeners();
+  }
+
+  void _setUpdatePetState(PetState newState) {
+    _updatePetState = newState;
     notifyListeners();
   }
 

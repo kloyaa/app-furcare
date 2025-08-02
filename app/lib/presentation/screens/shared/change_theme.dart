@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/core/enums/text_enum.dart';
-import 'package:flutter_application_1/core/helpers/theme.dart';
-import 'package:flutter_application_1/core/theme/theme_notifier.dart';
-import 'package:flutter_application_1/presentation/widgets/common/custom_text.dart';
+import 'package:furcare_app/core/enums/text_enum.dart';
+import 'package:furcare_app/core/helpers/theme.dart';
+import 'package:furcare_app/core/theme/theme_notifier.dart';
+import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
 import 'package:go_router/go_router.dart';
 
 class ThemeToggleScreen extends StatefulWidget {
@@ -180,8 +180,6 @@ class _ThemeToggleScreenState extends State<ThemeToggleScreen>
 
   @override
   Widget build(BuildContext context) {
-    final isDark = ThemeHelper.isDarkMode(context);
-
     return ValueListenableBuilder<bool>(
       valueListenable: ThemeNotifier.isDarkMode,
       builder: (context, isDarkMode, _) {

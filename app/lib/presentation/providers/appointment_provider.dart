@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/core/errors/failures.dart';
-import 'package:flutter_application_1/data/models/appointment_models.dart';
-import 'package:flutter_application_1/data/repositories/appointment_repository.dart';
+import 'package:furcare_app/core/errors/failures.dart';
+import 'package:furcare_app/data/models/appointment_models.dart';
+import 'package:furcare_app/data/repositories/appointment_repository.dart';
 
 enum AppointmentState {
   initial,
