@@ -5,6 +5,7 @@ import 'package:furcare_app/core/enums/text_enum.dart';
 import 'package:furcare_app/core/helpers/content.dart';
 import 'package:furcare_app/core/helpers/formatters.dart';
 import 'package:furcare_app/core/helpers/widget_helpers.dart';
+import 'package:furcare_app/core/helpers/widget_image_list.dart';
 import 'package:furcare_app/data/models/pet_service.models.dart';
 import 'package:furcare_app/presentation/providers/pet_service_provider.dart';
 import 'package:furcare_app/presentation/screens/modules/customer/tabs/widgets/appointments/shimmer.dart';
@@ -547,14 +548,7 @@ class _MainTabScreenState extends State<MainTabScreen>
                   scrollDirection: Axis.horizontal,
                   itemExtent: 300,
                   shrinkExtent: 200,
-                  children: [
-                    Image.asset('assets/carousel_1.jpeg'),
-                    Image.asset('assets/carousel_2.jpeg'),
-                    Image.asset('assets/carousel_3.jpeg'),
-                    Image.asset('assets/carousel_4.jpeg'),
-                    Image.asset('assets/carousel_5.jpeg'),
-                    Image.asset('assets/carousel_6.jpeg'),
-                  ],
+                  children: carouselItemsAlwaysRandom(),
                 ),
               ),
             ),
@@ -717,6 +711,7 @@ class _MainTabScreenState extends State<MainTabScreen>
         backgroundColor: colorScheme.primary,
         foregroundColor: colorScheme.onPrimary,
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
