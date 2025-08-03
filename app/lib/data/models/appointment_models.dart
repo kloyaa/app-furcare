@@ -145,7 +145,14 @@ class GroomingAppointment extends Equatable {
     return GroomingAppointment(
       id: json['_id'],
       user: json['user'],
-      pet: Pet.fromJson(json['pet']),
+      pet: json['pet'] != null
+          ? Pet.fromJson(json['pet'])
+          : Pet(
+              gender: 'Unknown',
+              id: "",
+              name: "Record not found",
+              specie: "Unknown",
+            ),
       branch: Branch.fromJson(json['branch']),
       groomingOptions: (json['groomingOptions'] as List)
           .map((e) => GroomingOptions.fromJson(e))

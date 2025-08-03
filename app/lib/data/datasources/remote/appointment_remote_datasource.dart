@@ -67,6 +67,7 @@ class AppointmentRemoteDatasourceImpl implements AppointmentRemoteDatasource {
 
       if (response.statusCode == 200) {
         final List<dynamic> data = response.data;
+        print('data:->> $data');
         return data.map((item) => GroomingAppointment.fromJson(item)).toList();
       } else {
         throw ServerException(
@@ -75,6 +76,7 @@ class AppointmentRemoteDatasourceImpl implements AppointmentRemoteDatasource {
         );
       }
     } catch (e) {
+      print(e);
       if (e is ServerException || e is NetworkException) {
         rethrow;
       }

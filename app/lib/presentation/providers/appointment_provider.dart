@@ -90,15 +90,12 @@ class AppointmentProvider with ChangeNotifier {
     result.fold(
       (failure) {
         clearError();
-        print('failure: $failure');
         _setGettGroomingAppointments(AppointmentState.error);
         _handleFailure(failure);
       },
       (response) {
         _groomingAppointments = response;
-        print('response: $response');
         _setGettGroomingAppointments(AppointmentState.fetched);
-        // getPets();
       },
     );
   }

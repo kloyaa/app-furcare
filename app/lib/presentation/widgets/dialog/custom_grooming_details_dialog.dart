@@ -176,7 +176,7 @@ class GroomingAppointmentPreviewDialog extends StatelessWidget {
                     ),
                     if (appointment.groomingOptions.isNotEmpty) ...[
                       _buildSection(
-                        'Grooming Services',
+                        'Services',
                         appointment.groomingOptions
                             .map(
                               (option) => _buildServiceRow(
@@ -192,7 +192,7 @@ class GroomingAppointmentPreviewDialog extends StatelessWidget {
                     if (appointment.groomingPreferences.isNotEmpty) ...[
                       const SizedBox(height: 24),
                       _buildSection(
-                        'Grooming Preferences',
+                        'Preferences',
                         appointment.groomingPreferences
                             .map(
                               (option) => _buildServiceRow(

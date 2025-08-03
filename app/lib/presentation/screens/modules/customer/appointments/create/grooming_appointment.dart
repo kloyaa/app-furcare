@@ -215,7 +215,7 @@ class _GroomingAppointmentScreenState extends State<GroomingAppointmentScreen> {
             ),
             const SizedBox(height: 16),
             _buildSectionCard(
-              title: "Grooming Options",
+              title: "Options",
               icon: Icons.wash,
               child: Consumer<PetServiceProvider>(
                 builder: (context, petServiceProvider, child) {
@@ -272,7 +272,7 @@ class _GroomingAppointmentScreenState extends State<GroomingAppointmentScreen> {
             ),
             const SizedBox(height: 16),
             _buildSectionCard(
-              title: "Grooming Preferences",
+              title: "Preferences",
               icon: Icons.content_cut,
               child: Consumer<PetServiceProvider>(
                 builder: (context, petServiceProvider, child) {

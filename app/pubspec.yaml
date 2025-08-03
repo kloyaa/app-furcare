@@ -18,6 +18,7 @@ dependencies:
   go_router: ^16.0.0
   google_fonts: ^6.2.1
   intl: ^0.20.2
+  logger: ^2.6.1
   provider: ^6.1.5
   shared_preferences: ^2.5.3
 

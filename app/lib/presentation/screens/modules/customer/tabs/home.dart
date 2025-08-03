@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:furcare_app/core/constants/padding_constant.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
@@ -13,6 +16,7 @@ import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
 import 'package:furcare_app/presentation/widgets/dialog/custom_my_appointments_dialog.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 class MainTabScreen extends StatefulWidget {
@@ -23,7 +27,9 @@ class MainTabScreen extends StatefulWidget {
 }
 
 class _MainTabScreenState extends State<MainTabScreen>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
+  late AnimationController _bounceController;
+  late Animation<double> _bounceAnimation;
   late AnimationController _glowController;
   late CarouselController _carouselController;
   late Animation<double> _glowAnimation;
@@ -132,25 +138,32 @@ class _MainTabScreenState extends State<MainTabScreen>
   void initState() {
     super.initState();
 
-    // Get the fun fact ONCE and store it
     _currentFunFact = PetMessages.getRandomFunFact();
-
-    // Initialize the glow animation controller
     _glowController = AnimationController(
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     );
-
-    // Create a smooth in-out animation
     _glowAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _glowController, curve: Curves.easeInOut),
     );
-
-    // Start the repeating animation
     _glowController.repeat(reverse: true);
+    _carouselController = CarouselController();
+    _bounceController = AnimationController(
+      duration: const Duration(seconds: 1),
+      vsync: this,
+    );
+    _bounceAnimation = Tween<double>(begin: 0.0, end: -5.0).animate(
+      CurvedAnimation(
+        parent: _bounceController,
+        curve: Curves.elasticInOut,
+        reverseCurve: Curves.elasticInOut,
+      ),
+    );
+
+    // Start bouncing every 2.5 seconds
+    _startBouncing();
 
     _carouselController = CarouselController();
-
     Future.microtask(() {
       if (mounted) {
         context.read<PetServiceProvider>().getPetServices();
@@ -162,11 +175,28 @@ class _MainTabScreenState extends State<MainTabScreen>
   void dispose() {
     _glowController.dispose();
     _carouselController.dispose();
+    _bounceController.dispose();
+
     super.dispose();
+  }
+
+  void _startBouncing() {
+    Timer.periodic(const Duration(seconds: 3), (timer) {
+      if (mounted) {
+        _bounceController.forward().then((_) {
+          _bounceController.reverse();
+        });
+      } else {
+        timer.cancel();
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    var logger = Logger();
+    logger.i("MainTabScreen", stackTrace: StackTrace.empty);
+
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
@@ -694,22 +724,32 @@ class _MainTabScreenState extends State<MainTabScreen>
         ),
       ),
 
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          final petServices = context.read<PetServiceProvider>().petServices;
+      floatingActionButton: AnimatedBuilder(
+        animation: _bounceAnimation,
+        builder: (context, child) {
+          return Transform.translate(
+            offset: Offset(0, _bounceAnimation.value),
+            child: FloatingActionButton.extended(
+              onPressed: () {
+                final petServices = context
+                    .read<PetServiceProvider>()
+                    .petServices;
 
-          HapticFeedback.lightImpact();
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (context) =>
-                MyAppointmentsDialog(petServices: petServices),
+                HapticFeedback.lightImpact();
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (context) =>
+                      MyAppointmentsDialog(petServices: petServices),
+                );
+              },
+              icon: const Icon(Icons.bookmark_border_rounded),
+              label: const Text('My Appointments'),
+              backgroundColor: colorScheme.primary,
+              foregroundColor: colorScheme.onPrimary,
+            ),
           );
         },
-        icon: const Icon(Icons.bookmark_border_rounded),
-        label: const Text('My Appointments'),
-        backgroundColor: colorScheme.primary,
-        foregroundColor: colorScheme.onPrimary,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );

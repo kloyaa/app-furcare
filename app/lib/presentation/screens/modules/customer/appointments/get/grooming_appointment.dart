@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:furcare_app/core/enums/text_enum.dart';
 import 'package:furcare_app/core/helpers/formatters.dart';
 import 'package:furcare_app/core/helpers/widget_helpers.dart';
 import 'package:furcare_app/data/models/appointment_models.dart';
@@ -10,6 +11,7 @@ import 'package:furcare_app/presentation/widgets/common/custom_appbar.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
 import 'package:furcare_app/presentation/widgets/dialog/custom_grooming_details_dialog.dart';
 import 'package:go_router/go_router.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 class AppointmentsScreen extends StatefulWidget {
@@ -52,6 +54,9 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
 
   @override
   Widget build(BuildContext context) {
+    var logger = Logger();
+    logger.i("AppointmentsScreen", stackTrace: StackTrace.empty);
+
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final colorScheme = Theme.of(context).colorScheme;
 
@@ -348,7 +353,37 @@ class _AppointmentCardState extends State<_AppointmentCard>
                       ),
                     ],
                   ),
-                  const SizedBox(height: 16),
+                  widget.appointment.pet.name == "Record not found"
+                      ? Container(
+                          margin: EdgeInsets.symmetric(vertical: 10.0),
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: widget.colorScheme.surfaceContainerHighest
+                                .withOpacity(0.6),
+                            borderRadius: BorderRadius.circular(7),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.info_outline,
+                                size: 24,
+                                color: widget.colorScheme.primary,
+                              ),
+                              SizedBox(width: 6),
+                              Expanded(
+                                child: CustomText.body(
+                                  "Record not found, the companion was possibly removed from the system",
+                                  size: AppTextSize.xs,
+                                  fontWeight: AppFontWeight.black.value,
+                                  style: TextStyle(
+                                    color: widget.colorScheme.primary,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : SizedBox(),
                   Row(
                     children: [
                       Icon(

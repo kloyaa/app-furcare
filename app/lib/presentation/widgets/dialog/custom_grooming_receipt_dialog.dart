@@ -285,7 +285,7 @@ class _GroomingReceiptDialogState extends State<GroomingReceiptDialog> {
                       // Grooming Preferences - Scrollable Section
                       if (widget.selectedGroomingPreferences.isNotEmpty)
                         _buildScrollableReceiptSection(
-                          title: 'Grooming Preferences',
+                          title: 'Preferences',
                           icon: Icons.content_cut,
                           content: Consumer<PetServiceProvider>(
                             builder: (context, petServiceProvider, child) {
