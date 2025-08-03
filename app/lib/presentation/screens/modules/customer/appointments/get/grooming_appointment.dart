@@ -112,17 +112,16 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
           },
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: FloatingActionButton(
         onPressed: () {
           HapticFeedback.lightImpact();
           context.push(CustomerRoute.createGroomingAppointment);
         },
-        icon: const Icon(Icons.add_rounded),
-        label: const Text('New Appointment'),
         backgroundColor: colorScheme.primary,
         foregroundColor: colorScheme.onPrimary,
         elevation: 4,
         heroTag: "grooming_fab",
+        child: Icon(Icons.add_rounded),
       ),
     );
   }
@@ -383,7 +382,7 @@ class _AppointmentCardState extends State<_AppointmentCard>
                             ],
                           ),
                         )
-                      : SizedBox(),
+                      : SizedBox(height: 15),
                   Row(
                     children: [
                       Icon(

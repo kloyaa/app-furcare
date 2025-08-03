@@ -15,6 +15,7 @@ abstract class AppointmentRepository {
   );
 
   Future<Either<Failure, List<GroomingAppointment>>> getGroomingAppointments();
+  Future<Either<Failure, List<BoardingAppointment>>> getBoardingAppointments();
 }
 
 class AppointmentRepositoryImpl implements AppointmentRepository {
@@ -47,6 +48,23 @@ class AppointmentRepositoryImpl implements AppointmentRepository {
   getGroomingAppointments() async {
     try {
       final response = await _remoteDataSource.getGroomingAppointments();
+      return Right(response);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message, code: e.code));
+    } on NetworkException catch (e) {
+      return Left(NetworkFailure(message: e.message));
+    } on CacheException catch (e) {
+      return Left(CacheFailure(message: e.message));
+    } catch (e) {
+      return Left(ServerFailure(message: 'An unexpected error occurred'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<BoardingAppointment>>>
+  getBoardingAppointments() async {
+    try {
+      final response = await _remoteDataSource.getBoardingAppointments();
       return Right(response);
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message, code: e.code));

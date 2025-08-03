@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:furcare_app/data/models/pet_service.models.dart';
+import 'package:furcare_app/presentation/routes/customer_router.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
+import 'package:furcare_app/presentation/widgets/common/default_snackbar.dart';
 import 'package:go_router/go_router.dart';
 
 class MyAppointmentsDialog extends StatefulWidget {
@@ -256,7 +258,19 @@ class _MyAppointmentsDialogState extends State<MyAppointmentsDialog>
     Navigator.of(context).pop();
 
     if (service.code == "PET_GROOMING") {
-      context.push('/me/appointments/grooming');
+      context.push(CustomerRoute.appointmentsGrooming);
+    }
+
+    if (service.code == "PET_BOARDING") {
+      context.push(CustomerRoute.appointmentsBoarding);
+    }
+
+    if (service.code == "HOME_SERVICE") {
+      context.push(CustomerRoute.appointmentsHomeService);
+    }
+
+    if (service.code == "PET_TRAINING") {
+      return showCustomSnackBar(context, 'This feature is not available yet');
     }
   }
 }

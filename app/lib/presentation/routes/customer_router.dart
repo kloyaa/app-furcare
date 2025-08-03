@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:furcare_app/presentation/screens/modules/customer/accounts/accounts.dart';
 import 'package:furcare_app/presentation/screens/modules/customer/appointments/create/boarding_appointment.dart';
-import 'package:furcare_app/presentation/screens/modules/customer/appointments/get/boarding_appointment.dart'
-    as boarding;
+
 import 'package:furcare_app/presentation/screens/modules/customer/companions/companion_create.dart';
 import 'package:furcare_app/presentation/screens/modules/customer/companions/companion_edit.dart';
 import 'package:furcare_app/presentation/screens/modules/customer/companions/companions.dart';
-import 'package:furcare_app/presentation/screens/modules/customer/appointments/get/grooming_appointment.dart'
-    as grooming;
+
 import 'package:furcare_app/presentation/screens/modules/customer/appointments/create/grooming_appointment.dart';
 import 'package:furcare_app/presentation/screens/modules/customer/home.dart';
 import 'package:furcare_app/presentation/screens/modules/customer/login.dart';
@@ -23,6 +21,12 @@ import 'package:furcare_app/presentation/screens/shared/change_theme.dart';
 import 'package:furcare_app/presentation/screens/shared/splash_screen.dart';
 import 'package:go_router/go_router.dart';
 
+// Named imports
+import 'package:furcare_app/presentation/screens/modules/customer/appointments/get/grooming_appointment.dart'
+    as grooming;
+import 'package:furcare_app/presentation/screens/modules/customer/appointments/get/boarding_appointment.dart'
+    as boarding;
+
 class CustomerRoute {
   static const String root = '/';
   static const String preLogin = '/pre-login';
@@ -36,6 +40,7 @@ class CustomerRoute {
 
   static const String appointmentsGrooming = '/me/appointments/grooming';
   static const String appointmentsBoarding = '/me/appointments/boarding';
+  static const String appointmentsHomeService = '/me/appointments/home-service';
 
   // Pets
   static const String pets = '/me/pets';
@@ -126,6 +131,12 @@ final GoRouter customerRouter = GoRouter(
           path: CustomerRoute.appointmentsBoarding,
           builder: (BuildContext context, GoRouterState state) {
             return const boarding.AppointmentsScreen();
+          },
+        ),
+        GoRoute(
+          path: CustomerRoute.appointmentsHomeService,
+          builder: (BuildContext context, GoRouterState state) {
+            return const grooming.AppointmentsScreen();
           },
         ),
         GoRoute(

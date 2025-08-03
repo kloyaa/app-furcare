@@ -24,6 +24,7 @@ class AppointmentProvider with ChangeNotifier {
   AppointmentState _isFetchingApplicationState = AppointmentState.initial;
 
   List<GroomingAppointment> _groomingAppointments = [];
+  List<BoardingAppointment> _boardingAppointments = [];
 
   String? _errorMessage;
   String? _errorCode;
@@ -38,6 +39,7 @@ class AppointmentProvider with ChangeNotifier {
       _isFetchingApplicationState == AppointmentState.loading;
 
   List<GroomingAppointment> get groomingAppointments => _groomingAppointments;
+  List<BoardingAppointment> get boardingAppointments => _boardingAppointments;
 
   Future<void> createGroomingAppointment(
     GroomingAppointmentRequest request,
@@ -72,18 +74,52 @@ class AppointmentProvider with ChangeNotifier {
 
     result.fold(
       (failure) {
-        print('failure: ${failure.message}');
         _setCreateBoardingAppointment(AppointmentState.error);
         _handleFailure(failure);
       },
       (response) {
-        print('response: $response');
         _setCreateBoardingAppointment(AppointmentState.created);
       },
     );
   }
 
   Future<void> getGroomingAppointments() async {
+    _setGettGroomingAppointments(AppointmentState.loading);
+
+    final result = await _appointmentRepository.getGroomingAppointments();
+    result.fold(
+      (failure) {
+        clearError();
+        _setGettGroomingAppointments(AppointmentState.error);
+        _handleFailure(failure);
+      },
+      (response) {
+        _groomingAppointments = response;
+        _setGettGroomingAppointments(AppointmentState.fetched);
+      },
+    );
+  }
+
+  Future<void> getBoardingAppointments() async {
+    _setGetBoardingAppointments(AppointmentState.loading);
+
+    final result = await _appointmentRepository.getBoardingAppointments();
+    result.fold(
+      (failure) {
+        print('failure: $failure');
+        clearError();
+        _setGetBoardingAppointments(AppointmentState.error);
+        _handleFailure(failure);
+      },
+      (response) {
+        print('response: $response');
+        _boardingAppointments = response;
+        _setGetBoardingAppointments(AppointmentState.fetched);
+      },
+    );
+  }
+
+  Future<void> getHomeServiceAppointments() async {
     _setGettGroomingAppointments(AppointmentState.loading);
 
     final result = await _appointmentRepository.getGroomingAppointments();
@@ -111,6 +147,11 @@ class AppointmentProvider with ChangeNotifier {
   }
 
   void _setGettGroomingAppointments(AppointmentState newState) {
+    _isFetchingApplicationState = newState;
+    notifyListeners();
+  }
+
+  void _setGetBoardingAppointments(AppointmentState newState) {
     _isFetchingApplicationState = newState;
     notifyListeners();
   }

@@ -89,7 +89,7 @@ const boardingApplicationSchema = new Schema<IBoardingApplication>(
                 required: true,
             },
             days: {
-                type: String,
+                type: Number,
                 required: true,
             },
         },

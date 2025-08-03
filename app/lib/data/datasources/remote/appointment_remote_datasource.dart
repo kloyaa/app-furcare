@@ -16,6 +16,7 @@ abstract class AppointmentRemoteDatasource {
   );
 
   Future<List<GroomingAppointment>> getGroomingAppointments();
+  Future<List<BoardingAppointment>> getBoardingAppointments();
 }
 
 class AppointmentRemoteDatasourceImpl implements AppointmentRemoteDatasource {
@@ -67,7 +68,6 @@ class AppointmentRemoteDatasourceImpl implements AppointmentRemoteDatasource {
 
       if (response.statusCode == 200) {
         final List<dynamic> data = response.data;
-        print('data:->> $data');
         return data.map((item) => GroomingAppointment.fromJson(item)).toList();
       } else {
         throw ServerException(
@@ -76,7 +76,34 @@ class AppointmentRemoteDatasourceImpl implements AppointmentRemoteDatasource {
         );
       }
     } catch (e) {
-      print(e);
+      if (e is ServerException || e is NetworkException) {
+        rethrow;
+      }
+      throw ServerException(
+        message: 'An error occurred during fetching appointments',
+      );
+    }
+  }
+
+  @override
+  Future<List<BoardingAppointment>> getBoardingAppointments() async {
+    try {
+      final response = await _networkService.get(
+        "${ApiConstants.appointment}/boarding",
+        options: Options(headers: await _authHeaderProvider.getHeaders()),
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = response.data;
+        return data.map((item) => BoardingAppointment.fromJson(item)).toList();
+      } else {
+        throw ServerException(
+          message: response.data?['message'] ?? 'Error fetching appointments',
+          code: response.data?['code'],
+        );
+      }
+    } catch (e) {
+      print("e: $e");
       if (e is ServerException || e is NetworkException) {
         rethrow;
       }
