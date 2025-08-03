@@ -21,6 +21,7 @@ import petServicesRoute from './routes/pet_services.route';
 import petRoute from './routes/pet.route';
 import applicationRoute from './routes/application.route';
 import branchRoute from './routes/branch.route';
+import healthRoute from './routes/health.route';
 
 import {
   logNetworBody,
@@ -48,6 +49,9 @@ const swaggerOptions: swaggerUi.SwaggerUiOptions = {
  */
 async function runApp(): Promise<void> {
   const env = await getEnv();
+
+  app.get('/', healthRoute);
+
 
   // Middleware
   app.use(helmet()); // Apply standard security headers
@@ -90,9 +94,6 @@ async function runApp(): Promise<void> {
   app.use("/api-docs", swaggerUi.serve);
   app.use("/api-docs", swaggerUi.setup(swaggerDocument, swaggerOptions));
 
-  app.get('/', (_, res) => {
-    return res.status(200).json({ message: 'ok' });
-  });
 
   // Connect to MongoDB
   connectDB();
