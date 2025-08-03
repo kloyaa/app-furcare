@@ -49,7 +49,7 @@ jobs:
             docker run -d \
               --name furcare-server \
               -p 3432:3432 \
-              -e DATABASE_URL="${{ secrets.DATABASE_URL }}" \
+              -e DB_CONNECTION_STRING="${{ secrets.DB_CONNECTION_STRING }}" \
               --restart unless-stopped \
               furcare-server-image
 
