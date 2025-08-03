@@ -1,0 +1,20 @@
+ ---- Customer ----
+
+Account 1:
+username: testuser1
+password: Test@Password1
+email: testuser1@example.com
+fullname: Test User
+phone: 09123456789
+facebook: https://www.facebook.com/testuser1
+messenger: https://www.messenger.com/testuser1
+
+
+Account 2:
+username: testuser2
+password: Test@Password2
+email: testuser2@example.com
+fullname: Test User Two
+phone: 09123450000
+facebook: https://www.facebook.com/testuser2
+messenger: https://www.messenger.com/testuser1
