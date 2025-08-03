@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:furcare_app/core/constants/padding_constant.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
@@ -29,11 +28,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   @override
   void initState() {
     super.initState();
-
-    _emailController.text = 'kolya01@gmail.com';
-    _usernameController.text = 'kolya01';
-    _passwordController.text = 'Password@123';
-    _confirmPasswordController.text = 'Password@123';
   }
 
   @override

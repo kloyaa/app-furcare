@@ -3,8 +3,11 @@ import 'package:furcare_app/core/enums/text_enum.dart';
 import 'package:furcare_app/core/helpers/widget_helpers.dart';
 import 'package:furcare_app/data/models/pet_models.dart';
 import 'package:furcare_app/presentation/providers/pet_provider.dart';
+import 'package:furcare_app/presentation/routes/customer_router.dart';
 import 'package:furcare_app/presentation/screens/modules/customer/appointments/create/widgets/grooming/skeleton.dart';
+import 'package:furcare_app/presentation/widgets/common/custom_button.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class PetSelectionAccordion extends StatefulWidget {
@@ -64,6 +67,27 @@ class _PetSelectionAccordionState extends State<PetSelectionAccordion> {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             widget.onPetSelected(selectedPetData.id, selectedPetData);
           });
+        }
+
+        if (petProvider.pets.isEmpty) {
+          return Card(
+            elevation: 0,
+            color: colorScheme.surfaceContainerHighest.withOpacity(0.3),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: CustomButton(
+                text: "Manage Companions",
+                icon: Icons.arrow_forward_outlined,
+                onPressed: () => context.push(CustomerRoute.createPet),
+                isLoading: false,
+                isOutlined: true,
+                isEnabled: true,
+              ),
+            ),
+          );
         }
 
         return Card(
