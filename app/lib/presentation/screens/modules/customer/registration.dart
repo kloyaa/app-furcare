@@ -95,16 +95,27 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const SizedBox(height: 32),
-
-                    // Header
-                    const CustomHeader(
-                      title: 'Welcome to Furcare',
-                      subtitle: 'Create your account to get started',
-                      subtitleSize: AppTextSize.sm,
-                      titleSize: AppTextSize.lg,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Image.asset(
+                            'assets/furcare_logo.png',
+                            width: 150,
+                            height: 150,
+                          ),
+                        ),
+                        SizedBox(width: 16),
+                        Expanded(
+                          flex: 2,
+                          child: const CustomHeader(
+                            title: 'Welcome to Furcare',
+                            subtitle: 'Create your account to get started',
+                            subtitleSize: AppTextSize.sm,
+                            titleSize: AppTextSize.mlg,
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 48),
 
                     // Email Field
                     CustomInputField(

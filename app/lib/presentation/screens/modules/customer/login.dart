@@ -83,14 +83,28 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
                     // Logo Section (Optional)
                     const SizedBox(height: 40),
                     // Header
-                    const CustomHeader(
-                      title: 'Welcome Back to Furcare',
-                      subtitle: 'Please sign in to your account',
-                      subtitleSize: AppTextSize.sm,
-                      titleSize: AppTextSize.lg,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Image.asset(
+                            'assets/furcare_logo.png',
+                            width: 150,
+                            height: 150,
+                          ),
+                        ),
+                        SizedBox(width: 16),
+                        Expanded(
+                          flex: 2,
+                          child: const CustomHeader(
+                            title: 'Welcome Back to Furcare',
+                            subtitle: 'Please sign in to your account',
+                            subtitleSize: AppTextSize.sm,
+                            titleSize: AppTextSize.mlg,
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 48),
-
                     // Username Field
                     CustomInputField(
                       label: 'Username',
