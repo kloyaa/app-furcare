@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:furcare_app/presentation/screens/modules/customer/accounts/accounts.dart';
 import 'package:furcare_app/presentation/screens/modules/customer/appointments/create/boarding_appointment.dart';
+import 'package:furcare_app/presentation/screens/modules/customer/appointments/create/home_service_appointment.dart';
 
 import 'package:furcare_app/presentation/screens/modules/customer/companions/companion_create.dart';
 import 'package:furcare_app/presentation/screens/modules/customer/companions/companion_edit.dart';
@@ -26,6 +27,24 @@ import 'package:furcare_app/presentation/screens/modules/customer/appointments/g
     as grooming;
 import 'package:furcare_app/presentation/screens/modules/customer/appointments/get/boarding_appointment.dart'
     as boarding;
+// import 'package:furcare_app/presentation/screens/modules/customer/appointments/create/home_service_appointment.dart'
+//     as homeService;
+
+class _CreateBookingRoutes {
+  const _CreateBookingRoutes();
+
+  final String grooming = '/appointments/grooming';
+  final String boarding = '/appointments/boarding';
+  final String homeService = '/appointments/home-service';
+}
+
+class _GetBookingRoutes {
+  const _GetBookingRoutes();
+
+  final String grooming = '/me/appointments/grooming';
+  final String boarding = '/me/appointments/boarding';
+  final String homeService = '/me/appointments/home-service';
+}
 
 class CustomerRoute {
   static const String root = '/';
@@ -34,13 +53,8 @@ class CustomerRoute {
   static const String registration = '/registration';
   static const String home = '/home';
 
-  // Appointments
-  static const String createGroomingAppointment = '/appointments/grooming';
-  static const String createBoardingppointment = '/appointments/boarding';
-
-  static const String appointmentsGrooming = '/me/appointments/grooming';
-  static const String appointmentsBoarding = '/me/appointments/boarding';
-  static const String appointmentsHomeService = '/me/appointments/home-service';
+  static const create = _CreateBookingRoutes();
+  static const me = _GetBookingRoutes();
 
   // Pets
   static const String pets = '/me/pets';
@@ -96,15 +110,21 @@ final GoRouter customerRouter = GoRouter(
         ),
 
         GoRoute(
-          path: CustomerRoute.createGroomingAppointment,
+          path: CustomerRoute.create.grooming,
           builder: (BuildContext context, GoRouterState state) {
             return const GroomingAppointmentScreen();
           },
         ),
         GoRoute(
-          path: CustomerRoute.createBoardingppointment,
+          path: CustomerRoute.create.boarding,
           builder: (BuildContext context, GoRouterState state) {
             return const BoardingAppointmentScreen();
+          },
+        ),
+        GoRoute(
+          path: CustomerRoute.create.homeService,
+          builder: (BuildContext context, GoRouterState state) {
+            return const HomeServiceAppointmentScreen();
           },
         ),
         GoRoute(
@@ -121,20 +141,20 @@ final GoRouter customerRouter = GoRouter(
           },
         ),
         GoRoute(
-          path: CustomerRoute.appointmentsGrooming,
+          path: CustomerRoute.me.grooming,
           builder: (BuildContext context, GoRouterState state) {
             return const grooming.AppointmentsScreen();
           },
         ),
 
         GoRoute(
-          path: CustomerRoute.appointmentsBoarding,
+          path: CustomerRoute.me.boarding,
           builder: (BuildContext context, GoRouterState state) {
             return const boarding.AppointmentsScreen();
           },
         ),
         GoRoute(
-          path: CustomerRoute.appointmentsHomeService,
+          path: CustomerRoute.me.homeService,
           builder: (BuildContext context, GoRouterState state) {
             return const grooming.AppointmentsScreen();
           },

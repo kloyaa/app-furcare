@@ -84,7 +84,7 @@ class BoardingAppointmentPreviewDialog extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Pet Information
-                    if (appointment.pet != null) ...[
+                    ...[
                       _buildSection('Pet Information', [
                         _buildInfoRow(
                           'Name',
@@ -103,39 +103,6 @@ class BoardingAppointmentPreviewDialog extends StatelessWidget {
                           appointment.pet!.gender,
                           Icons.info,
                           colorScheme,
-                        ),
-                      ], colorScheme),
-                      const SizedBox(height: 24),
-                    ] else ...[
-                      _buildSection('Pet Information', [
-                        Container(
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: colorScheme.errorContainer.withOpacity(0.3),
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: colorScheme.error.withOpacity(0.3),
-                            ),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.warning_amber_rounded,
-                                color: colorScheme.error,
-                                size: 20,
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Text(
-                                  'Pet information is not available for this appointment',
-                                  style: TextStyle(
-                                    color: colorScheme.onErrorContainer,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
                         ),
                       ], colorScheme),
                       const SizedBox(height: 24),

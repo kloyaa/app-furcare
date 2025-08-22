@@ -124,7 +124,7 @@ class _BoardingAppointmentScreenState extends State<BoardingAppointmentScreen> {
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: colorScheme.background,
+      backgroundColor: colorScheme.surface,
       appBar: CustomAppBar(
         title: formatDateToLong(selectedDate ?? today),
         titleTextStyle: TextStyle(

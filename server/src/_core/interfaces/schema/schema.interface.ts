@@ -163,6 +163,20 @@ export interface IBoardingApplication extends Document {
   updatedAt?: Date;
 }
 
+export interface IHomeServiceApplication extends Document {
+  user: Types.ObjectId;
+  pet: Types.ObjectId;
+  branch: Types.ObjectId;
+  schedule: {
+    date: Date;
+    time: string;
+  };
+  totalPrice?: number;
+  status: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
 export interface IBranch {
   name: string;
   address: string;

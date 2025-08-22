@@ -62,3 +62,25 @@ export const validateCreateBoardingApplication = (body: any) => {
     const { error } = schema.validate(body);
     return error;
 };
+
+export const validateCreateHomeServiceApplication = (body: any) => {
+    const schema = Joi.object({
+        pet: Joi
+            .string()
+            .trim()
+            .required()
+            .custom(CustomJoiHelpers.isValidObjectId, 'ObjectId validation'),
+        branch: Joi
+            .string()
+            .trim()
+            .required()
+            .custom(CustomJoiHelpers.isValidObjectId, 'ObjectId validation'),
+        schedule: Joi.object({
+            date: Joi.date().required(),
+            time: Joi.string().required(),
+        }).required(),
+    });
+
+    const { error } = schema.validate(body);
+    return error;
+};

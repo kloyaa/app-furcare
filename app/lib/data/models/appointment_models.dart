@@ -256,7 +256,7 @@ class BoardingAppointment extends Equatable {
     return {
       '_id': id,
       'user': user,
-      'pet': pet?.toJson(),
+      'pet': pet.toJson(),
       'branch': branch.toJson(),
       'cage': cage.toJson(),
       'instructions': instructions,

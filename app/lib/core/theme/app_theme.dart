@@ -35,8 +35,6 @@ class AppTheme {
         onTertiary: Colors.white,
         surface: Colors.white,
         onSurface: darkGray,
-        background: warmGray,
-        onBackground: darkGray,
         error: errorRed,
         onError: Colors.white,
         outline: coolGray,

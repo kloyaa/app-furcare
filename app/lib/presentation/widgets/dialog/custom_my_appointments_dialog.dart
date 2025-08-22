@@ -258,15 +258,15 @@ class _MyAppointmentsDialogState extends State<MyAppointmentsDialog>
     Navigator.of(context).pop();
 
     if (service.code == "PET_GROOMING") {
-      context.push(CustomerRoute.appointmentsGrooming);
+      context.push(CustomerRoute.me.grooming);
     }
 
     if (service.code == "PET_BOARDING") {
-      context.push(CustomerRoute.appointmentsBoarding);
+      context.push(CustomerRoute.me.boarding);
     }
 
     if (service.code == "HOME_SERVICE") {
-      context.push(CustomerRoute.appointmentsHomeService);
+      context.push(CustomerRoute.me.homeService);
     }
 
     if (service.code == "PET_TRAINING") {

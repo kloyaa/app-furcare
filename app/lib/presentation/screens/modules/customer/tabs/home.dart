@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:furcare_app/core/constants/padding_constant.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';

@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { IBoardingApplication, IGroomingApplication } from '../_core/interfaces/schema/schema.interface';
+import { IBoardingApplication, IGroomingApplication, IHomeServiceApplication } from '../_core/interfaces/schema/schema.interface';
 import { ApplicationStatusEnum } from '../_core/enum/application.enum';
 
 const groomingApplicationSchema = new Schema<IGroomingApplication>(
@@ -115,29 +115,48 @@ const boardingApplicationSchema = new Schema<IBoardingApplication>(
     { timestamps: true },
 );
 
-const homeServiceApplicationSchema = new Schema(
+const homeServiceApplicationSchema = new Schema<IHomeServiceApplication>(
     {
-        serviceArea: {
+        user: {
+            type: Schema.Types.ObjectId,
+            ref: 'User',
+            required: true,
+        },
+        pet: {
+            type: Schema.Types.ObjectId,
+            ref: 'Pet',
+            required: true,
+        },
+        branch: {
+            type: Schema.Types.ObjectId,
+            ref: 'Branch',
+            required: true,
+        },
+        schedule: {
+            date: {
+                type: Date,
+                required: true,
+            },
+            time: {
+                type: String,
+                required: true,
+            },
+        },
+        totalPrice: {
+            type: Number,
+            default: 390,
+        },
+        status: {
             type: String,
             required: true,
-        },
-        servicesOffered: {
-            type: [String],
-            required: true,
-        },
-        callOutFee: {
-            type: Number,
-            required: true,
-        },
-        isAvailable: {
-            type: Boolean,
-            default: true,
-        },
+            enum: Object.values(ApplicationStatusEnum),
+            default: 'pending',
+        }
     },
     { timestamps: true },
 );
 
-const HomeServiceApplication = model<IGroomingApplication>('HomeServiceApplication', homeServiceApplicationSchema);
+const HomeServiceApplication = model<IHomeServiceApplication>('HomeServiceApplication', homeServiceApplicationSchema);
 const BoardingApplication = model('BoardingApplication', boardingApplicationSchema);
 const GroomingApplication = model('GroomingApplication', groomingApplicationSchema);
 

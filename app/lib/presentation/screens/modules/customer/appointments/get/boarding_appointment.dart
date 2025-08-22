@@ -99,7 +99,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
                         colorScheme,
                       ),
                       speciesIcon: appointment.pet != null
-                          ? getSpecieIcon(appointment.pet!.specie)
+                          ? getSpecieIcon(appointment.pet.specie)
                           : Icons.pets,
                       index: index,
                     ),
@@ -113,7 +113,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           HapticFeedback.lightImpact();
-          context.push(CustomerRoute.createBoardingppointment);
+          context.push(CustomerRoute.create.boarding);
         },
         backgroundColor: colorScheme.primary,
         foregroundColor: colorScheme.onPrimary,

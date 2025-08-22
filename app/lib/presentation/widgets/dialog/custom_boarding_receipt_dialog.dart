@@ -291,9 +291,8 @@ class _BoardingReceiptDialogState extends State<BoardingReceiptDialog> {
                             width: double.infinity,
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: colorScheme.surfaceVariant.withOpacity(
-                                0.3,
-                              ),
+                              color: colorScheme.surfaceContainerHighest
+                                  .withOpacity(0.3),
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: Text(
@@ -344,7 +343,8 @@ class _BoardingReceiptDialogState extends State<BoardingReceiptDialog> {
                       Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: colorScheme.surfaceVariant.withOpacity(0.3),
+                          color: colorScheme.surfaceContainerHighest
+                              .withOpacity(0.3),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
@@ -396,7 +396,7 @@ class _BoardingReceiptDialogState extends State<BoardingReceiptDialog> {
                             Navigator.of(context)
                               ..pop() // Close dialog
                               ..pop(); // Close booking screen
-                            context.push(CustomerRoute.appointmentsBoarding);
+                            context.push(CustomerRoute.me.boarding);
                           },
                         );
                       }

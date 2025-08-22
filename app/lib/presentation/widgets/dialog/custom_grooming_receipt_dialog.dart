@@ -422,7 +422,7 @@ class _GroomingReceiptDialogState extends State<GroomingReceiptDialog> {
                             Navigator.of(context)
                               ..pop() // Close dialog
                               ..pop(); // Close booking screen
-                            context.push(CustomerRoute.appointmentsGrooming);
+                            context.push(CustomerRoute.me.grooming);
                           },
                         );
                       }
@@ -472,7 +472,7 @@ class _GroomingReceiptDialogState extends State<GroomingReceiptDialog> {
             width: double.infinity,
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: colorScheme.surfaceVariant.withOpacity(0.3),
+              color: colorScheme.surfaceContainerHighest.withOpacity(0.3),
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(8),
                 topRight: Radius.circular(8),

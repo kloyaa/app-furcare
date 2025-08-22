@@ -115,7 +115,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           HapticFeedback.lightImpact();
-          context.push(CustomerRoute.createGroomingAppointment);
+          context.push(CustomerRoute.create.grooming);
         },
         backgroundColor: colorScheme.primary,
         foregroundColor: colorScheme.onPrimary,
