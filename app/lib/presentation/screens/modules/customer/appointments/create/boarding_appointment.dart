@@ -15,15 +15,14 @@ import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
 import 'package:furcare_app/presentation/widgets/dialog/custom_boarding_receipt_dialog.dart';
 import 'package:provider/provider.dart';
 
-class BoardingAppointmentScreen extends StatefulWidget {
-  const BoardingAppointmentScreen({super.key});
+class BoardingApptScreen extends StatefulWidget {
+  const BoardingApptScreen({super.key});
 
   @override
-  State<BoardingAppointmentScreen> createState() =>
-      _BoardingAppointmentScreenState();
+  State<BoardingApptScreen> createState() => _BoardingApptScreenState();
 }
 
-class _BoardingAppointmentScreenState extends State<BoardingAppointmentScreen> {
+class _BoardingApptScreenState extends State<BoardingApptScreen> {
   List<String> times = [
     "7:00 AM",
     "8:00 AM",
@@ -224,6 +223,7 @@ class _BoardingAppointmentScreenState extends State<BoardingAppointmentScreen> {
               children: [
                 Expanded(
                   child: CustomSelectField<String>(
+                    maxHeight: MediaQuery.of(context).size.height * 0.8,
                     label: "Time",
                     hintText: "Select time",
                     options: times,

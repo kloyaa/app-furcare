@@ -14,15 +14,14 @@ import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
 import 'package:furcare_app/presentation/widgets/dialog/custom_grooming_receipt_dialog.dart';
 import 'package:provider/provider.dart';
 
-class GroomingAppointmentScreen extends StatefulWidget {
-  const GroomingAppointmentScreen({super.key});
+class GroomingApptScreen extends StatefulWidget {
+  const GroomingApptScreen({super.key});
 
   @override
-  State<GroomingAppointmentScreen> createState() =>
-      _GroomingAppointmentScreenState();
+  State<GroomingApptScreen> createState() => _GroomingApptScreenState();
 }
 
-class _GroomingAppointmentScreenState extends State<GroomingAppointmentScreen> {
+class _GroomingApptScreenState extends State<GroomingApptScreen> {
   String? selectedSchedule;
   Set<String> selectedGroomingOptions = {};
   Set<String> selectedGroomingPreferences = {};

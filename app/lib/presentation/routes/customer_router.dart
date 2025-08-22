@@ -112,19 +112,19 @@ final GoRouter customerRouter = GoRouter(
         GoRoute(
           path: CustomerRoute.create.grooming,
           builder: (BuildContext context, GoRouterState state) {
-            return const GroomingAppointmentScreen();
+            return const GroomingApptScreen();
           },
         ),
         GoRoute(
           path: CustomerRoute.create.boarding,
           builder: (BuildContext context, GoRouterState state) {
-            return const BoardingAppointmentScreen();
+            return const BoardingApptScreen();
           },
         ),
         GoRoute(
           path: CustomerRoute.create.homeService,
           builder: (BuildContext context, GoRouterState state) {
-            return const HomeServiceAppointmentScreen();
+            return const HomeServiceApptScreen();
           },
         ),
         GoRoute(
