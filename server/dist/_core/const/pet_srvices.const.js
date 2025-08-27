@@ -1,0 +1,159 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.boardingHours = exports.petCages = exports.groomingOptions = exports.groomingPreferences = exports.groomingServiceSchedules = exports.petServices = void 0;
+exports.petServices = [
+    {
+        "code": "PET_GROOMING",
+        "name": "Grooming",
+        "description": "Professional grooming services for your pets including bathing, haircut, and nail trimming.",
+        "available": true,
+    },
+    {
+        "code": "PET_BOARDING",
+        "name": "Boarding",
+        "description": "Safe and comfortable boarding facilities for your pets while you are away.",
+        "available": true,
+    },
+    {
+        "code": "HOME_SERVICE",
+        "name": "Home Service",
+        "description": "Pet care services delivered right at your doorstep for convenience.",
+        "available": true,
+    }
+];
+exports.groomingServiceSchedules = [
+    {
+        "code": "SCHEDULE_1",
+        "schedule": "08:00 AM - 09:00 AM",
+        "price": 30,
+        "available": true,
+    },
+    {
+        "code": "SCHEDULE_2",
+        "schedule": "10:00 AM - 11:00 AM",
+        "price": 30,
+        "available": true,
+    },
+    {
+        "code": "SCHEDULE_3",
+        "schedule": "12:00 PM - 01:00 PM",
+        "price": 30,
+        "available": false,
+    },
+    {
+        "code": "SCHEDULE_4",
+        "schedule": "02:00 PM - 03:00 PM",
+        "price": 30,
+        "available": false,
+    },
+    {
+        "code": "SCHEDULE_5",
+        "schedule": "04:00 PM - 05:00 PM",
+        "price": 30,
+        "available": false,
+    },
+];
+exports.groomingPreferences = [
+    {
+        "code": "SHORT_TRIM",
+        "name": "Short Trim",
+        "price": 20,
+        "available": true,
+    },
+    {
+        "code": "LONG_TRIM",
+        "name": "Long Trim",
+        "price": 25,
+        "available": true,
+    },
+    {
+        "code": "FULL_TRIM",
+        "name": "Full Trim (Complete Shave)",
+        "price": 50,
+        "available": true,
+    },
+    {
+        "code": "SPECIFIC_REQUEST",
+        "name": "Specfic request",
+        "price": 100,
+        "available": true,
+    },
+];
+exports.groomingOptions = [
+    {
+        "code": "FULL_BATH",
+        "name": "Full bath (Shampoo, Conditioning and Drying)",
+        "price": 120,
+        "available": true,
+    },
+    {
+        "code": "HAIRCUT",
+        "name": "Haircut/Trimming",
+        "price": 200,
+        "available": true,
+    },
+    {
+        "code": "NAIL_TRIM",
+        "name": "Nail trimming",
+        "price": 50,
+        "available": true,
+    },
+    {
+        "code": "EAR_CLEANING",
+        "name": "Ear cleaning",
+        "price": 50,
+        "available": true,
+    },
+    {
+        "code": "TEETH_BRUSHING",
+        "name": "Teeth brushing",
+        "price": 50,
+        "available": true,
+    },
+    {
+        "code": "FLEA_AND_TICK_TREATMENT",
+        "name": "Flea and tick treatment",
+        "price": 300,
+        "available": true,
+    },
+    {
+        "code": "SPECIFIC_REQUEST",
+        "name": "Specfic request",
+        "price": 100,
+        "available": true,
+    },
+];
+exports.petCages = [
+    {
+        "price": 100,
+        "size": "Small",
+        "occupant": 0,
+        "max": 6
+    },
+    {
+        "price": 200,
+        "size": "Medium",
+        "occupant": 0,
+        "max": 6
+    },
+    {
+        "price": 500,
+        "size": "Large",
+        "occupant": 0,
+        "max": 6
+    }
+];
+exports.boardingHours = [
+    "7:00 AM",
+    "8:00 AM",
+    "9:00 AM",
+    "10:00 AM",
+    "11:00 AM",
+    "12:00 PM",
+    "1:00 PM",
+    "2:00 PM",
+    "3:00 PM",
+    "4:00 PM",
+    "5:00 PM",
+    "6:00 PM",
+];
