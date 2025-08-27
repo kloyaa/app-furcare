@@ -25,27 +25,28 @@ class AWSService {
         this.secretsManagerClient = new client_secrets_manager_1.SecretsManagerClient(clientConfig);
     }
     // S3 Methods
-    async uploadToS3(options) {
-        try {
-            const command = new client_s3_1.PutObjectCommand({
-                Bucket: options.bucket,
-                Key: options.key,
-                Body: options.body,
-                ContentType: options.contentType || 'application/octet-stream',
-                ACL: options.acl || 'private',
-                Metadata: options.metadata
-            });
-            const command = new client_s3_1.ListBucketsCommand({});
-            const result = await this.s3Client.send(command);
-            return {
-                location: `https://${options.bucket}.s3.${this.config.region}.amazonaws.com/${options.key}`,
-                etag: result.ETag
-            };
-        }
-        catch (error) {
-            throw new Error(`S3 Upload failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
-        }
-    }
+    // async uploadToS3(options: S3UploadOptions): Promise<{ location: string; etag: string }> {
+    //     try {
+    //         const command = new PutObjectCommand({
+    //             Bucket: options.bucket,
+    //             Key: options.key,
+    //             Body: options.body,
+    //             ContentType: options.contentType || 'application/octet-stream',
+    //             ACL: options.acl || 'private',
+    //             Metadata: options.metadata
+    //         });
+    //         const command = new ListBucketsCommand(
+    //             {}
+    //         );
+    //         const result = await this.s3Client.send(command);
+    //         return {
+    //             location: `https://${options.bucket}.s3.${this.config.region}.amazonaws.com/${options.key}`,
+    //             etag: result.ETag
+    //         };
+    //     } catch (error) {
+    //         throw new Error(`S3 Upload failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    //     }
+    // }
     async downloadFromS3(options) {
         try {
             const command = new client_s3_1.GetObjectCommand({

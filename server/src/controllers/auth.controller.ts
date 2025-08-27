@@ -16,9 +16,7 @@ import { toObjectId } from '../_core/utils/odm';
 import { Role } from '../schema/role.schema';
 import { UserRole } from '../schema/user_role.schema';
 import { startSession } from 'mongoose';
-// import { Role } from '../schema/role.schema';
-// import { RoleName } from '../_core/enum/roles.enum';
-// import { UserRole } from '../schema/user_role.schema';
+
 
 export const login = async (req: TRequest, res: Response): Promise<any | Response> => {
   const error = validateLogin(req.body);
