@@ -98,9 +98,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
                         appointment.status,
                         colorScheme,
                       ),
-                      speciesIcon: appointment.pet != null
-                          ? getSpecieIcon(appointment.pet.specie)
-                          : Icons.pets,
+                      speciesIcon: getSpecieIcon(appointment.pet.specie),
                       index: index,
                     ),
                   );

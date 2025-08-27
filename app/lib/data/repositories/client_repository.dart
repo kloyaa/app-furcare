@@ -1,7 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:furcare_app/core/errors/exceptions.dart';
 import 'package:furcare_app/core/errors/failures.dart';
-import 'package:furcare_app/data/datasources/local/auth_local_datasource.dart';
 import 'package:furcare_app/data/datasources/remote/client_romote_datasource.dart';
 import 'package:furcare_app/data/models/client_models.dart';
 
@@ -14,13 +13,9 @@ abstract class ClientRepository {
 
 class ClientRepositoryImpl implements ClientRepository {
   final ClientRemoteDataSource _remoteDataSource;
-  final AuthLocalDataSource _localDataSource;
 
-  ClientRepositoryImpl({
-    required ClientRemoteDataSource remoteDataSource,
-    required AuthLocalDataSource localDataSource,
-  }) : _remoteDataSource = remoteDataSource,
-       _localDataSource = localDataSource;
+  ClientRepositoryImpl({required ClientRemoteDataSource remoteDataSource})
+    : _remoteDataSource = remoteDataSource;
 
   @override
   Future<Either<Failure, Client>> getProfile() async {

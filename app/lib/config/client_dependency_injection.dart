@@ -14,10 +14,7 @@ Future<void> clientDependencyInjection() async {
 
   // Repository goes here
   getIt.registerLazySingleton<ClientRepository>(
-    () => ClientRepositoryImpl(
-      remoteDataSource: getIt(),
-      localDataSource: getIt(),
-    ),
+    () => ClientRepositoryImpl(remoteDataSource: getIt()),
   );
 
   // Providers go here

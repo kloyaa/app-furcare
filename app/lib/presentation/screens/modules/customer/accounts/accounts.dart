@@ -89,7 +89,9 @@ class _PrivacyScreenState extends State<AccountsScreen>
           }
         });
       }
-    } catch (e) {}
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 
   void _handleProfileTap() {

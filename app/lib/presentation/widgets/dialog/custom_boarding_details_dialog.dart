@@ -88,19 +88,19 @@ class BoardingAppointmentPreviewDialog extends StatelessWidget {
                       _buildSection('Pet Information', [
                         _buildInfoRow(
                           'Name',
-                          appointment.pet!.name,
+                          appointment.pet.name,
                           Icons.pets,
                           colorScheme,
                         ),
                         _buildInfoRow(
                           'Species',
-                          appointment.pet!.specie,
+                          appointment.pet.specie,
                           Icons.category,
                           colorScheme,
                         ),
                         _buildInfoRow(
                           'Gender',
-                          appointment.pet!.gender,
+                          appointment.pet.gender,
                           Icons.info,
                           colorScheme,
                         ),

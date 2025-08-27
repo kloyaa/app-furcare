@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:furcare_app/core/errors/failures.dart';
 import 'package:furcare_app/data/models/appointment_models.dart';
 import 'package:furcare_app/data/repositories/appointment_repository.dart';
@@ -106,13 +106,17 @@ class AppointmentProvider with ChangeNotifier {
     final result = await _appointmentRepository.getBoardingAppointments();
     result.fold(
       (failure) {
-        print('failure: $failure');
+        if (kDebugMode) {
+          print('failure: $failure');
+        }
         clearError();
         _setGetBoardingAppointments(AppointmentState.error);
         _handleFailure(failure);
       },
       (response) {
-        print('response: $response');
+        if (kDebugMode) {
+          print('response: $response');
+        }
         _boardingAppointments = response;
         _setGetBoardingAppointments(AppointmentState.fetched);
       },

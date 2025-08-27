@@ -124,7 +124,9 @@ class _SettingsTabScreenState extends State<SettingsTabScreen>
           }
         });
       }
-    } catch (e) {}
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 
   void _handleLogout() async {

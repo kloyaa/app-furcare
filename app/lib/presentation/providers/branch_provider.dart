@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:furcare_app/core/errors/failures.dart';
 import 'package:furcare_app/data/models/branch_models.dart';
 import 'package:furcare_app/data/repositories/branch_repository.dart';
@@ -49,14 +49,17 @@ class BranchProvider with ChangeNotifier {
 
     result.fold(
       (failure) {
-        print('failure: $failure');
+        if (kDebugMode) {
+          print('failure: $failure');
+        }
         _setFetchBranches(BranchState.error);
         _handleFailure(failure);
       },
       (branches) {
         _branches = branches;
-
-        print('Branches: $_branches');
+        if (kDebugMode) {
+          print('Branches: $_branches');
+        }
         _setFetchBranches(BranchState.created);
         // getPets();
       },

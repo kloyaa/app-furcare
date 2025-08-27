@@ -84,7 +84,9 @@ class _PrivacyScreenState extends State<PrivacyScreen>
           }
         });
       }
-    } catch (e) {}
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 
   void _handleChangePassword() {

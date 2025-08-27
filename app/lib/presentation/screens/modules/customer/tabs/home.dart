@@ -1,19 +1,17 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:furcare_app/core/constants/padding_constant.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
 import 'package:furcare_app/core/helpers/content.dart';
-import 'package:furcare_app/core/helpers/formatters.dart';
 import 'package:furcare_app/core/helpers/widget_helpers.dart';
-import 'package:furcare_app/core/helpers/widget_image_list.dart';
 import 'package:furcare_app/data/models/pet_service.models.dart';
 import 'package:furcare_app/presentation/providers/pet_service_provider.dart';
 import 'package:furcare_app/presentation/screens/modules/customer/tabs/widgets/appointments/shimmer.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
 import 'package:furcare_app/presentation/widgets/dialog/custom_my_appointments_dialog.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
@@ -30,8 +28,6 @@ class _MainTabScreenState extends State<MainTabScreen>
   late Animation<double> _bounceAnimation;
   late AnimationController _glowController;
   late CarouselController _carouselController;
-  late Animation<double> _glowAnimation;
-  late String _currentFunFact; // Store the fun fact so it doesn't change
 
   // Mock booking counts for each service
   final Map<String, int> bookingCounts = const {
@@ -117,7 +113,9 @@ class _MainTabScreenState extends State<MainTabScreen>
   ];
 
   void _handleNavigateToPetServices(String code) {
-    print("code: $code");
+    if (kDebugMode) {
+      print("code: $code");
+    }
     if (code == "PET_GROOMING") {
       context.push('/appointments/grooming');
     }
@@ -136,13 +134,9 @@ class _MainTabScreenState extends State<MainTabScreen>
   void initState() {
     super.initState();
 
-    _currentFunFact = PetMessages.getRandomFunFact();
     _glowController = AnimationController(
       duration: const Duration(milliseconds: 1500),
       vsync: this,
-    );
-    _glowAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _glowController, curve: Curves.easeInOut),
     );
     _glowController.repeat(reverse: true);
     _carouselController = CarouselController();
