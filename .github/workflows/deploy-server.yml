@@ -1,0 +1,84 @@
+name: Deploy Server to EC2
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [master]
+    paths:
+      - "server/**"
+      - ".github/workflows/deploy-server.yml"
+
+jobs:
+  deploy:
+    # Only run if PR was merged (not just closed)
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    environment: EC2
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy Server to EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          timeout: 300s # 5 minutes - increased for Docker operations
+          script: |
+            set -e  # Exit on any error
+
+            # Navigate to home directory
+            cd /home/ec2-user
+
+            # Clone repo if it doesn't exist, otherwise pull
+            if [ ! -d "app-furcare" ]; then
+              echo "Cloning repository..."
+              git clone git@github.com:kloyaa/app-furcare.git app-furcare
+            else
+              echo "Updating repository..."
+              cd app-furcare
+              git pull origin master
+              cd ..
+            fi
+
+            # Navigate to server directory
+            cd app-furcare/server
+
+            # Stop existing container if running
+            echo "Stopping existing container..."
+            docker stop furcare-server || true
+            docker rm furcare-server || true
+
+            # Build new image
+            echo "Building new Docker image..."
+            docker build -t furcare-server-image .
+
+            # Run new container with environment variables
+            echo "Starting new container..."
+            docker run -d \
+              --name furcare-server \
+              -p 3432:3432 \
+              -e DB_CONNECTION_STRING="${{ secrets.DB_CONNECTION_STRING }}" \
+              --restart unless-stopped \
+              furcare-server-image
+
+            # Wait a moment for container to start
+            sleep 5
+
+            # Basic health check
+            if docker ps | grep -q furcare-server; then
+              echo "✅ Container started successfully"
+            else
+              echo "❌ Container failed to start"
+              docker logs furcare-server
+              exit 1
+            fi
+
+            # Clean up unused images
+            echo "Cleaning up unused images..."
+            docker image prune -f
+
+            echo "🚀 Deployment completed successfully!"
