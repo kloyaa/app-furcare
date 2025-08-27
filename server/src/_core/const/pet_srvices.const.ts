@@ -19,14 +19,7 @@ export const petServices = [
         "description":
             "Pet care services delivered right at your doorstep for convenience.",
         "available": true,
-    },
-    {
-        "code": "PET_TRAINING",
-        "name": "Training",
-        "description":
-            "Basic obedience and advanced training programs for dogs and cats.",
-        "available": false,
-    },
+    }
 ];
 
 export const groomingServiceSchedules = [
