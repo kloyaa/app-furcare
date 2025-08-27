@@ -28,7 +28,7 @@ class GroomingAppointmentPreviewDialog extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.2),
+              color: Colors.black.withAlpha(51),
               blurRadius: 20,
               offset: const Offset(0, 10),
             ),
@@ -40,7 +40,7 @@ class GroomingAppointmentPreviewDialog extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: colorScheme.primary.withOpacity(0.1),
+                color: colorScheme.primary.withAlpha(26),
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(12),
                   topRight: Radius.circular(12),
@@ -275,7 +275,7 @@ class GroomingAppointmentPreviewDialog extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Icon(icon, size: 20, color: colorScheme.onSurface.withOpacity(0.6)),
+          Icon(icon, size: 20, color: colorScheme.onSurface.withAlpha(153)),
           const SizedBox(width: 12),
           Expanded(
             flex: 2,
@@ -283,7 +283,7 @@ class GroomingAppointmentPreviewDialog extends StatelessWidget {
               label,
               style: TextStyle(
                 fontSize: 14,
-                color: colorScheme.onSurface.withOpacity(0.7),
+                color: colorScheme.onSurface.withAlpha(179),
               ),
             ),
           ),
@@ -319,14 +319,14 @@ class GroomingAppointmentPreviewDialog extends StatelessWidget {
               label,
               style: TextStyle(
                 fontSize: 14,
-                color: colorScheme.onSurface.withOpacity(0.7),
+                color: colorScheme.onSurface.withAlpha(179),
               ),
             ),
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
-              color: (value ? Colors.green : Colors.red).withOpacity(0.1),
+              color: (value ? Colors.green : Colors.red).withAlpha(26),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Text(
@@ -356,7 +356,7 @@ class GroomingAppointmentPreviewDialog extends StatelessWidget {
           Icon(
             Icons.design_services,
             size: 20,
-            color: colorScheme.onSurface.withOpacity(0.6),
+            color: colorScheme.onSurface.withAlpha(153),
           ),
           SizedBox(
             width: 200,
@@ -366,7 +366,7 @@ class GroomingAppointmentPreviewDialog extends StatelessWidget {
 
               style: TextStyle(
                 fontSize: 14,
-                color: colorScheme.onSurface.withOpacity(0.7),
+                color: colorScheme.onSurface.withAlpha(179),
               ),
             ),
           ),

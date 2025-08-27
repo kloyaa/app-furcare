@@ -76,10 +76,10 @@ class CustomButton extends StatelessWidget {
                 padding: padding ?? const EdgeInsets.symmetric(horizontal: 24),
                 disabledBackgroundColor: theme.colorScheme.onSurface
                     // ignore: deprecated_member_use
-                    .withOpacity(0.12),
+                    .withAlpha(31),
                 disabledForegroundColor: theme.colorScheme.onSurface
                     // ignore: deprecated_member_use
-                    .withOpacity(0.38),
+                    .withAlpha(97),
               ),
               child: _buildButtonContent(
                 context,

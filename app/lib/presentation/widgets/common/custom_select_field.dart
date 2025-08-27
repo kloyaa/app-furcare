@@ -113,19 +113,19 @@ class _CustomSelectFieldState<T> extends State<CustomSelectField<T>> {
             hintText: widget.hintText,
             hintStyle: TextStyle(
               color: hasError
-                  ? theme.colorScheme.error.withOpacity(0.7)
-                  : theme.colorScheme.onSurface.withOpacity(0.5),
+                  ? theme.colorScheme.error.withAlpha(179)
+                  : theme.colorScheme.onSurface.withAlpha(128),
               fontSize: AppTextSize.sm.size,
             ),
             errorText: hasError ? widget.errorText : null,
             errorMaxLines: 3,
             filled: true,
             fillColor: hasError
-                ? theme.colorScheme.errorContainer.withOpacity(0.1)
+                ? theme.colorScheme.errorContainer.withAlpha(26)
                 : (isDark
                       ? theme.colorScheme.surface
-                      : theme.colorScheme.surfaceContainerHighest.withOpacity(
-                          0.3,
+                      : theme.colorScheme.surfaceContainerHighest.withAlpha(
+                          77,
                         )),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),

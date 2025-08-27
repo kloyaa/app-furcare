@@ -183,10 +183,7 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
                           child: Text(
                             'Or continue with',
                             style: TextStyle(
-                              // ignore: deprecated_member_use
-                              color: theme.colorScheme.onSurface.withOpacity(
-                                0.6,
-                              ),
+                              color: theme.colorScheme.onSurface..withAlpha(15),
                               fontSize: 14,
                             ),
                           ),

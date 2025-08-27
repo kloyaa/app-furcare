@@ -91,7 +91,7 @@ class _CompanionCreationScreenState extends State<CompanionCreationScreen> {
                   'Fill in the details below to add your companion',
                   size: AppTextSize.sm,
                   fontWeight: AppFontWeight.normal.value,
-                  color: theme.colorScheme.onSurface.withOpacity(0.7),
+                  color: theme.colorScheme.onSurface.withAlpha(179),
                 ),
 
                 const SizedBox(height: 32),
@@ -136,7 +136,7 @@ class _CompanionCreationScreenState extends State<CompanionCreationScreen> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: theme.colorScheme.outline.withOpacity(0.3),
+                          color: theme.colorScheme.outline.withAlpha(77),
                         ),
                       ),
                       child: Column(
@@ -212,10 +212,10 @@ class _CompanionCreationScreenState extends State<CompanionCreationScreen> {
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       color: theme.colorScheme.surfaceContainerHighest
-                          .withOpacity(0.3),
+                          .withAlpha(77),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: theme.colorScheme.outline.withOpacity(0.2),
+                        color: theme.colorScheme.outline.withAlpha(51),
                       ),
                     ),
                     child: Column(
@@ -235,7 +235,7 @@ class _CompanionCreationScreenState extends State<CompanionCreationScreen> {
                             'Name: ${_nameController.text}',
                             size: AppTextSize.sm,
                             fontWeight: AppFontWeight.normal.value,
-                            color: theme.colorScheme.onSurface.withOpacity(0.8),
+                            color: theme.colorScheme.onSurface.withAlpha(204),
                           ),
 
                         if (_specieController.text.isNotEmpty)
@@ -243,14 +243,14 @@ class _CompanionCreationScreenState extends State<CompanionCreationScreen> {
                             'Species: ${_specieController.text}',
                             size: AppTextSize.sm,
                             fontWeight: AppFontWeight.normal.value,
-                            color: theme.colorScheme.onSurface.withOpacity(0.8),
+                            color: theme.colorScheme.onSurface.withAlpha(204),
                           ),
 
                         CustomText.title(
                           'Gender: $_selectedGender',
                           size: AppTextSize.sm,
                           fontWeight: AppFontWeight.normal.value,
-                          color: theme.colorScheme.onSurface.withOpacity(0.8),
+                          color: theme.colorScheme.onSurface.withAlpha(204),
                         ),
                       ],
                     ),

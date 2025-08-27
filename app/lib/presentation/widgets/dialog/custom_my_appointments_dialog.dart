@@ -116,13 +116,13 @@ class _MyAppointmentsDialogState extends State<MyAppointmentsDialog>
           Icon(
             Icons.calendar_month_outlined,
             size: 64,
-            color: colorScheme.outline.withOpacity(0.5),
+            color: colorScheme.outline.withAlpha(128),
           ),
           const SizedBox(height: 16),
           Text(
             'No appointments yet',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              color: colorScheme.onSurface.withOpacity(0.7),
+              color: colorScheme.onSurface.withAlpha(179),
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -130,7 +130,7 @@ class _MyAppointmentsDialogState extends State<MyAppointmentsDialog>
           Text(
             'Your upcoming appointments will appear here',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: colorScheme.onSurface.withOpacity(0.5),
+              color: colorScheme.onSurface.withAlpha(128),
             ),
             textAlign: TextAlign.center,
           ),
@@ -197,7 +197,7 @@ class _MyAppointmentsDialogState extends State<MyAppointmentsDialog>
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: colorScheme.outline.withOpacity(0.1),
+                  color: colorScheme.outline.withAlpha(26),
                   width: 1,
                 ),
               ),
@@ -233,7 +233,7 @@ class _MyAppointmentsDialogState extends State<MyAppointmentsDialog>
                           'Upcoming appointment',
                           style: TextStyle(
                             fontSize: 12,
-                            color: colorScheme.onSurface.withOpacity(0.6),
+                            color: colorScheme.onSurface.withAlpha(153),
                           ),
                         ),
                       ],
@@ -242,7 +242,7 @@ class _MyAppointmentsDialogState extends State<MyAppointmentsDialog>
                   Icon(
                     Icons.arrow_forward_ios,
                     size: 16,
-                    color: colorScheme.outline.withOpacity(0.5),
+                    color: colorScheme.outline.withAlpha(128),
                   ),
                 ],
               ),

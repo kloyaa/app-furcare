@@ -77,10 +77,10 @@ class ActivityCard extends StatelessWidget {
 
     return Card(
       elevation: 0,
-      color: colorScheme.surfaceContainerHighest.withOpacity(0.3),
+      color: colorScheme.surfaceContainerHighest.withAlpha(77),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: colorScheme.outline.withOpacity(0.1), width: 1),
+        side: BorderSide(color: colorScheme.outline.withAlpha(26), width: 1),
       ),
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -93,7 +93,7 @@ class ActivityCard extends StatelessWidget {
                   padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
-                    color: Colors.blue.withOpacity(0.1),
+                    color: Colors.blue.withAlpha(26),
                   ),
                   child: Icon(Icons.info_outline, color: Colors.blue, size: 20),
                 ),
@@ -172,10 +172,10 @@ class _ActivitySkeletonCardState extends State<ActivitySkeletonCard>
 
     return Card(
       elevation: 0,
-      color: colorScheme.surfaceContainerHighest.withOpacity(0.3),
+      color: colorScheme.surfaceContainerHighest.withAlpha(77),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: colorScheme.outline.withOpacity(0.1), width: 1),
+        side: BorderSide(color: colorScheme.outline.withAlpha(26), width: 1),
       ),
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -191,15 +191,14 @@ class _ActivitySkeletonCardState extends State<ActivitySkeletonCard>
                       padding: const EdgeInsets.all(5),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
-                        color: Colors.grey.withOpacity(_animation.value * 0.3),
+                        color: Colors.grey.withAlpha(77),
                       ),
                       child: Container(
                         width: 20,
                         height: 20,
                         decoration: BoxDecoration(
-                          color: Colors.grey.withOpacity(
-                            _animation.value * 0.3,
-                          ),
+                          color: Colors.grey.withAlpha(77),
+
                           borderRadius: BorderRadius.circular(4),
                         ),
                       ),
@@ -218,9 +217,8 @@ class _ActivitySkeletonCardState extends State<ActivitySkeletonCard>
                             height: 16,
                             width: double.infinity,
                             decoration: BoxDecoration(
-                              color: Colors.grey.withOpacity(
-                                _animation.value * 0.3,
-                              ),
+                              color: Colors.grey.withAlpha(77),
+
                               borderRadius: BorderRadius.circular(4),
                             ),
                           );
@@ -234,9 +232,8 @@ class _ActivitySkeletonCardState extends State<ActivitySkeletonCard>
                             height: 12,
                             width: 80,
                             decoration: BoxDecoration(
-                              color: Colors.grey.withOpacity(
-                                _animation.value * 0.3,
-                              ),
+                              color: Colors.grey.withAlpha(77),
+
                               borderRadius: BorderRadius.circular(4),
                             ),
                           );

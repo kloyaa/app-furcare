@@ -26,9 +26,7 @@ class CompanionSelectionSkeleton extends StatelessWidget {
                     width: 24,
                     height: 24,
                     decoration: BoxDecoration(
-                      color: colorScheme.surfaceContainerHighest.withOpacity(
-                        0.3,
-                      ),
+                      color: colorScheme.surfaceContainerHighest.withAlpha(77),
                       borderRadius: BorderRadius.circular(4),
                     ),
                   ),
@@ -112,9 +110,9 @@ class GroomingScheduleSkeleton extends StatelessWidget {
                       borderRadius: BorderRadius.circular(6),
                       gradient: LinearGradient(
                         colors: [
-                          theme.colorScheme.onSurface.withOpacity(0.1),
-                          theme.colorScheme.onSurface.withOpacity(0.05),
-                          theme.colorScheme.onSurface.withOpacity(0.1),
+                          theme.colorScheme.onSurface.withAlpha(26),
+                          theme.colorScheme.onSurface.withAlpha(13),
+                          theme.colorScheme.onSurface.withAlpha(26),
                         ],
                         stops: const [0.0, 0.5, 1.0],
                         begin: Alignment.topLeft,
@@ -131,9 +129,9 @@ class GroomingScheduleSkeleton extends StatelessWidget {
                       borderRadius: BorderRadius.circular(5),
                       gradient: LinearGradient(
                         colors: [
-                          theme.colorScheme.onSurface.withOpacity(0.08),
-                          theme.colorScheme.onSurface.withOpacity(0.04),
-                          theme.colorScheme.onSurface.withOpacity(0.08),
+                          theme.colorScheme.onSurface.withAlpha(20),
+                          theme.colorScheme.onSurface.withAlpha(10),
+                          theme.colorScheme.onSurface.withAlpha(20),
                         ],
                         stops: const [0.0, 0.5, 1.0],
                       ),
@@ -188,9 +186,9 @@ class GroomingOptionsSkeleton extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8),
                             gradient: LinearGradient(
                               colors: [
-                                theme.colorScheme.onSurface.withOpacity(0.1),
-                                theme.colorScheme.onSurface.withOpacity(0.05),
-                                theme.colorScheme.onSurface.withOpacity(0.1),
+                                theme.colorScheme.onSurface.withAlpha(26),
+                                theme.colorScheme.onSurface.withAlpha(13),
+                                theme.colorScheme.onSurface.withAlpha(26),
                               ],
                               stops: const [0.0, 0.5, 1.0],
                               begin: Alignment.topLeft,
@@ -209,9 +207,9 @@ class GroomingOptionsSkeleton extends StatelessWidget {
                             borderRadius: BorderRadius.circular(6),
                             gradient: LinearGradient(
                               colors: [
-                                theme.colorScheme.onSurface.withOpacity(0.08),
-                                theme.colorScheme.onSurface.withOpacity(0.04),
-                                theme.colorScheme.onSurface.withOpacity(0.08),
+                                theme.colorScheme.onSurface.withAlpha(20),
+                                theme.colorScheme.onSurface.withAlpha(10),
+                                theme.colorScheme.onSurface.withAlpha(20),
                               ],
                               stops: const [0.0, 0.5, 1.0],
                             ),
@@ -229,9 +227,9 @@ class GroomingOptionsSkeleton extends StatelessWidget {
                       borderRadius: BorderRadius.circular(4),
                       gradient: LinearGradient(
                         colors: [
-                          theme.colorScheme.onSurface.withOpacity(0.08),
-                          theme.colorScheme.onSurface.withOpacity(0.04),
-                          theme.colorScheme.onSurface.withOpacity(0.08),
+                          theme.colorScheme.onSurface.withAlpha(20),
+                          theme.colorScheme.onSurface.withAlpha(10),
+                          theme.colorScheme.onSurface.withAlpha(20),
                         ],
                         stops: const [0.0, 0.5, 1.0],
                       ),
@@ -272,9 +270,9 @@ class GroomingApplicationsSkeleton extends StatelessWidget {
             right: 16,
           ),
           decoration: BoxDecoration(
-            color: colorScheme.surfaceContainerHighest.withOpacity(0.3),
+            color: colorScheme.surfaceContainerHighest.withAlpha(77),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: colorScheme.outline.withOpacity(0.1)),
+            border: Border.all(color: colorScheme.outline.withAlpha(26)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -336,7 +334,7 @@ class GroomingApplicationsSkeleton extends StatelessWidget {
       height: height,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(borderRadius),
-        color: colorScheme.onSurface.withOpacity(0.1),
+        color: colorScheme.onSurface.withAlpha(26),
       ),
     );
   }

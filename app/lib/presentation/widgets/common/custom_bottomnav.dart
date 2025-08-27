@@ -43,7 +43,7 @@ class CustomBottomNavBar extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             // ignore: deprecated_member_use
-            color: isDark ? Colors.black26 : Colors.grey.withOpacity(0.2),
+            color: isDark ? Colors.black26 : Colors.grey.withAlpha(51),
             blurRadius: 10,
             offset: const Offset(0, -5),
           ),
@@ -70,7 +70,7 @@ class CustomBottomNavBar extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: isSelected
                         // ignore: deprecated_member_use
-                        ? theme.primaryColor.withOpacity(0.1)
+                        ? theme.primaryColor.withAlpha(26)
                         : Colors.transparent,
                     borderRadius: BorderRadius.circular(20),
                   ),
@@ -86,9 +86,9 @@ class CustomBottomNavBar extends StatelessWidget {
                           key: ValueKey(isSelected),
                           color: isSelected
                               // ignore: deprecated_member_use
-                              ? theme.colorScheme.primary.withOpacity(1)
+                              ? theme.colorScheme.primary.withAlpha(255)
                               // ignore: deprecated_member_use
-                              : theme.colorScheme.primary.withOpacity(0.5),
+                              : theme.colorScheme.primary.withAlpha(128),
                           size: 24,
                         ),
                       ),
@@ -102,9 +102,9 @@ class CustomBottomNavBar extends StatelessWidget {
                             style: TextStyle(
                               color: isSelected
                                   // ignore: deprecated_member_use
-                                  ? theme.colorScheme.primary.withOpacity(1)
+                                  ? theme.colorScheme.primary.withAlpha(255)
                                   // ignore: deprecated_member_use
-                                  : theme.colorScheme.primary.withOpacity(0.5),
+                                  : theme.colorScheme.primary.withAlpha(128),
                               fontWeight: AppFontWeight.bold.value,
                               fontSize: 12,
                             ),

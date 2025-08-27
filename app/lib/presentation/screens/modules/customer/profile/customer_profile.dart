@@ -94,7 +94,7 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                         ),
                         decoration: BoxDecoration(
                           // ignore: deprecated_member_use
-                          color: Colors.green.withOpacity(0.2),
+                          color: Colors.green.withAlpha(51),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: CustomText.caption(
@@ -198,7 +198,7 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                   width: 80,
                   height: 80,
                   decoration: BoxDecoration(
-                    color: colorScheme.primary.withOpacity(0.3),
+                    color: colorScheme.primary.withAlpha(77),
                     shape: BoxShape.circle,
                   ),
                 ),
@@ -208,7 +208,7 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                   width: 120,
                   height: 20,
                   decoration: BoxDecoration(
-                    color: colorScheme.onPrimaryContainer.withOpacity(0.3),
+                    color: colorScheme.onPrimaryContainer.withAlpha(77),
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
@@ -218,7 +218,7 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                   width: 60,
                   height: 24,
                   decoration: BoxDecoration(
-                    color: colorScheme.onPrimaryContainer.withOpacity(0.3),
+                    color: colorScheme.onPrimaryContainer.withAlpha(77),
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
@@ -248,7 +248,7 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0),
-        side: BorderSide(color: colorScheme.outline.withOpacity(0.1), width: 1),
+        side: BorderSide(color: colorScheme.outline.withAlpha(26), width: 1),
       ),
       child: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -262,7 +262,7 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                   width: 24,
                   height: 24,
                   decoration: BoxDecoration(
-                    color: colorScheme.onSurfaceVariant.withOpacity(0.3),
+                    color: colorScheme.onSurfaceVariant.withAlpha(77),
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
@@ -271,7 +271,7 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                   width: 150,
                   height: 18,
                   decoration: BoxDecoration(
-                    color: colorScheme.onSurfaceVariant.withOpacity(0.3),
+                    color: colorScheme.onSurfaceVariant.withAlpha(77),
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
@@ -302,7 +302,7 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
             width: 18,
             height: 18,
             decoration: BoxDecoration(
-              color: colorScheme.onSurfaceVariant.withOpacity(0.3),
+              color: colorScheme.onSurfaceVariant.withAlpha(77),
               borderRadius: BorderRadius.circular(4),
             ),
           ),
@@ -315,7 +315,7 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                   width: 80,
                   height: 12,
                   decoration: BoxDecoration(
-                    color: colorScheme.onSurfaceVariant.withOpacity(0.3),
+                    color: colorScheme.onSurfaceVariant.withAlpha(77),
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
@@ -324,7 +324,7 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                   width: double.infinity,
                   height: 16,
                   decoration: BoxDecoration(
-                    color: colorScheme.onSurfaceVariant.withOpacity(0.2),
+                    color: colorScheme.onSurfaceVariant.withAlpha(51),
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
@@ -350,7 +350,7 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0),
-        side: BorderSide(color: colorScheme.outline.withOpacity(0.1), width: 1),
+        side: BorderSide(color: colorScheme.outline.withAlpha(26), width: 1),
       ),
       child: Padding(
         padding: const EdgeInsets.all(20.0),

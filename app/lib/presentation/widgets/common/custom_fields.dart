@@ -99,16 +99,16 @@ class _CustomInputFieldState extends State<CustomInputField> {
             hintText: widget.hintText,
             hintStyle: TextStyle(
               color: hasError
-                  ? theme.colorScheme.error.withOpacity(0.7)
-                  : theme.colorScheme.onSurface.withOpacity(0.5),
+                  ? theme.colorScheme.error.withAlpha(179)
+                  : theme.colorScheme.onSurface.withAlpha(128),
               fontSize: AppTextSize.sm.size,
             ),
             prefixIcon: widget.prefixIcon != null
                 ? Icon(
                     widget.prefixIcon,
                     color: hasError
-                        ? theme.colorScheme.error.withOpacity(0.8)
-                        : theme.colorScheme.onSurface.withOpacity(0.6),
+                        ? theme.colorScheme.error.withAlpha(204)
+                        : theme.colorScheme.onSurface.withAlpha(153),
                     size: 20,
                   )
                 : null,
@@ -117,8 +117,8 @@ class _CustomInputFieldState extends State<CustomInputField> {
                     icon: Icon(
                       _obscureText ? Icons.visibility_off : Icons.visibility,
                       color: hasError
-                          ? theme.colorScheme.error.withOpacity(0.8)
-                          : theme.colorScheme.onSurface.withOpacity(0.6),
+                          ? theme.colorScheme.error.withAlpha(204)
+                          : theme.colorScheme.onSurface.withAlpha(153),
                       size: 20,
                     ),
                     onPressed: () {
@@ -132,8 +132,8 @@ class _CustomInputFieldState extends State<CustomInputField> {
                           icon: Icon(
                             widget.suffixIcon,
                             color: hasError
-                                ? theme.colorScheme.error.withOpacity(0.8)
-                                : theme.colorScheme.onSurface.withOpacity(0.6),
+                                ? theme.colorScheme.error.withAlpha(204)
+                                : theme.colorScheme.onSurface.withAlpha(153),
                             size: 20,
                           ),
                           onPressed: widget.onSuffixIconTap,
@@ -143,11 +143,11 @@ class _CustomInputFieldState extends State<CustomInputField> {
             errorMaxLines: 3, // Allow error text to wrap up to 3 lines
             filled: true,
             fillColor: hasError
-                ? theme.colorScheme.errorContainer.withOpacity(0.1)
+                ? theme.colorScheme.errorContainer.withAlpha(26)
                 : (isDark
                       ? theme.colorScheme.surface
-                      : theme.colorScheme.surfaceContainerHighest.withOpacity(
-                          0.3,
+                      : theme.colorScheme.surfaceContainerHighest.withAlpha(
+                          77,
                         )),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),

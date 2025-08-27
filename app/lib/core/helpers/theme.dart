@@ -44,7 +44,7 @@ class ThemeHelper {
 
   /// Gets the secondary text color (typically for less prominent text)
   static Color getSecondaryTextColor(BuildContext context) {
-    return Theme.of(context).colorScheme.onSurface.withOpacity(0.6);
+    return Theme.of(context).colorScheme.onSurface.withAlpha(153);
   }
 
   /// Gets text color for content on background

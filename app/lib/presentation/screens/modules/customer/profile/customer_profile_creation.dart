@@ -222,9 +222,7 @@ class _CustomerProfileCreationScreenState
                           horizontal: 16,
                         ),
                         side: BorderSide(
-                          color: Theme.of(
-                            context,
-                          ).primaryColor.withOpacity(0.3),
+                          color: Theme.of(context).primaryColor.withAlpha(77),
                         ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),

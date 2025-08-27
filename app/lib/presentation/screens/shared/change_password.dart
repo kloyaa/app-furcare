@@ -168,7 +168,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         color: theme.colorScheme.surface,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: theme.colorScheme.outline.withOpacity(0.2),
+                          color: theme.colorScheme.outline.withAlpha(51),
                         ),
                       ),
                       child: Column(
@@ -258,12 +258,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.primaryContainer.withOpacity(
-                          0.1,
-                        ),
+                        color: theme.colorScheme.primaryContainer.withAlpha(26),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: theme.colorScheme.primary.withOpacity(0.2),
+                          color: theme.colorScheme.primary.withAlpha(51),
                         ),
                       ),
                       child: Row(
@@ -291,7 +289,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                   'Use a unique password that you don\'t use elsewhere. Consider using a password manager to generate and store strong passwords.',
                                   style: theme.textTheme.bodySmall?.copyWith(
                                     color: theme.colorScheme.onSurface
-                                        .withOpacity(0.7),
+                                        .withAlpha(179),
                                   ),
                                 ),
                               ],
@@ -321,7 +319,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
             size: 16,
             color: isMet
                 ? Colors.green
-                : theme.colorScheme.onSurface.withOpacity(0.4),
+                : theme.colorScheme.onSurface.withAlpha(102),
           ),
           const SizedBox(width: 8),
           Text(
@@ -329,7 +327,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
             style: theme.textTheme.bodySmall?.copyWith(
               color: isMet
                   ? Colors.green
-                  : theme.colorScheme.onSurface.withOpacity(0.7),
+                  : theme.colorScheme.onSurface.withAlpha(179),
             ),
           ),
         ],

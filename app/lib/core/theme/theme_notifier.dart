@@ -108,7 +108,7 @@ class ThemeNotifier {
       switchTheme: SwitchThemeData(
         thumbColor: WidgetStateProperty.all(selectedColor.value.darkColor),
         trackColor: WidgetStateProperty.all(
-          selectedColor.value.accentColor.withOpacity(0.3),
+          selectedColor.value.accentColor.withAlpha(77),
         ),
       ),
     );

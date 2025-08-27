@@ -153,20 +153,20 @@ class _EmptyState extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: colorScheme.primary.withOpacity(0.1),
+              color: colorScheme.primary.withAlpha(26),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Icon(
               Icons.pets_outlined,
               size: 64,
-              color: colorScheme.primary.withOpacity(0.7),
+              color: colorScheme.primary.withAlpha(179),
             ),
           ),
           const SizedBox(height: 24),
           CustomText.body(
             'No appointments found',
             style: TextStyle(
-              color: colorScheme.onSurface.withOpacity(0.7),
+              color: colorScheme.onSurface.withAlpha(179),
               fontSize: 18,
               fontWeight: FontWeight.w500,
             ),
@@ -175,7 +175,7 @@ class _EmptyState extends StatelessWidget {
           Text(
             'Create your first grooming appointment',
             style: TextStyle(
-              color: colorScheme.onSurface.withOpacity(0.5),
+              color: colorScheme.onSurface.withAlpha(128),
               fontSize: 14,
             ),
           ),
@@ -265,22 +265,18 @@ class _AppointmentCardState extends State<_AppointmentCard>
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: _isPressed
-                    ? widget.colorScheme.surfaceContainerHighest.withOpacity(
-                        0.5,
-                      )
-                    : widget.colorScheme.surfaceContainerHighest.withOpacity(
-                        0.3,
-                      ),
+                    ? widget.colorScheme.surfaceContainerHighest.withAlpha(128)
+                    : widget.colorScheme.surfaceContainerHighest.withAlpha(77),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
                   color: _isPressed
-                      ? widget.colorScheme.primary.withOpacity(0.3)
-                      : widget.colorScheme.outline.withOpacity(0.1),
+                      ? widget.colorScheme.primary.withAlpha(77)
+                      : widget.colorScheme.outline.withAlpha(26),
                 ),
                 boxShadow: _isPressed
                     ? [
                         BoxShadow(
-                          color: widget.colorScheme.primary.withOpacity(0.1),
+                          color: widget.colorScheme.primary.withAlpha(26),
                           blurRadius: 8,
                           offset: const Offset(0, 2),
                         ),
@@ -297,7 +293,7 @@ class _AppointmentCardState extends State<_AppointmentCard>
                         child: Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: widget.colorScheme.primary.withOpacity(0.1),
+                            color: widget.colorScheme.primary.withAlpha(26),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Icon(
@@ -324,9 +320,8 @@ class _AppointmentCardState extends State<_AppointmentCard>
                               '${widget.appointment.pet.specie} • ${widget.appointment.pet.gender}',
                               style: TextStyle(
                                 fontSize: 14,
-                                color: widget.colorScheme.onSurface.withOpacity(
-                                  0.7,
-                                ),
+                                color: widget.colorScheme.onSurface
+                                  ..withAlpha(18),
                               ),
                             ),
                           ],
@@ -338,7 +333,7 @@ class _AppointmentCardState extends State<_AppointmentCard>
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: widget.statusColor.withOpacity(0.2),
+                          color: widget.statusColor.withAlpha(51),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
@@ -358,7 +353,7 @@ class _AppointmentCardState extends State<_AppointmentCard>
                           padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
                             color: widget.colorScheme.surfaceContainerHighest
-                                .withOpacity(0.6),
+                                .withAlpha(153),
                             borderRadius: BorderRadius.circular(7),
                           ),
                           child: Row(
@@ -388,21 +383,21 @@ class _AppointmentCardState extends State<_AppointmentCard>
                       Icon(
                         Icons.access_time_rounded,
                         size: 16,
-                        color: widget.colorScheme.onSurface.withOpacity(0.6),
+                        color: widget.colorScheme.onSurface.withAlpha(153),
                       ),
                       const SizedBox(width: 4),
                       Text(
                         widget.appointment.schedule.schedule,
                         style: TextStyle(
                           fontSize: 14,
-                          color: widget.colorScheme.onSurface.withOpacity(0.8),
+                          color: widget.colorScheme.onSurface.withAlpha(204),
                         ),
                       ),
                       const SizedBox(width: 16),
                       Icon(
                         Icons.location_on_rounded,
                         size: 16,
-                        color: widget.colorScheme.onSurface.withOpacity(0.6),
+                        color: widget.colorScheme.onSurface.withAlpha(153),
                       ),
                       const SizedBox(width: 4),
                       Expanded(
@@ -410,9 +405,7 @@ class _AppointmentCardState extends State<_AppointmentCard>
                           widget.appointment.branch.name,
                           style: TextStyle(
                             fontSize: 14,
-                            color: widget.colorScheme.onSurface.withOpacity(
-                              0.8,
-                            ),
+                            color: widget.colorScheme.onSurface..withAlpha(20),
                           ),
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -434,7 +427,7 @@ class _AppointmentCardState extends State<_AppointmentCard>
                       Icon(
                         Icons.arrow_forward_ios_rounded,
                         size: 16,
-                        color: widget.colorScheme.onSurface.withOpacity(0.4),
+                        color: widget.colorScheme.onSurface.withAlpha(102),
                       ),
                     ],
                   ),

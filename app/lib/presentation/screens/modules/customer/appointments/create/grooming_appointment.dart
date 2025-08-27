@@ -201,10 +201,10 @@ class _GroomingApptScreenState extends State<GroomingApptScreen> {
                         ),
                         backgroundColor: schedule.available
                             ? null
-                            : Colors.grey.withOpacity(0.3),
+                            : Colors.grey.withAlpha(77),
                         selectedColor: Theme.of(
                           context,
-                        ).primaryColor.withOpacity(0.2),
+                        ).primaryColor.withAlpha(51),
                       );
                     }).toList(),
                   );
@@ -233,7 +233,7 @@ class _GroomingApptScreenState extends State<GroomingApptScreen> {
                           border: Border.all(
                             color: isSelected
                                 ? Theme.of(context).primaryColor
-                                : Colors.grey.withOpacity(0.3),
+                                : Colors.grey.withAlpha(77),
                             width: isSelected ? 2 : 1,
                           ),
                         ),
@@ -292,7 +292,7 @@ class _GroomingApptScreenState extends State<GroomingApptScreen> {
                           border: Border.all(
                             color: isSelected
                                 ? Theme.of(context).primaryColor
-                                : Colors.grey.withOpacity(0.3),
+                                : Colors.grey.withAlpha(77),
                             width: isSelected ? 2 : 1,
                           ),
                         ),

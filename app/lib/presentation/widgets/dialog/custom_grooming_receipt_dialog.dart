@@ -128,7 +128,7 @@ class _GroomingReceiptDialogState extends State<GroomingReceiptDialog> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: colorScheme.primary.withOpacity(0.1),
+                  color: colorScheme.primary.withAlpha(26),
                   borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(16),
                     topRight: Radius.circular(16),
@@ -169,7 +169,7 @@ class _GroomingReceiptDialogState extends State<GroomingReceiptDialog> {
                           'Please review your booking details',
                           style: TextStyle(
                             fontSize: 14,
-                            color: colorScheme.onSurface.withOpacity(0.7),
+                            color: colorScheme.onSurface.withAlpha(179),
                           ),
                         ),
                       ],
@@ -324,7 +324,7 @@ class _GroomingReceiptDialogState extends State<GroomingReceiptDialog> {
                           color: colorScheme.errorContainer,
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(
-                            color: colorScheme.primary.withOpacity(0.3),
+                            color: colorScheme.primary.withAlpha(77),
                             width: 1,
                           ),
                         ),
@@ -459,10 +459,7 @@ class _GroomingReceiptDialogState extends State<GroomingReceiptDialog> {
       decoration: BoxDecoration(
         color: colorScheme.surface,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: colorScheme.outline.withOpacity(0.2),
-          width: 1,
-        ),
+        border: Border.all(color: colorScheme.outline.withAlpha(51), width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -472,7 +469,7 @@ class _GroomingReceiptDialogState extends State<GroomingReceiptDialog> {
             width: double.infinity,
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: colorScheme.surfaceContainerHighest.withOpacity(0.3),
+              color: colorScheme.surfaceContainerHighest.withAlpha(77),
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(8),
                 topRight: Radius.circular(8),
@@ -487,7 +484,7 @@ class _GroomingReceiptDialogState extends State<GroomingReceiptDialog> {
                 Icon(
                   Icons.unfold_more,
                   size: 16,
-                  color: colorScheme.onSurface.withOpacity(0.6),
+                  color: colorScheme.onSurface.withAlpha(153),
                 ),
               ],
             ),
@@ -517,7 +514,7 @@ class _GroomingReceiptDialogState extends State<GroomingReceiptDialog> {
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        border: Border.all(color: theme.colorScheme.outline.withOpacity(0.2)),
+        border: Border.all(color: theme.colorScheme.outline.withAlpha(51)),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
