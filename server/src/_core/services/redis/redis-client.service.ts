@@ -21,7 +21,7 @@ export const connectRedisDb = async () => {
   } catch (err) {
     console.error('Redis connection error:', err);
   }
-}
+};
 
 // Graceful shutdown
 process.on('SIGINT', async () => {

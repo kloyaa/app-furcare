@@ -40,8 +40,8 @@ export const generateUsername = () => {
 };
 
 export const delay = (ms: number) => {
-  console.log(`Delay started ${ms}`)
-  return new Promise(resolve => setTimeout(resolve, ms));
+  console.log(`Delay started ${ms}`);
+  return new Promise((resolve) => setTimeout(resolve, ms));
 };
 
 export const generateRandomNumber = (length: number): string => {

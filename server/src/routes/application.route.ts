@@ -1,11 +1,11 @@
 import { Router } from 'express';
 import {
-    createGroomingApplication,
-    getGroomingApplications,
-    createBoardingApplication,
-    getBoardingApplications,
-    createHomeServiceApplication,
-    getHomeServiceApplications
+  createGroomingApplication,
+  getGroomingApplications,
+  createBoardingApplication,
+  getBoardingApplications,
+  createHomeServiceApplication,
+  getHomeServiceApplications,
 } from '../controllers/application.controller';
 import { isAuthenticated } from '../_core/middlewares/jwt.middleware';
 
