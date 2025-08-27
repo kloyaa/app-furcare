@@ -69,7 +69,7 @@ class _PetsScreenState extends State<PetsScreen> {
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: theme.colorScheme.shadow.withOpacity(0.1),
+                  color: theme.colorScheme.shadow.withAlpha(26),
                   blurRadius: 20,
                   offset: const Offset(0, 8),
                 ),
@@ -109,7 +109,7 @@ class _PetsScreenState extends State<PetsScreen> {
                 // Divider
                 Divider(
                   height: 1,
-                  color: theme.colorScheme.outline.withOpacity(0.2),
+                  color: theme.colorScheme.outline.withAlpha(51),
                 ),
 
                 // Action buttons
@@ -157,8 +157,8 @@ class _PetsScreenState extends State<PetsScreen> {
                               ),
                               Icon(
                                 Icons.chevron_right_rounded,
-                                color: theme.colorScheme.onSurface.withOpacity(
-                                  0.4,
+                                color: theme.colorScheme.onSurface.withAlpha(
+                                  102,
                                 ),
                               ),
                             ],
@@ -170,7 +170,7 @@ class _PetsScreenState extends State<PetsScreen> {
                     // Divider
                     Divider(
                       height: 1,
-                      color: theme.colorScheme.outline.withOpacity(0.1),
+                      color: theme.colorScheme.outline.withAlpha(26),
                     ),
 
                     // Remove option
@@ -219,8 +219,8 @@ class _PetsScreenState extends State<PetsScreen> {
                               ),
                               Icon(
                                 Icons.chevron_right_rounded,
-                                color: theme.colorScheme.onSurface.withOpacity(
-                                  0.4,
+                                color: theme.colorScheme.onSurface.withAlpha(
+                                  102,
                                 ),
                               ),
                             ],
@@ -258,7 +258,7 @@ class _PetsScreenState extends State<PetsScreen> {
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: theme.colorScheme.shadow.withOpacity(0.1),
+                      color: theme.colorScheme.shadow.withAlpha(26),
                       blurRadius: 20,
                       offset: const Offset(0, 8),
                     ),
@@ -273,9 +273,7 @@ class _PetsScreenState extends State<PetsScreen> {
                       Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: theme.colorScheme.errorContainer.withOpacity(
-                            0.2,
-                          ),
+                          color: theme.colorScheme.errorContainer.withAlpha(51),
                           borderRadius: BorderRadius.circular(16),
                         ),
                         child: Icon(
@@ -323,8 +321,8 @@ class _PetsScreenState extends State<PetsScreen> {
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 side: BorderSide(
-                                  color: theme.colorScheme.outline.withOpacity(
-                                    0.5,
+                                  color: theme.colorScheme.outline.withAlpha(
+                                    128,
                                   ),
                                 ),
                               ),
@@ -474,7 +472,7 @@ class _PetsScreenState extends State<PetsScreen> {
         color: theme.colorScheme.surfaceContainerLow,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: theme.colorScheme.outline.withOpacity(0.1),
+          color: theme.colorScheme.outline.withAlpha(26),
           width: 1,
         ),
       ),
@@ -488,9 +486,9 @@ class _PetsScreenState extends State<PetsScreen> {
               borderRadius: BorderRadius.circular(16),
               gradient: LinearGradient(
                 colors: [
-                  theme.colorScheme.onSurface.withOpacity(0.1),
-                  theme.colorScheme.onSurface.withOpacity(0.05),
-                  theme.colorScheme.onSurface.withOpacity(0.1),
+                  theme.colorScheme.onSurface.withAlpha(26),
+                  theme.colorScheme.onSurface.withAlpha(13),
+                  theme.colorScheme.onSurface.withAlpha(26),
                 ],
                 stops: const [0.0, 0.5, 1.0],
                 begin: Alignment.topLeft,
@@ -513,9 +511,9 @@ class _PetsScreenState extends State<PetsScreen> {
                     borderRadius: BorderRadius.circular(8),
                     gradient: LinearGradient(
                       colors: [
-                        theme.colorScheme.onSurface.withOpacity(0.1),
-                        theme.colorScheme.onSurface.withOpacity(0.05),
-                        theme.colorScheme.onSurface.withOpacity(0.1),
+                        theme.colorScheme.onSurface.withAlpha(26),
+                        theme.colorScheme.onSurface.withAlpha(13),
+                        theme.colorScheme.onSurface.withAlpha(26),
                       ],
                       stops: const [0.0, 0.5, 1.0],
                     ),
@@ -534,9 +532,9 @@ class _PetsScreenState extends State<PetsScreen> {
                         borderRadius: BorderRadius.circular(12),
                         gradient: LinearGradient(
                           colors: [
-                            theme.colorScheme.onSurface.withOpacity(0.08),
-                            theme.colorScheme.onSurface.withOpacity(0.04),
-                            theme.colorScheme.onSurface.withOpacity(0.08),
+                            theme.colorScheme.onSurface.withAlpha(20),
+                            theme.colorScheme.onSurface.withAlpha(10),
+                            theme.colorScheme.onSurface.withAlpha(20),
                           ],
                           stops: const [0.0, 0.5, 1.0],
                         ),
@@ -550,9 +548,9 @@ class _PetsScreenState extends State<PetsScreen> {
                         borderRadius: BorderRadius.circular(12),
                         gradient: LinearGradient(
                           colors: [
-                            theme.colorScheme.onSurface.withOpacity(0.08),
-                            theme.colorScheme.onSurface.withOpacity(0.04),
-                            theme.colorScheme.onSurface.withOpacity(0.08),
+                            theme.colorScheme.onSurface.withAlpha(20),
+                            theme.colorScheme.onSurface.withAlpha(10),
+                            theme.colorScheme.onSurface.withAlpha(20),
                           ],
                           stops: const [0.0, 0.5, 1.0],
                         ),
@@ -572,9 +570,9 @@ class _PetsScreenState extends State<PetsScreen> {
               borderRadius: BorderRadius.circular(12),
               gradient: LinearGradient(
                 colors: [
-                  theme.colorScheme.onSurface.withOpacity(0.08),
-                  theme.colorScheme.onSurface.withOpacity(0.04),
-                  theme.colorScheme.onSurface.withOpacity(0.08),
+                  theme.colorScheme.onSurface.withAlpha(20),
+                  theme.colorScheme.onSurface.withAlpha(10),
+                  theme.colorScheme.onSurface.withAlpha(20),
                 ],
                 stops: const [0.0, 0.5, 1.0],
               ),
@@ -592,10 +590,7 @@ class _PetsScreenState extends State<PetsScreen> {
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerLow,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: colorScheme.outline.withOpacity(0.1),
-          width: 1,
-        ),
+        border: Border.all(color: colorScheme.outline.withAlpha(26), width: 1),
       ),
       child: Material(
         color: Colors.transparent,
@@ -640,7 +635,7 @@ class _PetsScreenState extends State<PetsScreen> {
                 ),
                 Icon(
                   Icons.more_vert_rounded,
-                  color: theme.colorScheme.onSurface.withOpacity(0.4),
+                  color: theme.colorScheme.onSurface.withAlpha(102),
                 ),
               ],
             ),

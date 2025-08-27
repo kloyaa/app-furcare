@@ -124,7 +124,9 @@ class _SettingsTabScreenState extends State<SettingsTabScreen>
           }
         });
       }
-    } catch (e) {}
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 
   void _handleLogout() async {
@@ -332,11 +334,11 @@ class _SettingsTabScreenState extends State<SettingsTabScreen>
     return Card(
       elevation: 0,
       // ignore: deprecated_member_use
-      color: colorScheme.surfaceContainerHighest.withOpacity(0.3),
+      color: colorScheme.surfaceContainerHighest.withAlpha(77),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
         // ignore: deprecated_member_use
-        side: BorderSide(color: colorScheme.outline.withOpacity(0.1), width: 1),
+        side: BorderSide(color: colorScheme.outline.withAlpha(26), width: 1),
       ),
       child: Material(
         color: Colors.transparent,
@@ -344,9 +346,9 @@ class _SettingsTabScreenState extends State<SettingsTabScreen>
           onTap: item.isEnabled ? item.onTap : null,
           borderRadius: BorderRadius.circular(16),
           // ignore: deprecated_member_use
-          splashColor: colorScheme.primary.withOpacity(0.1),
+          splashColor: colorScheme.primary.withAlpha(26),
           // ignore: deprecated_member_use
-          highlightColor: colorScheme.primary.withOpacity(0.05),
+          highlightColor: colorScheme.primary.withAlpha(13),
           child: Container(
             padding: const EdgeInsets.all(18.0),
             child: Row(
@@ -355,8 +357,8 @@ class _SettingsTabScreenState extends State<SettingsTabScreen>
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: (item.iconColor ?? colorScheme.primary).withOpacity(
-                      0.1,
+                    color: (item.iconColor ?? colorScheme.primary).withAlpha(
+                      26,
                     ),
                     shape: BoxShape.circle,
                   ),
@@ -386,8 +388,8 @@ class _SettingsTabScreenState extends State<SettingsTabScreen>
                   Icons.arrow_forward_ios_rounded,
                   size: 16,
                   color: item.isEnabled
-                      ? colorScheme.onSurface.withOpacity(0.5)
-                      : colorScheme.onSurface.withOpacity(0.3),
+                      ? colorScheme.onSurface.withAlpha(128)
+                      : colorScheme.onSurface.withAlpha(77),
                 ),
               ],
             ),

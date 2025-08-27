@@ -72,7 +72,7 @@ class _PetSelectionAccordionState extends State<PetSelectionAccordion> {
         if (petProvider.pets.isEmpty) {
           return Card(
             elevation: 0,
-            color: colorScheme.surfaceContainerHighest.withOpacity(0.3),
+            color: colorScheme.surfaceContainerHighest.withAlpha(77),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
@@ -92,7 +92,7 @@ class _PetSelectionAccordionState extends State<PetSelectionAccordion> {
 
         return Card(
           elevation: 0,
-          color: colorScheme.surfaceContainerHighest.withOpacity(0.3),
+          color: colorScheme.surfaceContainerHighest.withAlpha(77),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
@@ -128,7 +128,7 @@ class _PetSelectionAccordionState extends State<PetSelectionAccordion> {
                       Container(
                         padding: const EdgeInsets.all(5),
                         decoration: BoxDecoration(
-                          color: theme.colorScheme.primary.withOpacity(0.1),
+                          color: theme.colorScheme.primary.withAlpha(26),
                           borderRadius: BorderRadius.circular(100),
                         ),
                         child: AnimatedRotation(
@@ -170,7 +170,7 @@ class _PetSelectionAccordionState extends State<PetSelectionAccordion> {
                                   border: Border.all(
                                     color: widget.selectedPet == pet.id
                                         ? Theme.of(context).primaryColor
-                                        : Colors.grey.withOpacity(0.3),
+                                        : Colors.grey.withAlpha(77),
                                     width: widget.selectedPet == pet.id ? 2 : 1,
                                   ),
                                 ),
@@ -178,7 +178,7 @@ class _PetSelectionAccordionState extends State<PetSelectionAccordion> {
                                   leading: CircleAvatar(
                                     backgroundColor: Theme.of(
                                       context,
-                                    ).primaryColor.withOpacity(0.1),
+                                    ).primaryColor.withAlpha(26),
                                     child: Icon(getSpecieIcon(pet.specie)),
                                   ),
                                   title: CustomText.body(

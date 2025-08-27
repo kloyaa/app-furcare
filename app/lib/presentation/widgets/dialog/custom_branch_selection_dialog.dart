@@ -89,13 +89,13 @@ class _BranchSelectionDialogState extends State<BranchSelectionDialog>
               borderRadius: BorderRadius.circular(28),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.25),
+                  color: Colors.black.withAlpha(64),
                   blurRadius: 30,
                   offset: const Offset(0, 15),
                   spreadRadius: 5,
                 ),
                 BoxShadow(
-                  color: Theme.of(context).primaryColor.withOpacity(0.1),
+                  color: Theme.of(context).primaryColor.withAlpha(26),
                   blurRadius: 20,
                   offset: const Offset(0, 0),
                   spreadRadius: 0,
@@ -129,7 +129,7 @@ class _BranchSelectionDialogState extends State<BranchSelectionDialog>
         gradient: LinearGradient(
           colors: [
             Theme.of(context).primaryColor,
-            Theme.of(context).primaryColor.withOpacity(0.8),
+            Theme.of(context).primaryColor.withAlpha(204),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -146,9 +146,9 @@ class _BranchSelectionDialogState extends State<BranchSelectionDialog>
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.white.withOpacity(0.2),
+                    color: Colors.white.withAlpha(51),
                     border: Border.all(
-                      color: Colors.white.withOpacity(0.3),
+                      color: Colors.white.withAlpha(77),
                       width: 2,
                     ),
                   ),
@@ -205,7 +205,7 @@ class _BranchSelectionDialogState extends State<BranchSelectionDialog>
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Theme.of(context).disabledColor.withOpacity(0.1),
+                    color: Theme.of(context).disabledColor.withAlpha(26),
                   ),
                   child: Icon(
                     Icons.store_mall_directory_outlined,
@@ -225,7 +225,7 @@ class _BranchSelectionDialogState extends State<BranchSelectionDialog>
                 Text(
                   'Please try again later',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).disabledColor.withOpacity(0.7),
+                    color: Theme.of(context).disabledColor.withAlpha(179),
                   ),
                 ),
               ],
@@ -280,20 +280,18 @@ class _BranchSelectionDialogState extends State<BranchSelectionDialog>
                                     ? Theme.of(context).primaryColor
                                     : Theme.of(
                                         context,
-                                      ).dividerColor.withOpacity(0.3),
+                                      ).dividerColor.withAlpha(77),
                                 width: isSelected ? 2.5 : 1,
                               ),
                               color: isSelected
-                                  ? Theme.of(
-                                      context,
-                                    ).primaryColor.withOpacity(0.08)
+                                  ? Theme.of(context).primaryColor.withAlpha(20)
                                   : Theme.of(context).cardColor,
                               boxShadow: isSelected
                                   ? [
                                       BoxShadow(
                                         color: Theme.of(
                                           context,
-                                        ).primaryColor.withOpacity(0.15),
+                                        ).primaryColor.withAlpha(38),
                                         blurRadius: 15,
                                         offset: const Offset(0, 5),
                                       ),
@@ -308,12 +306,12 @@ class _BranchSelectionDialogState extends State<BranchSelectionDialog>
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     color: branch.open
-                                        ? Colors.green.withOpacity(0.15)
-                                        : Colors.orange.withOpacity(0.15),
+                                        ? Colors.green.withAlpha(38)
+                                        : Colors.orange.withAlpha(38),
                                     border: Border.all(
                                       color: branch.open
-                                          ? Colors.green.withOpacity(0.3)
-                                          : Colors.orange.withOpacity(0.3),
+                                          ? Colors.green.withAlpha(77)
+                                          : Colors.orange.withAlpha(77),
                                       width: 1,
                                     ),
                                   ),
@@ -354,12 +352,8 @@ class _BranchSelectionDialogState extends State<BranchSelectionDialog>
                                               borderRadius:
                                                   BorderRadius.circular(20),
                                               color: branch.open
-                                                  ? Colors.green.withOpacity(
-                                                      0.15,
-                                                    )
-                                                  : Colors.orange.withOpacity(
-                                                      0.15,
-                                                    ),
+                                                  ? Colors.green.withAlpha(38)
+                                                  : Colors.orange.withAlpha(38),
                                             ),
                                             child: Row(
                                               mainAxisSize: MainAxisSize.min,
@@ -396,7 +390,7 @@ class _BranchSelectionDialogState extends State<BranchSelectionDialog>
                                                 .textTheme
                                                 .bodySmall
                                                 ?.color
-                                                ?.withOpacity(0.7),
+                                                ?.withAlpha(179),
                                           ),
                                           const SizedBox(width: 4),
                                           Expanded(
@@ -417,7 +411,7 @@ class _BranchSelectionDialogState extends State<BranchSelectionDialog>
                                             size: 16,
                                             color: Theme.of(
                                               context,
-                                            ).primaryColor.withOpacity(0.7),
+                                            ).primaryColor.withAlpha(179),
                                           ),
                                           const SizedBox(width: 4),
                                           CustomText.body(branch.phone),
@@ -462,7 +456,7 @@ class _BranchSelectionDialogState extends State<BranchSelectionDialog>
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Theme.of(context).scaffoldBackgroundColor.withOpacity(0.5),
+        color: Theme.of(context).scaffoldBackgroundColor.withAlpha(128),
         borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(28),
           bottomRight: Radius.circular(28),

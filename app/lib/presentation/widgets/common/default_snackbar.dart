@@ -22,5 +22,7 @@ void showCustomSnackBar(
         duration: const Duration(seconds: 2),
       ),
     );
-  } catch (e) {}
+  } catch (e) {
+    debugPrint(e.toString());
+  }
 }

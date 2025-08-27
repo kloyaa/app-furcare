@@ -138,7 +138,9 @@ class NetworkService {
         options: options,
       );
     } on DioException catch (e) {
-      print(e.requestOptions.baseUrl);
+      if (kDebugMode) {
+        print(e.requestOptions.baseUrl);
+      }
       throw _handleDioException(e);
     }
   }

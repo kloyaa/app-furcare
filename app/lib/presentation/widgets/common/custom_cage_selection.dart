@@ -93,7 +93,7 @@ class _CageSelectionState extends State<CageSelection>
       elevation: 0,
       color: Theme.of(
         context,
-      ).colorScheme.surfaceContainerHighest.withOpacity(0.3),
+      ).colorScheme.surfaceContainerHighest.withAlpha(77),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Container(
         padding: const EdgeInsets.all(12),
@@ -187,7 +187,7 @@ class _CageSelectionState extends State<CageSelection>
                   ? colorScheme.errorContainer
                   : selectedCage != null && selectedCage.id == cage.id
                   ? colorScheme.primaryContainer
-                  : colorScheme.surfaceContainerHighest.withOpacity(0.3),
+                  : colorScheme.surfaceContainerHighest.withAlpha(77),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -211,7 +211,7 @@ class _CageSelectionState extends State<CageSelection>
                               vertical: 4,
                             ),
                             decoration: BoxDecoration(
-                              color: _getSizeColor(cage.size).withOpacity(0.1),
+                              color: _getSizeColor(cage.size).withAlpha(26),
                               borderRadius: BorderRadius.circular(5),
                             ),
                             child: Text(
@@ -240,7 +240,7 @@ class _CageSelectionState extends State<CageSelection>
                           Icon(
                             Icons.pets_outlined,
                             size: 16,
-                            color: colorScheme.onSurface.withOpacity(0.6),
+                            color: colorScheme.onSurface.withAlpha(153),
                           ),
                           const SizedBox(width: 4),
                           Flexible(
@@ -279,7 +279,7 @@ class _CageSelectionState extends State<CageSelection>
     return Container(
       height: 4,
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
+        color: Theme.of(context).colorScheme.onSurface.withAlpha(26),
         borderRadius: BorderRadius.circular(2),
       ),
       child: FractionallySizedBox(
@@ -287,7 +287,7 @@ class _CageSelectionState extends State<CageSelection>
         widthFactor: 1,
         child: Container(
           decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 250, 250, 250).withOpacity(0.1),
+            color: const Color.fromARGB(255, 250, 250, 250).withAlpha(26),
             borderRadius: BorderRadius.circular(2),
           ),
         ),
@@ -299,7 +299,7 @@ class _CageSelectionState extends State<CageSelection>
     return Container(
       height: 4,
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
+        color: Theme.of(context).colorScheme.onSurface.withAlpha(26),
         borderRadius: BorderRadius.circular(2),
       ),
       child: FractionallySizedBox(
@@ -350,7 +350,7 @@ class _CageSelectionState extends State<CageSelection>
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: colorScheme.primary.withOpacity(0.1),
+              color: colorScheme.primary.withAlpha(26),
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -370,7 +370,7 @@ class _CageSelectionState extends State<CageSelection>
           Text(
             'Check back later or try refreshing',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: colorScheme.onSurface.withOpacity(0.6),
+              color: colorScheme.onSurface.withAlpha(153),
             ),
             textAlign: TextAlign.center,
           ),

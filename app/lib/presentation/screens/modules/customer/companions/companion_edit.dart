@@ -110,7 +110,7 @@ class _CompanionEditState extends State<CompanionEdit> {
                   'Change your companion information',
                   size: AppTextSize.sm,
                   fontWeight: AppFontWeight.normal.value,
-                  color: theme.colorScheme.onSurface.withOpacity(0.7),
+                  color: theme.colorScheme.onSurface.withAlpha(179),
                 ),
                 const SizedBox(height: 32),
                 // Name Field
@@ -153,7 +153,7 @@ class _CompanionEditState extends State<CompanionEdit> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: theme.colorScheme.outline.withOpacity(0.3),
+                          color: theme.colorScheme.outline.withAlpha(77),
                         ),
                       ),
                       child: Column(
@@ -229,10 +229,10 @@ class _CompanionEditState extends State<CompanionEdit> {
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       color: theme.colorScheme.surfaceContainerHighest
-                          .withOpacity(0.3),
+                          .withAlpha(77),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: theme.colorScheme.outline.withOpacity(0.2),
+                        color: theme.colorScheme.outline.withAlpha(51),
                       ),
                     ),
                     child: Column(
@@ -252,7 +252,7 @@ class _CompanionEditState extends State<CompanionEdit> {
                             'Name: ${_nameController.text}',
                             size: AppTextSize.sm,
                             fontWeight: AppFontWeight.normal.value,
-                            color: theme.colorScheme.onSurface.withOpacity(0.8),
+                            color: theme.colorScheme.onSurface.withAlpha(204),
                           ),
 
                         if (_specieController.text.isNotEmpty)
@@ -260,14 +260,14 @@ class _CompanionEditState extends State<CompanionEdit> {
                             'Species: ${_specieController.text}',
                             size: AppTextSize.sm,
                             fontWeight: AppFontWeight.normal.value,
-                            color: theme.colorScheme.onSurface.withOpacity(0.8),
+                            color: theme.colorScheme.onSurface.withAlpha(204),
                           ),
 
                         CustomText.title(
                           'Gender: $_selectedGender',
                           size: AppTextSize.sm,
                           fontWeight: AppFontWeight.normal.value,
-                          color: theme.colorScheme.onSurface.withOpacity(0.8),
+                          color: theme.colorScheme.onSurface.withAlpha(204),
                         ),
                       ],
                     ),

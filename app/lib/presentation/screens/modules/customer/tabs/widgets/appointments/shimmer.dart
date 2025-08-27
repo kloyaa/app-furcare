@@ -47,9 +47,9 @@ class _ShimmerEffectState extends State<ShimmerEffect>
     final theme = Theme.of(context);
     final baseColor =
         widget.baseColor ??
-        theme.colorScheme.surfaceContainerHigh.withOpacity(0.3);
+        theme.colorScheme.surfaceContainerHigh.withAlpha(77);
     final highlightColor =
-        widget.highlightColor ?? theme.colorScheme.surface.withOpacity(0.8);
+        widget.highlightColor ?? theme.colorScheme.surface.withAlpha(204);
 
     return AnimatedBuilder(
       animation: _animation,
@@ -84,7 +84,7 @@ class ServiceSkeletonItem extends StatelessWidget {
         color: colorScheme.surfaceContainerLow,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: colorScheme.outline.withOpacity(0.2),
+          color: colorScheme.outline.withAlpha(51),
           width: 1.5,
         ),
       ),

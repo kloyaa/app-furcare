@@ -59,7 +59,7 @@ class AppTheme {
       cardTheme: CardThemeData(
         elevation: 4,
         // ignore: deprecated_member_use
-        shadowColor: Colors.black.withOpacity(0.1),
+        shadowColor: Colors.black.withAlpha(26),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         color: Colors.white,
       ),
@@ -70,7 +70,7 @@ class AppTheme {
           foregroundColor: Colors.white,
           elevation: 2,
           // ignore: deprecated_member_use
-          shadowColor: primaryBlue.withOpacity(0.3),
+          shadowColor: primaryBlue.withAlpha(77),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
@@ -293,7 +293,7 @@ class AppTheme {
       cardTheme: CardThemeData(
         elevation: 4,
         // ignore: deprecated_member_use
-        shadowColor: Colors.black.withOpacity(0.3),
+        shadowColor: Colors.black.withAlpha(77),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         color: const Color(0xFF1C1C1E),
       ),
@@ -305,7 +305,7 @@ class AppTheme {
           foregroundColor: Colors.white,
           elevation: 2,
           // ignore: deprecated_member_use
-          shadowColor: primaryBlue.withOpacity(0.3),
+          shadowColor: primaryBlue.withAlpha(77),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),

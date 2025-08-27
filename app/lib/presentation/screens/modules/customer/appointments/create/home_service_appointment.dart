@@ -91,15 +91,15 @@ class _HomeServiceApptScreenState extends State<HomeServiceApptScreen> {
               child: CustomText.body(
                 'Select Date',
                 size: AppTextSize.xs,
-                color: theme.colorScheme.onSurface.withOpacity(0.5),
+                color: theme.colorScheme.onSurface.withAlpha(128),
               ),
             ),
             Container(
               width: double.infinity,
               decoration: BoxDecoration(
-                color: colorScheme.surfaceContainerHighest.withOpacity(0.1),
+                color: colorScheme.surfaceContainerHighest.withAlpha(26),
                 border: Border.all(
-                  color: colorScheme.outline.withOpacity(0.1),
+                  color: colorScheme.outline.withAlpha(26),
                   width: 1.5,
                 ),
                 borderRadius: BorderRadius.circular(12),

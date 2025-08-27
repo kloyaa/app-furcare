@@ -53,9 +53,9 @@ class _BoardingApplicationsSkeletonState
                 right: 16,
               ),
               decoration: BoxDecoration(
-                color: colorScheme.surfaceContainerHighest.withOpacity(0.3),
+                color: colorScheme.surfaceContainerHighest.withAlpha(77),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: colorScheme.outline.withOpacity(0.1)),
+                border: Border.all(color: colorScheme.outline.withAlpha(26)),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -153,9 +153,9 @@ class _BoardingApplicationsSkeletonState
             (_shimmerAnimation.value + 1).clamp(0.0, 1.0),
           ],
           colors: [
-            colorScheme.onSurface.withOpacity(0.08),
-            colorScheme.onSurface.withOpacity(0.15),
-            colorScheme.onSurface.withOpacity(0.08),
+            colorScheme.onSurface.withAlpha(20),
+            colorScheme.onSurface.withAlpha(38),
+            colorScheme.onSurface.withAlpha(20),
           ],
         ),
       ),

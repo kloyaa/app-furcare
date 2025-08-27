@@ -166,7 +166,7 @@ class CustomText extends StatelessWidget {
     final textColor = color ?? theme.colorScheme.onSurface;
     final finalColor = opacity != null
         // ignore: deprecated_member_use
-        ? textColor.withOpacity(opacity!)
+        ? textColor.withAlpha((opacity! * 255).round())
         : textColor;
 
     // Create base style from individual properties

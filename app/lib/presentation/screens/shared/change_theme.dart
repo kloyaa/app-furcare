@@ -165,14 +165,14 @@ class _ThemeToggleScreenState extends State<ThemeToggleScreen>
   Color _getBackgroundColor(bool isDarkMode) {
     if (isDarkMode) {
       return Color.lerp(
-        _currentThemeColor.darkColor.withOpacity(0.3),
-        _currentThemeColor.darkColor.withOpacity(0.5),
+        _currentThemeColor.darkColor.withAlpha(77),
+        _currentThemeColor.darkColor.withAlpha(128),
         _backgroundAnimation.value,
       )!;
     } else {
       return Color.lerp(
-        _currentThemeColor.accentColor.withOpacity(0.3),
-        _currentThemeColor.accentColor.withOpacity(0.5),
+        _currentThemeColor.accentColor.withAlpha(77),
+        _currentThemeColor.accentColor.withAlpha(128),
         _backgroundAnimation.value,
       )!;
     }
@@ -252,22 +252,22 @@ class _ThemeToggleScreenState extends State<ThemeToggleScreen>
                                       padding: const EdgeInsets.all(40),
                                       decoration: BoxDecoration(
                                         color: isDarkMode
-                                            ? Colors.white.withOpacity(0.1)
-                                            : Colors.white.withOpacity(0.9),
+                                            ? Colors.white.withAlpha(26)
+                                            : Colors.white.withAlpha(230),
                                         borderRadius: BorderRadius.circular(24),
                                         boxShadow: [
                                           BoxShadow(
                                             color: isDarkMode
-                                                ? Colors.black.withOpacity(0.3)
+                                                ? Colors.black.withAlpha(77)
                                                 : _currentThemeColor.lightColor
-                                                      .withOpacity(0.2),
+                                                      .withAlpha(51),
                                             blurRadius: 20,
                                             offset: const Offset(0, 10),
                                           ),
                                         ],
                                         border: Border.all(
                                           color: _currentThemeColor.lightColor
-                                              .withOpacity(0.3),
+                                              .withAlpha(77),
                                           width: 1,
                                         ),
                                       ),
@@ -285,8 +285,8 @@ class _ThemeToggleScreenState extends State<ThemeToggleScreen>
                                                 fontSize: 20,
                                                 fontWeight: FontWeight.w600,
                                                 color: isDarkMode
-                                                    ? Colors.white.withOpacity(
-                                                        0.8,
+                                                    ? Colors.white.withAlpha(
+                                                        204,
                                                       )
                                                     : Colors.black87,
                                               ),
@@ -321,10 +321,10 @@ class _ThemeToggleScreenState extends State<ThemeToggleScreen>
                                                   BoxShadow(
                                                     color: isDarkMode
                                                         ? Colors.amber
-                                                              .withOpacity(0.5)
+                                                              .withAlpha(128)
                                                         : _currentThemeColor
                                                               .lightColor
-                                                              .withOpacity(0.5),
+                                                              .withAlpha(128),
                                                     blurRadius: 50,
                                                     spreadRadius: 10,
                                                   ),
@@ -408,13 +408,13 @@ class _ThemeToggleScreenState extends State<ThemeToggleScreen>
                                                 decoration: BoxDecoration(
                                                   color: _currentThemeColor
                                                       .lightColor
-                                                      .withOpacity(0.1),
+                                                      .withAlpha(26),
                                                   borderRadius:
                                                       BorderRadius.circular(20),
                                                   border: Border.all(
                                                     color: _currentThemeColor
                                                         .lightColor
-                                                        .withOpacity(0.3),
+                                                        .withAlpha(77),
                                                   ),
                                                 ),
                                                 child: Row(
@@ -468,16 +468,16 @@ class _ThemeToggleScreenState extends State<ThemeToggleScreen>
                                           shape: BoxShape.circle,
                                           border: Border.all(
                                             color: isDarkMode
-                                                ? Colors.white.withOpacity(0.2)
+                                                ? Colors.white.withAlpha(51)
                                                 : _currentThemeColor.lightColor
-                                                      .withOpacity(0.3),
+                                                      .withAlpha(77),
                                           ),
                                         ),
                                         child: Icon(
                                           Icons.arrow_back_ios_new_outlined,
                                           size: 24,
                                           color: isDarkMode
-                                              ? Colors.white.withOpacity(0.8)
+                                              ? Colors.white.withAlpha(204)
                                               : _currentThemeColor.lightColor,
                                         ),
                                       ),
@@ -504,12 +504,12 @@ class _ThemeToggleScreenState extends State<ThemeToggleScreen>
                                   padding: const EdgeInsets.all(20),
                                   decoration: BoxDecoration(
                                     color: isDarkMode
-                                        ? Colors.grey.shade900.withOpacity(0.95)
-                                        : Colors.white.withOpacity(0.95),
+                                        ? Colors.grey.shade900.withAlpha(242)
+                                        : Colors.white.withAlpha(242),
                                     borderRadius: BorderRadius.circular(20),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.black.withOpacity(0.2),
+                                        color: Colors.black.withAlpha(51),
                                         blurRadius: 20,
                                         offset: const Offset(0, -5),
                                       ),
@@ -561,7 +561,7 @@ class _ThemeToggleScreenState extends State<ThemeToggleScreen>
                                                 boxShadow: [
                                                   BoxShadow(
                                                     color: colorData.lightColor
-                                                        .withOpacity(0.3),
+                                                        .withAlpha(77),
                                                     blurRadius: 10,
                                                     spreadRadius: 2,
                                                   ),
@@ -588,14 +588,14 @@ class _ThemeToggleScreenState extends State<ThemeToggleScreen>
                                           ),
                                           decoration: BoxDecoration(
                                             color: _currentThemeColor.lightColor
-                                                .withOpacity(0.1),
+                                                .withAlpha(26),
                                             borderRadius: BorderRadius.circular(
                                               20,
                                             ),
                                             border: Border.all(
                                               color: _currentThemeColor
                                                   .lightColor
-                                                  .withOpacity(0.3),
+                                                  .withAlpha(77),
                                             ),
                                           ),
                                           child: Text(
