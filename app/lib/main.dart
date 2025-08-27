@@ -6,7 +6,7 @@ import 'package:furcare_app/config/branch_injection.dart';
 import 'package:furcare_app/config/client_dependency_injection.dart';
 import 'package:furcare_app/config/core_dependency_injection.dart';
 import 'package:furcare_app/config/dependency_instance.dart';
-import 'package:furcare_app/config/pet_dependency_injectioN.dart';
+import 'package:furcare_app/config/pet_dependency.dart';
 import 'package:furcare_app/config/pet_service_dependency_injection.dart';
 import 'package:furcare_app/core/theme/theme_notifier.dart';
 import 'package:furcare_app/presentation/providers/activity_provider.dart';
