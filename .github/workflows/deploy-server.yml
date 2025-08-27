@@ -23,7 +23,7 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
-          timeout: 60
+          timeout: 300s # 5 minutes - increased for Docker operations
           script: |
             set -e  # Exit on any error
 
@@ -32,8 +32,10 @@ jobs:
 
             # Clone repo if it doesn't exist, otherwise pull
             if [ ! -d "app-furcare" ]; then
-              git clone https://github.com/kloyaa/app-furcare.git app-furcare
+              echo "Cloning repository..."
+              git clone git@github.com:kloyaa/app-furcare.git app-furcare
             else
+              echo "Updating repository..."
               cd app-furcare
               git pull origin master
               cd ..
@@ -42,45 +44,38 @@ jobs:
             # Navigate to server directory
             cd app-furcare/server
 
-            # Build new image with timestamp tag
-            TIMESTAMP=$(date +%Y%m%d-%H%M%S)
-            docker build -t furcare-server-image:$TIMESTAMP .
-            docker tag furcare-server-image:$TIMESTAMP furcare-server-image:latest
+            # Stop existing container if running
+            echo "Stopping existing container..."
+            docker stop furcare-server || true
+            docker rm furcare-server || true
 
-            # Health check the new image before deploying
-            docker run --rm furcare-server-image:latest node --version || exit 1
+            # Build new image
+            echo "Building new Docker image..."
+            docker build -t furcare-server-image .
 
-            # Run new container (this creates overlap for zero-downtime)
+            # Run new container with environment variables
+            echo "Starting new container..."
             docker run -d \
-              --name furcare-server-new \
-              -p 3433:3432 \
+              --name furcare-server \
+              -p 3432:3432 \
               -e DB_CONNECTION_STRING="${{ secrets.DB_CONNECTION_STRING }}" \
               --restart unless-stopped \
-              furcare-server-image:latest
+              furcare-server-image
 
-            # Wait for health check
-            sleep 10
+            # Wait a moment for container to start
+            sleep 5
 
             # Basic health check
-            if curl -f http://localhost:3433/health || curl -f http://localhost:3433/ ; then
-              # Stop old container and switch ports
-              docker stop furcare-server || true
-              docker rm furcare-server || true
-              docker stop furcare-server-new
-              docker run -d \
-                --name furcare-server \
-                -p 3432:3432 \
-                -e DB_CONNECTION_STRING="${{ secrets.DB_CONNECTION_STRING }}" \
-                --restart unless-stopped \
-                furcare-server-image:latest
-              docker rm furcare-server-new
+            if docker ps | grep -q furcare-server; then
+              echo "✅ Container started successfully"
             else
-              echo "Health check failed, rolling back"
-              docker stop furcare-server-new || true
-              docker rm furcare-server-new || true
+              echo "❌ Container failed to start"
+              docker logs furcare-server
               exit 1
             fi
 
-            # Clean up old images (keep last 3)
-            docker images furcare-server-image --format "table {{.Tag}}\t{{.ID}}" | grep -v latest | tail -n +4 | awk '{print $2}' | xargs -r docker rmi || true
+            # Clean up unused images
+            echo "Cleaning up unused images..."
             docker image prune -f
+
+            echo "🚀 Deployment completed successfully!"
