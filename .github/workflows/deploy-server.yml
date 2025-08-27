@@ -4,30 +4,12 @@ on:
   pull_request:
     types: [closed]
     branches: [master]
+    paths:
+      - "server/**"
 
 jobs:
-  check-changes:
-    if: github.event.pull_request.merged == true
-    runs-on: ubuntu-latest
-    outputs:
-      server-changed: ${{ steps.changes.outputs.server }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 # Fetch full history for path filtering
-
-      - name: Check for server changes
-        uses: dorny/paths-filter@v3
-        id: changes
-        with:
-          filters: |
-            server:
-              - 'server/**'
-
   deploy:
-    needs: check-changes
-    if: needs.check-changes.outputs.server-changed == 'true'
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     environment: EC2
 
@@ -42,9 +24,9 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
-          timeout: 300s # 5 minutes - increased for Docker operations
+          timeout: 300s
           script: |
-            set -e  # Exit on any error
+            set -e
 
             # Navigate to home directory
             cd /home/ec2-user
