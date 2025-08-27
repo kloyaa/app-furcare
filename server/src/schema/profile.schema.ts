@@ -35,7 +35,7 @@ const profileSchema = new Schema<IProfile>(
       default: true,
     },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 const Profile = model<IProfile>('Profile', profileSchema);

@@ -28,7 +28,7 @@ const userSchema = new Schema<IUser>(
       },
     ],
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 const passwordSchema = new Schema<IPassword>(
@@ -43,7 +43,7 @@ const passwordSchema = new Schema<IPassword>(
       required: true,
     },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 const Password = model<IPassword>('Password', passwordSchema);

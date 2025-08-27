@@ -1,12 +1,22 @@
 import Joi from 'joi';
-import { groomingOptionsEnum, groomingPreferencesEnum, groomingScheduleEnum } from '../enum/application.enum';
+import {
+  groomingOptionsEnum,
+  groomingPreferencesEnum,
+  groomingScheduleEnum,
+} from '../enum/application.enum';
 import { CustomJoiHelpers } from '../utils/joi/joi.utils';
 import { boardingHours } from '../const/pet_srvices.const';
 
 export const validateCreateGroomingApplication = (body: any) => {
   const schema = Joi.object({
-    pet: Joi.string().trim().required().custom(CustomJoiHelpers.isValidObjectId, 'ObjectId validation'),
-    branch: Joi.string().trim().required().custom(CustomJoiHelpers.isValidObjectId, 'ObjectId validation'),
+    pet: Joi.string()
+      .trim()
+      .required()
+      .custom(CustomJoiHelpers.isValidObjectId, 'ObjectId validation'),
+    branch: Joi.string()
+      .trim()
+      .required()
+      .custom(CustomJoiHelpers.isValidObjectId, 'ObjectId validation'),
     scheduleCode: Joi.string()
       .trim()
       .required()
@@ -28,9 +38,18 @@ export const validateCreateGroomingApplication = (body: any) => {
 
 export const validateCreateBoardingApplication = (body: any) => {
   const schema = Joi.object({
-    pet: Joi.string().trim().required().custom(CustomJoiHelpers.isValidObjectId, 'ObjectId validation'),
-    cage: Joi.string().trim().required().custom(CustomJoiHelpers.isValidObjectId, 'ObjectId validation'),
-    branch: Joi.string().trim().required().custom(CustomJoiHelpers.isValidObjectId, 'ObjectId validation'),
+    pet: Joi.string()
+      .trim()
+      .required()
+      .custom(CustomJoiHelpers.isValidObjectId, 'ObjectId validation'),
+    cage: Joi.string()
+      .trim()
+      .required()
+      .custom(CustomJoiHelpers.isValidObjectId, 'ObjectId validation'),
+    branch: Joi.string()
+      .trim()
+      .required()
+      .custom(CustomJoiHelpers.isValidObjectId, 'ObjectId validation'),
     schedule: Joi.object({
       date: Joi.date().required(),
       time: Joi.string()
@@ -48,8 +67,14 @@ export const validateCreateBoardingApplication = (body: any) => {
 
 export const validateCreateHomeServiceApplication = (body: any) => {
   const schema = Joi.object({
-    pet: Joi.string().trim().required().custom(CustomJoiHelpers.isValidObjectId, 'ObjectId validation'),
-    branch: Joi.string().trim().required().custom(CustomJoiHelpers.isValidObjectId, 'ObjectId validation'),
+    pet: Joi.string()
+      .trim()
+      .required()
+      .custom(CustomJoiHelpers.isValidObjectId, 'ObjectId validation'),
+    branch: Joi.string()
+      .trim()
+      .required()
+      .custom(CustomJoiHelpers.isValidObjectId, 'ObjectId validation'),
     schedule: Joi.object({
       date: Joi.date().required(),
       time: Joi.string().required(),

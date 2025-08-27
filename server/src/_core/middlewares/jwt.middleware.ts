@@ -12,7 +12,11 @@ import { TRequest } from '../interfaces/overrides.interface';
  * @param {any} next - The next function to be called.
  * @return {Promise<void | Response>} - Returns a Promise that resolves when the middleware is done.
  */
-export const isAuthenticated = async (req: TRequest, res: any, next: any): Promise<void | Response> => {
+export const isAuthenticated = async (
+  req: TRequest,
+  res: any,
+  next: any
+): Promise<void | Response> => {
   try {
     const authHeader = req.headers['authorization'];
     if (!authHeader) {
@@ -26,24 +30,30 @@ export const isAuthenticated = async (req: TRequest, res: any, next: any): Promi
 
     const env = await getEnv();
 
-    jwt.verify(token, env?.JWT_SECRET_KEY as string, (err: any, decoded: any) => {
-      if (err) {
-        console.log('@isAuthenticated jwt.verify error', err);
-        return res.status(401).json(statuses['10020']);
-      } else if (decoded) {
-        const decryptedData: { origin: string; id: string } = decrypt(
-          decoded.value,
-          env.NODEX_CRYPTO_KEY ?? '123_cryptoKey',
-        );
-        if (!decryptedData) {
+    jwt.verify(
+      token,
+      env?.JWT_SECRET_KEY as string,
+      (err: any, decoded: any) => {
+        if (err) {
+          console.log('@isAuthenticated jwt.verify error', err);
           return res.status(401).json(statuses['10020']);
-        } else if (decryptedData?.origin !== req.headers['nodex-user-origin']) {
-          return res.status(403).json(statuses['0059']);
+        } else if (decoded) {
+          const decryptedData: { origin: string; id: string } = decrypt(
+            decoded.value,
+            env.NODEX_CRYPTO_KEY ?? '123_cryptoKey'
+          );
+          if (!decryptedData) {
+            return res.status(401).json(statuses['10020']);
+          } else if (
+            decryptedData?.origin !== req.headers['nodex-user-origin']
+          ) {
+            return res.status(403).json(statuses['0059']);
+          }
+          req.user = decryptedData as any;
+          next();
         }
-        req.user = decryptedData as any;
-        next();
       }
-    });
+    );
   } catch (error) {
     console.log('@isAuthenticated error', error);
     return res.status(401).json(statuses['10020']);

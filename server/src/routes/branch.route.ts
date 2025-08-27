@@ -1,5 +1,9 @@
 import { Router } from 'express';
-import { createRandomBranches, getBranches, clearBranches } from '../controllers/branch.controller';
+import {
+  createRandomBranches,
+  getBranches,
+  clearBranches,
+} from '../controllers/branch.controller';
 import { isAuthenticated } from '../_core/middlewares/jwt.middleware';
 
 const router = Router();

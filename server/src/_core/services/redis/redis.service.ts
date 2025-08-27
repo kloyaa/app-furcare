@@ -1,7 +1,14 @@
-import { IGetPayload, IGetResponse, ISetPayload, ISetResponse } from '../../interfaces';
+import {
+  IGetPayload,
+  IGetResponse,
+  ISetPayload,
+  ISetResponse,
+} from '../../interfaces';
 import redisClient from './redis-client.service';
 
-export const setLocalStorage = async <T>(payload: ISetPayload<T>): Promise<ISetResponse<void>> => {
+export const setLocalStorage = async <T>(
+  payload: ISetPayload<T>
+): Promise<ISetResponse<void>> => {
   const { key, value } = payload;
 
   try {
@@ -18,7 +25,9 @@ export const setLocalStorage = async <T>(payload: ISetPayload<T>): Promise<ISetR
   }
 };
 
-export const getLocalStorage = async <T>(payload: IGetPayload): Promise<IGetResponse<T | null>> => {
+export const getLocalStorage = async <T>(
+  payload: IGetPayload
+): Promise<IGetResponse<T | null>> => {
   const { key } = payload;
 
   try {

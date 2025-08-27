@@ -58,7 +58,7 @@ const groomingApplicationSchema = new Schema<IGroomingApplication>(
       default: 'pending',
     },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 const boardingApplicationSchema = new Schema<IBoardingApplication>(
@@ -116,7 +116,7 @@ const boardingApplicationSchema = new Schema<IBoardingApplication>(
       default: 'pending',
     },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 const homeServiceApplicationSchema = new Schema<IHomeServiceApplication>(
@@ -157,11 +157,20 @@ const homeServiceApplicationSchema = new Schema<IHomeServiceApplication>(
       default: 'pending',
     },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
-const HomeServiceApplication = model<IHomeServiceApplication>('HomeServiceApplication', homeServiceApplicationSchema);
-const BoardingApplication = model('BoardingApplication', boardingApplicationSchema);
-const GroomingApplication = model('GroomingApplication', groomingApplicationSchema);
+const HomeServiceApplication = model<IHomeServiceApplication>(
+  'HomeServiceApplication',
+  homeServiceApplicationSchema
+);
+const BoardingApplication = model(
+  'BoardingApplication',
+  boardingApplicationSchema
+);
+const GroomingApplication = model(
+  'GroomingApplication',
+  groomingApplicationSchema
+);
 
 export { HomeServiceApplication, BoardingApplication, GroomingApplication };

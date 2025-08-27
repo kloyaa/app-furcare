@@ -10,7 +10,11 @@ import { colors } from '../const/common.const';
  * @param {NextFunction} next - The next middleware function in the chain.
  * @return {void} This function does not return anything.
  */
-export const setDefaultDateTime = (req: Request, res: Response, next: NextFunction): void => {
+export const setDefaultDateTime = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
   res.setHeader('x-nodex-datetime', new Date().toISOString());
   next();
 };
@@ -23,9 +27,15 @@ export const setDefaultDateTime = (req: Request, res: Response, next: NextFuncti
  * @param {NextFunction} next - The next middleware function in the chain.
  * @return {void} This function does not return anything.
  */
-export const logNetworkRequests = (req: Request, res: Response, next: NextFunction): void => {
+export const logNetworkRequests = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
   console.log(
-    `${colors.fg.yellow}[endpoint] ${req.method} ${req.originalUrl} - ${formatDate(new Date())} ${colors.fg.white}`,
+    `${colors.fg.yellow}[endpoint] ${req.method} ${
+      req.originalUrl
+    } - ${formatDate(new Date())} ${colors.fg.white}`
   );
   next();
 };
@@ -38,7 +48,11 @@ export const logNetworkRequests = (req: Request, res: Response, next: NextFuncti
  * @param {NextFunction} next - The next middleware function in the chain.
  * @return {void} This function does not return anything.
  */
-export const logNetworkHeaders = (req: Request, res: Response, next: NextFunction): void => {
+export const logNetworkHeaders = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
   console.log(`${colors.fg.green}--> headers ${colors.fg.white}`);
   console.log(req.headers);
   next();
@@ -52,7 +66,11 @@ export const logNetworkHeaders = (req: Request, res: Response, next: NextFunctio
  * @param {NextFunction} next - The next middleware function in the chain.
  * @return {void} This function does not return anything.
  */
-export const logNetworBody = (req: Request, res: Response, next: NextFunction): void => {
+export const logNetworBody = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
   console.log(`${colors.fg.green}--> body ${colors.fg.white}`);
   console.log(req.body);
   next();

@@ -14,7 +14,7 @@ const activitySchema = new Schema<IActivity>(
       required: true,
     },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 // Create the Activity model

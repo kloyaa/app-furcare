@@ -14,7 +14,10 @@ export function handleMongooseError(error: unknown, res: Response) {
       message: 'Database connection error. Please try again shortly.',
     });
   }
-  if (error instanceof MongooseError.CastError || error instanceof MongooseError.ValidationError) {
+  if (
+    error instanceof MongooseError.CastError ||
+    error instanceof MongooseError.ValidationError
+  ) {
     return res.status(400).json({
       ...statuses['501'],
       message: error.message,

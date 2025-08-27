@@ -8,7 +8,10 @@ import { TRequest } from '../_core/interfaces/overrides.interface';
  * @param {Response} res - The response object used to send the JSON response.
  * @return {Promise<void | Response>} A promise that resolves to the JSON response containing the uploaded files.
  */
-export const uploadImage = async (req: TRequest, res: Response): Promise<any> => {
+export const uploadImage = async (
+  req: TRequest,
+  res: Response
+): Promise<any> => {
   const { files } = req;
   return res.status(200).json(files);
 };

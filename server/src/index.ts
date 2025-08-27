@@ -10,7 +10,10 @@ import { maintenanceModeMiddleware } from './_core/middlewares/maintenance-mode.
 
 import { requestLoggerMiddleware } from './_core/middlewares/request-logger.middleware';
 import { allowApiAccessMiddleware } from './_core/middlewares/allow-access.middleware';
-import { fileFilter, storage } from './_core/services/upload/image_upload.service';
+import {
+  fileFilter,
+  storage,
+} from './_core/services/upload/image_upload.service';
 
 import authRoute from './routes/auth.route';
 import userRoute from './routes/user.route';
@@ -57,7 +60,7 @@ async function runApp(): Promise<void> {
   app.use(
     cors({
       exposedHeaders: ['X-Nodex-DateTime'],
-    }),
+    })
   );
 
   app.use(express.urlencoded({ extended: true }));
@@ -101,9 +104,15 @@ async function runApp(): Promise<void> {
 
   // Start the HTTPS server
   app.listen(Number(env?.PORT) || 5000, () => {
-    console.log(`${colors.fg.cyan}[application] @environment `, env?.ENVIRONMENT);
+    console.log(
+      `${colors.fg.cyan}[application] @environment `,
+      env?.ENVIRONMENT
+    );
     console.log(`${colors.fg.cyan}[application] @port `, Number(env?.PORT));
-    console.log(`${colors.fg.cyan}[application] @url `, `http://localhost:${Number(env?.PORT)}`);
+    console.log(
+      `${colors.fg.cyan}[application] @url `,
+      `http://localhost:${Number(env?.PORT)}`
+    );
   });
 }
 

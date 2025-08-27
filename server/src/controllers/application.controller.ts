@@ -6,17 +6,28 @@ import {
   validateCreateHomeServiceApplication,
 } from '../_core/validators/application.validator';
 import { type Response } from 'express';
-import { BoardingApplication, GroomingApplication, HomeServiceApplication } from '../schema/application.schema';
+import {
+  BoardingApplication,
+  GroomingApplication,
+  HomeServiceApplication,
+} from '../schema/application.schema';
 import { emitter } from '../_core/events/activity.event';
 import { ActivityType, EventName } from '../_core/enum/activity.enum';
 import { IActivity } from '../_core/interfaces/activity.interface';
 import { Branch } from '../schema/branch.schema';
 import Pet from '../schema/pet.schema';
 import { handleMongooseError } from '../_core/utils/db/error.util';
-import { groomingOptions, groomingPreferences, groomingServiceSchedules } from '../_core/const/pet_srvices.const';
+import {
+  groomingOptions,
+  groomingPreferences,
+  groomingServiceSchedules,
+} from '../_core/const/pet_srvices.const';
 import PetCage from '../schema/pet_services.schema';
 
-export const createGroomingApplication = async (req: TRequest, res: Response): Promise<any> => {
+export const createGroomingApplication = async (
+  req: TRequest,
+  res: Response
+): Promise<any> => {
   const error = validateCreateGroomingApplication(req.body);
   if (error) {
     return res.status(400).json({
@@ -37,7 +48,10 @@ export const createGroomingApplication = async (req: TRequest, res: Response): P
       hasAntiRabbiesVaccination,
     } = req.body;
 
-    const [findPet, findBranch] = await Promise.all([Pet.findById(pet), Branch.findById(branch)]);
+    const [findPet, findBranch] = await Promise.all([
+      Pet.findById(pet),
+      Branch.findById(branch),
+    ]);
 
     if (!findBranch) {
       return res.status(404).json({
@@ -57,7 +71,9 @@ export const createGroomingApplication = async (req: TRequest, res: Response): P
     let totalPrice = 0;
 
     // Add schedule price
-    const schedule = groomingServiceSchedules.find(s => s.code === scheduleCode);
+    const schedule = groomingServiceSchedules.find(
+      s => s.code === scheduleCode
+    );
     if (schedule) {
       totalPrice += schedule.price;
     }
@@ -75,7 +91,9 @@ export const createGroomingApplication = async (req: TRequest, res: Response): P
     // Add grooming preferences prices (from request body codes)
     if (selectedPreferences && selectedPreferences.length > 0) {
       selectedPreferences.forEach((preferenceCode: string) => {
-        const preferenceObj = groomingPreferences.find(p => p.code === preferenceCode);
+        const preferenceObj = groomingPreferences.find(
+          p => p.code === preferenceCode
+        );
         if (preferenceObj) {
           totalPrice += preferenceObj.price;
         }
@@ -108,7 +126,10 @@ export const createGroomingApplication = async (req: TRequest, res: Response): P
   }
 };
 
-export const createBoardingApplication = async (req: TRequest, res: Response): Promise<any> => {
+export const createBoardingApplication = async (
+  req: TRequest,
+  res: Response
+): Promise<any> => {
   const error = validateCreateBoardingApplication(req.body);
   if (error) {
     return res.status(400).json({
@@ -169,7 +190,10 @@ export const createBoardingApplication = async (req: TRequest, res: Response): P
   }
 };
 
-export const createHomeServiceApplication = async (req: TRequest, res: Response): Promise<any> => {
+export const createHomeServiceApplication = async (
+  req: TRequest,
+  res: Response
+): Promise<any> => {
   const error = validateCreateHomeServiceApplication(req.body);
   if (error) {
     return res.status(400).json({
@@ -181,7 +205,10 @@ export const createHomeServiceApplication = async (req: TRequest, res: Response)
   try {
     const { pet, branch, schedule } = req.body;
 
-    const [findPet, findBranch] = await Promise.all([Pet.findById(pet), Branch.findById(branch)]);
+    const [findPet, findBranch] = await Promise.all([
+      Pet.findById(pet),
+      Branch.findById(branch),
+    ]);
 
     if (!findBranch) {
       return res.status(404).json({
@@ -217,7 +244,10 @@ export const createHomeServiceApplication = async (req: TRequest, res: Response)
   }
 };
 
-export const getGroomingApplications = async (req: TRequest, res: Response): Promise<any> => {
+export const getGroomingApplications = async (
+  req: TRequest,
+  res: Response
+): Promise<any> => {
   try {
     const status = req.query.status as string;
     const groomingApplications = await GroomingApplication.find({
@@ -230,14 +260,22 @@ export const getGroomingApplications = async (req: TRequest, res: Response): Pro
 
     const mappedApplications = groomingApplications.map(application => {
       const applicationObj = application.toObject();
-      const scheduleObj = groomingServiceSchedules.find(schedule => schedule.code === applicationObj.scheduleCode);
+      const scheduleObj = groomingServiceSchedules.find(
+        schedule => schedule.code === applicationObj.scheduleCode
+      );
       const groomingOptionsObjects =
         applicationObj.groomingOptions
-          ?.map(optionCode => groomingOptions.find(option => option.code === optionCode))
+          ?.map(optionCode =>
+            groomingOptions.find(option => option.code === optionCode)
+          )
           .filter(Boolean) || [];
       const groomingPreferencesObjects =
         applicationObj.groomingPreferences
-          ?.map(preferenceCode => groomingPreferences.find(preference => preference.code === preferenceCode))
+          ?.map(preferenceCode =>
+            groomingPreferences.find(
+              preference => preference.code === preferenceCode
+            )
+          )
           .filter(Boolean) || [];
 
       const { scheduleCode, ...restApplicationObj } = applicationObj;
@@ -256,7 +294,10 @@ export const getGroomingApplications = async (req: TRequest, res: Response): Pro
   }
 };
 
-export const getBoardingApplications = async (req: TRequest, res: Response): Promise<any> => {
+export const getBoardingApplications = async (
+  req: TRequest,
+  res: Response
+): Promise<any> => {
   try {
     const status = req.query.status as string;
     const boardingApplications = await BoardingApplication.find({
@@ -275,7 +316,10 @@ export const getBoardingApplications = async (req: TRequest, res: Response): Pro
   }
 };
 
-export const getHomeServiceApplications = async (req: TRequest, res: Response): Promise<any> => {
+export const getHomeServiceApplications = async (
+  req: TRequest,
+  res: Response
+): Promise<any> => {
   try {
     const status = req.query.status as string;
     const homeServiceApplications = await HomeServiceApplication.find({

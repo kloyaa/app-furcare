@@ -17,10 +17,14 @@ export const authorize = (...allowedRoles: RoleName[]) => {
       }
 
       // Fetch user roles
-      const userRoles = await UserRole.find({ user: req.user.id }).populate('role');
+      const userRoles = await UserRole.find({ user: req.user.id }).populate(
+        'role'
+      );
 
       // // Check if user has any of the allowed roles
-      const hasAllowedRole = userRoles.some(userRole => allowedRoles.includes(userRole.role.name as RoleName));
+      const hasAllowedRole = userRoles.some(userRole =>
+        allowedRoles.includes(userRole.role.name as RoleName)
+      );
 
       if (!hasAllowedRole) {
         return res.status(403).json(statuses['0057']);

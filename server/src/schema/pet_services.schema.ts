@@ -21,7 +21,7 @@ const petCageSchema = new Schema<IPetCage>(
       required: true,
     },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 const PetCage = model<IPetCage>('PetCage', petCageSchema);

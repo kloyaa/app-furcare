@@ -3,7 +3,10 @@ import { isValidObjectId } from 'mongoose';
 
 export const validateUpdatePetCages = (body: any) => {
   const schema = Joi.object({
-    id: Joi.string().trim().custom(isValidObjectId, 'ObjectId validation').required(),
+    id: Joi.string()
+      .trim()
+      .custom(isValidObjectId, 'ObjectId validation')
+      .required(),
     action: Joi.string().required().valid('add', 'remove'),
   });
 

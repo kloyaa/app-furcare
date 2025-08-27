@@ -1,6 +1,9 @@
 import { Router } from 'express';
 import { isAuthenticated } from '../_core/middlewares/jwt.middleware';
-import { generatePassword, generateUsername } from '../controllers/auxiliary.controller';
+import {
+  generatePassword,
+  generateUsername,
+} from '../controllers/auxiliary.controller';
 const router = Router();
 
 const commonMiddlewares = [isAuthenticated];

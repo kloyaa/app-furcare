@@ -9,7 +9,11 @@ import { statuses } from '../const/api.statuses';
  * @param {NextFunction} next - The next function to be called.
  * @return {void | Response} - This function does not return anything.
  */
-export const checkUserOrigin = (req: any, res: Response, next: NextFunction): void | Response => {
+export const checkUserOrigin = (
+  req: any,
+  res: Response,
+  next: NextFunction
+): void | Response => {
   const from = req.headers['from'];
   if (from === 'mobile' || from === 'web') {
     req.from = from;

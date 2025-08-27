@@ -6,7 +6,10 @@ import { statuses } from '../_core/const/api.statuses';
 import { handleMongooseError } from '../_core/utils/db/error.util';
 import { generateRandomNumber } from '../_core/utils/utils';
 
-export const createRandomBranches = async (req: TRequest, res: Response): Promise<any> => {
+export const createRandomBranches = async (
+  req: TRequest,
+  res: Response
+): Promise<any> => {
   try {
     const generatedBranches = await Branch.find().sort({ createdAt: -1 });
     if (generatedBranches.length > 0) {
@@ -62,7 +65,10 @@ export const createRandomBranches = async (req: TRequest, res: Response): Promis
   }
 };
 
-export const getBranches = async (req: TRequest, res: Response): Promise<any> => {
+export const getBranches = async (
+  req: TRequest,
+  res: Response
+): Promise<any> => {
   try {
     const branches = await Branch.find().sort({ createdAt: -1 });
     return res.status(200).json(branches);
@@ -72,7 +78,10 @@ export const getBranches = async (req: TRequest, res: Response): Promise<any> =>
   }
 };
 
-export const clearBranches = async (req: TRequest, res: Response): Promise<any> => {
+export const clearBranches = async (
+  req: TRequest,
+  res: Response
+): Promise<any> => {
   try {
     await Branch.deleteMany({});
     return res.status(200).json(statuses['00']);
