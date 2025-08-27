@@ -45,7 +45,7 @@ export const isAuthenticated = async (req: TRequest, res: any, next: any): Promi
       }
     });
   } catch (error) {
-    console.log("@isAuthenticated error", error);
+    console.log('@isAuthenticated error', error);
     return res.status(401).json(statuses['10020']);
   }
 };

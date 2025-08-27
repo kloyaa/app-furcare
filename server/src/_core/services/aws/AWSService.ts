@@ -1,360 +1,361 @@
 import {
-    S3Client,
-    PutObjectCommand,
-    GetObjectCommand,
-    DeleteObjectCommand,
-    ListObjectsV2Command,
-    HeadObjectCommand,
-    S3ClientConfig,
-    ListBucketsCommand
+  S3Client,
+  PutObjectCommand,
+  GetObjectCommand,
+  DeleteObjectCommand,
+  ListObjectsV2Command,
+  HeadObjectCommand,
+  S3ClientConfig,
+  ListBucketsCommand,
 } from '@aws-sdk/client-s3';
+import { DynamoDBClient, DynamoDBClientConfig } from '@aws-sdk/client-dynamodb';
+import { SESClient, SendEmailCommand, SESClientConfig } from '@aws-sdk/client-ses';
 import {
-    DynamoDBClient,
-    DynamoDBClientConfig
-} from '@aws-sdk/client-dynamodb';
-import {
-    SESClient,
-    SendEmailCommand,
-    SESClientConfig
-} from '@aws-sdk/client-ses';
-import {
-    SecretsManagerClient,
-    GetSecretValueCommand,
-    CreateSecretCommand,
-    UpdateSecretCommand,
-    DeleteSecretCommand,
-    ListSecretsCommand,
-    SecretsManagerClientConfig
+  SecretsManagerClient,
+  GetSecretValueCommand,
+  CreateSecretCommand,
+  UpdateSecretCommand,
+  DeleteSecretCommand,
+  ListSecretsCommand,
+  SecretsManagerClientConfig,
 } from '@aws-sdk/client-secrets-manager';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { AWSConfig, S3DeleteOptions, S3DownloadOptions, S3ListOptions, S3UploadOptions, SecretsManagerListOptions, SecretsManagerOptions } from '../../interfaces/aws.interface';
-
+import {
+  AWSConfig,
+  S3DeleteOptions,
+  S3DownloadOptions,
+  S3ListOptions,
+  S3UploadOptions,
+  SecretsManagerListOptions,
+  SecretsManagerOptions,
+} from '../../interfaces/aws.interface';
 
 export class AWSService {
-    private s3Client: S3Client;
-    private dynamoClient: DynamoDBClient;
-    private sesClient: SESClient;
-    private secretsManagerClient: SecretsManagerClient;
-    private config: AWSConfig;
+  private s3Client: S3Client;
+  private dynamoClient: DynamoDBClient;
+  private sesClient: SESClient;
+  private secretsManagerClient: SecretsManagerClient;
+  private config: AWSConfig;
 
-    constructor(config: AWSConfig) {
-        this.config = config;
+  constructor(config: AWSConfig) {
+    this.config = config;
 
-        const clientConfig: S3ClientConfig = {
-            region: config.region,
-            ...(config.accessKeyId && config.secretAccessKey && {
-                credentials: {
-                    accessKeyId: config.accessKeyId,
-                    secretAccessKey: config.secretAccessKey,
-                    ...(config.sessionToken && { sessionToken: config.sessionToken })
-                }
-            })
-        };
+    const clientConfig: S3ClientConfig = {
+      region: config.region,
+      ...(config.accessKeyId &&
+        config.secretAccessKey && {
+          credentials: {
+            accessKeyId: config.accessKeyId,
+            secretAccessKey: config.secretAccessKey,
+            ...(config.sessionToken && { sessionToken: config.sessionToken }),
+          },
+        }),
+    };
 
-        this.s3Client = new S3Client(clientConfig as S3ClientConfig);
-        this.dynamoClient = new DynamoDBClient(clientConfig as DynamoDBClientConfig);
-        this.sesClient = new SESClient(clientConfig as SESClientConfig);
-        this.secretsManagerClient = new SecretsManagerClient(clientConfig as SecretsManagerClientConfig);
+    this.s3Client = new S3Client(clientConfig as S3ClientConfig);
+    this.dynamoClient = new DynamoDBClient(clientConfig as DynamoDBClientConfig);
+    this.sesClient = new SESClient(clientConfig as SESClientConfig);
+    this.secretsManagerClient = new SecretsManagerClient(clientConfig as SecretsManagerClientConfig);
+  }
+
+  // S3 Methods
+  // async uploadToS3(options: S3UploadOptions): Promise<{ location: string; etag: string }> {
+  //     try {
+  //         const command = new PutObjectCommand({
+  //             Bucket: options.bucket,
+  //             Key: options.key,
+  //             Body: options.body,
+  //             ContentType: options.contentType || 'application/octet-stream',
+  //             ACL: options.acl || 'private',
+  //             Metadata: options.metadata
+  //         });
+  //         const command = new ListBucketsCommand(
+  //             {}
+  //         );
+
+  //         const result = await this.s3Client.send(command);
+
+  //         return {
+  //             location: `https://${options.bucket}.s3.${this.config.region}.amazonaws.com/${options.key}`,
+  //             etag: result.ETag
+  //         };
+  //     } catch (error) {
+  //         throw new Error(`S3 Upload failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  //     }
+  // }
+
+  async downloadFromS3(options: S3DownloadOptions): Promise<Buffer> {
+    try {
+      const command = new GetObjectCommand({
+        Bucket: options.bucket,
+        Key: options.key,
+      });
+
+      const result = await this.s3Client.send(command);
+
+      if (!result.Body) {
+        throw new Error('No body in S3 response');
+      }
+
+      // Convert stream to buffer
+      const chunks: Uint8Array[] = [];
+      const stream = result.Body as any;
+
+      for await (const chunk of stream) {
+        chunks.push(chunk);
+      }
+
+      return Buffer.concat(chunks);
+    } catch (error) {
+      throw new Error(`S3 Download failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
+  }
 
-    // S3 Methods
-    // async uploadToS3(options: S3UploadOptions): Promise<{ location: string; etag: string }> {
-    //     try {
-    //         const command = new PutObjectCommand({
-    //             Bucket: options.bucket,
-    //             Key: options.key,
-    //             Body: options.body,
-    //             ContentType: options.contentType || 'application/octet-stream',
-    //             ACL: options.acl || 'private',
-    //             Metadata: options.metadata
-    //         });
-    //         const command = new ListBucketsCommand(
-    //             {}
-    //         );
+  async deleteFromS3(options: S3DeleteOptions): Promise<boolean> {
+    try {
+      const command = new DeleteObjectCommand({
+        Bucket: options.bucket,
+        Key: options.key,
+      });
 
-    //         const result = await this.s3Client.send(command);
-
-    //         return {
-    //             location: `https://${options.bucket}.s3.${this.config.region}.amazonaws.com/${options.key}`,
-    //             etag: result.ETag
-    //         };
-    //     } catch (error) {
-    //         throw new Error(`S3 Upload failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
-    //     }
-    // }
-
-    async downloadFromS3(options: S3DownloadOptions): Promise<Buffer> {
-        try {
-            const command = new GetObjectCommand({
-                Bucket: options.bucket,
-                Key: options.key
-            });
-
-            const result = await this.s3Client.send(command);
-
-            if (!result.Body) {
-                throw new Error('No body in S3 response');
-            }
-
-            // Convert stream to buffer
-            const chunks: Uint8Array[] = [];
-            const stream = result.Body as any;
-
-            for await (const chunk of stream) {
-                chunks.push(chunk);
-            }
-
-            return Buffer.concat(chunks);
-        } catch (error) {
-            throw new Error(`S3 Download failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
-        }
+      await this.s3Client.send(command);
+      return true;
+    } catch (error) {
+      throw new Error(`S3 Delete failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
+  }
 
-    async deleteFromS3(options: S3DeleteOptions): Promise<boolean> {
-        try {
-            const command = new DeleteObjectCommand({
-                Bucket: options.bucket,
-                Key: options.key
-            });
+  async listS3Objects(options: S3ListOptions) {
+    try {
+      const command = new ListObjectsV2Command({
+        Bucket: options.bucket,
+        Prefix: options.prefix,
+        MaxKeys: options.maxKeys || 1000,
+        ContinuationToken: options.continuationToken,
+      });
 
-            await this.s3Client.send(command);
-            return true;
-        } catch (error) {
-            throw new Error(`S3 Delete failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
-        }
+      const result = await this.s3Client.send(command);
+
+      return {
+        objects: result.Contents || [],
+        isTruncated: result.IsTruncated || false,
+        nextContinuationToken: result.NextContinuationToken,
+      };
+    } catch (error) {
+      throw new Error(`S3 List failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
+  }
 
-    async listS3Objects(options: S3ListOptions) {
-        try {
-            const command = new ListObjectsV2Command({
-                Bucket: options.bucket,
-                Prefix: options.prefix,
-                MaxKeys: options.maxKeys || 1000,
-                ContinuationToken: options.continuationToken
-            });
+  async getS3ObjectInfo(options: S3DownloadOptions) {
+    try {
+      const command = new HeadObjectCommand({
+        Bucket: options.bucket,
+        Key: options.key,
+      });
 
-            const result = await this.s3Client.send(command);
+      const result = await this.s3Client.send(command);
 
-            return {
-                objects: result.Contents || [],
-                isTruncated: result.IsTruncated || false,
-                nextContinuationToken: result.NextContinuationToken
-            };
-        } catch (error) {
-            throw new Error(`S3 List failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
-        }
+      return {
+        contentLength: result.ContentLength,
+        contentType: result.ContentType,
+        lastModified: result.LastModified,
+        etag: result.ETag,
+        metadata: result.Metadata,
+      };
+    } catch (error) {
+      throw new Error(`S3 Head Object failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
+  }
 
-    async getS3ObjectInfo(options: S3DownloadOptions) {
-        try {
-            const command = new HeadObjectCommand({
-                Bucket: options.bucket,
-                Key: options.key
-            });
+  async generatePresignedUrl(options: S3DownloadOptions, expiresIn: number = 3600): Promise<string> {
+    try {
+      const command = new GetObjectCommand({
+        Bucket: options.bucket,
+        Key: options.key,
+      });
 
-            const result = await this.s3Client.send(command);
-
-            return {
-                contentLength: result.ContentLength,
-                contentType: result.ContentType,
-                lastModified: result.LastModified,
-                etag: result.ETag,
-                metadata: result.Metadata
-            };
-        } catch (error) {
-            throw new Error(`S3 Head Object failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
-        }
+      return await getSignedUrl(this.s3Client, command, { expiresIn });
+    } catch (error) {
+      throw new Error(`Presigned URL generation failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
+  }
 
-    async generatePresignedUrl(options: S3DownloadOptions, expiresIn: number = 3600): Promise<string> {
-        try {
-            const command = new GetObjectCommand({
-                Bucket: options.bucket,
-                Key: options.key
-            });
+  // SES Methods
+  async sendEmail(to: string[], subject: string, body: string, from?: string) {
+    try {
+      const command = new SendEmailCommand({
+        Source: from || process.env.AWS_SES_FROM_EMAIL,
+        Destination: {
+          ToAddresses: to,
+        },
+        Message: {
+          Subject: {
+            Data: subject,
+            Charset: 'UTF-8',
+          },
+          Body: {
+            Html: {
+              Data: body,
+              Charset: 'UTF-8',
+            },
+          },
+        },
+      });
 
-            return await getSignedUrl(this.s3Client, command, { expiresIn });
-        } catch (error) {
-            throw new Error(`Presigned URL generation failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
-        }
+      const result = await this.sesClient.send(command);
+      return { messageId: result.MessageId };
+    } catch (error) {
+      throw new Error(`SES Send Email failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
+  }
 
-    // SES Methods
-    async sendEmail(to: string[], subject: string, body: string, from?: string) {
-        try {
-            const command = new SendEmailCommand({
-                Source: from || process.env.AWS_SES_FROM_EMAIL,
-                Destination: {
-                    ToAddresses: to
-                },
-                Message: {
-                    Subject: {
-                        Data: subject,
-                        Charset: 'UTF-8'
-                    },
-                    Body: {
-                        Html: {
-                            Data: body,
-                            Charset: 'UTF-8'
-                        }
-                    }
-                }
-            });
+  // Secrets Manager Methods
+  async getSecret(secretName: string): Promise<string | Record<string, any>> {
+    try {
+      const command = new GetSecretValueCommand({
+        SecretId: secretName,
+      });
 
-            const result = await this.sesClient.send(command);
-            return { messageId: result.MessageId };
-        } catch (error) {
-            throw new Error(`SES Send Email failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
-        }
+      const result = await this.secretsManagerClient.send(command);
+
+      if (!result.SecretString) {
+        throw new Error('Secret value is empty or binary');
+      }
+
+      // Try to parse as JSON, if it fails return as string
+      try {
+        return JSON.parse(result.SecretString);
+      } catch {
+        return result.SecretString;
+      }
+    } catch (error) {
+      throw new Error(`Get Secret failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
+  }
 
-    // Secrets Manager Methods
-    async getSecret(secretName: string): Promise<string | Record<string, any>> {
-        try {
-            const command = new GetSecretValueCommand({
-                SecretId: secretName
-            });
+  async createSecret(options: SecretsManagerOptions): Promise<{ arn: string; name: string; versionId: string }> {
+    try {
+      if (!options.secretValue) {
+        throw new Error('Secret value is required for creation');
+      }
 
-            const result = await this.secretsManagerClient.send(command);
+      const secretString =
+        typeof options.secretValue === 'string' ? options.secretValue : JSON.stringify(options.secretValue);
 
-            if (!result.SecretString) {
-                throw new Error('Secret value is empty or binary');
-            }
+      const command = new CreateSecretCommand({
+        Name: options.secretName,
+        SecretString: secretString,
+        Description: options.description,
+        KmsKeyId: options.kmsKeyId,
+      });
 
-            // Try to parse as JSON, if it fails return as string
-            try {
-                return JSON.parse(result.SecretString);
-            } catch {
-                return result.SecretString;
-            }
-        } catch (error) {
-            throw new Error(`Get Secret failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
-        }
+      const result = await this.secretsManagerClient.send(command);
+
+      return {
+        arn: result.ARN || '',
+        name: result.Name || '',
+        versionId: result.VersionId || '',
+      };
+    } catch (error) {
+      throw new Error(`Create Secret failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
+  }
 
-    async createSecret(options: SecretsManagerOptions): Promise<{ arn: string; name: string; versionId: string }> {
-        try {
-            if (!options.secretValue) {
-                throw new Error('Secret value is required for creation');
-            }
+  async updateSecret(options: SecretsManagerOptions): Promise<{ arn: string; name: string; versionId: string }> {
+    try {
+      if (!options.secretValue) {
+        throw new Error('Secret value is required for update');
+      }
 
-            const secretString = typeof options.secretValue === 'string'
-                ? options.secretValue
-                : JSON.stringify(options.secretValue);
+      const secretString =
+        typeof options.secretValue === 'string' ? options.secretValue : JSON.stringify(options.secretValue);
 
-            const command = new CreateSecretCommand({
-                Name: options.secretName,
-                SecretString: secretString,
-                Description: options.description,
-                KmsKeyId: options.kmsKeyId
-            });
+      const command = new UpdateSecretCommand({
+        SecretId: options.secretName,
+        SecretString: secretString,
+        Description: options.description,
+        KmsKeyId: options.kmsKeyId,
+      });
 
-            const result = await this.secretsManagerClient.send(command);
+      const result = await this.secretsManagerClient.send(command);
 
-            return {
-                arn: result.ARN || '',
-                name: result.Name || '',
-                versionId: result.VersionId || ''
-            };
-        } catch (error) {
-            throw new Error(`Create Secret failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
-        }
+      return {
+        arn: result.ARN || '',
+        name: result.Name || '',
+        versionId: result.VersionId || '',
+      };
+    } catch (error) {
+      throw new Error(`Update Secret failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
+  }
 
-    async updateSecret(options: SecretsManagerOptions): Promise<{ arn: string; name: string; versionId: string }> {
-        try {
-            if (!options.secretValue) {
-                throw new Error('Secret value is required for update');
-            }
+  async deleteSecret(
+    secretName: string,
+    forceDelete: boolean = false,
+  ): Promise<{ arn: string; deletionDate: Date | undefined }> {
+    try {
+      const command = new DeleteSecretCommand({
+        SecretId: secretName,
+        ForceDeleteWithoutRecovery: forceDelete,
+      });
 
-            const secretString = typeof options.secretValue === 'string'
-                ? options.secretValue
-                : JSON.stringify(options.secretValue);
+      const result = await this.secretsManagerClient.send(command);
 
-            const command = new UpdateSecretCommand({
-                SecretId: options.secretName,
-                SecretString: secretString,
-                Description: options.description,
-                KmsKeyId: options.kmsKeyId
-            });
-
-            const result = await this.secretsManagerClient.send(command);
-
-            return {
-                arn: result.ARN || '',
-                name: result.Name || '',
-                versionId: result.VersionId || ''
-            };
-        } catch (error) {
-            throw new Error(`Update Secret failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
-        }
+      return {
+        arn: result.ARN || '',
+        deletionDate: result.DeletionDate,
+      };
+    } catch (error) {
+      throw new Error(`Delete Secret failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
+  }
 
-    async deleteSecret(secretName: string, forceDelete: boolean = false): Promise<{ arn: string; deletionDate: Date | undefined }> {
-        try {
-            const command = new DeleteSecretCommand({
-                SecretId: secretName,
-                ForceDeleteWithoutRecovery: forceDelete
-            });
+  async listSecrets(options?: SecretsManagerListOptions) {
+    try {
+      const command = new ListSecretsCommand({
+        MaxResults: options?.maxResults || 100,
+        NextToken: options?.nextToken,
+      });
 
-            const result = await this.secretsManagerClient.send(command);
+      const result = await this.secretsManagerClient.send(command);
 
-            return {
-                arn: result.ARN || '',
-                deletionDate: result.DeletionDate
-            };
-        } catch (error) {
-            throw new Error(`Delete Secret failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
-        }
+      return {
+        secrets: result.SecretList || [],
+        nextToken: result.NextToken,
+      };
+    } catch (error) {
+      throw new Error(`List Secrets failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
+  }
 
-    async listSecrets(options?: SecretsManagerListOptions) {
-        try {
-            const command = new ListSecretsCommand({
-                MaxResults: options?.maxResults || 100,
-                NextToken: options?.nextToken,
-            });
-
-            const result = await this.secretsManagerClient.send(command);
-
-            return {
-                secrets: result.SecretList || [],
-                nextToken: result.NextToken
-            };
-        } catch (error) {
-            throw new Error(`List Secrets failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
-        }
+  // Utility method to safely get secret with fallback
+  async getSecretOrDefault<T = string>(secretName: string, defaultValue: T): Promise<T> {
+    try {
+      const secret = await this.getSecret(secretName);
+      return secret as T;
+    } catch (error) {
+      console.warn(`Failed to get secret ${secretName}, using default value:`, error);
+      return defaultValue;
     }
+  }
 
-    // Utility method to safely get secret with fallback
-    async getSecretOrDefault<T = string>(secretName: string, defaultValue: T): Promise<T> {
-        try {
-            const secret = await this.getSecret(secretName);
-            return secret as T;
-        } catch (error) {
-            console.warn(`Failed to get secret ${secretName}, using default value:`, error);
-            return defaultValue;
-        }
-    }
+  // Utility Methods
+  getS3Client(): S3Client {
+    return this.s3Client;
+  }
 
-    // Utility Methods
-    getS3Client(): S3Client {
-        return this.s3Client;
-    }
+  getDynamoClient(): DynamoDBClient {
+    return this.dynamoClient;
+  }
 
-    getDynamoClient(): DynamoDBClient {
-        return this.dynamoClient;
-    }
+  getSESClient(): SESClient {
+    return this.sesClient;
+  }
 
-    getSESClient(): SESClient {
-        return this.sesClient;
-    }
-
-    getSecretsManagerClient(): SecretsManagerClient {
-        return this.secretsManagerClient;
-    }
+  getSecretsManagerClient(): SecretsManagerClient {
+    return this.secretsManagerClient;
+  }
 }
-
 
 // import express from 'express';
 // import multer from 'multer';

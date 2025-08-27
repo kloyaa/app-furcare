@@ -97,7 +97,6 @@ export const editProfile = async (req: TRequest, res: Response): Promise<void | 
   }
 };
 
-
 /**
  * Retrieves the user profile associated with the access token provided in the request.
  *

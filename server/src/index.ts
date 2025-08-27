@@ -2,7 +2,7 @@ import express, { type Application } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import multer from 'multer';
-import swaggerUi from "swagger-ui-express";
+import swaggerUi from 'swagger-ui-express';
 
 import { connectDB } from './_core/utils/db/db.util';
 import { getEnv } from './_core/config/env.config';
@@ -32,7 +32,7 @@ import {
 import { colors } from './_core/const/common.const';
 // import { swaggerSetup } from './swagger/swagger';
 
-import swaggerDocument from "./swagger/swagger.json";
+import swaggerDocument from './swagger/swagger.json';
 import { connectRedisDb } from './_core/services/redis/redis-client.service';
 import { delay } from './_core/utils/utils';
 
@@ -51,7 +51,6 @@ async function runApp(): Promise<void> {
   const env = await getEnv();
 
   app.get('/', healthRoute);
-
 
   // Middleware
   app.use(helmet()); // Apply standard security headers
@@ -75,9 +74,9 @@ async function runApp(): Promise<void> {
 
   // delay route
   app.use(async (req, res, next) => {
-    await delay(1_000)
-    next()
-  })
+    await delay(1_000);
+    next();
+  });
 
   // Routes
   app.use('/api', authRoute);
@@ -91,9 +90,8 @@ async function runApp(): Promise<void> {
   app.use('/api', branchRoute);
 
   // Swagger setup
-  app.use("/api-docs", swaggerUi.serve);
-  app.use("/api-docs", swaggerUi.setup(swaggerDocument, swaggerOptions));
-
+  app.use('/api-docs', swaggerUi.serve);
+  app.use('/api-docs', swaggerUi.setup(swaggerDocument, swaggerOptions));
 
   // Connect to MongoDB
   connectDB();

@@ -17,7 +17,6 @@ import { Role } from '../schema/role.schema';
 import { UserRole } from '../schema/user_role.schema';
 import { startSession } from 'mongoose';
 
-
 export const login = async (req: TRequest, res: Response): Promise<any | Response> => {
   const error = validateLogin(req.body);
   if (error) {

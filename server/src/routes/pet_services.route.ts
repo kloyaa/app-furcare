@@ -1,13 +1,13 @@
 import { Router } from 'express';
 import {
-    getAllCages,
-    insertCages,
-    validateCageAvailability,
-    updateCageOccupant,
-    getGroomingSchedules,
-    getPetServices,
-    getGroomingExtra,
-    getGroomingPreferences
+  getAllCages,
+  insertCages,
+  validateCageAvailability,
+  updateCageOccupant,
+  getGroomingSchedules,
+  getPetServices,
+  getGroomingExtra,
+  getGroomingPreferences,
 } from '../controllers/pet_services.controller';
 import { isAuthenticated } from '../_core/middlewares/jwt.middleware';
 const router = Router();
@@ -26,6 +26,5 @@ router.get('/pet-services/v1/cages', commonMiddlewares, getAllCages as any);
 router.post('/pet-services/v1/cages', commonMiddlewares, insertCages as any);
 router.put('/pet-services/v1/cages', commonMiddlewares, updateCageOccupant as any);
 router.get('/pet-services/v1/cages/availability/:id', commonMiddlewares, validateCageAvailability as any);
-
 
 export default router;
