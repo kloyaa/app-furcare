@@ -11,241 +11,47 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     environment: EC2
-    timeout-minutes: 15
 
     steps:
-      - name: 📋 Checkout code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: 🚀 Deploy Server to EC2
+      - name: Deploy Server to EC2
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          command_timeout: 10m
           script: |
-            set -e  # Exit on any error
-
-            echo "========================================="
-            echo "🚀 Starting deployment process..."
-            echo "📅 Timestamp: $(date)"
-            echo "🖥️  Server: $(hostname)"
-            echo "👤 User: $(whoami)"
-            echo "📂 Working directory: $(pwd)"
-            echo "========================================="
-
             # Navigate to home directory
-            echo "📁 Navigating to home directory..."
             cd /home/ec2-user
-            echo "✅ Current directory: $(pwd)"
 
-            # Handle repository cloning/updating
-            echo ""
-            echo "📦 Handling repository..."
+            # Clone repo if it doesn't exist, otherwise pull
             if [ ! -d "app-furcare" ]; then
-              echo "🆕 Repository not found. Cloning..."
               git clone git@github.com:kloyaa/app-furcare.git app-furcare
-              echo "✅ Repository cloned successfully"
             else
-              echo "📥 Repository exists. Updating..."
               cd app-furcare
-              
-              echo "🔄 Current branch: $(git branch --show-current)"
-              echo "🔄 Current commit: $(git rev-parse HEAD)"
-              
-              git fetch origin
-              git pull origin master
-              
-              echo "✅ Updated to commit: $(git rev-parse HEAD)"
-              echo "✅ Repository updated successfully"
+              git pull origin dev
               cd ..
             fi
 
             # Navigate to server directory
-            echo ""
-            echo "📂 Navigating to server directory..."
             cd app-furcare/server
-            echo "✅ Current directory: $(pwd)"
-            echo "📋 Directory contents:"
-            ls -la
 
-            # Check if Dockerfile exists
-            if [ ! -f "Dockerfile" ]; then
-              echo "❌ ERROR: Dockerfile not found!"
-              exit 1
-            fi
-            echo "✅ Dockerfile found"
-
-            # Stop and remove existing container
-            echo ""
-            echo "🛑 Stopping existing containers..."
-
-            CONTAINER_ID=$(docker ps -q -f name=furcare-server)
-            if [ ! -z "$CONTAINER_ID" ]; then
-              echo "🔍 Found running container: $CONTAINER_ID"
-              docker stop furcare-server
-              echo "✅ Container stopped"
-            else
-              echo "ℹ️  No running container found"
-            fi
-
-            CONTAINER_ID=$(docker ps -aq -f name=furcare-server)
-            if [ ! -z "$CONTAINER_ID" ]; then
-              echo "🗑️  Removing existing container: $CONTAINER_ID"
-              docker rm furcare-server
-              echo "✅ Container removed"
-            else
-              echo "ℹ️  No existing container to remove"
-            fi
+            # Stop existing container if running
+            docker stop furcare-server || true
+            docker rm furcare-server || true
 
             # Build new image
-            echo ""
-            echo "🔨 Building Docker image..."
-            echo "📋 Build started at: $(date)"
+            docker build -t furcare-server-image .
 
-            docker build -t furcare-server-image . --no-cache
-            BUILD_STATUS=$?
-
-            if [ $BUILD_STATUS -eq 0 ]; then
-              echo "✅ Docker image built successfully at: $(date)"
-              echo "📊 Image details:"
-              docker images furcare-server-image --format "table {{.Repository}}\t{{.Tag}}\t{{.ID}}\t{{.Size}}\t{{.CreatedAt}}"
-            else
-              echo "❌ ERROR: Docker build failed with status: $BUILD_STATUS"
-              exit 1
-            fi
-
-            # Run new container
-            echo ""
-            echo "🏃 Starting new container..."
-
-            CONTAINER_ID=$(docker run -d \
+            # Run new container with environment variables
+            docker run -d \
               --name furcare-server \
               -p 3432:3432 \
               -e DB_CONNECTION_STRING="${{ secrets.DB_CONNECTION_STRING }}" \
               --restart unless-stopped \
-              furcare-server-image)
-
-            if [ $? -eq 0 ]; then
-              echo "✅ Container started successfully"
-              echo "🆔 Container ID: $CONTAINER_ID"
-              echo "🌐 Port mapping: 3432:3432"
-              
-              # Wait a moment for container to start
-              echo "⏳ Waiting for container to initialize..."
-              sleep 5
-              
-              # Check container status
-              CONTAINER_STATUS=$(docker ps -f name=furcare-server --format "{{.Status}}")
-              if [ ! -z "$CONTAINER_STATUS" ]; then
-                echo "📊 Container status: $CONTAINER_STATUS"
-                echo "✅ Container is running!"
-              else
-                echo "⚠️  Container might not be running properly"
-                echo "📋 Container logs:"
-                docker logs furcare-server --tail=20
-              fi
-            else
-              echo "❌ ERROR: Failed to start container"
-              exit 1
-            fi
-
-            # Show running containers
-            echo ""
-            echo "📊 Current running containers:"
-            docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+              furcare-server-image
 
             # Clean up unused images
-            echo ""
-            echo "🧹 Cleaning up unused Docker images..."
-            REMOVED_IMAGES=$(docker image prune -f)
-            echo "$REMOVED_IMAGES"
-
-            # Final status
-            echo ""
-            echo "========================================="
-            echo "✅ DEPLOYMENT COMPLETED SUCCESSFULLY!"
-            echo "📅 Completed at: $(date)"
-            echo "🌐 Server should be available at: http://$(curl -s ifconfig.me):3432"
-            echo "========================================="
-
-      - name: 🔍 Verify Deployment
-        if: success()
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            echo "🔍 Verifying deployment..."
-
-            # Check if container is running
-            if docker ps -f name=furcare-server | grep -q furcare-server; then
-              echo "✅ Container is running"
-              
-              # Show container details
-              echo "📊 Container details:"
-              docker ps -f name=furcare-server --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}\t{{.Image}}"
-              
-              # Show recent logs
-              echo ""
-              echo "📋 Recent container logs:"
-              docker logs furcare-server --tail=10
-              
-              # Check if port is listening
-              if netstat -tuln | grep -q ":3432 "; then
-                echo "✅ Port 3432 is listening"
-              else
-                echo "⚠️  Port 3432 might not be available yet"
-              fi
-              
-            else
-              echo "❌ Container is not running!"
-              exit 1
-            fi
-
-      - name: 📧 Notify on Failure
-        if: failure()
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            echo "❌ DEPLOYMENT FAILED!"
-            echo "📅 Failed at: $(date)"
-
-            # Show any running containers
-            echo "📊 Current containers:"
-            docker ps -a --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
-
-            # Show recent logs if container exists
-            if docker ps -a -f name=furcare-server | grep -q furcare-server; then
-              echo ""
-              echo "📋 Container logs:"
-              docker logs furcare-server --tail=20
-            fi
-
-            # Show system resources
-            echo ""
-            echo "💾 System resources:"
-            echo "Memory: $(free -h | grep '^Mem:' | awk '{print $3 "/" $2}')"
-            echo "Disk: $(df -h / | tail -1 | awk '{print $3 "/" $2 " (" $5 " used)"}')"
-
-            # Show error logs
-            echo ""
-            echo "📋 Error logs:"
-            cat /var/log/syslog
-
-            # Clean up unused images
-            echo ""
-            echo "🧹 Cleaning up unused Docker images..."
             docker image prune -f
-
-            # Final status
-            echo ""
-            echo "========================================="
-            echo "❌ DEPLOYMENT FAILED!"
-            echo "📅 Failed at: $(date)"
-            echo "========================================="
