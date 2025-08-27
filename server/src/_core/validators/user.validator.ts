@@ -5,8 +5,7 @@ export const validateCreateProfile = (body: any) => {
     fullName: Joi.string().trim().min(2).max(100).required(),
     address: Joi.string().trim().min(5).max(255).required(),
     contact: Joi.object({
-      facebookUrl: Joi.string().uri().optional().allow(''),
-      messengerUrl: Joi.string().uri().optional().allow(''),
+      facebookDisplayName: Joi.string().optional().allow(''),
       phoneNumber: Joi.string()
         .trim()
         .pattern(/^09\d{9}$/) // Philippine mobile format

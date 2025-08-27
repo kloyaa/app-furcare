@@ -30,8 +30,7 @@ class _CustomerProfileCreationScreenState
   // Controllers
   final _fullNameController = TextEditingController();
   final _addressController = TextEditingController();
-  final _facebookUrlController = TextEditingController();
-  final _messengerUrlController = TextEditingController();
+  final _facebookDisplayNameController = TextEditingController();
   final _phoneNumberController = TextEditingController();
 
   // Loading state for auto-fill
@@ -41,8 +40,7 @@ class _CustomerProfileCreationScreenState
   void dispose() {
     _fullNameController.dispose();
     _addressController.dispose();
-    _facebookUrlController.dispose();
-    _messengerUrlController.dispose();
+    _facebookDisplayNameController.dispose();
     _phoneNumberController.dispose();
 
     super.dispose();
@@ -53,8 +51,7 @@ class _CustomerProfileCreationScreenState
       final fullName = _fullNameController.text.trim();
       final address = _addressController.text.trim();
       final phoneNumber = _phoneNumberController.text.trim();
-      final facebookUrl = _facebookUrlController.text.trim();
-      final messengerUrl = _messengerUrlController.text.trim();
+      final facebookDisplayName = _facebookDisplayNameController.text.trim();
 
       // Call the provider to create the profile
       final ClientRequest request = ClientRequest(
@@ -62,8 +59,9 @@ class _CustomerProfileCreationScreenState
         address: address,
         contact: Contact(
           phoneNumber: phoneNumber,
-          facebookUrl: facebookUrl.isNotEmpty ? facebookUrl : '',
-          messengerUrl: messengerUrl.isNotEmpty ? messengerUrl : '',
+          facebookDisplayName: facebookDisplayName.isNotEmpty
+              ? facebookDisplayName
+              : '',
         ),
       );
 
@@ -258,28 +256,15 @@ class _CustomerProfileCreationScreenState
 
                   // Facebook URL Field (Optional)
                   CustomInputField(
-                    label: 'Facebook Profile (Optional)',
-                    hintText: 'https://www.facebook.com/yourprofile',
-                    controller: _facebookUrlController,
+                    label: 'Facebook Name (Optional)',
+                    hintText: 'Juan Dela Cruz',
+                    controller: _facebookDisplayNameController,
                     prefixIcon: Icons.facebook_outlined,
-                    keyboardType: TextInputType.url,
-                    validator: validateFacebookUrl,
-                    isRequired: false,
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Messenger URL Field (Optional)
-                  CustomInputField(
-                    label: 'Messenger Link (Optional)',
-                    hintText: 'https://m.me/yourprofile',
-                    controller: _messengerUrlController,
-                    prefixIcon: Icons.chat_outlined,
-                    keyboardType: TextInputType.url,
-                    validator: validateMessengerUrl,
+                    keyboardType: TextInputType.text,
+                    validator: validateFacebookDisplayName,
                     isRequired: false,
                   ),
                   const SizedBox(height: 40),
-
                   // Submit Button
                   CustomButton(
                     text: 'Create Profile',
