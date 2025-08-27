@@ -25,16 +25,14 @@ class _CustomerUpdateProfileScreenState
 
   final _fullNameController = TextEditingController();
   final _addressController = TextEditingController();
-  final _facebookUrlController = TextEditingController();
-  final _messengerUrlController = TextEditingController();
+  final _facebookDisplayNameController = TextEditingController();
   final _phoneNumberController = TextEditingController();
 
   @override
   void dispose() {
     _fullNameController.dispose();
     _addressController.dispose();
-    _facebookUrlController.dispose();
-    _messengerUrlController.dispose();
+    _facebookDisplayNameController.dispose();
     _phoneNumberController.dispose();
 
     super.dispose();
@@ -45,8 +43,7 @@ class _CustomerUpdateProfileScreenState
       final fullName = _fullNameController.text.trim();
       final address = _addressController.text.trim();
       final phoneNumber = _phoneNumberController.text.trim();
-      final facebookUrl = _facebookUrlController.text.trim();
-      final messengerUrl = _messengerUrlController.text.trim();
+      final facebookDisplayName = _facebookDisplayNameController.text.trim();
 
       // Call the provider to create the profile
       final ClientRequest request = ClientRequest(
@@ -54,8 +51,9 @@ class _CustomerUpdateProfileScreenState
         address: address,
         contact: Contact(
           phoneNumber: phoneNumber,
-          facebookUrl: facebookUrl.isNotEmpty ? facebookUrl : '',
-          messengerUrl: messengerUrl.isNotEmpty ? messengerUrl : '',
+          facebookDisplayName: facebookDisplayName.isNotEmpty
+              ? facebookDisplayName
+              : '',
         ),
       );
 
@@ -79,11 +77,9 @@ class _CustomerUpdateProfileScreenState
     if (_phoneNumberController.text.isEmpty) {
       _phoneNumberController.text = client.contact.phoneNumber;
     }
-    if (_facebookUrlController.text.isEmpty) {
-      _facebookUrlController.text = client.contact.facebookUrl ?? '';
-    }
-    if (_messengerUrlController.text.isEmpty) {
-      _messengerUrlController.text = client.contact.messengerUrl ?? '';
+    if (_facebookDisplayNameController.text.isEmpty) {
+      _facebookDisplayNameController.text =
+          client.contact.facebookDisplayName ?? '';
     }
   }
 
@@ -178,24 +174,13 @@ class _CustomerUpdateProfileScreenState
                   CustomInputField(
                     label: 'Facebook Profile (Optional)',
                     hintText: 'https://www.facebook.com/yourprofile',
-                    controller: _facebookUrlController,
+                    controller: _facebookDisplayNameController,
                     prefixIcon: Icons.facebook_outlined,
                     keyboardType: TextInputType.url,
-                    validator: validateFacebookUrl,
+                    validator: validateFacebookDisplayName,
                     isRequired: false,
                   ),
-                  const SizedBox(height: 20),
 
-                  // Messenger URL Field (Optional)
-                  CustomInputField(
-                    label: 'Messenger Link (Optional)',
-                    hintText: 'https://m.me/yourprofile',
-                    controller: _messengerUrlController,
-                    prefixIcon: Icons.chat_outlined,
-                    keyboardType: TextInputType.url,
-                    validator: validateMessengerUrl,
-                    isRequired: false,
-                  ),
                   const SizedBox(height: 40),
 
                   // Submit Button

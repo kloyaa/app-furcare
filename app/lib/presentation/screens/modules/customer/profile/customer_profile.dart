@@ -121,18 +121,12 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                       Icons.phone,
                     ),
                     _buildInfoRow(
-                      'Facebook',
-                      client.contact.facebookUrl?.isEmpty == true
+                      'Facebook Name',
+                      client.contact.facebookDisplayName?.isEmpty == true
                           ? "Not provided"
-                          : client.contact.facebookUrl ?? "Not provided",
+                          : client.contact.facebookDisplayName ??
+                                "Not provided",
                       Icons.facebook,
-                    ),
-                    _buildInfoRow(
-                      'Messenger',
-                      client.contact.messengerUrl?.isEmpty == true
-                          ? "Not provided"
-                          : client.contact.messengerUrl ?? "Not provided",
-                      Icons.message,
                     ),
                   ],
                 ),

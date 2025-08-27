@@ -19,8 +19,7 @@ export interface IProfile extends Document {
   fullName: string;
   address: string;
   contact: {
-    facebookUrl: string;
-    messengerUrl: string;
+    facebookDisplayName: string;
     phoneNumber: string;
   };
   isActive: boolean;

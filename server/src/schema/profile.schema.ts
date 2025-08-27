@@ -17,11 +17,7 @@ const profileSchema = new Schema<IProfile>(
       required: true,
     },
     contact: {
-      facebookUrl: {
-        type: String,
-        required: false,
-      },
-      messengerUrl: {
+      facebookDisplayName: {
         type: String,
         required: false,
       },

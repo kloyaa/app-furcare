@@ -5,13 +5,16 @@ import 'package:flutter/services.dart';
 import 'package:furcare_app/core/constants/padding_constant.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
 import 'package:furcare_app/core/helpers/widget_helpers.dart';
+import 'package:furcare_app/core/services/location_service.dart';
 import 'package:furcare_app/data/models/pet_service.models.dart';
 import 'package:furcare_app/presentation/providers/pet_service_provider.dart';
-import 'package:furcare_app/presentation/screens/modules/customer/tabs/widgets/appointments/shimmer.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
+import 'package:furcare_app/presentation/widgets/dialog/custom_location_dialog.dart';
 import 'package:furcare_app/presentation/widgets/dialog/custom_my_appointments_dialog.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
+import 'package:map_launcher/map_launcher.dart';
 import 'package:provider/provider.dart';
 
 class MainTabScreen extends StatefulWidget {
@@ -107,6 +110,110 @@ class _MainTabScreenState extends State<MainTabScreen>
         timer.cancel();
       }
     });
+  }
+
+  void _handleLaunchMap() async {
+    try {
+      // Show loading indicator
+      LocationDialogUtils.showLoadingDialog(
+        context,
+        message: 'Getting your location...',
+      );
+
+      // Get current location
+      final locationService = LocationService();
+      final Position? currentPosition = await locationService
+          .getCurrentLocation();
+
+      if (!mounted) return;
+
+      // Dismiss loading dialog
+      LocationDialogUtils.dismissDialog(context);
+
+      if (currentPosition == null) {
+        // Handle location error
+        LocationDialogUtils.showLocationErrorDialog(context);
+        return;
+      }
+
+      // Launch map with current location as origin
+      final availableMaps = await MapLauncher.installedMaps;
+
+      if (availableMaps.isEmpty) {
+        if (!mounted) return;
+        LocationDialogUtils.showNoMapsDialog(context);
+        return;
+      }
+
+      await availableMaps.first.showDirections(
+        destinationTitle: "FurCare Veterinary Clinic",
+        directionsMode: DirectionsMode.driving,
+        // origin: Coords(currentPosition.latitude, currentPosition.longitude),
+        origin: Coords(8.433167620783577, 124.62233674985006),
+        destination: Coords(8.475588, 124.660488), // Your clinic coordinates
+      );
+    } catch (e) {
+      if (!mounted) return;
+      // Dismiss loading dialog if still showing
+      LocationDialogUtils.dismissDialog(context);
+
+      print('Error launching map: $e');
+      LocationDialogUtils.showGenericErrorDialog(
+        context,
+        'Failed to open directions. Please try again.',
+      );
+    }
+  }
+
+  // Alternative version with retry functionality
+  void _handleLaunchMapWithRetry() async {
+    await _attemptLaunchMap();
+  }
+
+  Future<void> _attemptLaunchMap() async {
+    try {
+      LocationDialogUtils.showLoadingDialog(
+        context,
+        message: 'Getting your location...',
+      );
+
+      final locationService = LocationService();
+      final Position? currentPosition = await locationService
+          .getCurrentLocation();
+
+      if (!mounted) return;
+
+      LocationDialogUtils.dismissDialog(context);
+
+      if (currentPosition == null) {
+        LocationDialogUtils.showLocationErrorWithRetry(context, () {
+          _attemptLaunchMap(); // Retry the same method
+        });
+        return;
+      }
+
+      final availableMaps = await MapLauncher.installedMaps;
+
+      if (availableMaps.isEmpty) {
+        if (!mounted) return;
+        LocationDialogUtils.showNoMapsDialog(context);
+        return;
+      }
+
+      await availableMaps.first.showDirections(
+        destinationTitle: "FurCare Veterinary Clinic",
+        directionsMode: DirectionsMode.driving,
+        origin: Coords(currentPosition.latitude, currentPosition.longitude),
+        destination: Coords(8.475588, 124.660488),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      LocationDialogUtils.dismissDialog(context);
+      LocationDialogUtils.showGenericErrorDialog(
+        context,
+        'Failed to open directions. Please try again.',
+      );
+    }
   }
 
   @override
@@ -224,7 +331,44 @@ class _MainTabScreenState extends State<MainTabScreen>
           ],
         ),
       ),
-
+      persistentFooterButtons: [
+        InkWell(
+          onTap: () => _handleLaunchMap(),
+          borderRadius: BorderRadius.circular(8),
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(15.0),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: colorScheme.primary.withAlpha(51),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(
+                    Icons.map_outlined,
+                    size: 18,
+                    color: colorScheme.primary,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                CustomText.body(
+                  "Branch Location",
+                  size: AppTextSize.md,
+                  fontWeight: AppFontWeight.bold.value,
+                ),
+                Spacer(),
+                Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 18,
+                  color: colorScheme.onSurfaceVariant,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
       floatingActionButton: AnimatedBuilder(
         animation: _bounceAnimation,
         builder: (context, child) {

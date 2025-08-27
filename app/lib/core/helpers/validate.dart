@@ -1,5 +1,17 @@
 import 'package:intl/intl.dart';
 
+String? validateFacebookDisplayName(String? value) {
+  if (value == null || value.isEmpty) {
+    return 'Please enter your facebook name';
+  }
+  // a-z and spaces only
+  if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(value)) {
+    return 'Please enter a valid facebook name';
+  }
+
+  return null;
+}
+
 String? validateEmail(String? value) {
   if (value == null || value.isEmpty) {
     return 'Email is required';

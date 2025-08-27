@@ -8,7 +8,7 @@ class ClientProvider with ChangeNotifier {
 
   Client _client = Client(
     fullName: 'John Doe',
-    contact: Contact(facebookUrl: '', messengerUrl: '', phoneNumber: ''),
+    contact: Contact(facebookDisplayName: '', phoneNumber: ''),
     address: '123 Main St',
     isActive: true,
     others: Others(lastLogin: '', lastChangePassword: ''),

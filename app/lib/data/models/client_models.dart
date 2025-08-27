@@ -20,46 +20,34 @@ class ClientRequest extends Equatable {
 }
 
 class Contact extends Equatable {
-  final String? facebookUrl;
-  final String? messengerUrl;
+  final String? facebookDisplayName;
   final String phoneNumber;
 
-  const Contact({
-    this.facebookUrl,
-    this.messengerUrl,
-    required this.phoneNumber,
-  });
+  const Contact({this.facebookDisplayName, required this.phoneNumber});
 
   factory Contact.fromJson(Map<String, dynamic> json) {
     return Contact(
-      facebookUrl: json['facebookUrl'] as String?,
-      messengerUrl: json['messengerUrl'] as String?,
+      facebookDisplayName: json['facebookDisplayName'] as String?,
       phoneNumber: json['phoneNumber'] as String? ?? '',
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'facebookUrl': facebookUrl,
-      'messengerUrl': messengerUrl,
+      'facebookDisplayName': facebookDisplayName,
       'phoneNumber': phoneNumber,
     };
   }
 
-  Contact copyWith({
-    String? facebookUrl,
-    String? messengerUrl,
-    String? phoneNumber,
-  }) {
+  Contact copyWith({String? facebookDisplayName, String? phoneNumber}) {
     return Contact(
-      facebookUrl: facebookUrl ?? this.facebookUrl,
-      messengerUrl: messengerUrl ?? this.messengerUrl,
+      facebookDisplayName: facebookDisplayName ?? this.facebookDisplayName,
       phoneNumber: phoneNumber ?? this.phoneNumber,
     );
   }
 
   @override
-  List<Object?> get props => [facebookUrl, messengerUrl, phoneNumber];
+  List<Object?> get props => [facebookDisplayName, phoneNumber];
 }
 
 class Others extends Equatable {
