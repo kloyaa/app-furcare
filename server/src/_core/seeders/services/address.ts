@@ -16,7 +16,7 @@ export class ReadAddress {
         .on('data', (row: any) => countries.push(row))
         .on('error', reject)
         .on('end', () => resolve(countries));
-    }).then((countries) => {
+    }).then(countries => {
       return countries.map((el: any) => ({
         id: el.id,
         name: el.name,
@@ -57,7 +57,7 @@ export class ReadAddress {
         .on('data', (row: any) => cities.push(row))
         .on('error', reject)
         .on('end', () => resolve(cities));
-    }).then((cities) => {
+    }).then(cities => {
       return cities.map((el: any) => ({
         id: el.id,
         name: el.name,
@@ -87,7 +87,7 @@ export class ReadAddress {
         .on('data', (row: any) => regions.push(row))
         .on('error', reject)
         .on('end', () => resolve(regions));
-    }).then((regions) => {
+    }).then(regions => {
       return regions.map((el: any) => ({
         id: el.id,
         name: el.name,
@@ -117,7 +117,7 @@ export class ReadAddress {
         .on('data', (row: any) => regions.push(row))
         .on('error', reject)
         .on('end', () => resolve(regions));
-    }).then((regions) => {
+    }).then(regions => {
       return regions.map((el: any) => ({
         id: el.id,
         name: el.name,
@@ -140,7 +140,7 @@ export class ReadAddress {
         .on('data', (row: any) => states.push(row))
         .on('error', reject)
         .on('end', () => resolve(states));
-    }).then((states) => {
+    }).then(states => {
       return states.map((el: any) => ({
         id: el.id,
         name: el.name,

@@ -7,7 +7,7 @@ export const seedRoleNames = async () => {
 
   await Role.deleteMany(); // clear all
 
-  const roles = Object.values(RoleName).map((roleName) => ({ name: roleName }));
+  const roles = Object.values(RoleName).map(roleName => ({ name: roleName }));
 
   await Role.insertMany(roles);
 

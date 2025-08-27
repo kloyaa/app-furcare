@@ -12,7 +12,7 @@ export const authorize = (...allowedRoles: RoleName[]) => {
         return res.status(401).json(statuses['10020']);
       }
 
-      if (allowedRoles.some((role) => role === RoleName.Any)) {
+      if (allowedRoles.some(role => role === RoleName.Any)) {
         return next();
       }
 
@@ -20,7 +20,7 @@ export const authorize = (...allowedRoles: RoleName[]) => {
       const userRoles = await UserRole.find({ user: req.user.id }).populate('role');
 
       // // Check if user has any of the allowed roles
-      const hasAllowedRole = userRoles.some((userRole) => allowedRoles.includes(userRole.role.name as RoleName));
+      const hasAllowedRole = userRoles.some(userRole => allowedRoles.includes(userRole.role.name as RoleName));
 
       if (!hasAllowedRole) {
         return res.status(403).json(statuses['0057']);

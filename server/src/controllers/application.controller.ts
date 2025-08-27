@@ -57,7 +57,7 @@ export const createGroomingApplication = async (req: TRequest, res: Response): P
     let totalPrice = 0;
 
     // Add schedule price
-    const schedule = groomingServiceSchedules.find((s) => s.code === scheduleCode);
+    const schedule = groomingServiceSchedules.find(s => s.code === scheduleCode);
     if (schedule) {
       totalPrice += schedule.price;
     }
@@ -65,7 +65,7 @@ export const createGroomingApplication = async (req: TRequest, res: Response): P
     // Add grooming options prices (from request body codes)
     if (selectedOptions && selectedOptions.length > 0) {
       selectedOptions.forEach((optionCode: string) => {
-        const optionObj = groomingOptions.find((o) => o.code === optionCode);
+        const optionObj = groomingOptions.find(o => o.code === optionCode);
         if (optionObj) {
           totalPrice += optionObj.price;
         }
@@ -75,7 +75,7 @@ export const createGroomingApplication = async (req: TRequest, res: Response): P
     // Add grooming preferences prices (from request body codes)
     if (selectedPreferences && selectedPreferences.length > 0) {
       selectedPreferences.forEach((preferenceCode: string) => {
-        const preferenceObj = groomingPreferences.find((p) => p.code === preferenceCode);
+        const preferenceObj = groomingPreferences.find(p => p.code === preferenceCode);
         if (preferenceObj) {
           totalPrice += preferenceObj.price;
         }
@@ -228,16 +228,16 @@ export const getGroomingApplications = async (req: TRequest, res: Response): Pro
       .populate('pet')
       .populate('branch');
 
-    const mappedApplications = groomingApplications.map((application) => {
+    const mappedApplications = groomingApplications.map(application => {
       const applicationObj = application.toObject();
-      const scheduleObj = groomingServiceSchedules.find((schedule) => schedule.code === applicationObj.scheduleCode);
+      const scheduleObj = groomingServiceSchedules.find(schedule => schedule.code === applicationObj.scheduleCode);
       const groomingOptionsObjects =
         applicationObj.groomingOptions
-          ?.map((optionCode) => groomingOptions.find((option) => option.code === optionCode))
+          ?.map(optionCode => groomingOptions.find(option => option.code === optionCode))
           .filter(Boolean) || [];
       const groomingPreferencesObjects =
         applicationObj.groomingPreferences
-          ?.map((preferenceCode) => groomingPreferences.find((preference) => preference.code === preferenceCode))
+          ?.map(preferenceCode => groomingPreferences.find(preference => preference.code === preferenceCode))
           .filter(Boolean) || [];
 
       const { scheduleCode, ...restApplicationObj } = applicationObj;
