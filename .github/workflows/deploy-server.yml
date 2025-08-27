@@ -2,7 +2,7 @@ name: Deploy Server to EC2
 
 on:
   push:
-    branches: [master]
+    branches: [dev]
     paths:
       - "server/**"
       - ".github/workflows/deploy-server.yml"
