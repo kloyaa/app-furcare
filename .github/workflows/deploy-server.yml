@@ -4,14 +4,30 @@ on:
   pull_request:
     types: [closed]
     branches: [master]
-    paths:
-      - "server/**"
-      - ".github/workflows/deploy-server.yml"
 
 jobs:
-  deploy:
-    # Only run if PR was merged (not just closed)
+  check-changes:
     if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    outputs:
+      server-changed: ${{ steps.changes.outputs.server }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch full history for path filtering
+
+      - name: Check for server changes
+        uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            server:
+              - 'server/**'
+
+  deploy:
+    needs: check-changes
+    if: needs.check-changes.outputs.server-changed == 'true'
     runs-on: ubuntu-latest
     environment: EC2
 
