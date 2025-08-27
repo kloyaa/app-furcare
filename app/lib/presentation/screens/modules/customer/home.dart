@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:furcare_app/core/helpers/theme.dart';
 import 'package:furcare_app/presentation/providers/branch_provider.dart';
 import 'package:furcare_app/presentation/providers/client_provider.dart';
+import 'package:furcare_app/presentation/screens/modules/customer/companions/companions.dart';
 import 'package:furcare_app/presentation/screens/modules/customer/tabs/home.dart';
 import 'package:furcare_app/presentation/screens/modules/customer/tabs/settings.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_bottomnav.dart';
@@ -43,6 +44,12 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
         activeIcon: Icons.calendar_month,
         label: 'Appointments',
         screen: const MainTabScreen(),
+      ),
+      BottomNavItem(
+        icon: Icons.pets_outlined,
+        activeIcon: Icons.pets,
+        label: 'Pets',
+        screen: const PetsScreen(),
       ),
       BottomNavItem(
         icon: Icons.settings_outlined,

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:furcare_app/core/constants/padding_constant.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
-import 'package:furcare_app/core/helpers/content.dart';
 import 'package:furcare_app/core/helpers/widget_helpers.dart';
 import 'package:furcare_app/data/models/pet_service.models.dart';
 import 'package:furcare_app/presentation/providers/pet_service_provider.dart';
@@ -37,80 +36,6 @@ class _MainTabScreenState extends State<MainTabScreen>
     "BRANCH_LOCATION": 0,
     "PET_TRAINING": 0,
   };
-
-  // Mock recent bookings data
-  final List<Map<String, dynamic>> recentBookings = const [
-    {
-      "id": "booking_001",
-      "serviceKey": "PET_GROOMING",
-      "serviceName": "Grooming",
-      "createdAt": "2024-07-10T14:30:00Z",
-      "status": "completed",
-    },
-    {
-      "id": "booking_002",
-      "serviceKey": "HOME_SERVICE",
-      "serviceName": "Home Service",
-      "createdAt": "2024-07-12T09:15:00Z",
-      "status": "pending",
-    },
-    {
-      "id": "booking_003",
-      "serviceKey": "PET_BOARDING",
-      "serviceName": "Boarding",
-      "createdAt": "2024-07-08T16:45:00Z",
-      "status": "completed",
-    },
-    {
-      "id": "booking_004",
-      "serviceKey": "PET_TRAINING",
-      "serviceName": "Training",
-      "createdAt": "2024-07-14T11:20:00Z",
-      "status": "active",
-    },
-    {
-      "id": "booking_005",
-      "serviceKey": "PET_GROOMING",
-      "serviceName": "Grooming",
-      "createdAt": "2024-07-09T13:00:00Z",
-      "status": "completed",
-    },
-    {
-      "id": "booking_006",
-      "serviceKey": "HOME_SERVICE",
-      "serviceName": "Home Service",
-      "createdAt": "2024-07-11T10:30:00Z",
-      "status": "active",
-    },
-    {
-      "id": "booking_007",
-      "serviceKey": "PET_BOARDING",
-      "serviceName": "Boarding",
-      "createdAt": "2024-07-07T15:45:00Z",
-      "status": "completed",
-    },
-    {
-      "id": "booking_008",
-      "serviceKey": "PET_TRAINING",
-      "serviceName": "Training",
-      "createdAt": "2024-07-13T08:15:00Z",
-      "status": "pending",
-    },
-    {
-      "id": "booking_009",
-      "serviceKey": "PET_GROOMING",
-      "serviceName": "Grooming",
-      "createdAt": "2024-07-06T12:30:00Z",
-      "status": "completed",
-    },
-    {
-      "id": "booking_010",
-      "serviceKey": "HOME_SERVICE",
-      "serviceName": "Home Service",
-      "createdAt": "2024-07-05T14:00:00Z",
-      "status": "completed",
-    },
-  ];
 
   void _handleNavigateToPetServices(String code) {
     if (kDebugMode) {
@@ -199,264 +124,103 @@ class _MainTabScreenState extends State<MainTabScreen>
         child: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      colorScheme.primaryContainer.withAlpha(204),
-                      colorScheme.surfaceContainerHighest,
-                    ],
-                  ),
-                  border: Border.all(
-                    color: colorScheme.outline.withAlpha(38),
-                    width: 1,
-                  ),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Stack(
-                  children: [
-                    // Decorative elements
-                    Positioned(
-                      right: -20,
-                      top: 20,
-                      child: Container(
-                        width: 100,
-                        height: 100,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: colorScheme.primary.withAlpha(26),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      left: -30,
-                      bottom: 30,
-                      child: Container(
-                        width: 80,
-                        height: 80,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: colorScheme.secondary.withAlpha(26),
-                        ),
-                      ),
-                    ),
-
-                    // Main content
-                    Padding(
-                      padding: const EdgeInsets.all(24),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(12),
-                                decoration: BoxDecoration(
-                                  color: colorScheme.primary,
-                                  borderRadius: BorderRadius.circular(16),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: colorScheme.primary.withAlpha(77),
-                                      spreadRadius: 1,
-                                      blurRadius: 8,
-                                      offset: const Offset(0, 2),
+              child: Consumer<PetServiceProvider>(
+                builder: (context, petServiceProvider, child) {
+                  List<PetService> petServices = petServiceProvider.petServices;
+                  return GridView.count(
+                    crossAxisCount: 1,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
+                    childAspectRatio: 4.0,
+                    children: petServices.map((service) {
+                      final count = bookingCounts[service.code] ?? 0;
+                      return GestureDetector(
+                        onTap: () => _handleNavigateToPetServices(service.code),
+                        child: Opacity(
+                          opacity: service.available ? 1.0 : 0.3,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: count > 0
+                                  ? colorScheme.primaryContainer.withAlpha(204)
+                                  : colorScheme.surfaceContainerLow,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: count > 0
+                                          ? colorScheme.primary.withAlpha(51)
+                                          : colorScheme.surfaceContainerHigh,
+                                      borderRadius: BorderRadius.circular(8),
                                     ),
-                                  ],
-                                ),
-                                child: Icon(
-                                  Icons.pets,
-                                  size: 32,
-                                  color: colorScheme.onPrimary,
-                                ),
-                              ),
-                              const SizedBox(width: 16),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    CustomText.title(
-                                      'Pet Services',
-                                      size: AppTextSize.lg,
+                                    child: Icon(
+                                      getServiceIcon(service.code),
+                                      size: 40,
+                                      color: count > 0
+                                          ? colorScheme.primary
+                                          : colorScheme.onSurfaceVariant,
                                     ),
-                                    CustomText.body(
-                                      PetMessages.getRandomPetMessage(),
-                                      size: AppTextSize.xs,
-                                      fontWeight: AppFontWeight.normal.value,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 24),
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.bookmark_border,
-                                size: 20,
-                                color: colorScheme.primary,
-                              ),
-                              const SizedBox(width: 8),
-                              CustomText.body(
-                                'New Appointments?',
-                                size: AppTextSize.sm,
-                                fontWeight: AppFontWeight.bold.value,
-                              ),
-                            ],
-                          ),
-                          Consumer<PetServiceProvider>(
-                            builder: (context, petServiceProvider, child) {
-                              if (petServiceProvider.isInitial ||
-                                  petServiceProvider.isFetching) {
-                                return ServicesGridSkeleton();
-                              }
-                              List<PetService> petServices =
-                                  petServiceProvider.petServices;
-                              return GridView.count(
-                                crossAxisCount: 2,
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                crossAxisSpacing: 12,
-                                mainAxisSpacing: 12,
-                                childAspectRatio: 2.0,
-                                children: petServices.map((service) {
-                                  final count =
-                                      bookingCounts[service.code] ?? 0;
-                                  return GestureDetector(
-                                    onTap: () => _handleNavigateToPetServices(
-                                      service.code,
-                                    ),
-                                    child: Opacity(
-                                      opacity: service.available ? 1.0 : 0.3,
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          color: count > 0
-                                              ? colorScheme.primaryContainer
-                                                    .withAlpha(204)
-                                              : colorScheme.surfaceContainerLow,
-                                          borderRadius: BorderRadius.circular(
-                                            16,
-                                          ),
-                                          border: Border.all(
-                                            color: count > 0
-                                                ? colorScheme.primary.withAlpha(
-                                                    102,
-                                                  )
-                                                : colorScheme.outline.withAlpha(
-                                                    51,
-                                                  ),
-                                            width: 1.5,
-                                          ),
-                                          boxShadow: count > 0
-                                              ? [
-                                                  BoxShadow(
-                                                    color: colorScheme.primary
-                                                        .withAlpha(51),
-                                                    spreadRadius: 1,
-                                                    blurRadius: 4,
-                                                    offset: const Offset(0, 2),
-                                                  ),
-                                                ]
-                                              : null,
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        CustomText.body(
+                                          service.name,
+                                          size: AppTextSize.md,
+                                          fontWeight: AppFontWeight.bold.value,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(10),
-                                          child: Row(
-                                            children: [
-                                              Container(
-                                                padding: const EdgeInsets.all(
-                                                  8,
-                                                ),
-                                                decoration: BoxDecoration(
-                                                  color: count > 0
-                                                      ? colorScheme.primary
-                                                            .withAlpha(51)
-                                                      : colorScheme
-                                                            .surfaceContainerHigh,
-                                                  borderRadius:
-                                                      BorderRadius.circular(8),
-                                                ),
-                                                child: Icon(
-                                                  getServiceIcon(service.code),
-                                                  size: 16,
-                                                  color: count > 0
-                                                      ? colorScheme.primary
-                                                      : colorScheme
-                                                            .onSurfaceVariant,
-                                                ),
-                                              ),
-                                              const SizedBox(width: 8),
-                                              Expanded(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    CustomText.body(
-                                                      service.name,
-                                                      size: AppTextSize.xs,
-                                                      fontWeight: AppFontWeight
-                                                          .bold
-                                                          .value,
-                                                      maxLines: 2,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                    ),
-                                                    if (count > 0)
-                                                      CustomText.body(
-                                                        '$count Active',
-                                                        size: AppTextSize.xss,
-                                                      ),
-                                                  ],
-                                                ),
-                                              ),
-                                              if (count > 0)
-                                                Container(
-                                                  padding:
-                                                      const EdgeInsets.symmetric(
-                                                        horizontal: 6,
-                                                        vertical: 2,
-                                                      ),
-                                                  decoration: BoxDecoration(
-                                                    color: colorScheme.error,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          8,
-                                                        ),
-                                                  ),
-                                                  child: Text(
-                                                    count.toString(),
-                                                    style: TextStyle(
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color:
-                                                          colorScheme.onError,
-                                                    ),
-                                                  ),
-                                                ),
-                                            ],
+                                        if (count > 0)
+                                          CustomText.body(
+                                            '$count Active',
+                                            size: AppTextSize.xs,
                                           ),
+                                      ],
+                                    ),
+                                  ),
+                                  if (count > 0)
+                                    Container(
+                                      margin: EdgeInsets.only(right: 14),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                        vertical: 6,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: colorScheme.error,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Text(
+                                        count.toString(),
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                          color: colorScheme.onError,
                                         ),
                                       ),
                                     ),
-                                  );
-                                }).toList(),
-                              );
-                            },
+                                ],
+                              ),
+                            ),
                           ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                        ),
+                      );
+                    }).toList(),
+                  );
+                },
               ),
             ),
-            SliverToBoxAdapter(child: SizedBox(height: 24)),
-            const SliverToBoxAdapter(child: SizedBox(height: 24)),
           ],
         ),
       ),
