@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:furcare_app/core/constants/padding_constant.dart';
@@ -330,151 +329,128 @@ class _MainTabScreenState extends State<MainTabScreen>
                                 crossAxisSpacing: 12,
                                 mainAxisSpacing: 12,
                                 childAspectRatio: 2.0,
-                                children: petServices
-                                    .where(
-                                      (service) =>
-                                          service.code != 'BRANCH_LOCATION',
-                                    )
-                                    .map((service) {
-                                      final count =
-                                          bookingCounts[service.code] ?? 0;
-                                      return GestureDetector(
-                                        onTap: () =>
-                                            _handleNavigateToPetServices(
-                                              service.code,
-                                            ),
-                                        child: Opacity(
-                                          opacity: service.available
-                                              ? 1.0
-                                              : 0.3,
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              color: count > 0
-                                                  ? colorScheme.primaryContainer
-                                                        .withOpacity(0.8)
-                                                  : colorScheme
-                                                        .surfaceContainerLow,
-                                              borderRadius:
-                                                  BorderRadius.circular(16),
-                                              border: Border.all(
-                                                color: count > 0
-                                                    ? colorScheme.primary
-                                                          .withOpacity(0.4)
-                                                    : colorScheme.outline
-                                                          .withOpacity(0.2),
-                                                width: 1.5,
+                                children: petServices.map((service) {
+                                  final count =
+                                      bookingCounts[service.code] ?? 0;
+                                  return GestureDetector(
+                                    onTap: () => _handleNavigateToPetServices(
+                                      service.code,
+                                    ),
+                                    child: Opacity(
+                                      opacity: service.available ? 1.0 : 0.3,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: count > 0
+                                              ? colorScheme.primaryContainer
+                                                    .withOpacity(0.8)
+                                              : colorScheme.surfaceContainerLow,
+                                          borderRadius: BorderRadius.circular(
+                                            16,
+                                          ),
+                                          border: Border.all(
+                                            color: count > 0
+                                                ? colorScheme.primary
+                                                      .withOpacity(0.4)
+                                                : colorScheme.outline
+                                                      .withOpacity(0.2),
+                                            width: 1.5,
+                                          ),
+                                          boxShadow: count > 0
+                                              ? [
+                                                  BoxShadow(
+                                                    color: colorScheme.primary
+                                                        .withOpacity(0.2),
+                                                    spreadRadius: 1,
+                                                    blurRadius: 4,
+                                                    offset: const Offset(0, 2),
+                                                  ),
+                                                ]
+                                              : null,
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(10),
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                padding: const EdgeInsets.all(
+                                                  8,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  color: count > 0
+                                                      ? colorScheme.primary
+                                                            .withOpacity(0.2)
+                                                      : colorScheme
+                                                            .surfaceContainerHigh,
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                ),
+                                                child: Icon(
+                                                  getServiceIcon(service.code),
+                                                  size: 16,
+                                                  color: count > 0
+                                                      ? colorScheme.primary
+                                                      : colorScheme
+                                                            .onSurfaceVariant,
+                                                ),
                                               ),
-                                              boxShadow: count > 0
-                                                  ? [
-                                                      BoxShadow(
-                                                        color: colorScheme
-                                                            .primary
-                                                            .withOpacity(0.2),
-                                                        spreadRadius: 1,
-                                                        blurRadius: 4,
-                                                        offset: const Offset(
-                                                          0,
-                                                          2,
-                                                        ),
-                                                      ),
-                                                    ]
-                                                  : null,
-                                            ),
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(10),
-                                              child: Row(
-                                                children: [
-                                                  Container(
-                                                    padding:
-                                                        const EdgeInsets.all(8),
-                                                    decoration: BoxDecoration(
-                                                      color: count > 0
-                                                          ? colorScheme.primary
-                                                                .withOpacity(
-                                                                  0.2,
-                                                                )
-                                                          : colorScheme
-                                                                .surfaceContainerHigh,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                            8,
-                                                          ),
+                                              const SizedBox(width: 8),
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    CustomText.body(
+                                                      service.name,
+                                                      size: AppTextSize.xs,
+                                                      fontWeight: AppFontWeight
+                                                          .bold
+                                                          .value,
+                                                      maxLines: 2,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                     ),
-                                                    child: Icon(
-                                                      getServiceIcon(
-                                                        service.code,
+                                                    if (count > 0)
+                                                      CustomText.body(
+                                                        '$count Active',
+                                                        size: AppTextSize.xss,
                                                       ),
-                                                      size: 16,
-                                                      color: count > 0
-                                                          ? colorScheme.primary
-                                                          : colorScheme
-                                                                .onSurfaceVariant,
+                                                  ],
+                                                ),
+                                              ),
+                                              if (count > 0)
+                                                Container(
+                                                  padding:
+                                                      const EdgeInsets.symmetric(
+                                                        horizontal: 6,
+                                                        vertical: 2,
+                                                      ),
+                                                  decoration: BoxDecoration(
+                                                    color: colorScheme.error,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          8,
+                                                        ),
+                                                  ),
+                                                  child: Text(
+                                                    count.toString(),
+                                                    style: TextStyle(
+                                                      fontSize: 10,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color:
+                                                          colorScheme.onError,
                                                     ),
                                                   ),
-                                                  const SizedBox(width: 8),
-                                                  Expanded(
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        CustomText.body(
-                                                          service.name,
-                                                          size: AppTextSize.xs,
-                                                          fontWeight:
-                                                              AppFontWeight
-                                                                  .bold
-                                                                  .value,
-                                                          maxLines: 2,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                        ),
-                                                        if (count > 0)
-                                                          CustomText.body(
-                                                            '$count Active',
-                                                            size:
-                                                                AppTextSize.xss,
-                                                          ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  if (count > 0)
-                                                    Container(
-                                                      padding:
-                                                          const EdgeInsets.symmetric(
-                                                            horizontal: 6,
-                                                            vertical: 2,
-                                                          ),
-                                                      decoration: BoxDecoration(
-                                                        color:
-                                                            colorScheme.error,
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                              8,
-                                                            ),
-                                                      ),
-                                                      child: Text(
-                                                        count.toString(),
-                                                        style: TextStyle(
-                                                          fontSize: 10,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color: colorScheme
-                                                              .onError,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                ],
-                                              ),
-                                            ),
+                                                ),
+                                            ],
                                           ),
                                         ),
-                                      );
-                                    })
-                                    .toList(),
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
                               );
                             },
                           ),
@@ -486,238 +462,6 @@ class _MainTabScreenState extends State<MainTabScreen>
               ),
             ),
             SliverToBoxAdapter(child: SizedBox(height: 24)),
-            SliverToBoxAdapter(
-              child: AnimatedBuilder(
-                animation: _glowController,
-                builder: (context, child) {
-                  return Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 16),
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.surface,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.outline.withOpacity(0.2),
-                        width: 1,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.shadow.withOpacity(0.1),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
-                        ),
-                        // Glowing shadow that pulses
-                        BoxShadow(
-                          color: Theme.of(context).colorScheme.primary
-                              .withOpacity(0.3 * _glowAnimation.value),
-                          blurRadius: 15 * _glowAnimation.value,
-                          spreadRadius: 2 * _glowAnimation.value,
-                          offset: const Offset(0, 0),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.primaryContainer,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Icon(
-                            Icons.lightbulb_outline,
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.onPrimaryContainer,
-                            size: 24,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              CustomText.body(
-                                'Fun Fact',
-                                style: Theme.of(context).textTheme.titleSmall
-                                    ?.copyWith(
-                                      fontWeight: FontWeight.w600,
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.primary,
-                                    ),
-                              ),
-                              const SizedBox(height: 4),
-                              CustomText.body(
-                                _currentFunFact,
-                                size: AppTextSize.xs,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ),
-            SliverToBoxAdapter(child: SizedBox(height: 24)),
-            SliverToBoxAdapter(
-              child: SizedBox(
-                height: 400,
-                child: CarouselView(
-                  controller: _carouselController,
-                  scrollDirection: Axis.horizontal,
-                  itemExtent: 300,
-                  shrinkExtent: 200,
-                  children: carouselItemsAlwaysRandom(),
-                ),
-              ),
-            ),
-            SliverToBoxAdapter(child: SizedBox(height: 24)),
-
-            // Recent Appointments Section
-            SliverToBoxAdapter(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: colorScheme.surface,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: colorScheme.outline.withOpacity(0.15),
-                    width: 1,
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Header with title and view all button
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.history,
-                                size: 20,
-                                color: colorScheme.primary,
-                              ),
-                              const SizedBox(width: 8),
-                              CustomText('Recent Appointments'),
-                            ],
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              context.push("/appointments");
-                            },
-                            child: CustomText.body('View all'),
-                          ),
-                        ],
-                      ),
-
-                      // Recent bookings list
-                      ListView.separated(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: recentBookings.length,
-                        separatorBuilder: (context, index) =>
-                            const SizedBox(height: 12),
-                        itemBuilder: (context, index) {
-                          final booking = recentBookings[index];
-                          final createdAt = DateTime.parse(
-                            booking['createdAt'],
-                          );
-                          final formattedDate = formatDateToLong(createdAt);
-                          final formattedTime = DateFormat(
-                            'h:mm a',
-                          ).format(createdAt);
-
-                          return Container(
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: colorScheme.surfaceContainerLow,
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                color: colorScheme.outline.withOpacity(0.1),
-                                width: 1,
-                              ),
-                            ),
-                            child: Row(
-                              children: [
-                                // Service icon
-                                Container(
-                                  width: 50,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                    color: colorScheme.primaryContainer
-                                        .withOpacity(0.5),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Icon(
-                                    getServiceIcon(booking['serviceKey']),
-                                    size: 24,
-                                    color: colorScheme.primary,
-                                  ),
-                                ),
-                                const SizedBox(width: 16),
-                                // Booking details
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      CustomText(
-                                        booking['serviceName'],
-                                        size: AppTextSize.sm,
-                                        fontWeight: AppFontWeight.bold.value,
-                                      ),
-                                      const SizedBox(height: 4),
-                                      CustomText(
-                                        '$formattedDate • $formattedTime',
-                                        size: AppTextSize.xs,
-                                        fontWeight: AppFontWeight.normal.value,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                // Status indicator
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: getStatusColor(
-                                      booking['status'],
-                                      colorScheme,
-                                    ).withOpacity(0.1),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: CustomText.body(
-                                    booking['status'].toUpperCase(),
-                                    size: AppTextSize.xss,
-                                    fontWeight: AppFontWeight.bold.value,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            // Bottom spacing
             const SliverToBoxAdapter(child: SizedBox(height: 24)),
           ],
         ),
