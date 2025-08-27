@@ -31,6 +31,9 @@ class _PetsScreenState extends State<PetsScreen> {
     });
   }
 
+  /*************  ✨ Windsurf Command ⭐  *************/
+  /// Navigate to pet creation screen when the "Add Pet" button is clicked.
+  /*******  1a6ea3f8-0388-48c0-a635-5e6519475364  *******/
   void _handleNavigateCompanionCreationScreen() {
     context.push(CustomerRoute.createPet);
   }
@@ -149,7 +152,7 @@ class _PetsScreenState extends State<PetsScreen> {
                                     ),
                                     const SizedBox(height: 2),
                                     CustomText.body(
-                                      'Update companion information',
+                                      'Update pet information',
                                       size: AppTextSize.xs,
                                     ),
                                   ],
@@ -211,7 +214,7 @@ class _PetsScreenState extends State<PetsScreen> {
                                     ),
                                     const SizedBox(height: 2),
                                     CustomText.body(
-                                      'Permanently delete this companion',
+                                      'Permanently delete this pet',
                                       size: AppTextSize.xs,
                                     ),
                                   ],
@@ -297,7 +300,7 @@ class _PetsScreenState extends State<PetsScreen> {
 
                       // Message
                       CustomText.body(
-                        'This action cannot be undone. ${pet.name} will be permanently removed from your companion list.',
+                        'This action cannot be undone. ${pet.name} will be permanently removed from your pet list.',
                         size: AppTextSize.xs,
                         textAlign: TextAlign.center,
                       ),
@@ -415,6 +418,7 @@ class _PetsScreenState extends State<PetsScreen> {
 
     return Scaffold(
       appBar: CustomAppBar(
+        leading: SizedBox(),
         actions: [
           IconButton(
             onPressed: () => context.read<PetProvider>().getPets(),
@@ -444,9 +448,10 @@ class _PetsScreenState extends State<PetsScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: "pet-fab",
         onPressed: () => _handleNavigateCompanionCreationScreen(),
         icon: const Icon(Icons.add),
-        label: const Text('Companion'),
+        label: const Text('Pet'),
         backgroundColor: theme.colorScheme.primary,
       ),
     );

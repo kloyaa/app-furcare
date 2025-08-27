@@ -79,7 +79,7 @@ class _CompanionCreationScreenState extends State<CompanionCreationScreen> {
               children: [
                 // Header
                 CustomText.title(
-                  'New Companion',
+                  'New Pet',
                   size: AppTextSize.lg,
                   fontWeight: AppFontWeight.semibold.value,
                   color: theme.colorScheme.onSurface,
@@ -88,7 +88,7 @@ class _CompanionCreationScreenState extends State<CompanionCreationScreen> {
                 const SizedBox(height: 8),
 
                 CustomText.title(
-                  'Fill in the details below to add your companion',
+                  'Fill in the details below to add your pet',
                   size: AppTextSize.sm,
                   fontWeight: AppFontWeight.normal.value,
                   color: theme.colorScheme.onSurface.withAlpha(179),
@@ -99,7 +99,7 @@ class _CompanionCreationScreenState extends State<CompanionCreationScreen> {
                 // Name Field
                 CustomInputField(
                   label: 'Name',
-                  hintText: 'Enter companion name',
+                  hintText: 'Enter pet name',
                   controller: _nameController,
                   prefixIcon: Icons.person_outline,
                   validator: validateCompanionName,
@@ -111,7 +111,7 @@ class _CompanionCreationScreenState extends State<CompanionCreationScreen> {
                 // Species Field
                 CustomInputField(
                   label: 'Species',
-                  hintText: 'Enter companion species',
+                  hintText: 'Enter pet species',
                   controller: _specieController,
                   prefixIcon: Icons.pets_outlined,
                   validator: validateSpecie,

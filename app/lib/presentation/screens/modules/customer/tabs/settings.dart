@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:furcare_app/core/constants/info.dart';
 import 'package:furcare_app/core/constants/padding_constant.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
 import 'package:furcare_app/data/models/settings_item.model.dart';
@@ -10,6 +11,7 @@ import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
 import 'package:furcare_app/presentation/widgets/common/default_snackbar.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// Enhanced Settings Tab Screen with animations, theme support, and error handling
 class SettingsTabScreen extends StatefulWidget {
@@ -69,17 +71,10 @@ class _SettingsTabScreenState extends State<SettingsTabScreen>
     _settingsItems = [
       SettingsItem(
         icon: Icons.pets_outlined,
-        title: 'Account and Companions',
-        subtitle: 'Manage your account and companions',
+        title: 'Account',
+        subtitle: 'Manage your account',
         onTap: () => _handleAccountTap(),
         iconColor: Colors.pink,
-      ),
-      SettingsItem(
-        icon: Icons.notifications_outlined,
-        title: 'Notifications',
-        subtitle: 'Manage your notification preferences',
-        onTap: () => _handleNotificationsTap(),
-        iconColor: Colors.orange,
       ),
       SettingsItem(
         icon: Icons.security_outlined,
@@ -98,15 +93,15 @@ class _SettingsTabScreenState extends State<SettingsTabScreen>
       SettingsItem(
         icon: Icons.history_outlined,
         title: 'Activities',
-        subtitle: 'View your activities and logs',
+        subtitle: 'View your activity log',
         onTap: () => _handleActivityTap(),
         iconColor: Colors.brown,
       ),
       SettingsItem(
-        icon: Icons.help_outline,
-        title: 'Help & Support',
-        subtitle: 'Get help and contact support',
-        onTap: () => _handleHelpTap(),
+        icon: Icons.call_outlined,
+        title: 'Need help?',
+        subtitle: 'Call us for support',
+        onTap: () => _handleCall(),
         iconColor: Colors.blue,
       ),
     ];
@@ -148,16 +143,6 @@ class _SettingsTabScreenState extends State<SettingsTabScreen>
     }
   }
 
-  void _handleNotificationsTap() {
-    try {
-      // Add haptic feedback for better UX
-      showCustomSnackBar(context, 'Notifications settings opened');
-      // Navigate to notifications settings
-    } catch (e) {
-      _handleError('Failed to open notifications settings', e);
-    }
-  }
-
   void _handleAccountTap() {
     context.push('/settings/accounts');
   }
@@ -170,12 +155,13 @@ class _SettingsTabScreenState extends State<SettingsTabScreen>
     context.push('/settings/theme');
   }
 
-  void _handleHelpTap() {
+  void _handleCall() {
     try {
-      showCustomSnackBar(context, 'Help & Support opened');
-      // Navigate to help settings
+      final Uri phoneUri = Uri(scheme: 'tel', path: mobileNumber);
+      launchUrl(phoneUri);
+      showCustomSnackBar(context, 'Opening phone app...');
     } catch (e) {
-      _handleError('Failed to open help settings', e);
+      _handleError('Failed to make phone call', e);
     }
   }
 

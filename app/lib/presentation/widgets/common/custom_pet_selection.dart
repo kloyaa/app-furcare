@@ -79,7 +79,7 @@ class _PetSelectionAccordionState extends State<PetSelectionAccordion> {
             child: Padding(
               padding: const EdgeInsets.all(24.0),
               child: CustomButton(
-                text: "Manage Companions",
+                text: "Manage Pets",
                 icon: Icons.arrow_forward_outlined,
                 onPressed: () => context.push(CustomerRoute.createPet),
                 isLoading: false,
@@ -114,7 +114,7 @@ class _PetSelectionAccordionState extends State<PetSelectionAccordion> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            CustomText.title("Companion", size: AppTextSize.md),
+                            CustomText.title("Pet", size: AppTextSize.md),
                             if (!widget.isPetAccordionExpanded) ...[
                               const SizedBox(height: 4),
                               CustomText.body(

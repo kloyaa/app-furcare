@@ -67,13 +67,6 @@ class _PrivacyScreenState extends State<AccountsScreen>
         onTap: () => _handleProfileTap(),
         iconColor: Colors.orange,
       ),
-      SettingsItem(
-        icon: Icons.pets_outlined,
-        title: 'My Companions',
-        subtitle: 'Manage your Companions',
-        onTap: () => _handlePetTap(),
-        iconColor: Colors.pink,
-      ),
     ];
   }
 
@@ -96,10 +89,6 @@ class _PrivacyScreenState extends State<AccountsScreen>
 
   void _handleProfileTap() {
     context.push('/me/profile');
-  }
-
-  void _handlePetTap() {
-    context.push('/me/pets');
   }
 
   @override
@@ -174,9 +163,9 @@ class _PrivacyScreenState extends State<AccountsScreen>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CustomHeader(
-                  title: 'Account & Companions',
+                  title: 'Account',
                   titleSize: AppTextSize.lg,
-                  subtitle: 'Manage your account and companions',
+                  subtitle: 'Manage your account',
                 ),
               ],
             ),

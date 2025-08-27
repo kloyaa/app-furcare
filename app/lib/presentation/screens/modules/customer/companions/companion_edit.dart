@@ -107,7 +107,7 @@ class _CompanionEditState extends State<CompanionEdit> {
                 ),
                 const SizedBox(height: 8),
                 CustomText.title(
-                  'Change your companion information',
+                  'Change your pet information',
                   size: AppTextSize.sm,
                   fontWeight: AppFontWeight.normal.value,
                   color: theme.colorScheme.onSurface.withAlpha(179),
@@ -116,7 +116,7 @@ class _CompanionEditState extends State<CompanionEdit> {
                 // Name Field
                 CustomInputField(
                   label: 'Name',
-                  hintText: 'Enter companion name',
+                  hintText: 'Enter pet name',
                   controller: _nameController,
                   prefixIcon: Icons.person_outline,
                   validator: validateCompanionName,
@@ -128,7 +128,7 @@ class _CompanionEditState extends State<CompanionEdit> {
                 // Species Field
                 CustomInputField(
                   label: 'Species',
-                  hintText: 'Enter companion species',
+                  hintText: 'Enter pet species',
                   controller: _specieController,
                   prefixIcon: Icons.pets_outlined,
                   validator: validateSpecie,
