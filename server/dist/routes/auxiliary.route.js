@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const jwt_middleware_1 = require("../_core/middlewares/jwt.middleware");
+const auxiliary_controller_1 = require("../controllers/auxiliary.controller");
+const router = (0, express_1.Router)();
+const commonMiddlewares = [jwt_middleware_1.isAuthenticated];
+router.get('/aux/v1/generate/password', auxiliary_controller_1.generatePassword);
+router.get('/aux/v1/generate/username', auxiliary_controller_1.generateUsername);
+exports.default = router;

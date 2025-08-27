@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const pet_controller_1 = require("../controllers/pet.controller");
+const jwt_middleware_1 = require("../_core/middlewares/jwt.middleware");
+const router = (0, express_1.Router)();
+const commonMiddlewares = [jwt_middleware_1.isAuthenticated];
+router.post('/pet/v1', commonMiddlewares, pet_controller_1.createPet);
+router.get('/pet/v1', commonMiddlewares, pet_controller_1.getPets);
+router.put('/pet/v1/:id', commonMiddlewares, pet_controller_1.updatePet);
+router.delete('/pet/v1/:id', commonMiddlewares, pet_controller_1.deletePet);
+exports.default = router;
