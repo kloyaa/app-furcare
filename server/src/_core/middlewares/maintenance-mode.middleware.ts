@@ -9,7 +9,11 @@ import { statuses } from '../const/api.statuses';
  * @param {any} next - The next function to be called.
  * @return {Promise<void | Response>} - Returns a Promise that resolves when the middleware is done.
  */
-export const maintenanceModeMiddleware = async (req: any, res: any, next: any): Promise<void | Response> => {
+export const maintenanceModeMiddleware = async (
+  req: any,
+  res: any,
+  next: any
+): Promise<void | Response> => {
   const env = await getEnv();
   if (env?.ENVIRONMENT_MAINTENANCE === 'true') {
     return res.status(500).json(statuses['500']);

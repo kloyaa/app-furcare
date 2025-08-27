@@ -1,5 +1,11 @@
 import mongoose, { Schema } from 'mongoose';
-import { City, Country, Region, State, SubRegion } from '../_core/interfaces/schema/schema.interface';
+import {
+  City,
+  Country,
+  Region,
+  State,
+  SubRegion,
+} from '../_core/interfaces/schema/schema.interface';
 
 const countrySchema = new Schema<Country>({
   id: {
@@ -145,4 +151,10 @@ const RegionSchema = mongoose.model<Region>('Region', regionSchema);
 const SubRegionSchema = mongoose.model<Region>('SubRegion', subRegionSchema);
 const StateSchema = mongoose.model<State>('State', stateSchema);
 
-export { CountrySchema, CitySchema, RegionSchema, SubRegionSchema, StateSchema };
+export {
+  CountrySchema,
+  CitySchema,
+  RegionSchema,
+  SubRegionSchema,
+  StateSchema,
+};

@@ -1,6 +1,10 @@
 import { createReadStream } from 'fs';
 import csv from 'csv-parser';
-import { City, Country, Region } from '../../interfaces/schema/schema.interface';
+import {
+  City,
+  Country,
+  Region,
+} from '../../interfaces/schema/schema.interface';
 
 export class ReadAddress {
   /**

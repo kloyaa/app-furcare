@@ -1,7 +1,11 @@
 import bcrypt from 'bcrypt';
 import { type Response } from 'express';
 import { statuses } from '../_core/const/api.statuses';
-import { validateChangePassword, validateLogin, validateRegister } from '../_core/validators/auth.validator';
+import {
+  validateChangePassword,
+  validateLogin,
+  validateRegister,
+} from '../_core/validators/auth.validator';
 import { emitter } from '../_core/events/activity.event';
 import { ActivityType, EventName } from '../_core/enum/activity.enum';
 import { IActivity } from '../_core/interfaces/activity.interface';
@@ -17,7 +21,10 @@ import { Role } from '../schema/role.schema';
 import { UserRole } from '../schema/user_role.schema';
 import { startSession } from 'mongoose';
 
-export const login = async (req: TRequest, res: Response): Promise<any | Response> => {
+export const login = async (
+  req: TRequest,
+  res: Response
+): Promise<any | Response> => {
   const error = validateLogin(req.body);
   if (error) {
     return res.status(400).json({
@@ -37,15 +44,24 @@ export const login = async (req: TRequest, res: Response): Promise<any | Respons
       return res.status(401).json(statuses['0051']);
     }
 
-    const passwordMatched: boolean = await bcrypt.compare(password, user.password);
+    const passwordMatched: boolean = await bcrypt.compare(
+      password,
+      user.password
+    );
     if (!passwordMatched) {
       return res.status(401).json(statuses['0051']);
     }
 
     const env = await getEnv();
     const payload = { origin: req.headers['nodex-user-origin'], id: user.id };
-    const encryptedPayload = encrypt(payload, env.NODEX_CRYPTO_KEY ?? '123_cryptoKey');
-    const generatedToken = await generateJwt(encryptedPayload, env.JWT_SECRET_KEY || '123_secretKey');
+    const encryptedPayload = encrypt(
+      payload,
+      env.NODEX_CRYPTO_KEY ?? '123_cryptoKey'
+    );
+    const generatedToken = await generateJwt(
+      encryptedPayload,
+      env.JWT_SECRET_KEY || '123_secretKey'
+    );
 
     emitter.emit(EventName.ACTIVITY, {
       user: user.id,
@@ -69,7 +85,10 @@ export const login = async (req: TRequest, res: Response): Promise<any | Respons
  * @param {Response} res - The response object used to send the registration result.
  * @return {Promise<any>} - A promise that resolves with the registration result.
  */
-export const register = async (req: TRequest, res: Response): Promise<any | Response> => {
+export const register = async (
+  req: TRequest,
+  res: Response
+): Promise<any | Response> => {
   const error = validateRegister(req.body);
 
   if (error) {
@@ -82,7 +101,9 @@ export const register = async (req: TRequest, res: Response): Promise<any | Resp
   try {
     const { username, email, password } = req.body;
 
-    const existingUser = await User.findOne().or([{ username }, { email }]).exec();
+    const existingUser = await User.findOne()
+      .or([{ username }, { email }])
+      .exec();
     if (existingUser) {
       return res.status(401).json(statuses['0052']);
     }
@@ -118,12 +139,21 @@ export const register = async (req: TRequest, res: Response): Promise<any | Resp
     } as IActivity);
 
     const env = await getEnv();
-    const payload = { origin: req.headers['nodex-user-origin'], id: createdUser.id };
-    const encryptedPayload = encrypt(payload, env.NODEX_CRYPTO_KEY ?? '123_cryptoKey');
+    const payload = {
+      origin: req.headers['nodex-user-origin'],
+      id: createdUser.id,
+    };
+    const encryptedPayload = encrypt(
+      payload,
+      env.NODEX_CRYPTO_KEY ?? '123_cryptoKey'
+    );
 
     return res.status(201).json({
       ...statuses['0050'],
-      accessToken: await generateJwt(encryptedPayload, env.JWT_SECRET_KEY || '123_secretkey'),
+      accessToken: await generateJwt(
+        encryptedPayload,
+        env.JWT_SECRET_KEY || '123_secretkey'
+      ),
     });
   } catch (error) {
     console.log('@register error', error);
@@ -138,7 +168,10 @@ export const register = async (req: TRequest, res: Response): Promise<any | Resp
  * @param {Response} res - The response object used to send the result of the password change.
  * @return {Promise<void>} - A promise that resolves with the result of the password change.
  */
-export const changeUserPassword = async (req: TRequest, res: Response): Promise<void | Response> => {
+export const changeUserPassword = async (
+  req: TRequest,
+  res: Response
+): Promise<void | Response> => {
   const error = validateChangePassword(req.body);
   if (error) {
     return res.status(400).json({
@@ -154,7 +187,10 @@ export const changeUserPassword = async (req: TRequest, res: Response): Promise<
       return res.status(404).json(statuses['0056']);
     }
 
-    const passwordMatched: boolean = await bcrypt.compare(currentPassword, user.password);
+    const passwordMatched: boolean = await bcrypt.compare(
+      currentPassword,
+      user.password
+    );
     if (!passwordMatched) {
       return res.status(403).json(statuses['0063']);
     }
@@ -163,7 +199,10 @@ export const changeUserPassword = async (req: TRequest, res: Response): Promise<
       return res.status(403).json(statuses['0064']);
     }
 
-    const _isPasswordAlreadyUsed = await isPasswordAlreadyUsed(toObjectId(req.user.id), newPassword);
+    const _isPasswordAlreadyUsed = await isPasswordAlreadyUsed(
+      toObjectId(req.user.id),
+      newPassword
+    );
     if (_isPasswordAlreadyUsed) {
       return res.status(403).json(statuses['0065']);
     }
@@ -178,7 +217,11 @@ export const changeUserPassword = async (req: TRequest, res: Response): Promise<
     });
 
     await Promise.all([
-      User.findByIdAndUpdate(req.user.id, { password: hashedPassword }, { new: true }),
+      User.findByIdAndUpdate(
+        req.user.id,
+        { password: hashedPassword },
+        { new: true }
+      ),
       savePassword.save(),
     ]);
 

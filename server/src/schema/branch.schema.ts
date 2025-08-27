@@ -26,7 +26,7 @@ const branchSchema = new Schema<IBranch>(
   },
   {
     timestamps: true,
-  },
+  }
 );
 
 export const Branch = model<IBranch>('Branch', branchSchema);

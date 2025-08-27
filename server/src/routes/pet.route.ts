@@ -1,5 +1,10 @@
 import { Router } from 'express';
-import { createPet, deletePet, updatePet, getPets } from '../controllers/pet.controller';
+import {
+  createPet,
+  deletePet,
+  updatePet,
+  getPets,
+} from '../controllers/pet.controller';
 import { isAuthenticated } from '../_core/middlewares/jwt.middleware';
 const router = Router();
 

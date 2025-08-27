@@ -2,19 +2,22 @@ export const petServices = [
   {
     code: 'PET_GROOMING',
     name: 'Grooming',
-    description: 'Professional grooming services for your pets including bathing, haircut, and nail trimming.',
+    description:
+      'Professional grooming services for your pets including bathing, haircut, and nail trimming.',
     available: true,
   },
   {
     code: 'PET_BOARDING',
     name: 'Boarding',
-    description: 'Safe and comfortable boarding facilities for your pets while you are away.',
+    description:
+      'Safe and comfortable boarding facilities for your pets while you are away.',
     available: true,
   },
   {
     code: 'HOME_SERVICE',
     name: 'Home Service',
-    description: 'Pet care services delivered right at your doorstep for convenience.',
+    description:
+      'Pet care services delivered right at your doorstep for convenience.',
     available: true,
   },
 ];

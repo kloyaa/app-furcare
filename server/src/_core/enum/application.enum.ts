@@ -1,4 +1,10 @@
-export const applicationStatusEnum = ['pending', 'in-progress', 'completed', 'cancelled', 'rejected'];
+export const applicationStatusEnum = [
+  'pending',
+  'in-progress',
+  'completed',
+  'cancelled',
+  'rejected',
+];
 export const groomingScheduleEnum = [
   'SCHEDULE_1',
   'SCHEDULE_2',
@@ -19,7 +25,12 @@ export const groomingOptionsEnum = [
   'EAR_CLEANING',
 ];
 
-export const groomingPreferencesEnum = ['SPECIFIC_REQUEST', 'FULL_TRIM', 'LONG_TRIM', 'SHORT_TRIM'];
+export const groomingPreferencesEnum = [
+  'SPECIFIC_REQUEST',
+  'FULL_TRIM',
+  'LONG_TRIM',
+  'SHORT_TRIM',
+];
 export enum ApplicationStatusEnum {
   PENDING = 'pending',
   IN_PROGRESS = 'in-progress',

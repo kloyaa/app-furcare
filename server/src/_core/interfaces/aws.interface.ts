@@ -42,7 +42,14 @@ export interface SecretsManagerListOptions {
   maxResults?: number;
   nextToken?: string;
   filters?: Array<{
-    key: 'description' | 'name' | 'tag-key' | 'tag-value' | 'primary-region' | 'owning-service' | 'all';
+    key:
+      | 'description'
+      | 'name'
+      | 'tag-key'
+      | 'tag-value'
+      | 'primary-region'
+      | 'owning-service'
+      | 'all';
     values: string[];
   }>;
 }

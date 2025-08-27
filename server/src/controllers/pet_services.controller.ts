@@ -23,7 +23,10 @@ import { isObjectIdOrHexString } from 'mongoose';
  * @responseProperty {string} description - Description of the pet service
  * @responseProperty {boolean} available - Whether the pet service is available or not
  */
-export const getPetServices = async (req: TRequest, res: Response): Promise<any> => {
+export const getPetServices = async (
+  req: TRequest,
+  res: Response
+): Promise<any> => {
   return res.status(200).json(petServices);
 };
 
@@ -36,7 +39,10 @@ export const getPetServices = async (req: TRequest, res: Response): Promise<any>
  * @responseProperty {number} price - Price of the grooming service
  * @responseProperty {boolean} available - Whether the grooming service is available or not
  */
-export const getGroomingSchedules = async (req: TRequest, res: Response): Promise<any> => {
+export const getGroomingSchedules = async (
+  req: TRequest,
+  res: Response
+): Promise<any> => {
   return res.status(200).json(groomingServiceSchedules);
 };
 
@@ -50,7 +56,10 @@ export const getGroomingSchedules = async (req: TRequest, res: Response): Promis
  * @responseProperty {number} price - Price of the grooming preference
  * @responseProperty {boolean} available - Whether the grooming preference is available or not
  */
-export const getGroomingPreferences = async (req: TRequest, res: Response): Promise<any> => {
+export const getGroomingPreferences = async (
+  req: TRequest,
+  res: Response
+): Promise<any> => {
   return res.status(200).json(groomingPreferences);
 };
 
@@ -64,7 +73,10 @@ export const getGroomingPreferences = async (req: TRequest, res: Response): Prom
  * @responseProperty {number} price - Price of the extra grooming service
  * @responseProperty {boolean} available - Whether the extra grooming service is available or not
  */
-export const getGroomingExtra = async (req: TRequest, res: Response): Promise<any> => {
+export const getGroomingExtra = async (
+  req: TRequest,
+  res: Response
+): Promise<any> => {
   return res.status(200).json(groomingOptions);
 };
 
@@ -138,7 +150,10 @@ export const updateCageOccupant = async (req: TRequest, res: Response) => {
   }
 };
 
-export const validateCageAvailability = async (req: TRequest, res: Response) => {
+export const validateCageAvailability = async (
+  req: TRequest,
+  res: Response
+) => {
   try {
     const { id } = req.params;
     if (!isObjectIdOrHexString(id)) {

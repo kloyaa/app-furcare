@@ -12,7 +12,9 @@ redisClient.on('error', err => {
 });
 
 redisClient.on('connect', () => {
-  console.log(`${colors.fg.cyan}[application] @connectRedisDb Redis connection success.`);
+  console.log(
+    `${colors.fg.cyan}[application] @connectRedisDb Redis connection success.`
+  );
 });
 
 export const connectRedisDb = async () => {

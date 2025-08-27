@@ -21,7 +21,14 @@ export const validateCreateProfile = (body: any) => {
 };
 
 export const validateUpdateProfile = (body: any) => {
-  const allowedKeys = ['firstName', 'lastName', 'birthdate', 'address', 'contact', 'gender'];
+  const allowedKeys = [
+    'firstName',
+    'lastName',
+    'birthdate',
+    'address',
+    'contact',
+    'gender',
+  ];
 
   const schema = Joi.object({
     keys: Joi.array()

@@ -14,7 +14,7 @@ import { getEnv } from '../config/env.config';
 export const allowApiAccessMiddleware = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ): Promise<void | Response> => {
   const accessKey = req.headers['nodex-access-key'];
   const secretKey = req.headers['nodex-secret-key'];
@@ -28,7 +28,10 @@ export const allowApiAccessMiddleware = async (
   }
 
   const env = await getEnv();
-  if (accessKey?.toString().trim() === env.NODEX_ACCESS_KEY && secretKey?.toString().trim() === env.NODEX_SECRET_KEY) {
+  if (
+    accessKey?.toString().trim() === env.NODEX_ACCESS_KEY &&
+    secretKey?.toString().trim() === env.NODEX_SECRET_KEY
+  ) {
     next();
   } else {
     return res.status(403).json(statuses['0070']);

@@ -16,7 +16,7 @@ import { IRequestLog } from '../interfaces/schema/schema.interface';
 export const requestLoggerMiddleware = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ): Promise<void | Response> => {
   const start = Date.now();
 

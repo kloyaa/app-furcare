@@ -9,7 +9,11 @@ import {
   ListBucketsCommand,
 } from '@aws-sdk/client-s3';
 import { DynamoDBClient, DynamoDBClientConfig } from '@aws-sdk/client-dynamodb';
-import { SESClient, SendEmailCommand, SESClientConfig } from '@aws-sdk/client-ses';
+import {
+  SESClient,
+  SendEmailCommand,
+  SESClientConfig,
+} from '@aws-sdk/client-ses';
 import {
   SecretsManagerClient,
   GetSecretValueCommand,
@@ -53,9 +57,13 @@ export class AWSService {
     };
 
     this.s3Client = new S3Client(clientConfig as S3ClientConfig);
-    this.dynamoClient = new DynamoDBClient(clientConfig as DynamoDBClientConfig);
+    this.dynamoClient = new DynamoDBClient(
+      clientConfig as DynamoDBClientConfig
+    );
     this.sesClient = new SESClient(clientConfig as SESClientConfig);
-    this.secretsManagerClient = new SecretsManagerClient(clientConfig as SecretsManagerClientConfig);
+    this.secretsManagerClient = new SecretsManagerClient(
+      clientConfig as SecretsManagerClientConfig
+    );
   }
 
   // S3 Methods
@@ -107,7 +115,11 @@ export class AWSService {
 
       return Buffer.concat(chunks);
     } catch (error) {
-      throw new Error(`S3 Download failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(
+        `S3 Download failed: ${
+          error instanceof Error ? error.message : 'Unknown error'
+        }`
+      );
     }
   }
 
@@ -121,7 +133,11 @@ export class AWSService {
       await this.s3Client.send(command);
       return true;
     } catch (error) {
-      throw new Error(`S3 Delete failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(
+        `S3 Delete failed: ${
+          error instanceof Error ? error.message : 'Unknown error'
+        }`
+      );
     }
   }
 
@@ -142,7 +158,11 @@ export class AWSService {
         nextContinuationToken: result.NextContinuationToken,
       };
     } catch (error) {
-      throw new Error(`S3 List failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(
+        `S3 List failed: ${
+          error instanceof Error ? error.message : 'Unknown error'
+        }`
+      );
     }
   }
 
@@ -163,11 +183,18 @@ export class AWSService {
         metadata: result.Metadata,
       };
     } catch (error) {
-      throw new Error(`S3 Head Object failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(
+        `S3 Head Object failed: ${
+          error instanceof Error ? error.message : 'Unknown error'
+        }`
+      );
     }
   }
 
-  async generatePresignedUrl(options: S3DownloadOptions, expiresIn: number = 3600): Promise<string> {
+  async generatePresignedUrl(
+    options: S3DownloadOptions,
+    expiresIn: number = 3600
+  ): Promise<string> {
     try {
       const command = new GetObjectCommand({
         Bucket: options.bucket,
@@ -176,7 +203,11 @@ export class AWSService {
 
       return await getSignedUrl(this.s3Client, command, { expiresIn });
     } catch (error) {
-      throw new Error(`Presigned URL generation failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(
+        `Presigned URL generation failed: ${
+          error instanceof Error ? error.message : 'Unknown error'
+        }`
+      );
     }
   }
 
@@ -205,7 +236,11 @@ export class AWSService {
       const result = await this.sesClient.send(command);
       return { messageId: result.MessageId };
     } catch (error) {
-      throw new Error(`SES Send Email failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(
+        `SES Send Email failed: ${
+          error instanceof Error ? error.message : 'Unknown error'
+        }`
+      );
     }
   }
 
@@ -229,18 +264,26 @@ export class AWSService {
         return result.SecretString;
       }
     } catch (error) {
-      throw new Error(`Get Secret failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(
+        `Get Secret failed: ${
+          error instanceof Error ? error.message : 'Unknown error'
+        }`
+      );
     }
   }
 
-  async createSecret(options: SecretsManagerOptions): Promise<{ arn: string; name: string; versionId: string }> {
+  async createSecret(
+    options: SecretsManagerOptions
+  ): Promise<{ arn: string; name: string; versionId: string }> {
     try {
       if (!options.secretValue) {
         throw new Error('Secret value is required for creation');
       }
 
       const secretString =
-        typeof options.secretValue === 'string' ? options.secretValue : JSON.stringify(options.secretValue);
+        typeof options.secretValue === 'string'
+          ? options.secretValue
+          : JSON.stringify(options.secretValue);
 
       const command = new CreateSecretCommand({
         Name: options.secretName,
@@ -257,18 +300,26 @@ export class AWSService {
         versionId: result.VersionId || '',
       };
     } catch (error) {
-      throw new Error(`Create Secret failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(
+        `Create Secret failed: ${
+          error instanceof Error ? error.message : 'Unknown error'
+        }`
+      );
     }
   }
 
-  async updateSecret(options: SecretsManagerOptions): Promise<{ arn: string; name: string; versionId: string }> {
+  async updateSecret(
+    options: SecretsManagerOptions
+  ): Promise<{ arn: string; name: string; versionId: string }> {
     try {
       if (!options.secretValue) {
         throw new Error('Secret value is required for update');
       }
 
       const secretString =
-        typeof options.secretValue === 'string' ? options.secretValue : JSON.stringify(options.secretValue);
+        typeof options.secretValue === 'string'
+          ? options.secretValue
+          : JSON.stringify(options.secretValue);
 
       const command = new UpdateSecretCommand({
         SecretId: options.secretName,
@@ -285,13 +336,17 @@ export class AWSService {
         versionId: result.VersionId || '',
       };
     } catch (error) {
-      throw new Error(`Update Secret failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(
+        `Update Secret failed: ${
+          error instanceof Error ? error.message : 'Unknown error'
+        }`
+      );
     }
   }
 
   async deleteSecret(
     secretName: string,
-    forceDelete: boolean = false,
+    forceDelete: boolean = false
   ): Promise<{ arn: string; deletionDate: Date | undefined }> {
     try {
       const command = new DeleteSecretCommand({
@@ -306,7 +361,11 @@ export class AWSService {
         deletionDate: result.DeletionDate,
       };
     } catch (error) {
-      throw new Error(`Delete Secret failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(
+        `Delete Secret failed: ${
+          error instanceof Error ? error.message : 'Unknown error'
+        }`
+      );
     }
   }
 
@@ -324,17 +383,27 @@ export class AWSService {
         nextToken: result.NextToken,
       };
     } catch (error) {
-      throw new Error(`List Secrets failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(
+        `List Secrets failed: ${
+          error instanceof Error ? error.message : 'Unknown error'
+        }`
+      );
     }
   }
 
   // Utility method to safely get secret with fallback
-  async getSecretOrDefault<T = string>(secretName: string, defaultValue: T): Promise<T> {
+  async getSecretOrDefault<T = string>(
+    secretName: string,
+    defaultValue: T
+  ): Promise<T> {
     try {
       const secret = await this.getSecret(secretName);
       return secret as T;
     } catch (error) {
-      console.warn(`Failed to get secret ${secretName}, using default value:`, error);
+      console.warn(
+        `Failed to get secret ${secretName}, using default value:`,
+        error
+      );
       return defaultValue;
     }
   }

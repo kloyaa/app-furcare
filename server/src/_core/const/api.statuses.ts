@@ -76,7 +76,8 @@ export const statuses = {
     code: '0061',
   },
   '0062': {
-    message: "Oops! Your password and confirmation didn't match. Please re-enter to match them up.",
+    message:
+      "Oops! Your password and confirmation didn't match. Please re-enter to match them up.",
     code: '0062',
   },
   '0063': {
@@ -88,7 +89,8 @@ export const statuses = {
     code: '0064',
   },
   '0065': {
-    message: "You can't use your previous password as your new one. Let's keep it fresh and secure!",
+    message:
+      "You can't use your previous password as your new one. Let's keep it fresh and secure!",
     code: '0065',
   },
   '0070': {
@@ -155,7 +157,8 @@ export const statuses = {
     code: '0300',
   },
   '500': {
-    message: 'Our server is currently undergoing maintenance to improve your experience. Please try again later.',
+    message:
+      'Our server is currently undergoing maintenance to improve your experience. Please try again later.',
     code: '500',
   },
   '501': {

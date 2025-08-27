@@ -21,7 +21,7 @@ const petSchema = new Schema<IPet>(
       required: true,
     },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 const Pet = model<IPet>('Pet', petSchema);

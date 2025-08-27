@@ -29,6 +29,6 @@ export const swaggerSetup = (app: any) => {
     swaggerUi.setup(swaggerDocs, {
       customCss: '.swagger-ui .topbar { display: none }',
       explorer: true,
-    }),
+    })
   );
 };
