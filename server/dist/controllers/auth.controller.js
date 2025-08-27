@@ -18,9 +18,6 @@ const odm_1 = require("../_core/utils/odm");
 const role_schema_1 = require("../schema/role.schema");
 const user_role_schema_1 = require("../schema/user_role.schema");
 const mongoose_1 = require("mongoose");
-// import { Role } from '../schema/role.schema';
-// import { RoleName } from '../_core/enum/roles.enum';
-// import { UserRole } from '../schema/user_role.schema';
 const login = async (req, res) => {
     const error = (0, auth_validator_1.validateLogin)(req.body);
     if (error) {
