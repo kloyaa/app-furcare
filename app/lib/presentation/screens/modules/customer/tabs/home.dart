@@ -157,7 +157,9 @@ class _MainTabScreenState extends State<MainTabScreen>
       // Dismiss loading dialog if still showing
       LocationDialogUtils.dismissDialog(context);
 
-      print('Error launching map: $e');
+      if (kDebugMode) {
+        print('Error launching map: $e');
+      }
       LocationDialogUtils.showGenericErrorDialog(
         context,
         'Failed to open directions. Please try again.',
@@ -166,55 +168,55 @@ class _MainTabScreenState extends State<MainTabScreen>
   }
 
   // Alternative version with retry functionality
-  void _handleLaunchMapWithRetry() async {
-    await _attemptLaunchMap();
-  }
+  // void _handleLaunchMapWithRetry() async {
+  //   await _attemptLaunchMap();
+  // }
 
-  Future<void> _attemptLaunchMap() async {
-    try {
-      LocationDialogUtils.showLoadingDialog(
-        context,
-        message: 'Getting your location...',
-      );
+  // Future<void> _attemptLaunchMap() async {
+  //   try {
+  //     LocationDialogUtils.showLoadingDialog(
+  //       context,
+  //       message: 'Getting your location...',
+  //     );
 
-      final locationService = LocationService();
-      final Position? currentPosition = await locationService
-          .getCurrentLocation();
+  //     final locationService = LocationService();
+  //     final Position? currentPosition = await locationService
+  //         .getCurrentLocation();
 
-      if (!mounted) return;
+  //     if (!mounted) return;
 
-      LocationDialogUtils.dismissDialog(context);
+  //     LocationDialogUtils.dismissDialog(context);
 
-      if (currentPosition == null) {
-        LocationDialogUtils.showLocationErrorWithRetry(context, () {
-          _attemptLaunchMap(); // Retry the same method
-        });
-        return;
-      }
+  //     if (currentPosition == null) {
+  //       LocationDialogUtils.showLocationErrorWithRetry(context, () {
+  //         _attemptLaunchMap(); // Retry the same method
+  //       });
+  //       return;
+  //     }
 
-      final availableMaps = await MapLauncher.installedMaps;
+  //     final availableMaps = await MapLauncher.installedMaps;
 
-      if (availableMaps.isEmpty) {
-        if (!mounted) return;
-        LocationDialogUtils.showNoMapsDialog(context);
-        return;
-      }
+  //     if (availableMaps.isEmpty) {
+  //       if (!mounted) return;
+  //       LocationDialogUtils.showNoMapsDialog(context);
+  //       return;
+  //     }
 
-      await availableMaps.first.showDirections(
-        destinationTitle: "FurCare Veterinary Clinic",
-        directionsMode: DirectionsMode.driving,
-        origin: Coords(currentPosition.latitude, currentPosition.longitude),
-        destination: Coords(8.475588, 124.660488),
-      );
-    } catch (e) {
-      if (!mounted) return;
-      LocationDialogUtils.dismissDialog(context);
-      LocationDialogUtils.showGenericErrorDialog(
-        context,
-        'Failed to open directions. Please try again.',
-      );
-    }
-  }
+  //     await availableMaps.first.showDirections(
+  //       destinationTitle: "FurCare Veterinary Clinic",
+  //       directionsMode: DirectionsMode.driving,
+  //       origin: Coords(currentPosition.latitude, currentPosition.longitude),
+  //       destination: Coords(8.475588, 124.660488),
+  //     );
+  //   } catch (e) {
+  //     if (!mounted) return;
+  //     LocationDialogUtils.dismissDialog(context);
+  //     LocationDialogUtils.showGenericErrorDialog(
+  //       context,
+  //       'Failed to open directions. Please try again.',
+  //     );
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {

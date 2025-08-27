@@ -31,9 +31,6 @@ class _PetsScreenState extends State<PetsScreen> {
     });
   }
 
-  /*************  ✨ Windsurf Command ⭐  *************/
-  /// Navigate to pet creation screen when the "Add Pet" button is clicked.
-  /*******  1a6ea3f8-0388-48c0-a635-5e6519475364  *******/
   void _handleNavigateCompanionCreationScreen() {
     context.push(CustomerRoute.createPet);
   }

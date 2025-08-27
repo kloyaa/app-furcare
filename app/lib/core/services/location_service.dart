@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 
 class LocationService {
@@ -32,14 +33,13 @@ class LocationService {
       }
 
       // Get current position
-      Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-        timeLimit: const Duration(seconds: 10),
-      );
+      Position position = await Geolocator.getCurrentPosition();
 
       return position;
     } catch (e) {
-      print('Error getting location: $e');
+      if (kDebugMode) {
+        print('Error getting location: $e');
+      }
       return null;
     }
   }
@@ -67,14 +67,13 @@ class LocationService {
         return null;
       }
 
-      Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: accuracy,
-        timeLimit: timeLimit,
-      );
+      Position position = await Geolocator.getCurrentPosition();
 
       return position;
     } catch (e) {
-      print('Error getting location with settings: $e');
+      if (kDebugMode) {
+        print('Error getting location with settings: $e');
+      }
       return null;
     }
   }
