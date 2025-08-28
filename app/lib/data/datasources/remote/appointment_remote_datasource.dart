@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:furcare_app/core/constants/api_constants.dart';
 import 'package:furcare_app/core/errors/exceptions.dart';
 import 'package:furcare_app/core/network/network_service.dart';
@@ -104,9 +103,6 @@ class AppointmentRemoteDatasourceImpl implements AppointmentRemoteDatasource {
         );
       }
     } catch (e) {
-      if (kDebugMode) {
-        print("e: $e");
-      }
       if (e is ServerException || e is NetworkException) {
         rethrow;
       }

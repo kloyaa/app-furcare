@@ -217,28 +217,14 @@ class _MyAppointmentsDialogState extends State<MyAppointmentsDialog>
                     ),
                   ),
                   const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CustomText.body(
-                          service.name,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            color: colorScheme.onSurface,
-                          ),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          'Upcoming appointment',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: colorScheme.onSurface.withAlpha(153),
-                          ),
-                        ),
-                      ],
+                  CustomText.body(
+                    service.name,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      color: colorScheme.onSurface,
                     ),
                   ),
+                  Spacer(),
                   Icon(
                     Icons.arrow_forward_ios,
                     size: 16,

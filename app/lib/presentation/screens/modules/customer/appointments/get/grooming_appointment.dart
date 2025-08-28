@@ -11,7 +11,6 @@ import 'package:furcare_app/presentation/widgets/common/custom_appbar.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
 import 'package:furcare_app/presentation/widgets/dialog/custom_grooming_details_dialog.dart';
 import 'package:go_router/go_router.dart';
-import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 class AppointmentsScreen extends StatefulWidget {
@@ -54,9 +53,6 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
 
   @override
   Widget build(BuildContext context) {
-    var logger = Logger();
-    logger.i("AppointmentsScreen", stackTrace: StackTrace.empty);
-
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final colorScheme = Theme.of(context).colorScheme;
 

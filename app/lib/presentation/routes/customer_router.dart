@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:furcare_app/core/helpers/navigation_logger.dart';
 import 'package:furcare_app/presentation/screens/modules/customer/accounts/accounts.dart';
 import 'package:furcare_app/presentation/screens/modules/customer/appointments/create/boarding_appointment.dart';
 import 'package:furcare_app/presentation/screens/modules/customer/appointments/create/home_service_appointment.dart';
@@ -220,4 +221,5 @@ final GoRouter customerRouter = GoRouter(
       ],
     ),
   ],
+  observers: [NavigationLogger()],
 );

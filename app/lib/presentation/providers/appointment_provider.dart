@@ -106,17 +106,11 @@ class AppointmentProvider with ChangeNotifier {
     final result = await _appointmentRepository.getBoardingAppointments();
     result.fold(
       (failure) {
-        if (kDebugMode) {
-          print('failure: $failure');
-        }
         clearError();
         _setGetBoardingAppointments(AppointmentState.error);
         _handleFailure(failure);
       },
       (response) {
-        if (kDebugMode) {
-          print('response: $response');
-        }
         _boardingAppointments = response;
         _setGetBoardingAppointments(AppointmentState.fetched);
       },

@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 
 class LocationService {
@@ -37,9 +36,6 @@ class LocationService {
 
       return position;
     } catch (e) {
-      if (kDebugMode) {
-        print('Error getting location: $e');
-      }
       return null;
     }
   }
@@ -71,9 +67,6 @@ class LocationService {
 
       return position;
     } catch (e) {
-      if (kDebugMode) {
-        print('Error getting location with settings: $e');
-      }
       return null;
     }
   }
