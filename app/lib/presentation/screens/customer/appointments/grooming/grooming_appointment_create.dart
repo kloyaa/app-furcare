@@ -6,7 +6,7 @@ import 'package:furcare_app/data/models/pet_models.dart';
 import 'package:furcare_app/data/models/pet_service.models.dart';
 import 'package:furcare_app/presentation/providers/pet_provider.dart';
 import 'package:furcare_app/presentation/providers/pet_service_provider.dart';
-import 'package:furcare_app/presentation/screens/modules/customer/appointments/create/widgets/grooming/skeleton.dart';
+import 'package:furcare_app/presentation/screens/customer/appointments/widgets/grooming/skeleton.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_appbar.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_button.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_pet_selection.dart';

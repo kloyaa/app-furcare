@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:furcare_app/presentation/screens/modules/customer/tabs/widgets/appointments/shimmer.dart';
+import 'package:furcare_app/presentation/screens/customer/tabs/widgets/appointments/shimmer.dart';
 
 class CompanionSelectionSkeleton extends StatelessWidget {
   const CompanionSelectionSkeleton({super.key});

@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:furcare_app/core/helpers/navigation_logger.dart';
-import 'package:furcare_app/presentation/screens/modules/customer/accounts/accounts.dart';
-import 'package:furcare_app/presentation/screens/modules/customer/appointments/create/boarding_appointment.dart';
-import 'package:furcare_app/presentation/screens/modules/customer/appointments/create/home_service_appointment.dart';
-
-import 'package:furcare_app/presentation/screens/modules/customer/companions/companion_create.dart';
-import 'package:furcare_app/presentation/screens/modules/customer/companions/companion_edit.dart';
-import 'package:furcare_app/presentation/screens/modules/customer/companions/companions.dart';
-
-import 'package:furcare_app/presentation/screens/modules/customer/appointments/create/grooming_appointment.dart';
-import 'package:furcare_app/presentation/screens/modules/customer/home.dart';
-import 'package:furcare_app/presentation/screens/modules/customer/login.dart';
-import 'package:furcare_app/presentation/screens/modules/customer/pre_login.dart';
-import 'package:furcare_app/presentation/screens/modules/customer/privacy/privacy.dart';
-import 'package:furcare_app/presentation/screens/modules/customer/profile/customer_edit_profile.dart';
-import 'package:furcare_app/presentation/screens/modules/customer/profile/customer_profile.dart';
-import 'package:furcare_app/presentation/screens/modules/customer/profile/customer_profile_creation.dart';
-import 'package:furcare_app/presentation/screens/modules/customer/registration.dart';
+import 'package:furcare_app/presentation/screens/customer/tabs/settings_subitems/accounts.dart';
+import 'package:furcare_app/presentation/screens/customer/appointments/boarding/boarding_appointment_create.dart';
+import 'package:furcare_app/presentation/screens/customer/appointments/home_service/home_service_appointment_create.dart';
+import 'package:furcare_app/presentation/screens/customer/pets/pet_create.dart';
+import 'package:furcare_app/presentation/screens/customer/pets/pet_edit.dart';
+import 'package:furcare_app/presentation/screens/customer/pets/pets.dart';
+import 'package:furcare_app/presentation/screens/customer/appointments/grooming/grooming_appointment_create.dart';
+import 'package:furcare_app/presentation/screens/customer/home.dart';
+import 'package:furcare_app/presentation/screens/customer/login.dart';
+import 'package:furcare_app/presentation/screens/customer/pre_login.dart';
+import 'package:furcare_app/presentation/screens/customer/tabs/settings_subitems/security.dart';
+import 'package:furcare_app/presentation/screens/customer/profile/profile_edit.dart';
+import 'package:furcare_app/presentation/screens/customer/profile/profile.dart';
+import 'package:furcare_app/presentation/screens/customer/profile/profile_create.dart';
+import 'package:furcare_app/presentation/screens/customer/registration.dart';
 import 'package:furcare_app/presentation/screens/shared/activity_log.dart';
 import 'package:furcare_app/presentation/screens/shared/change_password.dart';
 import 'package:furcare_app/presentation/screens/shared/change_theme.dart';
@@ -24,9 +22,9 @@ import 'package:furcare_app/presentation/screens/shared/splash_screen.dart';
 import 'package:go_router/go_router.dart';
 
 // Named imports
-import 'package:furcare_app/presentation/screens/modules/customer/appointments/get/grooming_appointment.dart'
+import 'package:furcare_app/presentation/screens/customer/appointments/grooming/grooming_appointment_list.dart'
     as grooming;
-import 'package:furcare_app/presentation/screens/modules/customer/appointments/get/boarding_appointment.dart'
+import 'package:furcare_app/presentation/screens/customer/appointments/boarding/boarding_appointment_list.dart'
     as boarding;
 // import 'package:furcare_app/presentation/screens/modules/customer/appointments/create/home_service_appointment.dart'
 //     as homeService;
