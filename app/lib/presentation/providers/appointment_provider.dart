@@ -83,6 +83,28 @@ class AppointmentProvider with ChangeNotifier {
     );
   }
 
+  Future<void> createBoardingAppointmentExtension(
+    AppointmentExtensionRequest request,
+  ) async {
+    clearError();
+    _setCreateBoardingAppointment(AppointmentState.loading);
+
+    final result = await _appointmentRepository
+        .createBoardingAppointmentExtension(request);
+
+    result.fold(
+      (failure) {
+        print(failure.message);
+        _setCreateBoardingAppointment(AppointmentState.error);
+        _handleFailure(failure);
+      },
+      (response) {
+        print(response);
+        _setCreateBoardingAppointment(AppointmentState.created);
+      },
+    );
+  }
+
   Future<void> getGroomingAppointments() async {
     _setGettGroomingAppointments(AppointmentState.loading);
 
@@ -106,17 +128,11 @@ class AppointmentProvider with ChangeNotifier {
     final result = await _appointmentRepository.getBoardingAppointments();
     result.fold(
       (failure) {
-        if (kDebugMode) {
-          print('failure: $failure');
-        }
         clearError();
         _setGetBoardingAppointments(AppointmentState.error);
         _handleFailure(failure);
       },
       (response) {
-        if (kDebugMode) {
-          print('response: $response');
-        }
         _boardingAppointments = response;
         _setGetBoardingAppointments(AppointmentState.fetched);
       },

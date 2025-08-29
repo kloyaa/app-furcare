@@ -65,6 +65,21 @@ export const validateCreateBoardingApplication = (body: any) => {
   return error;
 };
 
+export const validateCreateBoardingApplicationExtension = (body: any) => {
+  const schema = Joi.object({
+    application: Joi.string()
+      .trim()
+      .required()
+      .custom(CustomJoiHelpers.isValidObjectId, 'ObjectId validation'),
+    count: Joi
+      .number()
+      .required()
+  });
+
+  const { error } = schema.validate(body);
+  return error;
+};
+
 export const validateCreateHomeServiceApplication = (body: any) => {
   const schema = Joi.object({
     pet: Joi.string()

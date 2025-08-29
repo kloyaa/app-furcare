@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:furcare_app/core/constants/api_constants.dart';
 import 'package:furcare_app/core/errors/exceptions.dart';
 import 'package:furcare_app/core/network/network_service.dart';
@@ -14,6 +13,10 @@ abstract class AppointmentRemoteDatasource {
 
   Future<DefaultResponse> createBoardingAppointment(
     BoardingAppointmentRequest request,
+  );
+
+  Future<DefaultResponse> createBoardingAppointmentExtension(
+    AppointmentExtensionRequest request,
   );
 
   Future<List<GroomingAppointment>> getGroomingAppointments();
@@ -104,9 +107,6 @@ class AppointmentRemoteDatasourceImpl implements AppointmentRemoteDatasource {
         );
       }
     } catch (e) {
-      if (kDebugMode) {
-        print("e: $e");
-      }
       if (e is ServerException || e is NetworkException) {
         rethrow;
       }
@@ -140,6 +140,36 @@ class AppointmentRemoteDatasourceImpl implements AppointmentRemoteDatasource {
       }
       throw ServerException(
         message: 'An error occurred during creating appointment',
+      );
+    }
+  }
+
+  @override
+  Future<DefaultResponse> createBoardingAppointmentExtension(
+    AppointmentExtensionRequest request,
+  ) async {
+    try {
+      final response = await _networkService.post(
+        data: request.toJson(),
+        "${ApiConstants.appointment}/boarding/extension",
+        options: Options(headers: await _authHeaderProvider.getHeaders()),
+      );
+      if (response.statusCode == 200) {
+        return DefaultResponse.fromJson(response.data);
+      } else {
+        throw ServerException(
+          message:
+              response.data?['message'] ??
+              'Error creating appointment extension',
+          code: response.data?['code'],
+        );
+      }
+    } catch (e) {
+      if (e is ServerException || e is NetworkException) {
+        rethrow;
+      }
+      throw ServerException(
+        message: 'An error occurred during creating appointment extension',
       );
     }
   }

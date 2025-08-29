@@ -6,10 +6,10 @@ import 'package:furcare_app/core/helpers/widget_helpers.dart';
 import 'package:furcare_app/data/models/appointment_models.dart';
 import 'package:furcare_app/presentation/providers/appointment_provider.dart';
 import 'package:furcare_app/presentation/routes/customer_router.dart';
-import 'package:furcare_app/presentation/screens/modules/customer/appointments/create/widgets/boarding/skeleton.dart';
+import 'package:furcare_app/presentation/screens/customer/appointments/widgets/grooming/skeleton.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_appbar.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
-import 'package:furcare_app/presentation/widgets/dialog/custom_boarding_details_dialog.dart';
+import 'package:furcare_app/presentation/widgets/dialog/custom_grooming_details_dialog.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -40,7 +40,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
 
     Future.microtask(() {
       if (mounted) {
-        context.read<AppointmentProvider>().getBoardingAppointments();
+        context.read<AppointmentProvider>().getGroomingAppointments();
       }
     });
   }
@@ -61,15 +61,15 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
       body: RefreshIndicator(
         onRefresh: () async {
           HapticFeedback.lightImpact();
-          await context.read<AppointmentProvider>().getBoardingAppointments();
+          await context.read<AppointmentProvider>().getGroomingAppointments();
         },
         color: colorScheme.primary,
         child: Consumer<AppointmentProvider>(
           builder: (context, appointmentProvider, child) {
-            final appointments = appointmentProvider.boardingAppointments;
+            final appointments = appointmentProvider.groomingAppointments;
 
             if (appointmentProvider.isFetchingAppointments) {
-              return const BoardingApplicationsSkeleton();
+              return const GroomingApplicationsSkeleton();
             }
 
             if (appointments.isEmpty) {
@@ -111,12 +111,12 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           HapticFeedback.lightImpact();
-          context.push(CustomerRoute.create.boarding);
+          context.push(CustomerRoute.create.grooming);
         },
         backgroundColor: colorScheme.primary,
         foregroundColor: colorScheme.onPrimary,
         elevation: 4,
-        heroTag: "boarding_fab",
+        heroTag: "grooming_fab",
         child: Icon(Icons.add_rounded),
       ),
     );
@@ -124,13 +124,13 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
 
   void _showAppointmentDialog(
     BuildContext context,
-    BoardingAppointment appointment,
+    GroomingAppointment appointment,
   ) {
     HapticFeedback.mediumImpact();
     showDialog(
       context: context,
       builder: (context) =>
-          BoardingAppointmentPreviewDialog(appointment: appointment),
+          GroomingAppointmentPreviewDialog(appointment: appointment),
     );
   }
 }
@@ -153,14 +153,14 @@ class _EmptyState extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
             ),
             child: Icon(
-              Icons.hotel_outlined,
+              Icons.pets_outlined,
               size: 64,
               color: colorScheme.primary.withAlpha(179),
             ),
           ),
           const SizedBox(height: 24),
           CustomText.body(
-            'No boarding appointments found',
+            'No appointments found',
             style: TextStyle(
               color: colorScheme.onSurface.withAlpha(179),
               fontSize: 18,
@@ -169,7 +169,7 @@ class _EmptyState extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'Create your first boarding appointment',
+            'Create your first grooming appointment',
             style: TextStyle(
               color: colorScheme.onSurface.withAlpha(128),
               fontSize: 14,
@@ -182,7 +182,7 @@ class _EmptyState extends StatelessWidget {
 }
 
 class _AppointmentCard extends StatefulWidget {
-  final BoardingAppointment appointment;
+  final GroomingAppointment appointment;
   final bool isDark;
   final ColorScheme colorScheme;
   final VoidCallback onTap;
@@ -246,11 +246,6 @@ class _AppointmentCardState extends State<_AppointmentCard>
 
   @override
   Widget build(BuildContext context) {
-    final pet = widget.appointment.pet;
-    final schedule = widget.appointment.schedule;
-    final scheduleDatetime = DateTime.parse(schedule.date);
-    final formattedDate = formatDateToLong(scheduleDatetime);
-
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       child: ScaleTransition(
@@ -310,7 +305,7 @@ class _AppointmentCardState extends State<_AppointmentCard>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              pet.name,
+                              widget.appointment.pet.name,
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -318,18 +313,16 @@ class _AppointmentCardState extends State<_AppointmentCard>
                               ),
                             ),
                             Text(
-                              '${pet.specie} • ${pet.gender}',
+                              '${widget.appointment.pet.specie} • ${widget.appointment.pet.gender}',
                               style: TextStyle(
                                 fontSize: 14,
-                                color: widget.colorScheme.onSurface.withAlpha(
-                                  179,
-                                ),
+                                color: widget.colorScheme.onSurface
+                                  ..withAlpha(18),
                               ),
                             ),
                           ],
                         ),
                       ),
-
                       Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 8,
@@ -381,41 +374,6 @@ class _AppointmentCardState extends State<_AppointmentCard>
                           ),
                         )
                       : SizedBox(height: 15),
-                  // Boarding specific details
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.hotel,
-                        size: 16,
-                        color: widget.colorScheme.onSurface.withAlpha(153),
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        '${widget.appointment.cage.size} Cage',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: widget.colorScheme.onSurface.withAlpha(204),
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Icon(
-                        Icons.schedule,
-                        size: 16,
-                        color: widget.colorScheme.onSurface.withAlpha(153),
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        '${schedule.days} days',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: widget.colorScheme.onSurface.withAlpha(204),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 8),
-
                   Row(
                     children: [
                       Icon(
@@ -425,19 +383,13 @@ class _AppointmentCardState extends State<_AppointmentCard>
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        '$formattedDate at ${schedule.time}',
+                        widget.appointment.schedule.schedule,
                         style: TextStyle(
                           fontSize: 14,
                           color: widget.colorScheme.onSurface.withAlpha(204),
                         ),
                       ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 8),
-
-                  Row(
-                    children: [
+                      const SizedBox(width: 16),
                       Icon(
                         Icons.location_on_rounded,
                         size: 16,
@@ -449,14 +401,13 @@ class _AppointmentCardState extends State<_AppointmentCard>
                           widget.appointment.branch.name,
                           style: TextStyle(
                             fontSize: 14,
-                            color: widget.colorScheme.onSurface.withAlpha(204),
+                            color: widget.colorScheme.onSurface..withAlpha(20),
                           ),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ],
                   ),
-
                   const SizedBox(height: 12),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

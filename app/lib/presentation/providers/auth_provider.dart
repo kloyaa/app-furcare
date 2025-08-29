@@ -174,10 +174,6 @@ class AuthProvider extends ChangeNotifier {
     _setState(AuthState.error);
     _errorMessage = failure.message;
     _errorCode = failure.code;
-
-    if (kDebugMode) {
-      print("failure: $failure");
-    }
   }
 
   // Set state and notify listeners

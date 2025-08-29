@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:furcare_app/core/constants/padding_constant.dart';
@@ -13,7 +12,6 @@ import 'package:furcare_app/presentation/widgets/dialog/custom_location_dialog.d
 import 'package:furcare_app/presentation/widgets/dialog/custom_my_appointments_dialog.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
-import 'package:logger/logger.dart';
 import 'package:map_launcher/map_launcher.dart';
 import 'package:provider/provider.dart';
 
@@ -41,9 +39,6 @@ class _MainTabScreenState extends State<MainTabScreen>
   };
 
   void _handleNavigateToPetServices(String code) {
-    if (kDebugMode) {
-      print("code: $code");
-    }
     if (code == "PET_GROOMING") {
       context.push('/appointments/grooming');
     }
@@ -156,10 +151,6 @@ class _MainTabScreenState extends State<MainTabScreen>
       if (!mounted) return;
       // Dismiss loading dialog if still showing
       LocationDialogUtils.dismissDialog(context);
-
-      if (kDebugMode) {
-        print('Error launching map: $e');
-      }
       LocationDialogUtils.showGenericErrorDialog(
         context,
         'Failed to open directions. Please try again.',
@@ -220,9 +211,6 @@ class _MainTabScreenState extends State<MainTabScreen>
 
   @override
   Widget build(BuildContext context) {
-    var logger = Logger();
-    logger.i("MainTabScreen", stackTrace: StackTrace.empty);
-
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 

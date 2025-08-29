@@ -72,11 +72,7 @@ class NetworkService {
         responseHeader: true,
         responseBody: true,
         error: true,
-        logPrint: (object) {
-          if (kDebugMode) {
-            print(object);
-          }
-        },
+        logPrint: (object) {},
       ),
     );
   }
@@ -138,9 +134,6 @@ class NetworkService {
         options: options,
       );
     } on DioException catch (e) {
-      if (kDebugMode) {
-        print(e.requestOptions.baseUrl);
-      }
       throw _handleDioException(e);
     }
   }

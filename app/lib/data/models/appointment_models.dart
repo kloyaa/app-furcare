@@ -89,6 +89,23 @@ class BoardingAppointmentRequest extends Equatable {
   ];
 }
 
+class AppointmentExtensionRequest extends Equatable {
+  final String application;
+  final int count;
+
+  const AppointmentExtensionRequest({
+    required this.application,
+    required this.count,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {'application': application, 'count': count};
+  }
+
+  @override
+  List<Object?> get props => [application, count];
+}
+
 class BoardingSchedule extends Equatable {
   final String date;
   final String time;

@@ -2,6 +2,7 @@ import { statuses } from '../_core/const/api.statuses';
 import { TRequest } from '../_core/interfaces/overrides.interface';
 import {
   validateCreateBoardingApplication,
+  validateCreateBoardingApplicationExtension,
   validateCreateGroomingApplication,
   validateCreateHomeServiceApplication,
 } from '../_core/validators/application.validator';
@@ -186,6 +187,70 @@ export const createBoardingApplication = async (
     return res.status(201).json(statuses['00']);
   } catch (err) {
     console.log('@createBoardingApplication error', err);
+    return handleMongooseError(err, res);
+  }
+};
+
+export const createBoardingApplicationExtension = async (
+  req: TRequest,
+  res: Response
+): Promise<any> => {
+  const error = validateCreateBoardingApplicationExtension(req.body);
+  if (error) {
+    return res.status(400).json({
+      ...statuses['501'],
+      message: error.details[0].message.replace(/['"]/g, ''),
+    });
+  }
+
+  try {
+    const { application: id, count } = req.body;
+
+    const application = await BoardingApplication.findById(id);
+
+    if (!application) {
+      return res.status(404).json({
+        ...statuses['02'],
+        message: 'Boarding application not found.',
+      });
+    }
+
+    // Get the cage information to calculate additional price
+    const cage = await PetCage.findById(application.cage);
+    if (!cage) {
+      return res.status(404).json({
+        ...statuses['02'],
+        message: 'Associated cage not found.',
+      });
+    }
+
+    // Calculate additional price for the extension
+    const extensionPrice = cage.price * count;
+
+    // Update the application with extended days and new total price
+    const updatedApplication = await BoardingApplication.findByIdAndUpdate(
+      id,
+      {
+        $inc: {
+          'schedule.days': count,
+          totalPrice: extensionPrice,
+        },
+      },
+      { new: true }
+    );
+
+    console.log(
+      '@createBoardingApplicationExtension updatedApplication',
+      updatedApplication)
+
+    emitter.emit(EventName.ACTIVITY, {
+      user: req.user.id as any,
+      description: ActivityType.APPLICATION_BOARDING_EXTENDED,
+    } as IActivity);
+
+    return res.status(201).json(statuses['00']);
+  } catch (err) {
+    console.log('@createBoardingApplicationExtension error', err);
     return handleMongooseError(err, res);
   }
 };

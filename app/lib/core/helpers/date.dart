@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 
 bool isSameDate(DateTime a, DateTime b) {
@@ -23,9 +22,6 @@ DateTime parseTimeString(String timeString, DateTime baseDate) {
       parsedTime.minute,
     );
   } catch (e) {
-    if (kDebugMode) {
-      print('Error parsing time string: "$timeString" — $e');
-    }
     return DateTime(2000); // fallback, will be filtered out
   }
 }

@@ -49,17 +49,11 @@ class BranchProvider with ChangeNotifier {
 
     result.fold(
       (failure) {
-        if (kDebugMode) {
-          print('failure: $failure');
-        }
         _setFetchBranches(BranchState.error);
         _handleFailure(failure);
       },
       (branches) {
         _branches = branches;
-        if (kDebugMode) {
-          print('Branches: $_branches');
-        }
         _setFetchBranches(BranchState.created);
         // getPets();
       },
