@@ -23,6 +23,8 @@ export enum ActivityType {
   APPLICATION_BOARDING_SUBMITTED = 'Boarding application submitted',
   APPLICATION_BOARDING_UPDATED = 'Boarding application updated',
   APPLICATION_BOARDING_DELETED = 'Boarding application deleted',
+  APPLICATION_BOARDING_EXTENDED = 'Boarding application extended',
+
 
   APPLICATION_HOME_SERVICE_SUBMITTED = 'Home service application submitted',
   APPLICATION_HOME_SERVICE_UPDATED = 'Home service application updated',

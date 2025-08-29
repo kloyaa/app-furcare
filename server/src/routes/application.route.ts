@@ -6,6 +6,7 @@ import {
   getBoardingApplications,
   createHomeServiceApplication,
   getHomeServiceApplications,
+  createBoardingApplicationExtension
 } from '../controllers/application.controller';
 import { isAuthenticated } from '../_core/middlewares/jwt.middleware';
 
@@ -21,6 +22,11 @@ router.post(
   '/application/v1/boarding',
   commonMiddlewares,
   createBoardingApplication as any
+);
+router.post(
+  '/application/v1/boarding/extension',
+  commonMiddlewares,
+  createBoardingApplicationExtension as any
 );
 router.post(
   '/application/v1/home-service',

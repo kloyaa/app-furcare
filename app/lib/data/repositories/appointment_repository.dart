@@ -16,6 +16,10 @@ abstract class AppointmentRepository {
 
   Future<Either<Failure, List<GroomingAppointment>>> getGroomingAppointments();
   Future<Either<Failure, List<BoardingAppointment>>> getBoardingAppointments();
+
+  Future<Either<Failure, DefaultResponse>> createBoardingAppointmentExtension(
+    AppointmentExtensionRequest request,
+  );
 }
 
 class AppointmentRepositoryImpl implements AppointmentRepository {
@@ -85,6 +89,25 @@ class AppointmentRepositoryImpl implements AppointmentRepository {
       final response = await _remoteDataSource.createBoardingAppointment(
         request,
       );
+      return Right(response);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message, code: e.code));
+    } on NetworkException catch (e) {
+      return Left(NetworkFailure(message: e.message));
+    } on CacheException catch (e) {
+      return Left(CacheFailure(message: e.message));
+    } catch (e) {
+      return Left(ServerFailure(message: 'An unexpected error occurred'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, DefaultResponse>> createBoardingAppointmentExtension(
+    AppointmentExtensionRequest request,
+  ) async {
+    try {
+      final response = await _remoteDataSource
+          .createBoardingAppointmentExtension(request);
       return Right(response);
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message, code: e.code));
