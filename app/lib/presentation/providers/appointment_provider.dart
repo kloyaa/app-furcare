@@ -94,12 +94,10 @@ class AppointmentProvider with ChangeNotifier {
 
     result.fold(
       (failure) {
-        print(failure.message);
         _setCreateBoardingAppointment(AppointmentState.error);
         _handleFailure(failure);
       },
       (response) {
-        print(response);
         _setCreateBoardingAppointment(AppointmentState.created);
       },
     );

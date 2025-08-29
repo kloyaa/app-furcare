@@ -508,8 +508,9 @@ class _BoardingAppointmentPreviewDialogState
   }
 
   void _handleExtend() async {
-    if (_isProcessingExtension)
-      return; // Double-check to prevent concurrent calls
+    if (_isProcessingExtension) {
+      return;
+    }
 
     setState(() {
       _isProcessingExtension = true;
@@ -524,10 +525,6 @@ class _BoardingAppointmentPreviewDialogState
       await context
           .read<AppointmentProvider>()
           .createBoardingAppointmentExtension(payload);
-    } catch (e) {
-      // Handle error if needed
-      // You might want to show a snackbar or dialog here
-      print('Error extending appointment: $e');
     } finally {
       if (mounted) {
         setState(() {
