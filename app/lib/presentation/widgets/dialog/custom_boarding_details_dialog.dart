@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
 import 'package:furcare_app/core/helpers/formatters.dart';
+import 'package:furcare_app/core/utils/boarding.dart';
 import 'package:furcare_app/data/models/appointment_models.dart';
 import 'package:furcare_app/presentation/providers/appointment_provider.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
@@ -23,18 +24,84 @@ class BoardingAppointmentPreviewDialog extends StatefulWidget {
 
 class _BoardingAppointmentPreviewDialogState
     extends State<BoardingAppointmentPreviewDialog> {
-  int extensionDays = 0;
+  int _currentExtensionDays = 0;
   static const int maxExtensionDays = 12;
-  bool _isProcessingExtension = false; // Add this state variable
+  bool _isProcessingExtension = false;
+  int _lastSentExtensionDays = 0;
+
+  void _increaseExtension() {
+    if (_currentExtensionDays < maxExtensionDays && !_isProcessingExtension) {
+      setState(() {
+        _currentExtensionDays++;
+      });
+      _handleExtensionChange('add', 1);
+    }
+  }
+
+  void _decreaseExtension() {
+    if (_currentExtensionDays > 0 && !_isProcessingExtension) {
+      setState(() {
+        _currentExtensionDays--;
+      });
+      _handleExtensionChange('minus', 1);
+    }
+  }
+
+  Future<void> _handleExtensionChange(String type, int count) async {
+    if (_isProcessingExtension) return;
+
+    setState(() {
+      _isProcessingExtension = true;
+    });
+
+    try {
+      widget.onExtensionChanged?.call(_currentExtensionDays);
+
+      final payload = AppointmentExtensionRequest(
+        application: widget.appointment.id,
+        count: count,
+        type: type,
+      );
+
+      await context
+          .read<AppointmentProvider>()
+          .createBoardingAppointmentExtension(payload);
+
+      _lastSentExtensionDays = _currentExtensionDays;
+    } catch (e) {
+      setState(() {
+        _currentExtensionDays = _lastSentExtensionDays;
+      });
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to update extension: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isProcessingExtension = false;
+        });
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize with current extension days from API
+    _currentExtensionDays = widget.appointment.currentExtensionDays;
+    _lastSentExtensionDays = _currentExtensionDays;
+  }
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final screenSize = MediaQuery.of(context).size;
-
-    // Calculate total days and price with extension
-    final totalDays = widget.appointment.schedule.days + extensionDays;
-    final totalPrice = widget.appointment.cage.price * totalDays;
 
     return Dialog(
       backgroundColor: Colors.transparent,
@@ -55,306 +122,402 @@ class _BoardingAppointmentPreviewDialogState
         ),
         child: Column(
           children: [
-            // Header
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: colorScheme.primary.withAlpha(26),
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(12),
-                  topRight: Radius.circular(12),
-                ),
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.hotel_rounded,
-                    color: colorScheme.primary,
-                    size: 32,
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CustomText.title(
-                          'Boarding Appointment',
-                          size: AppTextSize.md,
-                        ),
-                        CustomText.body(
-                          'Scroll down to view details',
-                          size: AppTextSize.xs,
-                        ),
-                      ],
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    icon: Icon(Icons.close, color: colorScheme.onSurface),
-                  ),
-                ],
-              ),
-            ),
-            // Content
+            _buildHeader(colorScheme),
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Pet Information
-                    ...[
-                      _buildSection('Pet Information', [
-                        _buildInfoRow(
-                          'Name',
-                          widget.appointment.pet.name,
-                          Icons.pets,
-                          colorScheme,
-                        ),
-                        _buildInfoRow(
-                          'Species',
-                          widget.appointment.pet.specie,
-                          Icons.category,
-                          colorScheme,
-                        ),
-                        _buildInfoRow(
-                          'Gender',
-                          widget.appointment.pet.gender,
-                          Icons.info,
-                          colorScheme,
-                        ),
-                      ], colorScheme),
-                      const SizedBox(height: 24),
-                    ],
-
-                    // Boarding Details
-                    _buildSection('Boarding Details', [
-                      _buildInfoRow(
-                        'Check-in Date',
-                        formatDateToLong(
-                          DateTime.parse(widget.appointment.schedule.date),
-                        ),
-                        Icons.calendar_today,
-                        colorScheme,
-                      ),
-                      _buildInfoRow(
-                        'Check-in Time',
-                        widget.appointment.schedule.time,
-                        Icons.access_time,
-                        colorScheme,
-                      ),
-                      _buildInfoRow(
-                        'Original Duration',
-                        '${widget.appointment.schedule.days} days',
-                        Icons.schedule,
-                        colorScheme,
-                      ),
-                      _buildInfoRow(
-                        'Status',
-                        widget.appointment.status.toUpperCase(),
-                        Icons.flag,
-                        colorScheme,
-                      ),
-                    ], colorScheme),
+                    _buildPetInformation(colorScheme),
                     const SizedBox(height: 24),
-
-                    // Extension Section
-                    _buildSection('Extension of Stay', [
-                      _buildExtensionControl(colorScheme),
-                    ], colorScheme),
+                    _buildBoardingDetails(colorScheme),
                     const SizedBox(height: 24),
-
-                    // Cage Information
-                    _buildSection('Cage Information', [
-                      _buildInfoRow(
-                        'Size',
-                        widget.appointment.cage.size,
-                        Icons.hotel,
-                        colorScheme,
-                      ),
-                      _buildInfoRow(
-                        'Daily Rate',
-                        formatToPhpCurrency(widget.appointment.cage.price),
-                        Icons.attach_money,
-                        colorScheme,
-                      ),
-                      _buildInfoRow(
-                        'Current Occupancy',
-                        '${widget.appointment.cage.occupant}/${widget.appointment.cage.max}',
-                        Icons.group,
-                        colorScheme,
-                      ),
-                    ], colorScheme),
+                    _buildExtensionSection(colorScheme),
                     const SizedBox(height: 24),
-
-                    // Branch Information
-                    _buildSection('Branch Information', [
-                      _buildInfoRow(
-                        'Name',
-                        widget.appointment.branch.name,
-                        Icons.store,
-                        colorScheme,
-                      ),
-                      _buildInfoRow(
-                        'Address',
-                        widget.appointment.branch.address,
-                        Icons.location_on,
-                        colorScheme,
-                      ),
-                      _buildInfoRow(
-                        'Phone',
-                        widget.appointment.branch.phone,
-                        Icons.phone,
-                        colorScheme,
-                      ),
-                      _buildInfoRow(
-                        'Status',
-                        widget.appointment.branch.open ? 'Open' : 'Closed',
-                        Icons.schedule,
-                        colorScheme,
-                      ),
-                    ], colorScheme),
+                    _buildCageInformation(colorScheme),
                     const SizedBox(height: 24),
-
-                    // Health & Special Requirements
-                    _buildSection('Health & Requirements', [
-                      _buildHealthRow(
-                        'Anti-Rabies Vaccination Requested',
-                        widget.appointment.requestAntiRabiesVaccination,
-                        colorScheme,
-                      ),
-                    ], colorScheme),
-
-                    // Instructions
+                    _buildBranchInformation(colorScheme),
+                    const SizedBox(height: 24),
+                    _buildHealthRequirements(colorScheme),
                     if (widget.appointment.instructions.isNotEmpty) ...[
                       const SizedBox(height: 24),
-                      _buildSection('Special Instructions', [
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: colorScheme.surfaceContainerLow,
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: colorScheme.outline.withAlpha(51),
-                            ),
-                          ),
-                          child: Text(
-                            widget.appointment.instructions,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: colorScheme.onSurface,
-                              height: 1.5,
-                            ),
-                          ),
-                        ),
-                      ], colorScheme),
+                      _buildSpecialInstructions(colorScheme),
                     ],
-
-                    // Pricing Summary
-                    Container(
-                      margin: const EdgeInsets.symmetric(vertical: 24),
-                      child: Divider(color: colorScheme.outline.withAlpha(77)),
-                    ),
-
-                    _buildSection('Pricing Summary', [
-                      _buildPricingRow(
-                        'Cage (${widget.appointment.cage.size})',
-                        '${formatToPhpCurrency(widget.appointment.cage.price)} x ${widget.appointment.schedule.days} days',
-                        formatToPhpCurrency(
-                          widget.appointment.cage.price *
-                              widget.appointment.schedule.days,
-                        ),
-                        colorScheme,
-                      ),
-                      if (extensionDays > 0) ...[
-                        _buildPricingRow(
-                          'Extension',
-                          '${formatToPhpCurrency(widget.appointment.cage.price)} x $extensionDays days',
-                          formatToPhpCurrency(
-                            widget.appointment.cage.price * extensionDays,
-                          ),
-                          colorScheme,
-                        ),
-                      ],
-                      if (widget.appointment.requestAntiRabiesVaccination) ...[
-                        _buildPricingRow(
-                          'Anti-Rabies Vaccination',
-                          'Additional service',
-                          'Included',
-                          colorScheme,
-                        ),
-                      ],
-                    ], colorScheme),
-
-                    Container(
-                      margin: const EdgeInsets.symmetric(vertical: 16),
-                      child: Divider(
-                        color: colorScheme.primary.withAlpha(77),
-                        thickness: 2,
-                      ),
-                    ),
-
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: colorScheme.primaryContainer.withAlpha(77),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Total Duration',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  color: colorScheme.primary,
-                                ),
-                              ),
-                              Text(
-                                '$totalDays days',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  color: colorScheme.primary,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Total Amount',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: colorScheme.primary,
-                                ),
-                              ),
-                              Text(
-                                formatToPhpCurrency(totalPrice),
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: colorScheme.primary,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
+                    if (widget.appointment.hasExtensions) ...[
+                      const SizedBox(height: 24),
+                      _buildExtensionHistory(colorScheme),
+                    ],
+                    _buildPricingSummary(colorScheme),
                   ],
                 ),
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildHeader(ColorScheme colorScheme) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: colorScheme.primary.withAlpha(26),
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(12),
+          topRight: Radius.circular(12),
+        ),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.hotel_rounded, color: colorScheme.primary, size: 32),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CustomText.title('Boarding Appointment', size: AppTextSize.md),
+                CustomText.body(
+                  'Scroll down to view details',
+                  size: AppTextSize.xs,
+                ),
+              ],
+            ),
+          ),
+          IconButton(
+            onPressed: () => Navigator.of(context).pop(),
+            icon: Icon(Icons.close, color: colorScheme.onSurface),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPetInformation(ColorScheme colorScheme) {
+    return _buildSection('Pet Information', [
+      _buildInfoRow(
+        'Name',
+        widget.appointment.pet.name,
+        Icons.pets,
+        colorScheme,
+      ),
+      _buildInfoRow(
+        'Species',
+        widget.appointment.pet.specie,
+        Icons.category,
+        colorScheme,
+      ),
+      _buildInfoRow(
+        'Gender',
+        widget.appointment.pet.gender,
+        Icons.info,
+        colorScheme,
+      ),
+    ], colorScheme);
+  }
+
+  Widget _buildBoardingDetails(ColorScheme colorScheme) {
+    return _buildSection('Boarding Details', [
+      _buildInfoRow(
+        'Check-in Date',
+        formatDateToLong(DateTime.parse(widget.appointment.schedule.date)),
+        Icons.calendar_today,
+        colorScheme,
+      ),
+      _buildInfoRow(
+        'Check-in Time',
+        widget.appointment.schedule.time,
+        Icons.access_time,
+        colorScheme,
+      ),
+      _buildInfoRow(
+        'Original Duration',
+        '${widget.appointment.schedule.originalDays} days',
+        Icons.schedule,
+        colorScheme,
+      ),
+      _buildInfoRow(
+        'Current Duration',
+        '${widget.appointment.schedule.days} days',
+        Icons.update,
+        colorScheme,
+      ),
+      _buildInfoRow(
+        'Status',
+        widget.appointment.status.toUpperCase(),
+        Icons.flag,
+        colorScheme,
+      ),
+    ], colorScheme);
+  }
+
+  Widget _buildExtensionSection(ColorScheme colorScheme) {
+    return _buildSection('Extension of Stay', [
+      _buildExtensionControl(colorScheme),
+    ], colorScheme);
+  }
+
+  Widget _buildCageInformation(ColorScheme colorScheme) {
+    return _buildSection('Cage Information', [
+      _buildInfoRow(
+        'Size',
+        widget.appointment.cage.size,
+        Icons.hotel,
+        colorScheme,
+      ),
+      _buildInfoRow(
+        'Daily Rate',
+        formatToPhpCurrency(widget.appointment.cage.price),
+        Icons.attach_money,
+        colorScheme,
+      ),
+      _buildInfoRow(
+        'Current Occupancy',
+        '${widget.appointment.cage.occupant}/${widget.appointment.cage.max}',
+        Icons.group,
+        colorScheme,
+      ),
+    ], colorScheme);
+  }
+
+  Widget _buildBranchInformation(ColorScheme colorScheme) {
+    return _buildSection('Branch Information', [
+      _buildInfoRow(
+        'Name',
+        widget.appointment.branch.name,
+        Icons.store,
+        colorScheme,
+      ),
+      _buildInfoRow(
+        'Address',
+        widget.appointment.branch.address,
+        Icons.location_on,
+        colorScheme,
+      ),
+      _buildInfoRow(
+        'Phone',
+        widget.appointment.branch.phone,
+        Icons.phone,
+        colorScheme,
+      ),
+      _buildInfoRow(
+        'Status',
+        widget.appointment.branch.open ? 'Open' : 'Closed',
+        Icons.schedule,
+        colorScheme,
+      ),
+    ], colorScheme);
+  }
+
+  Widget _buildHealthRequirements(ColorScheme colorScheme) {
+    return _buildSection('Health & Requirements', [
+      _buildHealthRow(
+        'Anti-Rabies Vaccination Requested',
+        widget.appointment.requestAntiRabiesVaccination,
+        colorScheme,
+      ),
+    ], colorScheme);
+  }
+
+  Widget _buildSpecialInstructions(ColorScheme colorScheme) {
+    return _buildSection('Special Instructions', [
+      Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: colorScheme.surfaceContainerLow,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: colorScheme.outline.withAlpha(51)),
+        ),
+        child: Text(
+          widget.appointment.instructions,
+          style: TextStyle(
+            fontSize: 14,
+            color: colorScheme.onSurface,
+            height: 1.5,
+          ),
+        ),
+      ),
+    ], colorScheme);
+  }
+
+  Widget _buildExtensionHistory(ColorScheme colorScheme) {
+    return _buildSection('Extension History', [
+      Container(
+        decoration: BoxDecoration(
+          color: colorScheme.surfaceContainerLow,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: colorScheme.outline.withAlpha(51)),
+        ),
+        child: Column(
+          children: widget.appointment.extensions.asMap().entries.map((entry) {
+            final index = entry.key;
+            final extension = entry.value;
+            final isLast = index == widget.appointment.extensions.length - 1;
+
+            return Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                border: isLast
+                    ? null
+                    : Border(
+                        bottom: BorderSide(
+                          color: colorScheme.outline.withAlpha(26),
+                        ),
+                      ),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    extension.type == 'add'
+                        ? Icons.add_circle
+                        : Icons.remove_circle,
+                    color: extension.type == 'add' ? Colors.green : Colors.red,
+                    size: 20,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          extension.type == 'add'
+                              ? 'Added ${extension.days} day(s)'
+                              : 'Removed ${extension.days} day(s)',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: colorScheme.onSurface,
+                          ),
+                        ),
+                        Text(
+                          BoardingUtils.formatDateTimeToShort(
+                            extension.timestamp,
+                          ),
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: colorScheme.onSurface.withAlpha(153),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Text(
+                    '${extension.priceChange >= 0 ? '+' : ''}${formatToPhpCurrency(extension.priceChange.abs())}',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: extension.priceChange >= 0
+                          ? Colors.green
+                          : Colors.red,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }).toList(),
+        ),
+      ),
+    ], colorScheme);
+  }
+
+  Widget _buildPricingSummary(ColorScheme colorScheme) {
+    return Column(
+      children: [
+        Container(
+          margin: const EdgeInsets.symmetric(vertical: 24),
+          child: Divider(color: colorScheme.outline.withAlpha(77)),
+        ),
+        _buildSection('Pricing Summary', [
+          _buildPricingRow(
+            'Original Booking',
+            '${formatToPhpCurrency(widget.appointment.cage.price)} x ${widget.appointment.schedule.originalDays} days',
+            formatToPhpCurrency(widget.appointment.originalPrice),
+            colorScheme,
+          ),
+          if (widget.appointment.extensionDays > 0) ...[
+            _buildPricingRow(
+              'Extension Cost',
+              '${formatToPhpCurrency(widget.appointment.cage.price)} x ${widget.appointment.extensionDays} days',
+              formatToPhpCurrency(widget.appointment.extensionPrice),
+              colorScheme,
+            ),
+          ],
+          if (widget.appointment.requestAntiRabiesVaccination) ...[
+            _buildPricingRow(
+              'Anti-Rabies Vaccination',
+              'Additional service',
+              'Included',
+              colorScheme,
+            ),
+          ],
+        ], colorScheme),
+        Container(
+          margin: const EdgeInsets.symmetric(vertical: 16),
+          child: Divider(
+            color: colorScheme.primary.withAlpha(77),
+            thickness: 2,
+          ),
+        ),
+        _buildTotalSummary(colorScheme),
+      ],
+    );
+  }
+
+  Widget _buildTotalSummary(ColorScheme colorScheme) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: colorScheme.primaryContainer.withAlpha(77),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Total Duration',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: colorScheme.primary,
+                ),
+              ),
+              Text(
+                '${widget.appointment.schedule.days} days',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: colorScheme.primary,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Total Amount',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: colorScheme.primary,
+                ),
+              ),
+              Text(
+                formatToPhpCurrency(widget.appointment.totalPrice),
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: colorScheme.primary,
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -389,7 +552,7 @@ class _BoardingAppointmentPreviewDialogState
                       Text(
                         _isProcessingExtension
                             ? 'Processing...'
-                            : 'Max: $maxExtensionDays days',
+                            : 'Current: $_currentExtensionDays | Max: $maxExtensionDays days',
                         style: TextStyle(
                           fontSize: 12,
                           color: _isProcessingExtension
@@ -400,88 +563,12 @@ class _BoardingAppointmentPreviewDialogState
                     ],
                   ),
                 ),
-                Row(
-                  children: [
-                    // Decrease button
-                    IconButton(
-                      onPressed: extensionDays > 0 ? _decreaseExtension : null,
-                      icon: Icon(
-                        Icons.remove_circle_outline,
-                        color: extensionDays > 0
-                            ? colorScheme.primary
-                            : colorScheme.onSurface.withAlpha(77),
-                      ),
-                    ),
-                    Container(
-                      width: 60,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
-                      ),
-                      decoration: BoxDecoration(
-                        color: colorScheme.surface,
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: colorScheme.outline.withAlpha(77),
-                        ),
-                      ),
-                      child: Text(
-                        '$extensionDays',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: colorScheme.onSurface,
-                        ),
-                      ),
-                    ),
-                    // Increase button
-                    IconButton(
-                      onPressed: extensionDays < maxExtensionDays
-                          ? _increaseExtension
-                          : null,
-                      icon: Icon(
-                        Icons.add_circle_outline,
-                        color: extensionDays < maxExtensionDays
-                            ? colorScheme.primary
-                            : colorScheme.onSurface.withAlpha(77),
-                      ),
-                    ),
-                  ],
-                ),
+                _buildExtensionButtons(colorScheme),
               ],
             ),
-            if (extensionDays > 0) ...[
+            if (_currentExtensionDays > 0) ...[
               const SizedBox(height: 12),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: colorScheme.primaryContainer.withAlpha(51),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Extension Cost:',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: colorScheme.onSurface,
-                      ),
-                    ),
-                    Text(
-                      formatToPhpCurrency(
-                        widget.appointment.cage.price * extensionDays,
-                      ),
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: colorScheme.primary,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              _buildExtensionCostDisplay(colorScheme),
             ],
           ],
         ),
@@ -489,49 +576,84 @@ class _BoardingAppointmentPreviewDialogState
     );
   }
 
-  void _increaseExtension() {
-    if (extensionDays < maxExtensionDays && !_isProcessingExtension) {
-      setState(() {
-        extensionDays++;
-      });
-      _handleExtend();
-    }
+  Widget _buildExtensionButtons(ColorScheme colorScheme) {
+    return Row(
+      children: [
+        IconButton(
+          onPressed: _currentExtensionDays > 0 && !_isProcessingExtension
+              ? _decreaseExtension
+              : null,
+          icon: Icon(
+            Icons.remove_circle_outline,
+            color: _currentExtensionDays > 0 && !_isProcessingExtension
+                ? colorScheme.primary
+                : colorScheme.onSurface.withAlpha(77),
+          ),
+        ),
+        Container(
+          width: 60,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          decoration: BoxDecoration(
+            color: colorScheme.surface,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: colorScheme.outline.withAlpha(77)),
+          ),
+          child: Text(
+            '$_currentExtensionDays',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: colorScheme.onSurface,
+            ),
+          ),
+        ),
+        IconButton(
+          onPressed:
+              _currentExtensionDays < maxExtensionDays &&
+                  !_isProcessingExtension
+              ? _increaseExtension
+              : null,
+          icon: Icon(
+            Icons.add_circle_outline,
+            color:
+                _currentExtensionDays < maxExtensionDays &&
+                    !_isProcessingExtension
+                ? colorScheme.primary
+                : colorScheme.onSurface.withAlpha(77),
+          ),
+        ),
+      ],
+    );
   }
 
-  void _decreaseExtension() {
-    if (extensionDays > 0 && !_isProcessingExtension) {
-      setState(() {
-        extensionDays--;
-      });
-      _handleExtend();
-    }
-  }
-
-  void _handleExtend() async {
-    if (_isProcessingExtension) {
-      return;
-    }
-
-    setState(() {
-      _isProcessingExtension = true;
-    });
-
-    try {
-      widget.onExtensionChanged?.call(extensionDays);
-      final payload = AppointmentExtensionRequest(
-        application: widget.appointment.id,
-        count: extensionDays,
-      );
-      await context
-          .read<AppointmentProvider>()
-          .createBoardingAppointmentExtension(payload);
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isProcessingExtension = false;
-        });
-      }
-    }
+  Widget _buildExtensionCostDisplay(ColorScheme colorScheme) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: colorScheme.primaryContainer.withAlpha(51),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Current Extension Cost:',
+            style: TextStyle(fontSize: 14, color: colorScheme.onSurface),
+          ),
+          Text(
+            formatToPhpCurrency(
+              widget.appointment.cage.price * _currentExtensionDays,
+            ),
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: colorScheme.primary,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildSection(

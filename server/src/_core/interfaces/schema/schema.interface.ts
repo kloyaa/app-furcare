@@ -152,14 +152,21 @@ export interface IBoardingApplication extends Document {
   schedule: {
     date: Date;
     time: string;
-    days: string;
+    days: number;
+    originalDays: number;
   };
   totalPrice: number;
+  originalPrice: number;
   requestAntiRabiesVaccination: boolean;
   instructions: string;
   status: string;
   createdAt?: Date;
   updatedAt?: Date;
+  extensions: any[]
+
+  // Virtual fields
+  extensionDays: number;
+  extensionPrice: number;
 }
 
 export interface IHomeServiceApplication extends Document {

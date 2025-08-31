@@ -87,18 +87,16 @@ class AppointmentProvider with ChangeNotifier {
     AppointmentExtensionRequest request,
   ) async {
     clearError();
-    _setCreateBoardingAppointment(AppointmentState.loading);
 
     final result = await _appointmentRepository
         .createBoardingAppointmentExtension(request);
 
     result.fold(
       (failure) {
-        _setCreateBoardingAppointment(AppointmentState.error);
         _handleFailure(failure);
       },
       (response) {
-        _setCreateBoardingAppointment(AppointmentState.created);
+        getBoardingAppointments();
       },
     );
   }

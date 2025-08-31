@@ -154,7 +154,7 @@ class AppointmentRemoteDatasourceImpl implements AppointmentRemoteDatasource {
         "${ApiConstants.appointment}/boarding/extension",
         options: Options(headers: await _authHeaderProvider.getHeaders()),
       );
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         return DefaultResponse.fromJson(response.data);
       } else {
         throw ServerException(
