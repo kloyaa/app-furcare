@@ -191,6 +191,7 @@ export const createBoardingApplication = async (
   }
 };
 
+
 export const createBoardingApplicationExtension = async (
   req: TRequest,
   res: Response
@@ -204,7 +205,15 @@ export const createBoardingApplicationExtension = async (
   }
 
   try {
-    const { application: id, count } = req.body;
+    const { application: id, count, type } = req.body;
+
+    // Validate count parameter
+    if (typeof count !== 'number' || count < 0) {
+      return res.status(400).json({
+        ...statuses['501'],
+        message: 'Count must be a non-negative number.',
+      });
+    }
 
     const application = await BoardingApplication.findById(id);
 
@@ -215,7 +224,6 @@ export const createBoardingApplicationExtension = async (
       });
     }
 
-    // Get the cage information to calculate additional price
     const cage = await PetCage.findById(application.cage);
     if (!cage) {
       return res.status(404).json({
@@ -224,36 +232,131 @@ export const createBoardingApplicationExtension = async (
       });
     }
 
-    // Calculate additional price for the extension
-    const extensionPrice = cage.price * count;
+    // Initialize original values if this is the first extension
+    const originalDays = application.schedule.originalDays || application.schedule.days;
+    const originalPrice = application.originalPrice || application.totalPrice;
 
-    // Update the application with extended days and new total price
+    let daysToChange = 0;
+    let priceChange = 0;
+    let activityDescription = '';
+    let newTotalDays = application.schedule.days;
+
+    switch (type) {
+      case 'add':
+        daysToChange = count;
+        priceChange = cage.price * count;
+        newTotalDays = application.schedule.days + count;
+        activityDescription = `Extended boarding by ${count} day(s)`;
+        break;
+
+      case 'minus':
+        // Use virtual field to get current extension days
+        const currentExtensionDays = application.extensionDays;
+
+        if (count > currentExtensionDays) {
+          return res.status(400).json({
+            ...statuses['501'],
+            message: `Cannot reduce by ${count} days. Current extension is only ${currentExtensionDays} day(s).`,
+          });
+        }
+
+        daysToChange = -count;
+        priceChange = -(cage.price * count);
+        newTotalDays = application.schedule.days - count;
+        activityDescription = `Reduced boarding by ${count} day(s)`;
+        break;
+
+      case 'set':
+        // Use virtual field to get current extension
+        const currentExtension = application.extensionDays;
+
+        daysToChange = count - currentExtension;
+        priceChange = cage.price * daysToChange;
+        newTotalDays = originalDays + count;
+
+        if (count > currentExtension) {
+          activityDescription = `Extended boarding to ${count} additional day(s)`;
+        } else if (count < currentExtension) {
+          activityDescription = `Reduced boarding to ${count} additional day(s)`;
+        } else {
+          activityDescription = `Boarding extension unchanged at ${count} day(s)`;
+        }
+        break;
+    }
+
+    // Validate that we don't go below the original booking days
+    if (newTotalDays < originalDays) {
+      return res.status(400).json({
+        ...statuses['501'],
+        message: `Cannot reduce below original booking of ${originalDays} day(s).`,
+      });
+    }
+
+    // Prepare the extension record
+    const extensionRecord = {
+      type,
+      days: type === 'set' ? count : Math.abs(daysToChange),
+      priceChange,
+      timestamp: new Date(),
+      user: req.user.id,
+    };
+
+    // Update the application with the changes
+    const updateData: any = {
+      $inc: {
+        'schedule.days': daysToChange,
+        totalPrice: priceChange,
+      },
+      $push: {
+        extensions: extensionRecord,
+      },
+    };
+
+    // Set original values if this is the first extension
+    if (!application.schedule.originalDays) {
+      updateData['schedule.originalDays'] = originalDays;
+    }
+    if (!application.originalPrice) {
+      updateData['originalPrice'] = originalPrice;
+    }
+
     const updatedApplication = await BoardingApplication.findByIdAndUpdate(
       id,
-      {
-        $inc: {
-          'schedule.days': count,
-          totalPrice: extensionPrice,
-        },
-      },
+      updateData,
       { new: true }
-    );
+    ).populate(['user', 'pet', 'cage', 'branch']);
 
     console.log(
       '@createBoardingApplicationExtension updatedApplication',
-      updatedApplication)
+      updatedApplication
+    );
 
+    // Emit activity with descriptive message
     emitter.emit(EventName.ACTIVITY, {
       user: req.user.id as any,
-      description: ActivityType.APPLICATION_BOARDING_EXTENDED,
+      description: activityDescription
     } as IActivity);
 
-    return res.status(201).json(statuses['00']);
+    return res.status(201).json({
+      ...statuses['00'],
+      data: {
+        daysChanged: daysToChange,
+        priceChanged: priceChange,
+        newTotalDays: updatedApplication.schedule.days,
+        newTotalPrice: updatedApplication.totalPrice,
+        // Use virtual fields here instead of manual calculation
+        extensionDays: updatedApplication.extensionDays,
+        extensionPrice: updatedApplication.extensionPrice,
+        originalDays: updatedApplication.schedule.originalDays || originalDays,
+        application: updatedApplication,
+      },
+    });
   } catch (err) {
     console.log('@createBoardingApplicationExtension error', err);
     return handleMongooseError(err, res);
   }
 };
+
 
 export const createHomeServiceApplication = async (
   req: TRequest,
@@ -374,6 +477,7 @@ export const getBoardingApplications = async (
       .populate('branch')
       .populate('cage');
 
+    console.log('boardingApplications', boardingApplications.length);
     return res.status(200).json(boardingApplications);
   } catch (error) {
     console.log('@getBoardingApplications error', error);

@@ -96,6 +96,10 @@ const boardingApplicationSchema = new Schema<IBoardingApplication>(
         type: Number,
         required: true,
       },
+      originalDays: {
+        type: Number,
+        required: false, // Will be set on first extension
+      },
     },
     instructions: {
       type: String,
@@ -104,6 +108,10 @@ const boardingApplicationSchema = new Schema<IBoardingApplication>(
     totalPrice: {
       type: Number,
       required: true,
+    },
+    originalPrice: {
+      type: Number,
+      required: false, // Will be set on first extension
     },
     requestAntiRabiesVaccination: {
       type: Boolean,
@@ -115,9 +123,52 @@ const boardingApplicationSchema = new Schema<IBoardingApplication>(
       enum: Object.values(ApplicationStatusEnum),
       default: 'pending',
     },
+    extensions: [{
+      type: {
+        type: String,
+        enum: ['add', 'minus', 'set'],
+        required: true,
+      },
+      days: {
+        type: Number,
+        required: true,
+      },
+      priceChange: {
+        type: Number,
+        required: true,
+      },
+      timestamp: {
+        type: Date,
+        default: Date.now,
+      },
+      user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+      },
+    }],
   },
   { timestamps: true }
 );
+
+// Add virtual fields for easier access
+boardingApplicationSchema.virtual('extensionDays').get(function () {
+  if (this.schedule.originalDays) {
+    return this.schedule.days - this.schedule.originalDays;
+  }
+  return 0;
+});
+
+boardingApplicationSchema.virtual('extensionPrice').get(function () {
+  if (this.originalPrice) {
+    return this.totalPrice - this.originalPrice;
+  }
+  return 0;
+});
+
+// Ensure virtual fields are serialized
+boardingApplicationSchema.set('toJSON', { virtuals: true });
+boardingApplicationSchema.set('toObject', { virtuals: true });
 
 const homeServiceApplicationSchema = new Schema<IHomeServiceApplication>(
   {
