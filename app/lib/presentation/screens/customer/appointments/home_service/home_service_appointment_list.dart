@@ -5,8 +5,10 @@ import 'package:furcare_app/core/helpers/formatters.dart';
 import 'package:furcare_app/core/helpers/widget_helpers.dart';
 import 'package:furcare_app/data/models/appointment_models.dart';
 import 'package:furcare_app/presentation/providers/appointment_provider.dart';
+import 'package:furcare_app/presentation/routes/customer_router.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_appbar.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
+import 'package:furcare_app/presentation/widgets/dialog/custom_home_service_details_dialog.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -54,7 +56,9 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: CustomAppBar(title: 'Home Service Appointments'),
+      backgroundColor: colorScheme.surface,
+      appBar: CustomAppBar(),
+
       body: RefreshIndicator(
         onRefresh: () async {
           HapticFeedback.lightImpact();
@@ -110,12 +114,12 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           HapticFeedback.lightImpact();
-          context.push('/appointments/home-service/create');
+          context.push(CustomerRoute.create.homeService);
         },
         backgroundColor: colorScheme.primary,
         foregroundColor: colorScheme.onPrimary,
         elevation: 4,
-        heroTag: "home_service_fab",
+        heroTag: "grooming_fab",
         child: Icon(Icons.add_rounded),
       ),
     );
@@ -126,11 +130,11 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
     HomeServiceAppointment appointment,
   ) {
     HapticFeedback.mediumImpact();
-    // showDialog(
-    //   context: context,
-    //   builder: (context) =>
-    //       HomeServiceAppointmentPreviewDialog(appointment: appointment),
-    // );
+    showDialog(
+      context: context,
+      builder: (context) =>
+          HomeServiceAppointmentPreviewDialog(appointment: appointment),
+    );
   }
 }
 
