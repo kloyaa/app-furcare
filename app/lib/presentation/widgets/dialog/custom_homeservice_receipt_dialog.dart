@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
 import 'package:furcare_app/core/helpers/formatters.dart';
 import 'package:furcare_app/core/helpers/theme.dart';
+import 'package:furcare_app/data/models/appointment_models.dart';
 import 'package:furcare_app/data/models/pet_models.dart';
+import 'package:furcare_app/presentation/providers/appointment_provider.dart';
 import 'package:furcare_app/presentation/providers/branch_provider.dart';
 import 'package:furcare_app/presentation/routes/customer_router.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_button.dart';
@@ -79,20 +81,20 @@ class _HomeServiceReceiptDialogState extends State<HomeServiceReceiptDialog> {
 
     if (selectedBranch != null) {
       // // Create your home service appointment payload here
-      // final payload = HomeServiceAppointmentRequest(
-      //   branch: branchProvider.selectedBranch!.id,
-      //   pet: widget.selectedPet!.id,
-      //   schedule: HomeServiceSchedule(
-      //     date: widget.schedule ?? '',
-      //     time: widget.selectedTime ?? '',
-      //   ),
-      // );
+      final payload = HomeServiceAppointmentRequest(
+        branch: branchProvider.selectedBranch!.id,
+        pet: widget.selectedPet!.id,
+        schedule: HomeServiceSchedule(
+          date: widget.schedule ?? '',
+          time: widget.selectedTime ?? '',
+        ),
+      );
 
-      // if (mounted) {
-      //   await context.read<AppointmentProvider>().createHomeServiceAppointment(
-      //     payload,
-      //   );
-      // }
+      if (mounted) {
+        await context.read<AppointmentProvider>().createHomeServiceAppointment(
+          payload,
+        );
+      }
     }
   }
 

@@ -14,8 +14,14 @@ abstract class AppointmentRepository {
     BoardingAppointmentRequest request,
   );
 
+  Future<Either<Failure, DefaultResponse>> createHomeServiceAppointment(
+    HomeServiceAppointmentRequest request,
+  );
+
   Future<Either<Failure, List<GroomingAppointment>>> getGroomingAppointments();
   Future<Either<Failure, List<BoardingAppointment>>> getBoardingAppointments();
+  Future<Either<Failure, List<HomeServiceAppointment>>>
+  getHomeServiceAppointments();
 
   Future<Either<Failure, DefaultResponse>> createBoardingAppointmentExtension(
     AppointmentExtensionRequest request,
@@ -35,6 +41,24 @@ class AppointmentRepositoryImpl implements AppointmentRepository {
   ) async {
     try {
       final response = await _remoteDataSource.createGroomingAppointment(pet);
+      return Right(response);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message, code: e.code));
+    } on NetworkException catch (e) {
+      return Left(NetworkFailure(message: e.message));
+    } on CacheException catch (e) {
+      return Left(CacheFailure(message: e.message));
+    } catch (e) {
+      return Left(ServerFailure(message: 'An unexpected error occurred'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, DefaultResponse>> createBoardingAppointment(
+    BoardingAppointmentRequest pet,
+  ) async {
+    try {
+      final response = await _remoteDataSource.createBoardingAppointment(pet);
       return Right(response);
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message, code: e.code));
@@ -82,11 +106,28 @@ class AppointmentRepositoryImpl implements AppointmentRepository {
   }
 
   @override
-  Future<Either<Failure, DefaultResponse>> createBoardingAppointment(
-    BoardingAppointmentRequest request,
+  Future<Either<Failure, List<HomeServiceAppointment>>>
+  getHomeServiceAppointments() async {
+    try {
+      final response = await _remoteDataSource.getHomeServiceAppointments();
+      return Right(response);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message, code: e.code));
+    } on NetworkException catch (e) {
+      return Left(NetworkFailure(message: e.message));
+    } on CacheException catch (e) {
+      return Left(CacheFailure(message: e.message));
+    } catch (e) {
+      return Left(ServerFailure(message: 'An unexpected error occurred'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, DefaultResponse>> createHomeServiceAppointment(
+    HomeServiceAppointmentRequest request,
   ) async {
     try {
-      final response = await _remoteDataSource.createBoardingAppointment(
+      final response = await _remoteDataSource.createHomeServiceAppointment(
         request,
       );
       return Right(response);
