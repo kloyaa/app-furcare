@@ -18,9 +18,13 @@ abstract class AppointmentRemoteDatasource {
   Future<DefaultResponse> createBoardingAppointmentExtension(
     AppointmentExtensionRequest request,
   );
+  Future<DefaultResponse> createHomeServiceAppointment(
+    HomeServiceAppointmentRequest request,
+  );
 
   Future<List<GroomingAppointment>> getGroomingAppointments();
   Future<List<BoardingAppointment>> getBoardingAppointments();
+  Future<List<HomeServiceAppointment>> getHomeServiceAppointments();
 }
 
 class AppointmentRemoteDatasourceImpl implements AppointmentRemoteDatasource {
@@ -117,6 +121,35 @@ class AppointmentRemoteDatasourceImpl implements AppointmentRemoteDatasource {
   }
 
   @override
+  Future<List<HomeServiceAppointment>> getHomeServiceAppointments() async {
+    try {
+      final response = await _networkService.get(
+        "${ApiConstants.appointment}/home-service",
+        options: Options(headers: await _authHeaderProvider.getHeaders()),
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = response.data;
+        return data
+            .map((item) => HomeServiceAppointment.fromJson(item))
+            .toList();
+      } else {
+        throw ServerException(
+          message: response.data?['message'] ?? 'Error fetching appointments',
+          code: response.data?['code'],
+        );
+      }
+    } catch (e) {
+      if (e is ServerException || e is NetworkException) {
+        rethrow;
+      }
+      throw ServerException(
+        message: 'An error occurred during fetching appointments',
+      );
+    }
+  }
+
+  @override
   Future<DefaultResponse> createBoardingAppointment(
     BoardingAppointmentRequest request,
   ) async {
@@ -170,6 +203,34 @@ class AppointmentRemoteDatasourceImpl implements AppointmentRemoteDatasource {
       }
       throw ServerException(
         message: 'An error occurred during creating appointment extension',
+      );
+    }
+  }
+
+  @override
+  Future<DefaultResponse> createHomeServiceAppointment(
+    HomeServiceAppointmentRequest request,
+  ) async {
+    try {
+      final response = await _networkService.post(
+        data: request.toJson(),
+        "${ApiConstants.appointment}/home-service",
+        options: Options(headers: await _authHeaderProvider.getHeaders()),
+      );
+      if (response.statusCode == 201) {
+        return DefaultResponse.fromJson(response.data);
+      } else {
+        throw ServerException(
+          message: response.data?['message'] ?? 'Error creating appointment',
+          code: response.data?['code'],
+        );
+      }
+    } catch (e) {
+      if (e is ServerException || e is NetworkException) {
+        rethrow;
+      }
+      throw ServerException(
+        message: 'An error occurred during creating appointment',
       );
     }
   }

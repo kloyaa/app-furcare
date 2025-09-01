@@ -26,8 +26,9 @@ import 'package:furcare_app/presentation/screens/customer/appointments/grooming/
     as grooming;
 import 'package:furcare_app/presentation/screens/customer/appointments/boarding/boarding_appointment_list.dart'
     as boarding;
-// import 'package:furcare_app/presentation/screens/modules/customer/appointments/create/home_service_appointment.dart'
-//     as homeService;
+
+import 'package:furcare_app/presentation/screens/customer/appointments/home_service/home_service_appointment_list.dart'
+    as home_service;
 
 class _CreateBookingRoutes {
   const _CreateBookingRoutes();
@@ -155,7 +156,7 @@ final GoRouter customerRouter = GoRouter(
         GoRoute(
           path: CustomerRoute.me.homeService,
           builder: (BuildContext context, GoRouterState state) {
-            return const grooming.AppointmentsScreen();
+            return const home_service.AppointmentsScreen();
           },
         ),
         GoRoute(

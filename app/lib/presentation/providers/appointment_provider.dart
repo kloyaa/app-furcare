@@ -25,6 +25,7 @@ class AppointmentProvider with ChangeNotifier {
 
   List<GroomingAppointment> _groomingAppointments = [];
   List<BoardingAppointment> _boardingAppointments = [];
+  List<HomeServiceAppointment> _homeServiceAppointments = [];
 
   String? _errorMessage;
   String? _errorCode;
@@ -40,6 +41,8 @@ class AppointmentProvider with ChangeNotifier {
 
   List<GroomingAppointment> get groomingAppointments => _groomingAppointments;
   List<BoardingAppointment> get boardingAppointments => _boardingAppointments;
+  List<HomeServiceAppointment> get homeServiceAppointments =>
+      _homeServiceAppointments;
 
   Future<void> createGroomingAppointment(
     GroomingAppointmentRequest request,
@@ -79,6 +82,25 @@ class AppointmentProvider with ChangeNotifier {
       },
       (response) {
         _setCreateBoardingAppointment(AppointmentState.created);
+      },
+    );
+  }
+
+  Future<void> createHomeServiceAppointment(
+    HomeServiceAppointmentRequest request,
+  ) async {
+    clearError();
+
+    final result = await _appointmentRepository.createHomeServiceAppointment(
+      request,
+    );
+    result.fold(
+      (failure) {
+        _setCreateHomeServiceAppointment(AppointmentState.error);
+        _handleFailure(failure);
+      },
+      (response) {
+        _setCreateHomeServiceAppointment(AppointmentState.created);
       },
     );
   }
@@ -136,18 +158,18 @@ class AppointmentProvider with ChangeNotifier {
   }
 
   Future<void> getHomeServiceAppointments() async {
-    _setGettGroomingAppointments(AppointmentState.loading);
+    _setGetHomeServiceAppointments(AppointmentState.loading);
 
-    final result = await _appointmentRepository.getGroomingAppointments();
+    final result = await _appointmentRepository.getHomeServiceAppointments();
     result.fold(
       (failure) {
         clearError();
-        _setGettGroomingAppointments(AppointmentState.error);
+        _setGetHomeServiceAppointments(AppointmentState.error);
         _handleFailure(failure);
       },
       (response) {
-        _groomingAppointments = response;
-        _setGettGroomingAppointments(AppointmentState.fetched);
+        _homeServiceAppointments = response;
+        _setGetHomeServiceAppointments(AppointmentState.fetched);
       },
     );
   }
@@ -162,7 +184,17 @@ class AppointmentProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void _setCreateHomeServiceAppointment(AppointmentState newState) {
+    _createApplicationState = newState;
+    notifyListeners();
+  }
+
   void _setGettGroomingAppointments(AppointmentState newState) {
+    _isFetchingApplicationState = newState;
+    notifyListeners();
+  }
+
+  void _setGetHomeServiceAppointments(AppointmentState newState) {
     _isFetchingApplicationState = newState;
     notifyListeners();
   }

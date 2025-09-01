@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:furcare_app/core/constants/padding_constant.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
+import 'package:furcare_app/core/helpers/formatters.dart';
 import 'package:furcare_app/data/models/pet_models.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_appbar.dart';
+import 'package:furcare_app/presentation/widgets/common/custom_button.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_pet_selection.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_select_field.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
+import 'package:furcare_app/presentation/widgets/dialog/custom_homeservice_receipt_dialog.dart';
 
 class HomeServiceApptScreen extends StatefulWidget {
   const HomeServiceApptScreen({super.key});
@@ -17,10 +20,12 @@ class HomeServiceApptScreen extends StatefulWidget {
 class _HomeServiceApptScreenState extends State<HomeServiceApptScreen> {
   final DateTime today = DateTime.now();
 
+  final int defaultHomeServicePrice = 320;
+
   String? selectedPet;
   Pet? selectedPetObject;
   bool isPetAccordionExpanded = false;
-  DateTime? selectedDate;
+  DateTime? selectedDay;
   String? selectedTime;
 
   List<String> times = [
@@ -48,6 +53,25 @@ class _HomeServiceApptScreenState extends State<HomeServiceApptScreen> {
     "5:30 PM",
     "6:00 PM",
   ];
+
+  bool _canBookAppointment() {
+    return selectedPet != null && selectedTime != null && selectedDay != null;
+  }
+
+  void _bookAppointment() {
+    _showReceiptDialog();
+  }
+
+  void _showReceiptDialog() {
+    return HomeServiceReceiptDialog.show(
+      context: context,
+      schedule: formatDateToLong(selectedDay ?? today),
+      selectedPet: selectedPetObject,
+      selectedTime: selectedTime,
+      selectedDay: selectedDay,
+      totalPrice: defaultHomeServicePrice,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -116,12 +140,12 @@ class _HomeServiceApptScreenState extends State<HomeServiceApptScreen> {
                     return SizedBox(
                       width: calendarWidth,
                       child: CalendarDatePicker(
-                        initialDate: selectedDate ?? today,
+                        initialDate: selectedDay ?? today,
                         firstDate: today,
                         lastDate: DateTime(today.year, today.month + 2),
                         onDateChanged: (DateTime date) {
                           setState(() {
-                            selectedDate = date;
+                            selectedDay = date;
                           });
                         },
                       ),
@@ -152,9 +176,51 @@ class _HomeServiceApptScreenState extends State<HomeServiceApptScreen> {
               error: selectedTime == null,
               isRequired: true,
             ),
+            const SizedBox(height: 16),
+            _buildPriceSummaryAndButton(theme),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildPriceSummaryAndButton(ThemeData theme) {
+    return Column(
+      children: [
+        Card(
+          elevation: 0,
+          color: theme.colorScheme.errorContainer,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CustomText.body(
+                  'TOTAL',
+                  color: theme.colorScheme.onErrorContainer,
+                  fontWeight: AppFontWeight.bold.value,
+                ),
+                CustomText.body(
+                  formatToPhpCurrency(defaultHomeServicePrice),
+                  size: AppTextSize.mlg,
+                  color: theme.colorScheme.onErrorContainer,
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
+        CustomButton(
+          text: 'Book Appointment',
+          onPressed: _canBookAppointment() ? _bookAppointment : null,
+          // isLoading: authProvider.isLoading,
+          icon: Icons.book_outlined,
+          // isEnabled: !authProvider.isLoading,
+        ),
+      ],
     );
   }
 }

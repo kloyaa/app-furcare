@@ -82,7 +82,8 @@ class _BoardingApptScreenState extends State<BoardingApptScreen> {
     return selectedPet != null &&
         selectedTime != null &&
         selectedDay != null &&
-        selectedCage != null;
+        selectedCage != null &&
+        _instructionsController.text.isNotEmpty;
   }
 
   void _bookAppointment() {
