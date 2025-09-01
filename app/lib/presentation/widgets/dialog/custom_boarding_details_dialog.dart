@@ -432,7 +432,7 @@ class _BoardingAppointmentPreviewDialogState
         _buildSection('Pricing Summary', [
           _buildPricingRow(
             'Original Booking',
-            '${formatToPhpCurrency(widget.appointment.cage.price)} x ${widget.appointment.schedule.originalDays} days',
+            '${formatToPhpCurrency(widget.appointment.cage.price)} x ${widget.appointment.schedule.originalDays ?? widget.appointment.schedule.days} days',
             formatToPhpCurrency(widget.appointment.originalPrice),
             colorScheme,
           ),
