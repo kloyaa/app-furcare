@@ -61,6 +61,10 @@ class BoardingAppointment extends Equatable {
   final BoardingSchedule schedule;
   final List<BoardingExtension> extensions;
 
+  final int remainingBalance;
+  final int paidAmount;
+  final String paymentStatus;
+
   const BoardingAppointment({
     required this.id,
     required this.user,
@@ -78,6 +82,10 @@ class BoardingAppointment extends Equatable {
     required this.updatedAt,
     required this.schedule,
     required this.extensions,
+
+    required this.remainingBalance,
+    required this.paidAmount,
+    required this.paymentStatus,
   });
 
   factory BoardingAppointment.fromJson(Map<String, dynamic> json) {
@@ -116,6 +124,10 @@ class BoardingAppointment extends Equatable {
               )
               .toList() ??
           [],
+
+      remainingBalance: json['remainingBalance'] as int,
+      paidAmount: json['paidAmount'] as int,
+      paymentStatus: json['paymentStatus'] as String,
     );
   }
 
@@ -184,6 +196,10 @@ class BoardingAppointment extends Equatable {
       updatedAt: updatedAt ?? this.updatedAt,
       schedule: schedule ?? this.schedule,
       extensions: extensions ?? this.extensions,
+
+      remainingBalance: remainingBalance,
+      paidAmount: paidAmount,
+      paymentStatus: paymentStatus,
     );
   }
 

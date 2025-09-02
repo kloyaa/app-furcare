@@ -7,7 +7,7 @@ import 'package:furcare_app/presentation/widgets/common/custom_button.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
 import 'package:go_router/go_router.dart';
 
-class GroomingAppointmentPreviewDialog extends StatelessWidget {
+class GroomingAppointmentPreviewDialog extends StatefulWidget {
   final GroomingAppointment appointment;
 
   const GroomingAppointmentPreviewDialog({
@@ -15,6 +15,13 @@ class GroomingAppointmentPreviewDialog extends StatelessWidget {
     required this.appointment,
   });
 
+  @override
+  State<GroomingAppointmentPreviewDialog> createState() =>
+      _GroomingAppointmentPreviewDialogState();
+}
+
+class _GroomingAppointmentPreviewDialogState
+    extends State<GroomingAppointmentPreviewDialog> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -89,19 +96,19 @@ class GroomingAppointmentPreviewDialog extends StatelessWidget {
                     _buildSection('Pet Information', [
                       _buildInfoRow(
                         'Name',
-                        appointment.pet.name,
+                        widget.appointment.pet.name,
                         Icons.pets,
                         colorScheme,
                       ),
                       _buildInfoRow(
                         'Species',
-                        appointment.pet.specie,
+                        widget.appointment.pet.specie,
                         Icons.category,
                         colorScheme,
                       ),
                       _buildInfoRow(
                         'Gender',
-                        appointment.pet.gender,
+                        widget.appointment.pet.gender,
                         Icons.info,
                         colorScheme,
                       ),
@@ -110,19 +117,19 @@ class GroomingAppointmentPreviewDialog extends StatelessWidget {
                     _buildSection('Appointment Details', [
                       _buildInfoRow(
                         'Schedule',
-                        appointment.schedule.schedule,
+                        widget.appointment.schedule.schedule,
                         Icons.access_time,
                         colorScheme,
                       ),
                       _buildInfoRow(
                         'Status',
-                        appointment.status.toUpperCase(),
+                        widget.appointment.status.toUpperCase(),
                         Icons.flag,
                         colorScheme,
                       ),
                       _buildInfoRow(
                         'Total Price',
-                        formatToPhpCurrency(appointment.totalPrice),
+                        formatToPhpCurrency(widget.appointment.totalPrice),
                         Icons.attach_money,
                         colorScheme,
                       ),
@@ -131,25 +138,25 @@ class GroomingAppointmentPreviewDialog extends StatelessWidget {
                     _buildSection('Branch Information', [
                       _buildInfoRow(
                         'Name',
-                        appointment.branch.name,
+                        widget.appointment.branch.name,
                         Icons.store,
                         colorScheme,
                       ),
                       _buildInfoRow(
                         'Address',
-                        appointment.branch.address,
+                        widget.appointment.branch.address,
                         Icons.location_on,
                         colorScheme,
                       ),
                       _buildInfoRow(
                         'Phone',
-                        appointment.branch.phone,
+                        widget.appointment.branch.phone,
                         Icons.phone,
                         colorScheme,
                       ),
                       _buildInfoRow(
                         'Status',
-                        appointment.branch.open ? 'Open' : 'Closed',
+                        widget.appointment.branch.open ? 'Open' : 'Closed',
                         Icons.schedule,
                         colorScheme,
                       ),
@@ -158,17 +165,17 @@ class GroomingAppointmentPreviewDialog extends StatelessWidget {
                     _buildSection('Health Information', [
                       _buildHealthRow(
                         'Has Allergy',
-                        appointment.hasAllergy,
+                        widget.appointment.hasAllergy,
                         colorScheme,
                       ),
                       _buildHealthRow(
                         'On Medication',
-                        appointment.isOnMedication,
+                        widget.appointment.isOnMedication,
                         colorScheme,
                       ),
                       _buildHealthRow(
                         'Anti-Rabies Vaccination',
-                        appointment.hasAntiRabbiesVaccination,
+                        widget.appointment.hasAntiRabbiesVaccination,
                         colorScheme,
                       ),
                     ], colorScheme),
@@ -177,10 +184,10 @@ class GroomingAppointmentPreviewDialog extends StatelessWidget {
                       margin: const EdgeInsets.symmetric(vertical: 24),
                       child: Divider(),
                     ),
-                    if (appointment.groomingOptions.isNotEmpty) ...[
+                    if (widget.appointment.groomingOptions.isNotEmpty) ...[
                       _buildSection(
                         'Services',
-                        appointment.groomingOptions
+                        widget.appointment.groomingOptions
                             .map(
                               (option) => _buildServiceRow(
                                 option.name,
@@ -192,11 +199,11 @@ class GroomingAppointmentPreviewDialog extends StatelessWidget {
                         colorScheme,
                       ),
                     ],
-                    if (appointment.groomingPreferences.isNotEmpty) ...[
+                    if (widget.appointment.groomingPreferences.isNotEmpty) ...[
                       const SizedBox(height: 24),
                       _buildSection(
                         'Preferences',
-                        appointment.groomingPreferences
+                        widget.appointment.groomingPreferences
                             .map(
                               (option) => _buildServiceRow(
                                 option.name,
@@ -212,22 +219,13 @@ class GroomingAppointmentPreviewDialog extends StatelessWidget {
                     _buildSection('Schedule ', [
                       _buildServiceRow(
                         'Price',
-                        formatToPhpCurrency(appointment.schedule.price),
+                        formatToPhpCurrency(widget.appointment.schedule.price),
                         colorScheme,
                       ),
                     ], colorScheme),
 
-                    SizedBox(height: 32),
-                    CustomButton(
-                      text:
-                          "Pay ${formatToPhpCurrency(appointment.totalPrice)}",
-                      textSize: AppTextSize.md,
-                      height: 64,
-                      onPressed: () =>
-                          context.push(CustomerRoute.payment.paymentMethods),
-                      icon: Icons.payment_outlined,
-                      isOutlined: false,
-                    ),
+                    SizedBox(height: 12),
+                    _buildTotalSummary(colorScheme),
                   ],
                 ),
               ),
@@ -236,6 +234,29 @@ class GroomingAppointmentPreviewDialog extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildTotalSummary(ColorScheme colorScheme) {
+    if (widget.appointment.remainingBalance == 0) {
+      return SizedBox(width: double.infinity);
+    }
+    return Column(
+      children: [
+        Container(
+          margin: const EdgeInsets.symmetric(vertical: 24),
+          child: Divider(),
+        ),
+        CustomButton(
+          text:
+              "Pay ${formatToPhpCurrency(widget.appointment.remainingBalance)}",
+          textSize: AppTextSize.md,
+          height: 64,
+          onPressed: () => context.push(CustomerRoute.payment.paymentMethods),
+          icon: Icons.payment_outlined,
+          isOutlined: false,
+        ),
+      ],
     );
   }
 

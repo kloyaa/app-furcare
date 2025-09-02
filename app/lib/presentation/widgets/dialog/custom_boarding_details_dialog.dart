@@ -458,15 +458,9 @@ class _BoardingAppointmentPreviewDialogState
             ),
           ],
         ], colorScheme),
-        SizedBox(height: 32),
+        SizedBox(height: 12),
         _buildDurationSummary(colorScheme),
-        Container(
-          margin: const EdgeInsets.symmetric(vertical: 16),
-          child: Divider(
-            color: colorScheme.primary.withAlpha(77),
-            thickness: 2,
-          ),
-        ),
+
         _buildTotalSummary(colorScheme),
       ],
     );
@@ -497,13 +491,25 @@ class _BoardingAppointmentPreviewDialogState
   }
 
   Widget _buildTotalSummary(ColorScheme colorScheme) {
-    return CustomButton(
-      text: "Pay ${formatToPhpCurrency(widget.appointment.totalPrice)}",
-      textSize: AppTextSize.md,
-      height: 64,
-      onPressed: () => context.push(CustomerRoute.payment.paymentMethods),
-      icon: Icons.payment_outlined,
-      isOutlined: false,
+    if (widget.appointment.remainingBalance == 0) {
+      return SizedBox(width: double.infinity);
+    }
+    return Column(
+      children: [
+        Container(
+          margin: const EdgeInsets.symmetric(vertical: 24),
+          child: Divider(),
+        ),
+        CustomButton(
+          text:
+              "Pay ${formatToPhpCurrency(widget.appointment.remainingBalance)}",
+          textSize: AppTextSize.md,
+          height: 64,
+          onPressed: () => context.push(CustomerRoute.payment.paymentMethods),
+          icon: Icons.payment_outlined,
+          isOutlined: false,
+        ),
+      ],
     );
   }
 

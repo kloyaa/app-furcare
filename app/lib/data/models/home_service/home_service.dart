@@ -13,6 +13,10 @@ class HomeServiceAppointment extends Equatable {
   final DateTime updatedAt;
   final HomeServiceSchedule schedule;
 
+  final int remainingBalance;
+  final int paidAmount;
+  final String paymentStatus;
+
   const HomeServiceAppointment({
     required this.id,
     required this.user,
@@ -23,6 +27,10 @@ class HomeServiceAppointment extends Equatable {
     required this.createdAt,
     required this.updatedAt,
     required this.schedule,
+
+    required this.remainingBalance,
+    required this.paidAmount,
+    required this.paymentStatus,
   });
 
   factory HomeServiceAppointment.fromJson(Map<String, dynamic> json) {
@@ -43,6 +51,10 @@ class HomeServiceAppointment extends Equatable {
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
       schedule: HomeServiceSchedule.fromJson(json['schedule']),
+
+      remainingBalance: json['remainingBalance'] as int,
+      paidAmount: json['paidAmount'] as int,
+      paymentStatus: json['paymentStatus'] as String,
     );
   }
 
@@ -57,6 +69,10 @@ class HomeServiceAppointment extends Equatable {
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
       'schedule': schedule.toJson(),
+
+      'remainingBalance': remainingBalance,
+      'paidAmount': paidAmount,
+      'paymentStatus': paymentStatus,
     };
   }
 
@@ -81,6 +97,10 @@ class HomeServiceAppointment extends Equatable {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       schedule: schedule ?? this.schedule,
+
+      remainingBalance: remainingBalance,
+      paidAmount: paidAmount,
+      paymentStatus: paymentStatus,
     );
   }
 
