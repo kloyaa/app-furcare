@@ -8,7 +8,10 @@ const joi_1 = __importDefault(require("joi"));
 const mongoose_1 = require("mongoose");
 const validateUpdatePetCages = (body) => {
     const schema = joi_1.default.object({
-        id: joi_1.default.string().trim().custom(mongoose_1.isValidObjectId, 'ObjectId validation').required(),
+        id: joi_1.default.string()
+            .trim()
+            .custom(mongoose_1.isValidObjectId, 'ObjectId validation')
+            .required(),
         action: joi_1.default.string().required().valid('add', 'remove'),
     });
     const { error } = schema.validate(body);

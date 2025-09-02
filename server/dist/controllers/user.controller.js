@@ -111,8 +111,12 @@ const getProfileByAccessToken = async (req, res) => {
         return res.status(200).json({
             ...result._doc,
             others: {
-                lastLogin: _findLastLoginByUser ? (0, utils_1.formatDate)(_findLastLoginByUser) : 'N/A',
-                lastChangePassword: _findLastChangePassActivityByUser ? (0, utils_1.formatDate)(_findLastChangePassActivityByUser) : 'N/A',
+                lastLogin: _findLastLoginByUser
+                    ? (0, utils_1.formatDate)(_findLastLoginByUser)
+                    : 'N/A',
+                lastChangePassword: _findLastChangePassActivityByUser
+                    ? (0, utils_1.formatDate)(_findLastChangePassActivityByUser)
+                    : 'N/A',
             },
         });
     }

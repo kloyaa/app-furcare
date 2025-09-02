@@ -74,7 +74,9 @@ const register = async (req, res) => {
     }
     try {
         const { username, email, password } = req.body;
-        const existingUser = await user_schema_1.User.findOne().or([{ username }, { email }]).exec();
+        const existingUser = await user_schema_1.User.findOne()
+            .or([{ username }, { email }])
+            .exec();
         if (existingUser) {
             return res.status(401).json(api_statuses_1.statuses['0052']);
         }
@@ -104,7 +106,10 @@ const register = async (req, res) => {
             description: activity_enum_1.ActivityType.REGISTRATION_SUCCESS,
         });
         const env = await (0, env_config_1.getEnv)();
-        const payload = { origin: req.headers['nodex-user-origin'], id: createdUser.id };
+        const payload = {
+            origin: req.headers['nodex-user-origin'],
+            id: createdUser.id,
+        };
         const encryptedPayload = (0, encryption_util_1.encrypt)(payload, env.NODEX_CRYPTO_KEY ?? '123_cryptoKey');
         return res.status(201).json({
             ...api_statuses_1.statuses['0050'],

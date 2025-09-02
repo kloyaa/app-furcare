@@ -16,11 +16,7 @@ const profileSchema = new mongoose_1.Schema({
         required: true,
     },
     contact: {
-        facebookUrl: {
-            type: String,
-            required: false,
-        },
-        messengerUrl: {
+        facebookDisplayName: {
             type: String,
             required: false,
         },

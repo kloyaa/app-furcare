@@ -13,7 +13,9 @@ const activity_schema_1 = __importDefault(require("../schema/activity.schema"));
  * @return {Promise<void | Response>} A promise that resolves to the JSON response containing the activity log
  */
 const getActivity = async (req, res) => {
-    const activities = await activity_schema_1.default.find({ user: req.user.id }).sort({ createdAt: -1 });
+    const activities = await activity_schema_1.default.find({ user: req.user.id }).sort({
+        createdAt: -1,
+    });
     return res.status(200).json(activities);
 };
 exports.getActivity = getActivity;

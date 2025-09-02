@@ -9,7 +9,7 @@ const router = (0, express_1.Router)();
 router.get('', async (_, res) => {
     const database = await mongoose_1.default.connection.db.admin().ping();
     return res.status(200).json({
-        database
+        database,
     });
 });
 exports.default = router;

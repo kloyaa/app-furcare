@@ -20,7 +20,7 @@ class ReadAddress {
                 .on('data', (row) => countries.push(row))
                 .on('error', reject)
                 .on('end', () => resolve(countries));
-        }).then((countries) => {
+        }).then(countries => {
             return countries.map((el) => ({
                 id: el.id,
                 name: el.name,
@@ -60,7 +60,7 @@ class ReadAddress {
                 .on('data', (row) => cities.push(row))
                 .on('error', reject)
                 .on('end', () => resolve(cities));
-        }).then((cities) => {
+        }).then(cities => {
             return cities.map((el) => ({
                 id: el.id,
                 name: el.name,
@@ -89,7 +89,7 @@ class ReadAddress {
                 .on('data', (row) => regions.push(row))
                 .on('error', reject)
                 .on('end', () => resolve(regions));
-        }).then((regions) => {
+        }).then(regions => {
             return regions.map((el) => ({
                 id: el.id,
                 name: el.name,
@@ -118,7 +118,7 @@ class ReadAddress {
                 .on('data', (row) => regions.push(row))
                 .on('error', reject)
                 .on('end', () => resolve(regions));
-        }).then((regions) => {
+        }).then(regions => {
             return regions.map((el) => ({
                 id: el.id,
                 name: el.name,
@@ -140,7 +140,7 @@ class ReadAddress {
                 .on('data', (row) => states.push(row))
                 .on('error', reject)
                 .on('end', () => resolve(states));
-        }).then((states) => {
+        }).then(states => {
             return states.map((el) => ({
                 id: el.id,
                 name: el.name,

@@ -46,7 +46,7 @@ const isAuthenticated = async (req, res, next) => {
         });
     }
     catch (error) {
-        console.log("@isAuthenticated error", error);
+        console.log('@isAuthenticated error', error);
         return res.status(401).json(api_statuses_1.statuses['10020']);
     }
 };

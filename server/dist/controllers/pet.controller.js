@@ -31,9 +31,7 @@ const createPet = async (req, res) => {
             name: { $regex: new RegExp(`^${req.body.name}$`, 'i') },
         });
         if (pet) {
-            return res
-                .status(400)
-                .json(api_statuses_1.statuses['0200']);
+            return res.status(400).json(api_statuses_1.statuses['0200']);
         }
         const createdPet = await pet_schema_1.default.create({
             ...req.body,
@@ -97,9 +95,7 @@ exports.updatePet = updatePet;
  */
 const getPets = async (req, res) => {
     try {
-        const pets = await pet_schema_1.default
-            .find({ user: req.user.id })
-            .sort({ createdAt: -1 });
+        const pets = await pet_schema_1.default.find({ user: req.user.id }).sort({ createdAt: -1 });
         return res.status(200).json(pets);
     }
     catch (error) {

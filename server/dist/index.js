@@ -21,13 +21,17 @@ const auxiliary_route_1 = __importDefault(require("./routes/auxiliary.route"));
 const activity_route_1 = __importDefault(require("./routes/activity.route"));
 const pet_services_route_1 = __importDefault(require("./routes/pet_services.route"));
 const pet_route_1 = __importDefault(require("./routes/pet.route"));
-const application_route_1 = __importDefault(require("./routes/application.route"));
 const branch_route_1 = __importDefault(require("./routes/branch.route"));
 const health_route_1 = __importDefault(require("./routes/health.route"));
+const HomeService_1 = __importDefault(require("./routes/application/HomeService"));
+const Grooming_1 = __importDefault(require("./routes/application/Grooming"));
+const Boarding_1 = __importDefault(require("./routes/application/Boarding"));
+const Payment_routes_1 = __importDefault(require("./routes/Payment.routes"));
 const default_middleware_1 = require("./_core/middlewares/default.middleware");
 const common_const_1 = require("./_core/const/common.const");
 // import { swaggerSetup } from './swagger/swagger';
 const swagger_json_1 = __importDefault(require("./swagger/swagger.json"));
+// import { connectRedisDb } from './_core/services/redis/redis-client.service';
 const utils_1 = require("./_core/utils/utils");
 const app = (0, express_1.default)();
 const swaggerOptions = {
@@ -58,7 +62,7 @@ async function runApp() {
     app.use(default_middleware_1.logNetworBody);
     // delay route
     app.use(async (req, res, next) => {
-        await (0, utils_1.delay)(1_500);
+        await (0, utils_1.delay)(1_000);
         next();
     });
     // Routes
@@ -69,11 +73,14 @@ async function runApp() {
     app.use('/api', activity_route_1.default);
     app.use('/api', pet_services_route_1.default);
     app.use('/api', pet_route_1.default);
-    app.use('/api', application_route_1.default);
     app.use('/api', branch_route_1.default);
+    app.use('/api', HomeService_1.default);
+    app.use('/api', Grooming_1.default);
+    app.use('/api', Boarding_1.default);
+    app.use('/api', Payment_routes_1.default);
     // Swagger setup
-    app.use("/api-docs", swagger_ui_express_1.default.serve);
-    app.use("/api-docs", swagger_ui_express_1.default.setup(swagger_json_1.default, swaggerOptions));
+    app.use('/api-docs', swagger_ui_express_1.default.serve);
+    app.use('/api-docs', swagger_ui_express_1.default.setup(swagger_json_1.default, swaggerOptions));
     // Connect to MongoDB
     (0, db_util_1.connectDB)();
     // Connect to Redis

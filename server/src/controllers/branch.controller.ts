@@ -1,10 +1,10 @@
 import { type Response } from 'express';
 import { faker } from '@faker-js/faker';
 import { TRequest } from '../_core/interfaces/overrides.interface';
-import { Branch } from '../schema/branch.schema';
 import { statuses } from '../_core/const/api.statuses';
 import { handleMongooseError } from '../_core/utils/db/error.util';
 import { generateRandomNumber } from '../_core/utils/utils';
+import Branch from '../schema/branch.schema';
 
 export const createRandomBranches = async (
   req: TRequest,

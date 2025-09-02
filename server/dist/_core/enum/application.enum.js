@@ -1,7 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ApplicationStatusEnum = exports.groomingPreferencesEnum = exports.groomingOptionsEnum = exports.groomingScheduleEnum = exports.applicationStatusEnum = void 0;
-exports.applicationStatusEnum = ['pending', 'in-progress', 'completed', 'cancelled', 'rejected'];
+exports.applicationStatusEnum = [
+    'pending',
+    'in-progress',
+    'completed',
+    'cancelled',
+    'rejected',
+];
 exports.groomingScheduleEnum = [
     'SCHEDULE_1',
     'SCHEDULE_2',
@@ -18,13 +24,13 @@ exports.groomingOptionsEnum = [
     'SPECIFIC_REQUEST',
     'NAIL_TRIM',
     'HAIRCUT',
-    'EAR_CLEANING'
+    'EAR_CLEANING',
 ];
 exports.groomingPreferencesEnum = [
     'SPECIFIC_REQUEST',
     'FULL_TRIM',
     'LONG_TRIM',
-    'SHORT_TRIM'
+    'SHORT_TRIM',
 ];
 var ApplicationStatusEnum;
 (function (ApplicationStatusEnum) {
