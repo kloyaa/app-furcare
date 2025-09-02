@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
 import 'package:furcare_app/core/helpers/formatters.dart';
-import 'package:furcare_app/data/models/appointment_models.dart';
+import 'package:furcare_app/data/models/grooming/grooming.dart';
+import 'package:furcare_app/presentation/routes/customer_router.dart';
+import 'package:furcare_app/presentation/widgets/common/custom_button.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
+import 'package:go_router/go_router.dart';
 
 class GroomingAppointmentPreviewDialog extends StatelessWidget {
   final GroomingAppointment appointment;
@@ -214,22 +217,16 @@ class GroomingAppointmentPreviewDialog extends StatelessWidget {
                       ),
                     ], colorScheme),
 
-                    Container(
-                      margin: const EdgeInsets.symmetric(vertical: 24),
-                      child: Divider(),
-                    ),
-
-                    Container(
-                      margin: const EdgeInsets.only(bottom: 24),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          CustomText.title(
-                            color: colorScheme.primary,
-                            formatToPhpCurrency(appointment.totalPrice),
-                          ),
-                        ],
-                      ),
+                    SizedBox(height: 32),
+                    CustomButton(
+                      text:
+                          "Pay ${formatToPhpCurrency(appointment.totalPrice)}",
+                      textSize: AppTextSize.md,
+                      height: 64,
+                      onPressed: () =>
+                          context.push(CustomerRoute.payment.paymentMethods),
+                      icon: Icons.payment_outlined,
+                      isOutlined: false,
                     ),
                   ],
                 ),

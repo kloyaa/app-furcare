@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
 import 'package:furcare_app/core/helpers/formatters.dart';
-import 'package:furcare_app/data/models/appointment_models.dart';
+import 'package:furcare_app/data/models/home_service/home_service.dart';
+import 'package:furcare_app/presentation/routes/customer_router.dart';
+import 'package:furcare_app/presentation/widgets/common/custom_button.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 class HomeServiceAppointmentPreviewDialog extends StatelessWidget {
@@ -219,23 +222,16 @@ class HomeServiceAppointmentPreviewDialog extends StatelessWidget {
                       margin: const EdgeInsets.symmetric(vertical: 24),
                       child: Divider(),
                     ),
-
-                    Container(
-                      margin: const EdgeInsets.only(bottom: 24),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              CustomText.title(
-                                color: colorScheme.primary,
-                                formatToPhpCurrency(appointment.totalPrice),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                    // Total Price
+                    CustomButton(
+                      text:
+                          "Pay ${formatToPhpCurrency(appointment.totalPrice)}",
+                      textSize: AppTextSize.md,
+                      height: 64,
+                      onPressed: () =>
+                          context.push(CustomerRoute.payment.paymentMethods),
+                      icon: Icons.payment_outlined,
+                      isOutlined: false,
                     ),
                   ],
                 ),

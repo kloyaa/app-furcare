@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
 import 'package:furcare_app/core/helpers/formatters.dart';
 import 'package:furcare_app/core/helpers/theme.dart';
-import 'package:furcare_app/data/models/appointment_models.dart';
+import 'package:furcare_app/data/models/home_service/home_service.dart'
+    show HomeServiceSchedule;
+import 'package:furcare_app/data/models/home_service/home_service_request.dart';
 import 'package:furcare_app/data/models/pet_models.dart';
 import 'package:furcare_app/presentation/providers/appointment_provider.dart';
 import 'package:furcare_app/presentation/providers/branch_provider.dart';

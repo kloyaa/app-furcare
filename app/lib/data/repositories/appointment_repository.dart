@@ -2,8 +2,13 @@ import 'package:dartz/dartz.dart';
 import 'package:furcare_app/core/errors/exceptions.dart';
 import 'package:furcare_app/core/errors/failures.dart';
 import 'package:furcare_app/data/datasources/remote/appointment_remote_datasource.dart';
-import 'package:furcare_app/data/models/appointment_models.dart';
+import 'package:furcare_app/data/models/boarding/boarding.dart';
+import 'package:furcare_app/data/models/boarding/boarding_request.dart';
 import 'package:furcare_app/data/models/default_models.dart';
+import 'package:furcare_app/data/models/grooming/grooming.dart';
+import 'package:furcare_app/data/models/grooming/grooming_request.dart';
+import 'package:furcare_app/data/models/home_service/home_service.dart';
+import 'package:furcare_app/data/models/home_service/home_service_request.dart';
 
 abstract class AppointmentRepository {
   Future<Either<Failure, DefaultResponse>> createGroomingAppointment(
