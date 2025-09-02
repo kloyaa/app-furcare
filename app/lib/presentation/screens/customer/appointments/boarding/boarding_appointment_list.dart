@@ -6,7 +6,6 @@ import 'package:furcare_app/core/helpers/widget_helpers.dart';
 import 'package:furcare_app/data/models/boarding/boarding.dart';
 import 'package:furcare_app/presentation/providers/appointment_provider.dart';
 import 'package:furcare_app/presentation/routes/customer_router.dart';
-import 'package:furcare_app/presentation/screens/customer/appointments/widgets/boarding/skeleton.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_appbar.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
 import 'package:furcare_app/presentation/widgets/dialog/custom_boarding_details_dialog.dart';
