@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
 import 'package:furcare_app/core/helpers/formatters.dart';
 import 'package:furcare_app/core/helpers/widget_helpers.dart';
-import 'package:furcare_app/data/models/appointment_models.dart';
+import 'package:furcare_app/data/models/boarding/boarding.dart';
 import 'package:furcare_app/presentation/providers/appointment_provider.dart';
 import 'package:furcare_app/presentation/routes/customer_router.dart';
 import 'package:furcare_app/presentation/screens/customer/appointments/widgets/boarding/skeleton.dart';
@@ -69,7 +69,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
             final appointments = appointmentProvider.boardingAppointments;
 
             if (appointmentProvider.isFetchingAppointments) {
-              return const BoardingApplicationsSkeleton();
+              return const Center(child: CircularProgressIndicator());
             }
 
             if (appointments.isEmpty) {
@@ -244,12 +244,52 @@ class _AppointmentCardState extends State<_AppointmentCard>
     _scaleController.reverse();
   }
 
+  // Helper methods for payment status
+  Color _getPaymentStatusColor() {
+    switch (widget.appointment.paymentStatus) {
+      case 'fully_paid':
+        return Colors.green;
+      case 'partially_paid':
+        return Colors.orange;
+      case 'overpaid':
+        return Colors.blue;
+      case 'unpaid':
+      default:
+        return Colors.red;
+    }
+  }
+
+  IconData _getPaymentStatusIcon() {
+    switch (widget.appointment.paymentStatus) {
+      case 'fully_paid':
+        return Icons.check_circle_rounded;
+      case 'partially_paid':
+        return Icons.schedule_rounded;
+      case 'overpaid':
+        return Icons.trending_up_rounded;
+      case 'unpaid':
+      default:
+        return Icons.warning_rounded;
+    }
+  }
+
+  String _getPaymentStatusText() {
+    switch (widget.appointment.paymentStatus) {
+      case 'fully_paid':
+        return 'Fully Paid';
+      case 'partially_paid':
+        return 'Partially Paid';
+      case 'overpaid':
+        return 'Overpaid';
+      case 'unpaid':
+      default:
+        return 'Unpaid';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final pet = widget.appointment.pet;
-    final schedule = widget.appointment.schedule;
-    final scheduleDatetime = DateTime.parse(schedule.date);
-    final formattedDate = formatDateToLong(scheduleDatetime);
+    final paymentStatusColor = _getPaymentStatusColor();
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -310,7 +350,7 @@ class _AppointmentCardState extends State<_AppointmentCard>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              pet.name,
+                              widget.appointment.pet.name,
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -318,18 +358,17 @@ class _AppointmentCardState extends State<_AppointmentCard>
                               ),
                             ),
                             Text(
-                              '${pet.specie} • ${pet.gender}',
+                              '${widget.appointment.pet.specie} • ${widget.appointment.pet.gender}',
                               style: TextStyle(
                                 fontSize: 14,
                                 color: widget.colorScheme.onSurface.withAlpha(
-                                  179,
+                                  153,
                                 ),
                               ),
                             ),
                           ],
                         ),
                       ),
-
                       Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 8,
@@ -347,6 +386,12 @@ class _AppointmentCardState extends State<_AppointmentCard>
                             color: widget.statusColor,
                           ),
                         ),
+                      ),
+                      SizedBox(width: 8),
+                      Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        size: 16,
+                        color: widget.colorScheme.onSurface.withAlpha(102),
                       ),
                     ],
                   ),
@@ -381,41 +426,6 @@ class _AppointmentCardState extends State<_AppointmentCard>
                           ),
                         )
                       : SizedBox(height: 15),
-                  // Boarding specific details
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.hotel,
-                        size: 16,
-                        color: widget.colorScheme.onSurface.withAlpha(153),
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        '${widget.appointment.cage.size} Cage',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: widget.colorScheme.onSurface.withAlpha(204),
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Icon(
-                        Icons.schedule,
-                        size: 16,
-                        color: widget.colorScheme.onSurface.withAlpha(153),
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        '${schedule.days} days',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: widget.colorScheme.onSurface.withAlpha(204),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 8),
-
                   Row(
                     children: [
                       Icon(
@@ -425,19 +435,15 @@ class _AppointmentCardState extends State<_AppointmentCard>
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        '$formattedDate at ${schedule.time}',
+                        formatDateToLong(
+                          DateTime.parse(widget.appointment.schedule.date),
+                        ),
                         style: TextStyle(
                           fontSize: 14,
                           color: widget.colorScheme.onSurface.withAlpha(204),
                         ),
                       ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 8),
-
-                  Row(
-                    children: [
+                      const SizedBox(width: 16),
                       Icon(
                         Icons.location_on_rounded,
                         size: 16,
@@ -456,25 +462,162 @@ class _AppointmentCardState extends State<_AppointmentCard>
                       ),
                     ],
                   ),
-
                   const SizedBox(height: 12),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        formatToPhpCurrency(widget.appointment.totalPrice),
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: widget.colorScheme.primary,
+
+                  // Enhanced Payment Status Section
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: paymentStatusColor.withAlpha(26),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: paymentStatusColor.withAlpha(51),
+                        width: 1,
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        // Payment Status Header
+                        Row(
+                          children: [
+                            Icon(
+                              _getPaymentStatusIcon(),
+                              size: 18,
+                              color: paymentStatusColor,
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              _getPaymentStatusText(),
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: paymentStatusColor,
+                              ),
+                            ),
+                            const Spacer(),
+                            Text(
+                              formatToPhpCurrency(
+                                widget.appointment.totalPrice,
+                              ),
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: widget.colorScheme.primary,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      Icon(
-                        Icons.arrow_forward_ios_rounded,
-                        size: 16,
-                        color: widget.colorScheme.onSurface.withAlpha(102),
-                      ),
-                    ],
+
+                        // Payment Details
+                        if (widget.appointment.paymentStatus != 'unpaid') ...[
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Paid Amount',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: widget.colorScheme.onSurface
+                                            .withAlpha(153),
+                                      ),
+                                    ),
+                                    Text(
+                                      formatToPhpCurrency(
+                                        widget.appointment.paidAmount,
+                                      ),
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.green,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              if (widget.appointment.remainingBalance > 0) ...[
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        'Remaining',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: widget.colorScheme.onSurface
+                                              .withAlpha(153),
+                                        ),
+                                      ),
+                                      Text(
+                                        formatToPhpCurrency(
+                                          widget.appointment.remainingBalance,
+                                        ),
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.orange,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ] else if (widget.appointment.paymentStatus ==
+                                  'overpaid') ...[
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        'Overpaid',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: widget.colorScheme.onSurface
+                                              .withAlpha(153),
+                                        ),
+                                      ),
+                                      Text(
+                                        formatToPhpCurrency(
+                                          widget.appointment.paidAmount -
+                                              widget.appointment.totalPrice,
+                                        ),
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.blue,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
+                        ],
+
+                        // Progress Bar for Partial Payments
+                        if (widget.appointment.paymentStatus ==
+                            'partially_paid') ...[
+                          const SizedBox(height: 8),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(4),
+                            child: LinearProgressIndicator(
+                              value:
+                                  widget.appointment.paidAmount /
+                                  widget.appointment.totalPrice,
+                              backgroundColor: widget.colorScheme.outline
+                                  .withAlpha(51),
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Colors.orange,
+                              ),
+                              minHeight: 4,
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
                   ),
                 ],
               ),

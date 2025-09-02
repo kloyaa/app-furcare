@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const jwt_middleware_1 = require("../../../_core/middlewares/jwt.middleware");
+const Boarding_1 = require("../../../controllers/application/Boarding");
+const router = (0, express_1.Router)();
+const commonMiddlewares = [jwt_middleware_1.isAuthenticated];
+router.post('/application/v1/boarding', commonMiddlewares, Boarding_1.createBoardingApplication);
+router.post('/application/v1/boarding/extension', commonMiddlewares, Boarding_1.createBoardingApplicationExtension);
+router.get('/application/v1/boarding', commonMiddlewares, Boarding_1.getBoardingApplications);
+exports.default = router;

@@ -11,15 +11,13 @@ const authorize = (...allowedRoles) => {
             if (!req.user || !req.user.id) {
                 return res.status(401).json(api_statuses_1.statuses['10020']);
             }
-            if (allowedRoles.some((role) => role === roles_enum_1.RoleName.Any)) {
+            if (allowedRoles.some(role => role === roles_enum_1.RoleName.Any)) {
                 return next();
             }
             // Fetch user roles
-            const userRoles = await user_role_schema_1.UserRole
-                .find({ user: req.user.id })
-                .populate('role');
+            const userRoles = await user_role_schema_1.UserRole.find({ user: req.user.id }).populate('role');
             // // Check if user has any of the allowed roles
-            const hasAllowedRole = userRoles.some((userRole) => allowedRoles.includes(userRole.role.name));
+            const hasAllowedRole = userRoles.some(userRole => allowedRoles.includes(userRole.role.name));
             if (!hasAllowedRole) {
                 return res.status(403).json(api_statuses_1.statuses['0057']);
             }

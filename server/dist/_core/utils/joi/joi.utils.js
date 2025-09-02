@@ -8,7 +8,9 @@ const mongoose_1 = __importDefault(require("mongoose"));
 class CustomJoiHelpers {
     static isValidObjectId(value, helpers) {
         if (!mongoose_1.default.Types.ObjectId.isValid(value)) {
-            return helpers.message({ custom: `${helpers.state.path} value is not a valid ObjectId` });
+            return helpers.message({
+                custom: `${helpers.state.path} value is not a valid ObjectId`,
+            });
         }
         return value;
     }

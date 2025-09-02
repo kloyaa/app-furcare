@@ -1,6 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:furcare_app/core/errors/failures.dart';
-import 'package:furcare_app/data/models/appointment_models.dart';
+import 'package:furcare_app/data/models/boarding/boarding.dart';
+import 'package:furcare_app/data/models/boarding/boarding_request.dart';
+import 'package:furcare_app/data/models/grooming/grooming.dart';
+import 'package:furcare_app/data/models/grooming/grooming_request.dart';
+import 'package:furcare_app/data/models/home_service/home_service.dart';
+import 'package:furcare_app/data/models/home_service/home_service_request.dart';
 import 'package:furcare_app/data/repositories/appointment_repository.dart';
 
 enum AppointmentState {

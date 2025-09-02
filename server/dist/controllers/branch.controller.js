@@ -1,14 +1,17 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.clearBranches = exports.getBranches = exports.createRandomBranches = void 0;
 const faker_1 = require("@faker-js/faker");
-const branch_schema_1 = require("../schema/branch.schema");
 const api_statuses_1 = require("../_core/const/api.statuses");
 const error_util_1 = require("../_core/utils/db/error.util");
 const utils_1 = require("../_core/utils/utils");
+const branch_schema_1 = __importDefault(require("../schema/branch.schema"));
 const createRandomBranches = async (req, res) => {
     try {
-        const generatedBranches = await branch_schema_1.Branch.find().sort({ createdAt: -1 });
+        const generatedBranches = await branch_schema_1.default.find().sort({ createdAt: -1 });
         if (generatedBranches.length > 0) {
             return res.status(400).json(api_statuses_1.statuses['03']);
         }
@@ -50,7 +53,7 @@ const createRandomBranches = async (req, res) => {
                 open: faker_1.faker.datatype.boolean(),
             },
         ];
-        await branch_schema_1.Branch.insertMany(branches);
+        await branch_schema_1.default.insertMany(branches);
         return res.status(201).json(api_statuses_1.statuses['00']);
     }
     catch (error) {
@@ -61,7 +64,7 @@ const createRandomBranches = async (req, res) => {
 exports.createRandomBranches = createRandomBranches;
 const getBranches = async (req, res) => {
     try {
-        const branches = await branch_schema_1.Branch.find().sort({ createdAt: -1 });
+        const branches = await branch_schema_1.default.find().sort({ createdAt: -1 });
         return res.status(200).json(branches);
     }
     catch (error) {
@@ -72,7 +75,7 @@ const getBranches = async (req, res) => {
 exports.getBranches = getBranches;
 const clearBranches = async (req, res) => {
     try {
-        await branch_schema_1.Branch.deleteMany({});
+        await branch_schema_1.default.deleteMany({});
         return res.status(200).json(api_statuses_1.statuses['00']);
     }
     catch (error) {

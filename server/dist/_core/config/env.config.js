@@ -21,7 +21,11 @@ const getEnv = async () => {
         CLOUDINARY_SECRET: process.env.CLOUDINARY_SECRET,
     };
     // Check if any property is undefined or null
-    const missingVariables = Object.entries(env).filter(([, value]) => value === undefined || value === null || value === 'null' || value === 'undefined' || value === '');
+    const missingVariables = Object.entries(env).filter(([, value]) => value === undefined ||
+        value === null ||
+        value === 'null' ||
+        value === 'undefined' ||
+        value === '');
     if (missingVariables.length > 0) {
         const missingProps = missingVariables.map(([key]) => key).join(', ');
         throw new Error(`Missing environment variables: ${missingProps}`);

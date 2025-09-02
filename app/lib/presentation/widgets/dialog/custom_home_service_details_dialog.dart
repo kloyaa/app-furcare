@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
 import 'package:furcare_app/core/helpers/formatters.dart';
-import 'package:furcare_app/data/models/appointment_models.dart';
+import 'package:furcare_app/data/models/home_service/home_service.dart';
+import 'package:furcare_app/presentation/routes/customer_router.dart';
+import 'package:furcare_app/presentation/widgets/common/custom_button.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-class HomeServiceAppointmentPreviewDialog extends StatelessWidget {
+class HomeServiceAppointmentPreviewDialog extends StatefulWidget {
   final HomeServiceAppointment appointment;
 
   const HomeServiceAppointmentPreviewDialog({
@@ -13,14 +16,23 @@ class HomeServiceAppointmentPreviewDialog extends StatelessWidget {
     required this.appointment,
   });
 
+  @override
+  State<HomeServiceAppointmentPreviewDialog> createState() =>
+      _HomeServiceAppointmentPreviewDialogState();
+}
+
+class _HomeServiceAppointmentPreviewDialogState
+    extends State<HomeServiceAppointmentPreviewDialog> {
   String _formatSchedule() {
-    final date = formatDateToLong(DateTime.parse(appointment.schedule.date));
-    final time = appointment.schedule.time;
+    final date = formatDateToLong(
+      DateTime.parse(widget.appointment.schedule.date),
+    );
+    final time = widget.appointment.schedule.time;
     return '$date at $time';
   }
 
   String _formatCreatedDate() {
-    return DateFormat('MMM dd, yyyy').format(appointment.createdAt);
+    return DateFormat('MMM dd, yyyy').format(widget.appointment.createdAt);
   }
 
   @override
@@ -96,20 +108,20 @@ class HomeServiceAppointmentPreviewDialog extends StatelessWidget {
                     _buildSection('Pet Information', [
                       _buildInfoRow(
                         'Name',
-                        appointment.pet.name,
+                        widget.appointment.pet.name,
                         Icons.pets,
                         colorScheme,
                       ),
                       _buildInfoRow(
                         'Species',
-                        appointment.pet.specie,
+                        widget.appointment.pet.specie,
                         Icons.category,
                         colorScheme,
                       ),
                       _buildInfoRow(
                         'Gender',
-                        appointment.pet.gender,
-                        appointment.pet.gender.toLowerCase() == 'male'
+                        widget.appointment.pet.gender,
+                        widget.appointment.pet.gender.toLowerCase() == 'male'
                             ? Icons.male
                             : Icons.female,
                         colorScheme,
@@ -134,26 +146,26 @@ class HomeServiceAppointmentPreviewDialog extends StatelessWidget {
                     _buildSection('Branch Information', [
                       _buildInfoRow(
                         'Name',
-                        appointment.branch.name,
+                        widget.appointment.branch.name,
                         Icons.store,
                         colorScheme,
                       ),
                       _buildInfoRow(
                         'Address',
-                        appointment.branch.address,
+                        widget.appointment.branch.address,
                         Icons.location_on,
                         colorScheme,
                       ),
-                      if (appointment.branch.phone.isNotEmpty)
+                      if (widget.appointment.branch.phone.isNotEmpty)
                         _buildInfoRow(
                           'Phone',
-                          appointment.branch.phone,
+                          widget.appointment.branch.phone,
                           Icons.phone,
                           colorScheme,
                         ),
                       _buildInfoRow(
                         'Status',
-                        appointment.branch.open ? 'Open' : 'Closed',
+                        widget.appointment.branch.open ? 'Open' : 'Closed',
                         Icons.schedule,
                         colorScheme,
                       ),
@@ -162,26 +174,26 @@ class HomeServiceAppointmentPreviewDialog extends StatelessWidget {
                     _buildSection('Appointment Details', [
                       _buildInfoRow(
                         'Status',
-                        appointment.status.toUpperCase(),
+                        widget.appointment.status.toUpperCase(),
                         Icons.flag,
                         colorScheme,
                       ),
                       _buildInfoRow(
                         'Appointment ID',
-                        '#${appointment.id.substring(0, 8).toUpperCase()}',
+                        '#${widget.appointment.id.substring(0, 8).toUpperCase()}',
                         Icons.tag,
                         colorScheme,
                       ),
                       _buildInfoRow(
                         'User ID',
-                        appointment.user.substring(0, 8).toUpperCase(),
+                        widget.appointment.user.substring(0, 8).toUpperCase(),
                         Icons.person,
                         colorScheme,
                       ),
                     ], colorScheme),
 
                     // Show warning if pet record not found
-                    if (appointment.pet.name == "Record not found")
+                    if (widget.appointment.pet.name == "Record not found")
                       Container(
                         margin: const EdgeInsets.symmetric(vertical: 24),
                         padding: const EdgeInsets.all(16),
@@ -215,28 +227,8 @@ class HomeServiceAppointmentPreviewDialog extends StatelessWidget {
                         ),
                       ),
 
-                    Container(
-                      margin: const EdgeInsets.symmetric(vertical: 24),
-                      child: Divider(),
-                    ),
-
-                    Container(
-                      margin: const EdgeInsets.only(bottom: 24),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              CustomText.title(
-                                color: colorScheme.primary,
-                                formatToPhpCurrency(appointment.totalPrice),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
+                    // Total Price
+                    _buildTotalSummary(colorScheme),
                   ],
                 ),
               ),
@@ -244,6 +236,29 @@ class HomeServiceAppointmentPreviewDialog extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildTotalSummary(ColorScheme colorScheme) {
+    if (widget.appointment.remainingBalance == 0) {
+      return SizedBox(width: double.infinity);
+    }
+    return Column(
+      children: [
+        Container(
+          margin: const EdgeInsets.symmetric(vertical: 24),
+          child: Divider(),
+        ),
+        CustomButton(
+          text:
+              "Pay ${formatToPhpCurrency(widget.appointment.remainingBalance)}",
+          textSize: AppTextSize.md,
+          height: 64,
+          onPressed: () => context.push(CustomerRoute.payment.paymentMethods),
+          icon: Icons.payment_outlined,
+          isOutlined: false,
+        ),
+      ],
     );
   }
 

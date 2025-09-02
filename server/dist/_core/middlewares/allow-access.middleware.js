@@ -23,7 +23,8 @@ const allowApiAccessMiddleware = async (req, res, next) => {
         return res.status(403).json(api_statuses_1.statuses['0060']);
     }
     const env = await (0, env_config_1.getEnv)();
-    if (accessKey?.toString().trim() === env.NODEX_ACCESS_KEY && secretKey?.toString().trim() === env.NODEX_SECRET_KEY) {
+    if (accessKey?.toString().trim() === env.NODEX_ACCESS_KEY &&
+        secretKey?.toString().trim() === env.NODEX_SECRET_KEY) {
         next();
     }
     else {

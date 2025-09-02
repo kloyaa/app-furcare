@@ -44,7 +44,9 @@ const isPasswordAlreadyUsed = async (user, password) => {
 exports.isPasswordAlreadyUsed = isPasswordAlreadyUsed;
 const findLastChangePassActivityByUser = async (user) => {
     try {
-        const activity = await user_schema_1.Password.findOne({ user }).sort({ createdAt: 'desc' });
+        const activity = await user_schema_1.Password.findOne({ user }).sort({
+            createdAt: 'desc',
+        });
         return activity?.createdAt ?? null;
     }
     catch (error) {

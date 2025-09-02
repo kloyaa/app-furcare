@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:furcare_app/core/helpers/navigation_logger.dart';
+import 'package:furcare_app/presentation/screens/customer/payments/bank/bank_payment.dart';
+import 'package:furcare_app/presentation/screens/customer/payments/bank/bank_payment_receipt.dart';
+import 'package:furcare_app/presentation/screens/customer/payments/ewallet/gcash/gcash_payment.dart';
+import 'package:furcare_app/presentation/screens/customer/payments/ewallet/gcash/gcash_payment_receipt.dart';
+import 'package:furcare_app/presentation/screens/customer/payments/otc_payment.dart';
+import 'package:furcare_app/presentation/screens/customer/payments/payment_methods.dart';
 import 'package:furcare_app/presentation/screens/customer/tabs/settings_subitems/accounts.dart';
 import 'package:furcare_app/presentation/screens/customer/appointments/boarding/boarding_appointment_create.dart';
 import 'package:furcare_app/presentation/screens/customer/appointments/home_service/home_service_appointment_create.dart';
@@ -46,6 +52,26 @@ class _GetBookingRoutes {
   final String homeService = '/me/appointments/home-service';
 }
 
+class _PaymentRoutes {
+  const _PaymentRoutes();
+
+  final String paymentMethods = '/payment/methods';
+  final String bankPayment = '/payment/bank';
+  final String ewalletGcashPayment = '/payment/ewallet/gcash';
+  final String ewalletMayaPayment = '/payment/ewallet/maya';
+  final String otcPayment = '/payment/otc';
+}
+
+class _PaymentReceiptRoutes {
+  const _PaymentReceiptRoutes();
+
+  final String bankReceipt = '/receipt/bank';
+  final String ewalletReceipt = '/receipt/ewallet';
+  final String ewalletGcashReceipt = '/receipt/ewallet/gcash';
+  final String ewalletMayaReceipt = '/receipt/ewallet/maya';
+  final String otcReceipt = '/receipt/bank/otc';
+}
+
 class CustomerRoute {
   static const String root = '/';
   static const String preLogin = '/pre-login';
@@ -55,6 +81,8 @@ class CustomerRoute {
 
   static const create = _CreateBookingRoutes();
   static const me = _GetBookingRoutes();
+  static const payment = _PaymentRoutes();
+  static const receipt = _PaymentReceiptRoutes();
 
   // Pets
   static const String pets = '/me/pets';
@@ -215,6 +243,45 @@ final GoRouter customerRouter = GoRouter(
           path: CustomerRoute.changePassword,
           builder: (BuildContext context, GoRouterState state) {
             return const ChangePasswordScreen();
+          },
+        ),
+
+        GoRoute(
+          path: CustomerRoute.payment.paymentMethods,
+          builder: (BuildContext context, GoRouterState state) {
+            return const PaymentMethodsScreen();
+          },
+        ),
+
+        GoRoute(
+          path: CustomerRoute.payment.otcPayment,
+          builder: (BuildContext context, GoRouterState state) {
+            return const OTCPaymentReceiptScreen();
+          },
+        ),
+        GoRoute(
+          path: CustomerRoute.payment.bankPayment,
+          builder: (BuildContext context, GoRouterState state) {
+            return const BankPaymentScreen();
+          },
+        ),
+        GoRoute(
+          path: CustomerRoute.receipt.bankReceipt,
+          builder: (BuildContext context, GoRouterState state) {
+            return const BankPaymentReceiptScreen();
+          },
+        ),
+        GoRoute(
+          path: CustomerRoute.payment.ewalletGcashPayment,
+          builder: (BuildContext context, GoRouterState state) {
+            return const GCashPaymentScreen();
+          },
+        ),
+
+        GoRoute(
+          path: CustomerRoute.receipt.ewalletGcashReceipt,
+          builder: (BuildContext context, GoRouterState state) {
+            return const GCashPaymentReceiptScreen();
           },
         ),
       ],

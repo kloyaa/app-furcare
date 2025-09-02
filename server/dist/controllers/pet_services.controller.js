@@ -103,38 +103,30 @@ const updateCageOccupant = async (req, res) => {
     try {
         const cage = await pet_services_schema_1.default.findById(id);
         if (!cage) {
-            return res
-                .status(404)
-                .json(api_statuses_1.statuses['02']);
+            return res.status(404).json(api_statuses_1.statuses['02']);
         }
         if (action === 'add') {
             if (cage.occupant >= cage.max) {
-                return res
-                    .status(400)
-                    .json({
+                return res.status(400).json({
                     ...api_statuses_1.statuses['01'],
-                    message: 'Cage is already full.'
+                    message: 'Cage is already full.',
                 });
             }
             cage.occupant += 1;
         }
         else if (action === 'remove') {
             if (cage.occupant <= 0) {
-                return res
-                    .status(400)
-                    .json({
+                return res.status(400).json({
                     ...api_statuses_1.statuses['01'],
-                    message: 'Cage is already empty.'
+                    message: 'Cage is already empty.',
                 });
             }
             cage.occupant -= 1;
         }
         await cage.save();
-        return res
-            .status(200)
-            .json({
+        return res.status(200).json({
             ...api_statuses_1.statuses['00'],
-            message: 'Occupant updated successfully.'
+            message: 'Occupant updated successfully.',
         });
     }
     catch (error) {
@@ -147,27 +139,19 @@ const validateCageAvailability = async (req, res) => {
     try {
         const { id } = req.params;
         if (!(0, mongoose_1.isObjectIdOrHexString)(id)) {
-            return res
-                .status(400)
-                .json(api_statuses_1.statuses['0901']);
+            return res.status(400).json(api_statuses_1.statuses['0901']);
         }
         const cage = await pet_services_schema_1.default.findById(id);
         if (!cage) {
-            return res
-                .status(404)
-                .json(api_statuses_1.statuses['02']);
+            return res.status(404).json(api_statuses_1.statuses['02']);
         }
         if (cage.occupant >= cage.max) {
-            return res
-                .status(400)
-                .json({
+            return res.status(400).json({
                 ...api_statuses_1.statuses['01'],
-                message: 'Cage is already full.'
+                message: 'Cage is already full.',
             });
         }
-        return res
-            .status(200)
-            .json(api_statuses_1.statuses['00']);
+        return res.status(200).json(api_statuses_1.statuses['00']);
     }
     catch (error) {
         console.log('@validateCageCapacity error', error);

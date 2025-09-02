@@ -11,13 +11,14 @@ class AWSService {
         this.config = config;
         const clientConfig = {
             region: config.region,
-            ...(config.accessKeyId && config.secretAccessKey && {
+            ...(config.accessKeyId &&
+                config.secretAccessKey && {
                 credentials: {
                     accessKeyId: config.accessKeyId,
                     secretAccessKey: config.secretAccessKey,
-                    ...(config.sessionToken && { sessionToken: config.sessionToken })
-                }
-            })
+                    ...(config.sessionToken && { sessionToken: config.sessionToken }),
+                },
+            }),
         };
         this.s3Client = new client_s3_1.S3Client(clientConfig);
         this.dynamoClient = new client_dynamodb_1.DynamoDBClient(clientConfig);
@@ -51,7 +52,7 @@ class AWSService {
         try {
             const command = new client_s3_1.GetObjectCommand({
                 Bucket: options.bucket,
-                Key: options.key
+                Key: options.key,
             });
             const result = await this.s3Client.send(command);
             if (!result.Body) {
@@ -73,7 +74,7 @@ class AWSService {
         try {
             const command = new client_s3_1.DeleteObjectCommand({
                 Bucket: options.bucket,
-                Key: options.key
+                Key: options.key,
             });
             await this.s3Client.send(command);
             return true;
@@ -88,13 +89,13 @@ class AWSService {
                 Bucket: options.bucket,
                 Prefix: options.prefix,
                 MaxKeys: options.maxKeys || 1000,
-                ContinuationToken: options.continuationToken
+                ContinuationToken: options.continuationToken,
             });
             const result = await this.s3Client.send(command);
             return {
                 objects: result.Contents || [],
                 isTruncated: result.IsTruncated || false,
-                nextContinuationToken: result.NextContinuationToken
+                nextContinuationToken: result.NextContinuationToken,
             };
         }
         catch (error) {
@@ -105,7 +106,7 @@ class AWSService {
         try {
             const command = new client_s3_1.HeadObjectCommand({
                 Bucket: options.bucket,
-                Key: options.key
+                Key: options.key,
             });
             const result = await this.s3Client.send(command);
             return {
@@ -113,7 +114,7 @@ class AWSService {
                 contentType: result.ContentType,
                 lastModified: result.LastModified,
                 etag: result.ETag,
-                metadata: result.Metadata
+                metadata: result.Metadata,
             };
         }
         catch (error) {
@@ -124,7 +125,7 @@ class AWSService {
         try {
             const command = new client_s3_1.GetObjectCommand({
                 Bucket: options.bucket,
-                Key: options.key
+                Key: options.key,
             });
             return await (0, s3_request_presigner_1.getSignedUrl)(this.s3Client, command, { expiresIn });
         }
@@ -138,20 +139,20 @@ class AWSService {
             const command = new client_ses_1.SendEmailCommand({
                 Source: from || process.env.AWS_SES_FROM_EMAIL,
                 Destination: {
-                    ToAddresses: to
+                    ToAddresses: to,
                 },
                 Message: {
                     Subject: {
                         Data: subject,
-                        Charset: 'UTF-8'
+                        Charset: 'UTF-8',
                     },
                     Body: {
                         Html: {
                             Data: body,
-                            Charset: 'UTF-8'
-                        }
-                    }
-                }
+                            Charset: 'UTF-8',
+                        },
+                    },
+                },
             });
             const result = await this.sesClient.send(command);
             return { messageId: result.MessageId };
@@ -164,7 +165,7 @@ class AWSService {
     async getSecret(secretName) {
         try {
             const command = new client_secrets_manager_1.GetSecretValueCommand({
-                SecretId: secretName
+                SecretId: secretName,
             });
             const result = await this.secretsManagerClient.send(command);
             if (!result.SecretString) {
@@ -194,13 +195,13 @@ class AWSService {
                 Name: options.secretName,
                 SecretString: secretString,
                 Description: options.description,
-                KmsKeyId: options.kmsKeyId
+                KmsKeyId: options.kmsKeyId,
             });
             const result = await this.secretsManagerClient.send(command);
             return {
                 arn: result.ARN || '',
                 name: result.Name || '',
-                versionId: result.VersionId || ''
+                versionId: result.VersionId || '',
             };
         }
         catch (error) {
@@ -219,13 +220,13 @@ class AWSService {
                 SecretId: options.secretName,
                 SecretString: secretString,
                 Description: options.description,
-                KmsKeyId: options.kmsKeyId
+                KmsKeyId: options.kmsKeyId,
             });
             const result = await this.secretsManagerClient.send(command);
             return {
                 arn: result.ARN || '',
                 name: result.Name || '',
-                versionId: result.VersionId || ''
+                versionId: result.VersionId || '',
             };
         }
         catch (error) {
@@ -236,12 +237,12 @@ class AWSService {
         try {
             const command = new client_secrets_manager_1.DeleteSecretCommand({
                 SecretId: secretName,
-                ForceDeleteWithoutRecovery: forceDelete
+                ForceDeleteWithoutRecovery: forceDelete,
             });
             const result = await this.secretsManagerClient.send(command);
             return {
                 arn: result.ARN || '',
-                deletionDate: result.DeletionDate
+                deletionDate: result.DeletionDate,
             };
         }
         catch (error) {
@@ -257,7 +258,7 @@ class AWSService {
             const result = await this.secretsManagerClient.send(command);
             return {
                 secrets: result.SecretList || [],
-                nextToken: result.NextToken
+                nextToken: result.NextToken,
             };
         }
         catch (error) {

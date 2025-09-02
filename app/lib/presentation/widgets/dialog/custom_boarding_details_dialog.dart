@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
 import 'package:furcare_app/core/helpers/formatters.dart';
 import 'package:furcare_app/core/utils/boarding.dart';
-import 'package:furcare_app/data/models/appointment_models.dart';
+import 'package:furcare_app/data/models/boarding/boarding.dart';
+import 'package:furcare_app/data/models/boarding/boarding_request.dart';
 import 'package:furcare_app/presentation/providers/appointment_provider.dart';
+import 'package:furcare_app/presentation/routes/customer_router.dart';
+import 'package:furcare_app/presentation/widgets/common/custom_button.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class BoardingAppointmentPreviewDialog extends StatefulWidget {
@@ -148,6 +152,7 @@ class _BoardingAppointmentPreviewDialogState
                       const SizedBox(height: 24),
                       _buildExtensionHistory(colorScheme),
                     ],
+
                     _buildPricingSummary(colorScheme),
                   ],
                 ),
@@ -453,72 +458,58 @@ class _BoardingAppointmentPreviewDialogState
             ),
           ],
         ], colorScheme),
-        Container(
-          margin: const EdgeInsets.symmetric(vertical: 16),
-          child: Divider(
-            color: colorScheme.primary.withAlpha(77),
-            thickness: 2,
-          ),
-        ),
+        SizedBox(height: 12),
+        _buildDurationSummary(colorScheme),
+
         _buildTotalSummary(colorScheme),
       ],
     );
   }
 
+  Widget _buildDurationSummary(ColorScheme colorScheme) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          'Total Duration',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: colorScheme.primary,
+          ),
+        ),
+        Text(
+          '${widget.appointment.schedule.days} days',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: colorScheme.primary,
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildTotalSummary(ColorScheme colorScheme) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: colorScheme.primaryContainer.withAlpha(77),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Total Duration',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: colorScheme.primary,
-                ),
-              ),
-              Text(
-                '${widget.appointment.schedule.days} days',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: colorScheme.primary,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Total Amount',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: colorScheme.primary,
-                ),
-              ),
-              Text(
-                formatToPhpCurrency(widget.appointment.totalPrice),
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: colorScheme.primary,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+    if (widget.appointment.remainingBalance == 0) {
+      return SizedBox(width: double.infinity);
+    }
+    return Column(
+      children: [
+        Container(
+          margin: const EdgeInsets.symmetric(vertical: 24),
+          child: Divider(),
+        ),
+        CustomButton(
+          text:
+              "Pay ${formatToPhpCurrency(widget.appointment.remainingBalance)}",
+          textSize: AppTextSize.md,
+          height: 64,
+          onPressed: () => context.push(CustomerRoute.payment.paymentMethods),
+          icon: Icons.payment_outlined,
+          isOutlined: false,
+        ),
+      ],
     );
   }
 

@@ -29,6 +29,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if (mounted) {
         if (authProvider.isAuthenticated) {
           context.go('/home');
+          // context.go(CustomerRoute.payment.otcPayment);
         } else {
           context.go('/login');
         }

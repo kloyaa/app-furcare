@@ -3,18 +3,15 @@ import cors from 'cors';
 import helmet from 'helmet';
 import multer from 'multer';
 import swaggerUi from 'swagger-ui-express';
-
 import { connectDB } from './_core/utils/db/db.util';
 import { getEnv } from './_core/config/env.config';
 import { maintenanceModeMiddleware } from './_core/middlewares/maintenance-mode.middleware';
-
 import { requestLoggerMiddleware } from './_core/middlewares/request-logger.middleware';
 import { allowApiAccessMiddleware } from './_core/middlewares/allow-access.middleware';
 import {
   fileFilter,
   storage,
 } from './_core/services/upload/image_upload.service';
-
 import authRoute from './routes/auth.route';
 import userRoute from './routes/user.route';
 import uploadRoute from './routes/upload.route';
@@ -22,9 +19,14 @@ import auxiliaryRoute from './routes/auxiliary.route';
 import activityRoute from './routes/activity.route';
 import petServicesRoute from './routes/pet_services.route';
 import petRoute from './routes/pet.route';
-import applicationRoute from './routes/application.route';
 import branchRoute from './routes/branch.route';
 import healthRoute from './routes/health.route';
+
+import homeServiceRoute from './routes/application/HomeService';
+import groomingRoute from './routes/application/Grooming';
+import boardingRoute from './routes/application/Boarding';
+
+import paymentRoute from './routes/Payment.routes';
 
 import {
   logNetworBody,
@@ -36,8 +38,9 @@ import { colors } from './_core/const/common.const';
 // import { swaggerSetup } from './swagger/swagger';
 
 import swaggerDocument from './swagger/swagger.json';
-import { connectRedisDb } from './_core/services/redis/redis-client.service';
+// import { connectRedisDb } from './_core/services/redis/redis-client.service';
 import { delay } from './_core/utils/utils';
+
 
 const app: Application = express();
 
@@ -89,8 +92,12 @@ async function runApp(): Promise<void> {
   app.use('/api', activityRoute);
   app.use('/api', petServicesRoute);
   app.use('/api', petRoute);
-  app.use('/api', applicationRoute);
   app.use('/api', branchRoute);
+
+  app.use('/api', homeServiceRoute);
+  app.use('/api', groomingRoute);
+  app.use('/api', boardingRoute);
+  app.use('/api', paymentRoute);
 
   // Swagger setup
   app.use('/api-docs', swaggerUi.serve);

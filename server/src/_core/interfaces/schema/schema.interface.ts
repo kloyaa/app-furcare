@@ -177,10 +177,19 @@ export interface IHomeServiceApplication extends Document {
     date: Date;
     time: string;
   };
+
   totalPrice?: number;
+  paidAmount?: number;
+  paymentStatus: string;
+  remainingBalance: number;
+
   status: string;
+
   createdAt?: Date;
   updatedAt?: Date;
+  // Methods
+  updatePaymentStatus(): void;
+  getTotalPaidAmount(): Promise<number>;
 }
 
 export interface IBranch {
@@ -198,4 +207,20 @@ export interface IPetCage extends Document {
   size: 'Small' | 'Medium' | 'Large';
   occupant: number;
   max: number;
+}
+
+export interface IPayment extends Document {
+  application: Types.ObjectId;
+  applicationModel: string;
+  user: Types.ObjectId;
+  amount: number;
+  paymentMethod: string;
+  paymentStatus: string;
+  paymentType: string;
+  transactionId?: string;
+  paymentGatewayResponse?: any;
+  notes?: string;
+
+  createdAt?: Date;
+  updatedAt?: Date;
 }

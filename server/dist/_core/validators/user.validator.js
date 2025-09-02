@@ -10,8 +10,7 @@ const validateCreateProfile = (body) => {
         fullName: joi_1.default.string().trim().min(2).max(100).required(),
         address: joi_1.default.string().trim().min(5).max(255).required(),
         contact: joi_1.default.object({
-            facebookUrl: joi_1.default.string().uri().optional().allow(''),
-            messengerUrl: joi_1.default.string().uri().optional().allow(''),
+            facebookDisplayName: joi_1.default.string().optional().allow(''),
             phoneNumber: joi_1.default.string()
                 .trim()
                 .pattern(/^09\d{9}$/) // Philippine mobile format
@@ -25,7 +24,14 @@ const validateCreateProfile = (body) => {
 };
 exports.validateCreateProfile = validateCreateProfile;
 const validateUpdateProfile = (body) => {
-    const allowedKeys = ['firstName', 'lastName', 'birthdate', 'address', 'contact', 'gender'];
+    const allowedKeys = [
+        'firstName',
+        'lastName',
+        'birthdate',
+        'address',
+        'contact',
+        'gender',
+    ];
     const schema = joi_1.default.object({
         keys: joi_1.default.array()
             .items(joi_1.default.string().valid(...allowedKeys))
