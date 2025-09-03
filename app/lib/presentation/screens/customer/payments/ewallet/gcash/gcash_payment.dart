@@ -135,14 +135,6 @@ class _GCashPaymentScreenState extends State<GCashPaymentScreen>
         _phoneController.text.trim().isNotEmpty;
   }
 
-  String? _getReferenceValidationError() {
-    if (!_showValidationErrors) return null;
-    final text = _referenceController.text.trim();
-    if (text.isEmpty) return 'Reference number is required';
-    if (text.length < 6) return 'Reference number too short';
-    return null;
-  }
-
   String? _getPhoneValidationError() {
     if (!_showValidationErrors) return null;
     final text = _phoneController.text.trim();
@@ -922,8 +914,6 @@ class _GCashPaymentScreenState extends State<GCashPaymentScreen>
   }
 
   Widget _buildReferenceField(ThemeData theme) {
-    final hasError = _getReferenceValidationError() != null;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -933,67 +923,31 @@ class _GCashPaymentScreenState extends State<GCashPaymentScreen>
           color: theme.colorScheme.onSurface.withAlpha(160),
         ),
         SizedBox(height: 12),
-        AnimatedContainer(
-          duration: Duration(milliseconds: 200),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: hasError
-                  ? theme.colorScheme.error
-                  : _referenceFocusNode.hasFocus
-                  ? theme.colorScheme.primary
-                  : theme.colorScheme.outline.withAlpha(64),
-              width: 2,
+        TextFormField(
+          controller: _referenceController,
+          focusNode: _referenceFocusNode,
+          decoration: InputDecoration(
+            hintText: 'e.g., REF123456789',
+            prefixIcon: Icon(
+              Icons.numbers_outlined,
+              color: theme.colorScheme.primary,
             ),
+            suffixIcon: _referenceController.text.isNotEmpty
+                ? IconButton(
+                    icon: Icon(Icons.clear),
+                    onPressed: () {
+                      _referenceController.clear();
+                      setState(() {});
+                    },
+                  )
+                : null,
+            border: InputBorder.none,
+            contentPadding: EdgeInsets.all(16),
+            errorStyle: TextStyle(height: 0),
           ),
-          child: TextFormField(
-            controller: _referenceController,
-            focusNode: _referenceFocusNode,
-            decoration: InputDecoration(
-              hintText: 'e.g., REF123456789',
-              prefixIcon: Icon(
-                Icons.numbers_outlined,
-                color: hasError
-                    ? theme.colorScheme.error
-                    : _referenceFocusNode.hasFocus
-                    ? theme.colorScheme.primary
-                    : null,
-              ),
-              suffixIcon: _referenceController.text.isNotEmpty
-                  ? IconButton(
-                      icon: Icon(Icons.clear),
-                      onPressed: () {
-                        _referenceController.clear();
-                        setState(() {});
-                      },
-                    )
-                  : null,
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.all(16),
-              errorStyle: TextStyle(height: 0),
-            ),
-            keyboardType: TextInputType.text,
-            textCapitalization: TextCapitalization.characters,
-          ),
+          keyboardType: TextInputType.text,
+          textCapitalization: TextCapitalization.characters,
         ),
-        if (hasError) ...[
-          SizedBox(height: 8),
-          Row(
-            children: [
-              Icon(
-                Icons.error_outline,
-                size: 16,
-                color: theme.colorScheme.error,
-              ),
-              SizedBox(width: 4),
-              CustomText.body(
-                _getReferenceValidationError()!,
-                size: AppTextSize.xs,
-                color: theme.colorScheme.error,
-              ),
-            ],
-          ),
-        ],
       ],
     );
   }

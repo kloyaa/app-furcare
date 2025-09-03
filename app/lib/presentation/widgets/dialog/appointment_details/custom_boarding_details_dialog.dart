@@ -30,6 +30,8 @@ class BoardingAppointmentPreviewDialog extends StatefulWidget {
 
 class _BoardingAppointmentPreviewDialogState
     extends State<BoardingAppointmentPreviewDialog> {
+  bool _needsUpdate = false;
+
   int _currentExtensionDays = 0;
   static const int maxExtensionDays = 12;
   bool _isProcessingExtension = false;
@@ -39,6 +41,7 @@ class _BoardingAppointmentPreviewDialogState
     if (_currentExtensionDays < maxExtensionDays && !_isProcessingExtension) {
       setState(() {
         _currentExtensionDays++;
+        _needsUpdate = true;
       });
       _handleExtensionChange('add', 1);
     }
@@ -48,6 +51,7 @@ class _BoardingAppointmentPreviewDialogState
     if (_currentExtensionDays > 0 && !_isProcessingExtension) {
       setState(() {
         _currentExtensionDays--;
+        _needsUpdate = true;
       });
       _handleExtensionChange('minus', 1);
     }
@@ -473,7 +477,9 @@ class _BoardingAppointmentPreviewDialogState
         SizedBox(height: 12),
         _buildDurationSummary(colorScheme),
 
-        _buildTotalSummary(colorScheme),
+        _needsUpdate
+            ? _buildDismissButton(colorScheme)
+            : _buildTotalSummary(colorScheme),
       ],
     );
   }
@@ -519,6 +525,28 @@ class _BoardingAppointmentPreviewDialogState
           height: 64,
           onPressed: () => _handlePay(),
           icon: Icons.payment_outlined,
+          isOutlined: false,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDismissButton(ColorScheme colorScheme) {
+    if (widget.appointment.remainingBalance == 0) {
+      return SizedBox(width: double.infinity);
+    }
+    return Column(
+      children: [
+        Container(
+          margin: const EdgeInsets.symmetric(vertical: 24),
+          child: Divider(),
+        ),
+        CustomButton(
+          text: "Submit Request",
+          textSize: AppTextSize.md,
+          height: 64,
+          onPressed: () => context.pop(),
+          icon: Icons.send_outlined,
           isOutlined: false,
         ),
       ],
