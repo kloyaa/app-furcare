@@ -5,9 +5,8 @@ class PaymentRequest extends Equatable {
   final String application;
   final ApplicationModel applicationModel;
   final double amount;
-  final String paymentMethod;
-  final String paymentType;
-  final String? notes;
+  final PaymentMethod paymentMethod;
+  final PaymentType paymentType;
 
   const PaymentRequest({
     required this.application,
@@ -15,17 +14,16 @@ class PaymentRequest extends Equatable {
     required this.amount,
     required this.paymentMethod,
     required this.paymentType,
-    this.notes,
   });
 
   Map<String, dynamic> toJson() {
     return {
       'application': application,
-      'applicationModel': applicationModel,
+      'applicationModel': applicationModel.value,
       'amount': amount,
-      'paymentMethod': paymentMethod,
-      'paymentType': paymentType,
-      'notes': notes,
+      'paymentMethod': paymentMethod.value,
+      'paymentType': paymentType.value,
+      'notes': "",
     };
   }
 
@@ -36,6 +34,5 @@ class PaymentRequest extends Equatable {
     amount,
     paymentMethod,
     paymentType,
-    notes,
   ];
 }

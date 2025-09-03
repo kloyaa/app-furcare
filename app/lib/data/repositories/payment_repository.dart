@@ -7,10 +7,11 @@ import 'package:furcare_app/data/models/payment/payment.dart';
 import 'package:furcare_app/data/models/payment/payment_process_request.dart';
 import 'package:furcare_app/data/models/payment/payment_request.dart';
 import 'package:furcare_app/data/models/payment/payment_response.dart';
+import 'package:furcare_app/data/models/payment/payments.dart';
 import 'package:furcare_app/data/models/payment/payment_statistics.dart';
 
 abstract class PaymentRepository {
-  Future<Either<Failure, DefaultResponse>> createPayment(
+  Future<Either<Failure, PaymentResponse>> createPayment(
     PaymentRequest request,
   );
 
@@ -19,7 +20,7 @@ abstract class PaymentRepository {
     PaymentProcessRequest request,
   );
 
-  Future<Either<Failure, PaymentsResponse>> getPayments({
+  Future<Either<Failure, Payments>> getPayments({
     int? page,
     int? limit,
     String? status,
@@ -38,7 +39,7 @@ class PaymentRepositoryImpl implements PaymentRepository {
     : _remoteDataSource = remoteDataSource;
 
   @override
-  Future<Either<Failure, DefaultResponse>> createPayment(
+  Future<Either<Failure, PaymentResponse>> createPayment(
     PaymentRequest request,
   ) async {
     try {
@@ -78,7 +79,7 @@ class PaymentRepositoryImpl implements PaymentRepository {
   }
 
   @override
-  Future<Either<Failure, PaymentsResponse>> getPayments({
+  Future<Either<Failure, Payments>> getPayments({
     int? page,
     int? limit,
     String? status,

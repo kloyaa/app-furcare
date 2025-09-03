@@ -7,6 +7,7 @@ import 'package:furcare_app/data/models/payment/payment.dart';
 import 'package:furcare_app/data/models/payment/payment_process_request.dart';
 import 'package:furcare_app/data/models/payment/payment_request.dart';
 import 'package:furcare_app/data/models/payment/payment_response.dart';
+import 'package:furcare_app/data/models/payment/payments.dart';
 import 'package:furcare_app/data/models/payment/payment_statistics.dart';
 import 'package:furcare_app/data/repositories/payment_repository.dart';
 
@@ -27,13 +28,14 @@ class PaymentProvider with ChangeNotifier {
   PaymentProvider({required PaymentRepository paymentRepository})
     : _paymentRepository = paymentRepository;
 
+  PaymentResponse? _paymentResponse;
   PaymentState _createPaymentState = PaymentState.initial;
   PaymentState _processPaymentState = PaymentState.initial;
   PaymentState _fetchPaymentsState = PaymentState.initial;
   PaymentState _fetchPaymentByIdState = PaymentState.initial;
   PaymentState _fetchStatisticsState = PaymentState.initial;
 
-  PaymentsResponse? _paymentsResponse;
+  Payments? _payments;
   Payment? _selectedPayment;
   List<PaymentStatistics> _paymentStatistics = [];
 
@@ -52,11 +54,11 @@ class PaymentProvider with ChangeNotifier {
   bool get isFetchingStatistics =>
       _fetchStatisticsState == PaymentState.loading;
 
-  PaymentsResponse? get paymentsResponse => _paymentsResponse;
-  List<Payment> get payments => _paymentsResponse?.payments ?? [];
-  Pagination? get pagination => _paymentsResponse?.pagination;
+  Payments? get payments => _payments;
   Payment? get selectedPayment => _selectedPayment;
   List<PaymentStatistics> get paymentStatistics => _paymentStatistics;
+
+  PaymentResponse? get paymentResponse => _paymentResponse;
 
   // Create Payment
   Future<void> createPayment(PaymentRequest request) async {
@@ -71,6 +73,7 @@ class PaymentProvider with ChangeNotifier {
         _handleFailure(failure);
       },
       (response) {
+        _paymentResponse = response;
         _setCreatePaymentState(PaymentState.created);
       },
     );
@@ -93,7 +96,6 @@ class PaymentProvider with ChangeNotifier {
       },
       (response) {
         _setProcessPaymentState(PaymentState.processed);
-        // Refresh payments after processing
         getPayments();
       },
     );
@@ -122,7 +124,7 @@ class PaymentProvider with ChangeNotifier {
         _handleFailure(failure);
       },
       (response) {
-        _paymentsResponse = response;
+        _payments = response;
         _setFetchPaymentsState(PaymentState.fetched);
       },
     );
@@ -168,12 +170,11 @@ class PaymentProvider with ChangeNotifier {
 
   // Load more payments (for pagination)
   Future<void> loadMorePayments({String? status, String? method}) async {
-    if (_paymentsResponse?.pagination.current ==
-        _paymentsResponse?.pagination.total) {
+    if (_payments?.pagination.current == _payments?.pagination.total) {
       return; // No more pages to load
     }
 
-    final nextPage = (_paymentsResponse?.pagination.current ?? 0) + 1;
+    final nextPage = (_payments?.pagination.current ?? 0) + 1;
 
     final result = await _paymentRepository.getPayments(
       page: nextPage,
@@ -186,13 +187,13 @@ class PaymentProvider with ChangeNotifier {
         _handleFailure(failure);
       },
       (response) {
-        if (_paymentsResponse != null) {
+        if (_payments != null) {
           final combinedPayments = [
-            ..._paymentsResponse!.payments,
+            ..._payments!.payments,
             ...response.payments,
           ];
 
-          _paymentsResponse = PaymentsResponse(
+          _payments = Payments(
             payments: combinedPayments,
             pagination: response.pagination,
           );
@@ -254,7 +255,7 @@ class PaymentProvider with ChangeNotifier {
     _fetchPaymentByIdState = PaymentState.initial;
     _fetchStatisticsState = PaymentState.initial;
 
-    _paymentsResponse = null;
+    _payments = null;
     _selectedPayment = null;
     _paymentStatistics = [];
 
@@ -275,7 +276,7 @@ class PaymentSettingsProvider extends ChangeNotifier {
   int _amount = 0;
   int _amountPaid = 0;
 
-  File? _receipt = null;
+  File? _receipt;
 
   PaymentMethod get paymentMethod => _paymentMethod;
   PaymentType get paymentType => _paymentType;

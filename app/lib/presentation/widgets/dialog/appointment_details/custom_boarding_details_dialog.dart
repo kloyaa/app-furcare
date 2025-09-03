@@ -97,7 +97,7 @@ class _BoardingAppointmentPreviewDialogState
   }
 
   void _handlePay() {
-    PaymentSettingsProvider provider = context.read<PaymentSettingsProvider>();
+    final provider = context.read<PaymentSettingsProvider>();
 
     provider.setAmount(widget.appointment.remainingBalance);
     provider.setApplication(widget.appointment.id);

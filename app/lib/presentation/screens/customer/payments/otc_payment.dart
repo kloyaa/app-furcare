@@ -6,7 +6,6 @@ import 'package:furcare_app/presentation/routes/customer_router.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_button.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class OTCPaymentReceiptScreen extends StatefulWidget {

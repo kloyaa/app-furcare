@@ -23,7 +23,6 @@ class _GCashPaymentReceiptScreenState extends State<GCashPaymentReceiptScreen>
     with TickerProviderStateMixin {
   late AnimationController _successAnimationController;
   late AnimationController _slideAnimationController;
-  late Animation<double> _successAnimation;
   late Animation<double> _slideAnimation;
   late Animation<double> _fadeAnimation;
 
@@ -39,13 +38,6 @@ class _GCashPaymentReceiptScreenState extends State<GCashPaymentReceiptScreen>
     _slideAnimationController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
-    );
-
-    _successAnimation = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(
-        parent: _successAnimationController,
-        curve: Curves.elasticOut,
-      ),
     );
 
     _slideAnimation = Tween<double>(begin: 50, end: 0).animate(

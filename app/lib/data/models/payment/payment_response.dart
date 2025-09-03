@@ -1,91 +1,158 @@
 import 'package:equatable/equatable.dart';
-import 'package:furcare_app/data/models/payment/payment.dart';
+import 'package:furcare_app/data/models/default_models.dart';
 
-class Pagination extends Equatable {
-  final int current;
-  final int total;
-  final int count;
-  final int totalRecords;
+class PaymentResponseData extends Equatable {
+  final String application;
+  final String applicationModel;
+  final String user;
+  final double amount;
+  final String paymentMethod;
+  final String paymentStatus;
+  final dynamic paymentGatewayResponse; // Can be null or object
+  final String paymentType;
+  final String? notes;
+  final String id;
+  final String createdAt;
+  final String updatedAt;
+  final int v;
 
-  const Pagination({
-    required this.current,
-    required this.total,
-    required this.count,
-    required this.totalRecords,
+  const PaymentResponseData({
+    required this.application,
+    required this.applicationModel,
+    required this.user,
+    required this.amount,
+    required this.paymentMethod,
+    required this.paymentStatus,
+    this.paymentGatewayResponse,
+    required this.paymentType,
+    this.notes,
+    required this.id,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.v,
   });
 
-  factory Pagination.fromJson(Map<String, dynamic> json) {
-    return Pagination(
-      current: json['current'] as int? ?? 1,
-      total: json['total'] as int? ?? 0,
-      count: json['count'] as int? ?? 0,
-      totalRecords: json['totalRecords'] as int? ?? 0,
+  factory PaymentResponseData.fromJson(Map<String, dynamic> json) {
+    return PaymentResponseData(
+      application: json['application'] as String? ?? '',
+      applicationModel: json['applicationModel'] as String? ?? '',
+      user: json['user'] as String? ?? '',
+      amount: (json['amount'] as num?)?.toDouble() ?? 0.0,
+      paymentMethod: json['paymentMethod'] as String? ?? '',
+      paymentStatus: json['paymentStatus'] as String? ?? '',
+      paymentGatewayResponse: json['paymentGatewayResponse'],
+      paymentType: json['paymentType'] as String? ?? '',
+      notes: json['notes'] as String?,
+      id: json['_id'] as String? ?? '',
+      createdAt: json['createdAt'] as String? ?? '',
+      updatedAt: json['updatedAt'] as String? ?? '',
+      v: json['__v'] as int? ?? 0,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'current': current,
-      'total': total,
-      'count': count,
-      'totalRecords': totalRecords,
+      'application': application,
+      'applicationModel': applicationModel,
+      'user': user,
+      'amount': amount,
+      'paymentMethod': paymentMethod,
+      'paymentStatus': paymentStatus,
+      'paymentGatewayResponse': paymentGatewayResponse,
+      'paymentType': paymentType,
+      'notes': notes,
+      '_id': id,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
+      '__v': v,
     };
   }
 
-  Pagination copyWith({
-    int? current,
-    int? total,
-    int? count,
-    int? totalRecords,
+  PaymentResponseData copyWith({
+    String? application,
+    String? applicationModel,
+    String? user,
+    double? amount,
+    String? paymentMethod,
+    String? paymentStatus,
+    dynamic paymentGatewayResponse,
+    String? paymentType,
+    String? notes,
+    String? id,
+    String? createdAt,
+    String? updatedAt,
+    int? v,
   }) {
-    return Pagination(
-      current: current ?? this.current,
-      total: total ?? this.total,
-      count: count ?? this.count,
-      totalRecords: totalRecords ?? this.totalRecords,
+    return PaymentResponseData(
+      application: application ?? this.application,
+      applicationModel: applicationModel ?? this.applicationModel,
+      user: user ?? this.user,
+      amount: amount ?? this.amount,
+      paymentMethod: paymentMethod ?? this.paymentMethod,
+      paymentStatus: paymentStatus ?? this.paymentStatus,
+      paymentGatewayResponse:
+          paymentGatewayResponse ?? this.paymentGatewayResponse,
+      paymentType: paymentType ?? this.paymentType,
+      notes: notes ?? this.notes,
+      id: id ?? this.id,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      v: v ?? this.v,
     );
   }
 
   @override
-  List<Object?> get props => [current, total, count, totalRecords];
+  List<Object?> get props => [
+    application,
+    applicationModel,
+    user,
+    amount,
+    paymentMethod,
+    paymentStatus,
+    paymentGatewayResponse,
+    paymentType,
+    notes,
+    id,
+    createdAt,
+    updatedAt,
+    v,
+  ];
 }
 
-class PaymentsResponse extends Equatable {
-  final List<Payment> payments;
-  final Pagination pagination;
+class PaymentResponse extends DefaultResponse {
+  final PaymentResponseData data;
 
-  const PaymentsResponse({required this.payments, required this.pagination});
+  const PaymentResponse({
+    required super.message,
+    required super.code,
+    required this.data,
+  });
 
-  factory PaymentsResponse.fromJson(Map<String, dynamic> json) {
-    return PaymentsResponse(
-      payments:
-          (json['payments'] as List<dynamic>?)
-              ?.map(
-                (paymentJson) =>
-                    Payment.fromJson(paymentJson as Map<String, dynamic>),
-              )
-              .toList() ??
-          [],
-      pagination: Pagination.fromJson(
-        json['pagination'] as Map<String, dynamic>,
-      ),
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'payments': payments.map((payment) => payment.toJson()).toList(),
-      'pagination': pagination.toJson(),
-    };
-  }
-
-  PaymentsResponse copyWith({List<Payment>? payments, Pagination? pagination}) {
-    return PaymentsResponse(
-      payments: payments ?? this.payments,
-      pagination: pagination ?? this.pagination,
+  factory PaymentResponse.fromJson(Map<String, dynamic> json) {
+    return PaymentResponse(
+      message: json['message'] as String? ?? '',
+      code: json['code'] as String? ?? '',
+      data: PaymentResponseData.fromJson(json['data'] as Map<String, dynamic>),
     );
   }
 
   @override
-  List<Object?> get props => [payments, pagination];
+  Map<String, dynamic> toJson() {
+    return {'message': message, 'code': code, 'data': data.toJson()};
+  }
+
+  PaymentResponse copyWith({
+    String? message,
+    String? code,
+    PaymentResponseData? data,
+  }) {
+    return PaymentResponse(
+      message: message ?? this.message,
+      code: code ?? this.code,
+      data: data ?? this.data,
+    );
+  }
+
+  @override
+  List<Object?> get props => [message, code, data];
 }

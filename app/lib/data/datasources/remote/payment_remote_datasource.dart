@@ -8,15 +8,16 @@ import 'package:furcare_app/data/models/payment/payment.dart';
 import 'package:furcare_app/data/models/payment/payment_process_request.dart';
 import 'package:furcare_app/data/models/payment/payment_request.dart';
 import 'package:furcare_app/data/models/payment/payment_response.dart';
+import 'package:furcare_app/data/models/payment/payments.dart';
 import 'package:furcare_app/data/models/payment/payment_statistics.dart';
 
 abstract class PaymentRemoteDatasource {
-  Future<DefaultResponse> createPayment(PaymentRequest request);
+  Future<PaymentResponse> createPayment(PaymentRequest request);
   Future<DefaultResponse> processPayment(
     String paymentId,
     PaymentProcessRequest request,
   );
-  Future<PaymentsResponse> getPayments({
+  Future<Payments> getPayments({
     int? page,
     int? limit,
     String? status,
@@ -37,7 +38,7 @@ class PaymentRemoteDatasourceImpl implements PaymentRemoteDatasource {
        _authHeaderProvider = authHeaderProvider;
 
   @override
-  Future<DefaultResponse> createPayment(PaymentRequest request) async {
+  Future<PaymentResponse> createPayment(PaymentRequest request) async {
     try {
       final response = await _networkService.post(
         data: request.toJson(),
@@ -46,7 +47,7 @@ class PaymentRemoteDatasourceImpl implements PaymentRemoteDatasource {
       );
 
       if (response.statusCode == 201) {
-        return DefaultResponse.fromJson(response.data);
+        return PaymentResponse.fromJson(response.data);
       } else {
         throw ServerException(
           message: response.data?['message'] ?? 'Error creating payment',
@@ -94,7 +95,7 @@ class PaymentRemoteDatasourceImpl implements PaymentRemoteDatasource {
   }
 
   @override
-  Future<PaymentsResponse> getPayments({
+  Future<Payments> getPayments({
     int? page,
     int? limit,
     String? status,
@@ -115,7 +116,7 @@ class PaymentRemoteDatasourceImpl implements PaymentRemoteDatasource {
       );
 
       if (response.statusCode == 200) {
-        return PaymentsResponse.fromJson(response.data);
+        return Payments.fromJson(response.data);
       } else {
         throw ServerException(
           message: response.data?['message'] ?? 'Error fetching payments',

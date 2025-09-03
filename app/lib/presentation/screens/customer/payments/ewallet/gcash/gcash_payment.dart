@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:furcare_app/core/enums/payment.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
 import 'package:furcare_app/core/helpers/formatters.dart';
+import 'package:furcare_app/data/models/payment/payment_customer_details.dart';
+import 'package:furcare_app/data/models/payment/payment_process_request.dart';
+import 'package:furcare_app/data/models/payment/payment_request.dart';
+import 'package:furcare_app/presentation/providers/client_provider.dart';
 import 'package:furcare_app/presentation/providers/payment_provider.dart';
 import 'package:furcare_app/presentation/routes/customer_router.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_appbar.dart';
@@ -205,18 +209,48 @@ class _GCashPaymentScreenState extends State<GCashPaymentScreen>
     });
 
     try {
-      final provider = context.read<PaymentSettingsProvider>();
+      final paymentSettingProvider = context.read<PaymentSettingsProvider>();
+      final paymentProvider = context.read<PaymentProvider>();
+      final clientProvider = context.read<ClientProvider>();
 
-      provider.setPaymentType(selectedPayment!.type);
-      provider.setReference(_referenceController.text.trim());
-      provider.setAccountNumber(_phoneController.text.trim());
-      provider.setAmountPaid(paymentAmountValue.toInt());
+      paymentSettingProvider.setPaymentType(selectedPayment!.type);
+      paymentSettingProvider.setReference(_referenceController.text.trim());
+      paymentSettingProvider.setAccountNumber(_phoneController.text.trim());
+      paymentSettingProvider.setAmountPaid(paymentAmountValue.toInt());
+
       if (receiptImage != null) {
-        provider.setReceipt(receiptImage!);
+        paymentSettingProvider.setReceipt(receiptImage!);
       }
 
-      // Simulate API call
-      await Future.delayed(const Duration(seconds: 2));
+      final paymentRequest = PaymentRequest(
+        application: paymentSettingProvider.application,
+        applicationModel: paymentSettingProvider.applicationType,
+        amount: paymentSettingProvider.amountPaid.toDouble(),
+        paymentMethod: paymentSettingProvider.paymentMethod,
+        paymentType: paymentSettingProvider.paymentType,
+      );
+
+      await paymentProvider.createPayment(paymentRequest);
+
+      if (paymentProvider.paymentResponse != null) {
+        final payment = paymentProvider.paymentResponse;
+        final paymentMethod = payment!.data.paymentMethod.toUpperCase();
+        final paymentId = paymentSettingProvider.applicationId;
+
+        await paymentProvider.processPayment(
+          payment.data.id,
+          PaymentProcessRequest(
+            gatewayData: GatewayData(
+              merchant: "Furcare GCash Gateway",
+              reference: "$paymentMethod$paymentId",
+              customerDetails: PaymentCustomerDetails(
+                address: clientProvider.client.address,
+                fullName: clientProvider.client.fullName,
+              ),
+            ),
+          ),
+        );
+      }
 
       if (mounted) {
         // Navigate to receipt
