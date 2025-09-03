@@ -13,6 +13,7 @@ import 'package:furcare_app/presentation/widgets/dialog/custom_location_dialog.d
 import 'package:furcare_app/presentation/widgets/dialog/custom_my_appointments_dialog.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:map_launcher/map_launcher.dart';
 import 'package:provider/provider.dart';
 
@@ -29,7 +30,7 @@ class _MainTabScreenState extends State<MainTabScreen>
   late Animation<double> _bounceAnimation;
   late AnimationController _glowController;
   late AnimationController _backgroundController;
-  late CarouselController _carouselController;
+  late AnimationController _cardAnimationController;
   late PageController _backgroundPageController;
 
   // Background images list
@@ -42,6 +43,9 @@ class _MainTabScreenState extends State<MainTabScreen>
   int _currentBackgroundIndex = 0;
 
   void _handleNavigateToPetServices(String code) {
+    // Add haptic feedback for better UX
+    HapticFeedback.selectionClick();
+
     if (code == "PET_GROOMING") {
       context.push('/appointments/grooming');
     }
@@ -71,13 +75,18 @@ class _MainTabScreenState extends State<MainTabScreen>
       vsync: this,
     );
 
-    _backgroundPageController = PageController();
-    _carouselController = CarouselController();
-    _bounceController = AnimationController(
-      duration: const Duration(seconds: 1),
+    _cardAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 1200),
       vsync: this,
     );
-    _bounceAnimation = Tween<double>(begin: 0.0, end: -5.0).animate(
+
+    _backgroundPageController = PageController();
+
+    _bounceController = AnimationController(
+      duration: const Duration(milliseconds: 2000),
+      vsync: this,
+    );
+    _bounceAnimation = Tween<double>(begin: 0.0, end: -8.0).animate(
       CurvedAnimation(
         parent: _bounceController,
         curve: Curves.elasticInOut,
@@ -85,12 +94,11 @@ class _MainTabScreenState extends State<MainTabScreen>
       ),
     );
 
-    // Start bouncing every 3 seconds
+    // Start animations
     _startBouncing();
-    // Start background rotation
     _startBackgroundRotation();
+    _animateCards();
 
-    _carouselController = CarouselController();
     Future.microtask(() {
       if (mounted) {
         context.read<PetServiceProvider>().getPetServices();
@@ -103,13 +111,13 @@ class _MainTabScreenState extends State<MainTabScreen>
     _glowController.dispose();
     _backgroundController.dispose();
     _backgroundPageController.dispose();
-    _carouselController.dispose();
+    _cardAnimationController.dispose();
     _bounceController.dispose();
     super.dispose();
   }
 
   void _startBouncing() {
-    Timer.periodic(const Duration(seconds: 3), (timer) {
+    Timer.periodic(const Duration(seconds: 4), (timer) {
       if (mounted) {
         _bounceController.forward().then((_) {
           _bounceController.reverse();
@@ -121,7 +129,7 @@ class _MainTabScreenState extends State<MainTabScreen>
   }
 
   void _startBackgroundRotation() {
-    Timer.periodic(const Duration(seconds: 4), (timer) {
+    Timer.periodic(const Duration(seconds: 5), (timer) {
       if (mounted) {
         setState(() {
           _currentBackgroundIndex =
@@ -136,8 +144,14 @@ class _MainTabScreenState extends State<MainTabScreen>
     });
   }
 
+  void _animateCards() {
+    _cardAnimationController.forward();
+  }
+
   void _handleLaunchMap() async {
     try {
+      HapticFeedback.mediumImpact();
+
       // Show loading indicator
       LocationDialogUtils.showLoadingDialog(
         context,
@@ -192,14 +206,14 @@ class _MainTabScreenState extends State<MainTabScreen>
       animation: _backgroundController,
       builder: (context, child) {
         return AnimatedSwitcher(
-          duration: const Duration(milliseconds: 1000),
+          duration: const Duration(milliseconds: 1200),
           child: Container(
             key: ValueKey(_currentBackgroundIndex),
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: AssetImage(backgroundImages[_currentBackgroundIndex]),
                 fit: BoxFit.cover,
-                opacity: 0.3 + (_backgroundController.value * 0.1),
+                opacity: 0.25 + (_backgroundController.value * 0.15),
               ),
             ),
             child: Container(
@@ -208,11 +222,12 @@ class _MainTabScreenState extends State<MainTabScreen>
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    theme.colorScheme.primaryContainer.withAlpha(255),
-                    theme.colorScheme.primaryContainer.withAlpha(255),
-                    theme.colorScheme.primaryContainer.withAlpha(150),
-                    theme.colorScheme.primaryContainer.withAlpha(50),
-                    theme.colorScheme.primaryContainer.withAlpha(5),
+                    theme.colorScheme.primaryContainer.withAlpha(240),
+                    theme.colorScheme.primaryContainer.withAlpha(220),
+                    theme.colorScheme.primaryContainer.withAlpha(180),
+                    theme.colorScheme.primaryContainer.withAlpha(120),
+                    theme.colorScheme.primaryContainer.withAlpha(60),
+                    theme.colorScheme.primaryContainer.withAlpha(20),
                   ],
                 ),
               ),
@@ -223,201 +238,272 @@ class _MainTabScreenState extends State<MainTabScreen>
     );
   }
 
-  Widget _buildServiceCard(PetService service, ColorScheme colorScheme) {
+  Widget _buildServiceCard(
+    PetService service,
+    ColorScheme colorScheme,
+    int index,
+  ) {
     final cardImageIndex =
         service.code.hashCode.abs() % backgroundImages.length;
 
-    return GestureDetector(
-      onTap: () => _handleNavigateToPetServices(service.code),
-      child: Opacity(
-        opacity: service.available ? 1.0 : 0.3,
+    return AnimatedBuilder(
+      animation: _cardAnimationController,
+      builder: (context, child) {
+        final slideAnimation =
+            Tween<Offset>(
+              begin: const Offset(0, 0.5),
+              end: Offset.zero,
+            ).animate(
+              CurvedAnimation(
+                parent: _cardAnimationController,
+                curve: Interval(
+                  index * 0.15,
+                  0.6 + (index * 0.15),
+                  curve: Curves.easeOutCubic,
+                ),
+              ),
+            );
+
+        final fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+          CurvedAnimation(
+            parent: _cardAnimationController,
+            curve: Interval(
+              index * 0.1,
+              0.8 + (index * 0.1),
+              curve: Curves.easeOut,
+            ),
+          ),
+        );
+
+        return SlideTransition(
+          position: slideAnimation,
+          child: FadeTransition(
+            opacity: fadeAnimation,
+            child: GestureDetector(
+              onTap: service.available
+                  ? () => _handleNavigateToPetServices(service.code)
+                  : null,
+              child: Container(
+                margin: const EdgeInsets.symmetric(vertical: 6),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withAlpha(
+                        service.available ? 25 : 10,
+                      ),
+                      blurRadius: service.available ? 12 : 6,
+                      offset: const Offset(0, 4),
+                      spreadRadius: service.available ? 1 : 0,
+                    ),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: Stack(
+                    children: [
+                      // Card background image
+                      Positioned.fill(
+                        child: Image.asset(
+                          backgroundImages[cardImageIndex],
+                          fit: BoxFit.cover,
+                          opacity: AlwaysStoppedAnimation(
+                            service.available ? 0.12 : 0.05,
+                          ),
+                        ),
+                      ),
+                      // Gradient overlay
+                      Positioned.fill(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: service.available
+                                  ? [
+                                      colorScheme.primaryContainer.withAlpha(
+                                        220,
+                                      ),
+                                      colorScheme.primaryContainer.withAlpha(
+                                        180,
+                                      ),
+                                    ]
+                                  : [
+                                      colorScheme.surfaceContainerHighest
+                                          .withAlpha(200),
+                                      colorScheme.surfaceContainerHighest
+                                          .withAlpha(150),
+                                    ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      // Unavailable overlay
+                      if (!service.available)
+                        Positioned.fill(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.grey.withAlpha(100),
+                            ),
+                            child: const Center(
+                              child: Icon(
+                                Icons.lock_outline,
+                                size: 32,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ),
+                        ),
+                      // Content
+                      Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Row(
+                          children: [
+                            // Icon container with enhanced styling
+                            Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: colorScheme.primary.withAlpha(50),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Icon(
+                                getServiceIcon(service.code),
+                                size: 72,
+                                color: colorScheme.surface,
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            // Service information
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  CustomText.title(
+                                    service.name,
+                                    size: AppTextSize.mlg,
+                                    fontWeight: AppFontWeight.semibold.value,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    color: service.available
+                                        ? colorScheme.primary
+                                        : Colors.grey,
+                                    style: GoogleFonts.pacifico(),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  CustomText.subtitle(
+                                    service.description,
+                                    size: AppTextSize.sm,
+                                    fontWeight: AppFontWeight.normal.value,
+                                    maxLines: 3,
+                                    overflow: TextOverflow.ellipsis,
+                                    color: colorScheme.onSurfaceVariant,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            // Arrow indicator
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              child: Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                color: service.available
+                                    ? colorScheme.onSurfaceVariant
+                                    : Colors.grey.withAlpha(100),
+                                size: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildLocationSection(ColorScheme colorScheme) {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(0, 24, 0, 8),
+      child: InkWell(
+        onTap: () => _handleLaunchMap(),
+        borderRadius: BorderRadius.circular(16),
         child: Container(
+          padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
+            color: colorScheme.surface.withAlpha(200),
+            border: Border.all(
+              color: colorScheme.outline.withAlpha(80),
+              width: 1,
+            ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withAlpha(20),
+                color: Colors.black.withAlpha(15),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
             ],
           ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(16),
-            child: Stack(
-              children: [
-                // Card background image
-                Positioned.fill(
-                  child: Image.asset(
-                    backgroundImages[cardImageIndex],
-                    fit: BoxFit.cover,
-                    opacity: const AlwaysStoppedAnimation(0.1),
-                  ),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: colorScheme.primary.withAlpha(80),
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                // Gradient overlay
-                Positioned.fill(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          colorScheme.primaryContainer.withAlpha(200),
-                          colorScheme.primaryContainer.withAlpha(100),
-                        ],
-                      ),
+                child: Icon(
+                  Icons.location_on_outlined,
+                  size: 24,
+                  color: colorScheme.primary,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CustomText.body(
+                      "Branch Location",
+                      size: AppTextSize.md,
+                      fontWeight: AppFontWeight.bold.value,
+                      color: colorScheme.onSurface,
                     ),
-                  ),
+                    const SizedBox(height: 2),
+                    CustomText.subtitle(
+                      "Get directions to our clinic",
+                      size: AppTextSize.xs,
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  ],
                 ),
-                // Content
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Row(
-                    children: [
-                      const SizedBox(width: 12),
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: colorScheme.primary.withAlpha(80),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Icon(
-                          getServiceIcon(service.code),
-                          size: 60,
-                          color: colorScheme.primary,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CustomText.body(
-                            service.name,
-                            size: AppTextSize.md,
-                            fontWeight: AppFontWeight.bold.value,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            color: colorScheme.primary,
-                          ),
-                          SizedBox(
-                            width: 200,
-                            child: CustomText.subtitle(
-                              service.description,
-                              size: AppTextSize.xs,
-                              fontWeight: AppFontWeight.bold.value,
-                              maxLines: 3,
-                              overflow: TextOverflow.ellipsis,
-                              color: colorScheme.primary.withAlpha(100),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Spacer(flex: 1),
-                      Icon(
-                        Icons.arrow_forward_ios_outlined,
-                        color: Colors.grey,
-                        size: 16,
-                      ),
-                      const SizedBox(width: 12),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              ),
+              Icon(
+                Icons.arrow_forward_ios_rounded,
+                size: 18,
+                color: colorScheme.onSurfaceVariant,
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
-    return Scaffold(
-      body: Stack(
-        children: [
-          // Animated background
-          Positioned.fill(child: _buildBackgroundImage()),
-          // Main content
-          Container(
-            padding: kDefaultBodyPadding,
-            child: CustomScrollView(
-              slivers: [
-                SliverToBoxAdapter(
-                  child: Consumer<PetServiceProvider>(
-                    builder: (context, petServiceProvider, child) {
-                      List<PetService> petServices =
-                          petServiceProvider.petServices;
-                      return GridView.count(
-                        crossAxisCount: 1,
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        crossAxisSpacing: 12,
-                        mainAxisSpacing: 12,
-                        childAspectRatio: 3.2,
-                        children: petServices.map((service) {
-                          return _buildServiceCard(service, colorScheme);
-                        }).toList(),
-                      );
-                    },
-                  ),
-                ),
-                // Add some bottom padding to avoid FAB overlap
-              ],
-            ),
-          ),
-        ],
-      ),
-      persistentFooterButtons: [
-        InkWell(
-          onTap: () => _handleLaunchMap(),
-          borderRadius: BorderRadius.circular(12),
+  Widget _buildFloatingActionButton(ColorScheme colorScheme) {
+    return AnimatedBuilder(
+      animation: _bounceAnimation,
+      builder: (context, child) {
+        return Transform.translate(
+          offset: Offset(0, _bounceAnimation.value),
           child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(15.0),
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: colorScheme.primary.withAlpha(51),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                      color: colorScheme.primary.withAlpha(100),
-                      width: 0,
-                    ),
-                  ),
-                  child: Icon(
-                    Icons.map_outlined,
-                    size: 18,
-                    color: colorScheme.primary,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                CustomText.body(
-                  "Branch Location",
-                  size: AppTextSize.md,
-                  fontWeight: AppFontWeight.bold.value,
-                ),
-                const Spacer(),
-                Icon(
-                  Icons.arrow_forward_ios_rounded,
-                  size: 18,
-                  color: colorScheme.onSurfaceVariant,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-      floatingActionButton: AnimatedBuilder(
-        animation: _bounceAnimation,
-        builder: (context, child) {
-          return Transform.translate(
-            offset: Offset(0, _bounceAnimation.value),
+            margin: const EdgeInsets.only(bottom: 16),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(16),
               child: BackdropFilter(
@@ -436,17 +522,82 @@ class _MainTabScreenState extends State<MainTabScreen>
                           MyAppointmentsDialog(petServices: petServices),
                     );
                   },
-                  icon: const Icon(Icons.bookmark_border_rounded),
-                  label: const Text('My Appointments'),
-                  backgroundColor: colorScheme.primary.withAlpha(200),
+                  icon: const Icon(Icons.bookmark_border_rounded, size: 20),
+                  label: CustomText.body(
+                    'My Appointments',
+                    size: AppTextSize.sm,
+                    fontWeight: AppFontWeight.bold.value,
+                    color: colorScheme.onPrimary,
+                  ),
+                  backgroundColor: colorScheme.primary.withAlpha(220),
                   foregroundColor: colorScheme.onPrimary,
-                  elevation: 8,
+                  elevation: 12,
+                  extendedPadding: const EdgeInsets.symmetric(horizontal: 24),
                 ),
               ),
             ),
-          );
-        },
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Scaffold(
+      body: Stack(
+        children: [
+          // Animated background
+          Positioned.fill(child: _buildBackgroundImage()),
+          // Main content
+          SafeArea(
+            child: Container(
+              padding: kDefaultBodyPadding,
+              child: CustomScrollView(
+                slivers: [
+                  // App bar space
+                  const SliverToBoxAdapter(child: SizedBox(height: 20)),
+                  // Services grid
+                  SliverToBoxAdapter(
+                    child: Consumer<PetServiceProvider>(
+                      builder: (context, petServiceProvider, child) {
+                        List<PetService> petServices =
+                            petServiceProvider.petServices;
+
+                        return Column(
+                          children: [
+                            // Services list
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: petServices.length,
+                              itemBuilder: (context, index) {
+                                return _buildServiceCard(
+                                  petServices[index],
+                                  colorScheme,
+                                  index,
+                                );
+                              },
+                            ),
+                            // Location section
+                            _buildLocationSection(colorScheme),
+                            // Bottom spacing for FAB
+                            const SizedBox(height: 80),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
+      floatingActionButton: _buildFloatingActionButton(colorScheme),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
