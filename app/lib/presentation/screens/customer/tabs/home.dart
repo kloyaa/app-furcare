@@ -369,7 +369,7 @@ class _MainTabScreenState extends State<MainTabScreen>
                               child: Icon(
                                 getServiceIcon(service.code),
                                 size: 72,
-                                color: colorScheme.surface,
+                                color: colorScheme.onPrimaryContainer,
                               ),
                             ),
                             const SizedBox(width: 16),
@@ -385,9 +385,7 @@ class _MainTabScreenState extends State<MainTabScreen>
                                     fontWeight: AppFontWeight.semibold.value,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    color: service.available
-                                        ? colorScheme.primary
-                                        : Colors.grey,
+                                    color: colorScheme.primary,
                                     style: GoogleFonts.pacifico(),
                                   ),
                                   const SizedBox(height: 4),
@@ -504,35 +502,85 @@ class _MainTabScreenState extends State<MainTabScreen>
           offset: Offset(0, _bounceAnimation.value),
           child: Container(
             margin: const EdgeInsets.only(bottom: 16),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                child: FloatingActionButton.extended(
-                  onPressed: () {
-                    final petServices = context
-                        .read<PetServiceProvider>()
-                        .petServices;
+            child: Material(
+              elevation: 12,
+              borderRadius: BorderRadius.circular(28),
+              shadowColor: colorScheme.primary.withAlpha(100),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(28),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(28),
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          colorScheme.primary.withAlpha(240),
+                          colorScheme.primary.withAlpha(200),
+                        ],
+                      ),
+                      border: Border.all(
+                        color: colorScheme.onPrimary.withAlpha(50),
+                        width: 1,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: colorScheme.primary.withAlpha(80),
+                          blurRadius: 20,
+                          offset: const Offset(0, 8),
+                          spreadRadius: 2,
+                        ),
+                      ],
+                    ),
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(28),
+                      onTap: () {
+                        final petServices = context
+                            .read<PetServiceProvider>()
+                            .petServices;
 
-                    HapticFeedback.lightImpact();
-                    showDialog(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (context) =>
-                          MyAppointmentsDialog(petServices: petServices),
-                    );
-                  },
-                  icon: const Icon(Icons.bookmark_border_rounded, size: 20),
-                  label: CustomText.body(
-                    'My Appointments',
-                    size: AppTextSize.sm,
-                    fontWeight: AppFontWeight.bold.value,
-                    color: colorScheme.onPrimary,
+                        HapticFeedback.lightImpact();
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (context) =>
+                              MyAppointmentsDialog(petServices: petServices),
+                        );
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 28,
+                          vertical: 16,
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(6),
+                              decoration: BoxDecoration(
+                                color: colorScheme.onPrimary.withAlpha(40),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Icon(
+                                Icons.bookmark_border_rounded,
+                                size: 18,
+                                color: colorScheme.onPrimary,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            CustomText.body(
+                              'My Appointments',
+                              size: AppTextSize.sm,
+                              fontWeight: AppFontWeight.bold.value,
+                              color: colorScheme.onPrimary,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
-                  backgroundColor: colorScheme.primary.withAlpha(220),
-                  foregroundColor: colorScheme.onPrimary,
-                  elevation: 12,
-                  extendedPadding: const EdgeInsets.symmetric(horizontal: 24),
                 ),
               ),
             ),
