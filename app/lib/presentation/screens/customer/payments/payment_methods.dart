@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:furcare_app/core/enums/payment.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
 import 'package:furcare_app/core/helpers/formatters.dart';
+import 'package:furcare_app/presentation/providers/payment_provider.dart';
 import 'package:furcare_app/presentation/routes/customer_router.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_appbar.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class PaymentMethodsScreen extends StatefulWidget {
   const PaymentMethodsScreen({super.key});
@@ -19,13 +22,13 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen>
   late Animation<Offset> _slideAnimation;
   late Animation<double> _fadeAnimation;
 
-  String? selectedMethod;
+  PaymentMethod? selectedMethod;
   double paymentAmount = 3000.0;
   String applicationId = "9XAFGKFKA0242";
 
   final List<PaymentMethodInfo> paymentMethods = [
     PaymentMethodInfo(
-      id: 'gcash',
+      id: PaymentMethod.gcash,
       title: 'GCash',
       subtitle: 'Pay using your GCash wallet',
       description: 'Fast and secure digital payment',
@@ -35,7 +38,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen>
       features: ['QR Code Payment', 'Mobile Wallet', 'Instant Transfer'],
     ),
     PaymentMethodInfo(
-      id: 'otc',
+      id: PaymentMethod.cash,
       title: 'Over The Counter',
       subtitle: 'Pay at authorized payment centers',
       description: 'Cash payment at physical locations',
@@ -45,7 +48,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen>
       features: ['Cash Payment', '7-Eleven, Bayad Center', 'Physical Receipt'],
     ),
     PaymentMethodInfo(
-      id: 'bank',
+      id: PaymentMethod.bankTransfer,
       title: 'Bank Transfer',
       subtitle: 'Direct bank to bank transfer',
       description: 'Secure online banking transfer',
@@ -87,30 +90,30 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen>
     super.dispose();
   }
 
-  void _navigateToPaymentMethod(String methodId) {
+  void _navigateToPaymentMethod(PaymentMethod paymentMethod) {
     setState(() {
-      selectedMethod = methodId;
+      selectedMethod = paymentMethod;
     });
+
+    PaymentSettingsProvider provider = context.read<PaymentSettingsProvider>();
+
+    provider.setPaymentMethod(paymentMethod);
 
     // Add a small delay for visual feedback
     Future.delayed(Duration(milliseconds: 350), () {
       if (mounted) {
-        switch (methodId) {
-          case 'gcash':
+        switch (paymentMethod) {
+          case PaymentMethod.gcash:
             context.push(CustomerRoute.payment.ewalletGcashPayment);
             break;
-          case 'otc':
-            context.push(
-              CustomerRoute.payment.otcPayment,
-              extra: {
-                'paymentType': 'Over The Counter',
-                'paymentAmount': paymentAmount,
-                'applicationId': applicationId,
-              },
-            );
+          case PaymentMethod.cash:
+            context.push(CustomerRoute.payment.otcPayment);
             break;
-          case 'bank':
+          case PaymentMethod.bankTransfer:
             context.push(CustomerRoute.payment.bankPayment);
+            break;
+
+          default:
             break;
         }
       }
@@ -128,13 +131,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen>
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
-      appBar: CustomAppBar(
-        title: 'Payment Methods',
-        titleTextStyle: TextStyle(
-          fontSize: AppTextSize.md.size,
-          fontWeight: AppFontWeight.black.value,
-        ),
-      ),
+      appBar: CustomListAppBar(title: 'Payment Methods'),
       body: AnimatedBuilder(
         animation: _slideAnimation,
         builder: (context, child) {
@@ -186,6 +183,9 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen>
   }
 
   Widget _buildPaymentSummaryHeader(ThemeData theme) {
+    PaymentSettingsProvider provider = context.read<PaymentSettingsProvider>();
+    String applicationId = provider.applicationId;
+    String paymentAmount = formatToPhpCurrency(provider.amount);
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(20),
@@ -214,9 +214,13 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CustomText.body('Application ID: $applicationId'),
+                CustomText.body(
+                  'Application ID: $applicationId',
+                  color: theme.colorScheme.primary,
+                  size: AppTextSize.md,
+                ),
                 CustomText.title(
-                  'Amount: ${formatToPhpCurrency(paymentAmount)}',
+                  'Amount: $paymentAmount',
                   color: theme.colorScheme.primary,
                   size: AppTextSize.md,
                 ),
@@ -474,7 +478,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen>
 }
 
 class PaymentMethodInfo {
-  final String id;
+  final PaymentMethod id;
   final String title;
   final String subtitle;
   final String description;

@@ -26,6 +26,9 @@ class ApiConstants {
   // Branches
   static const String branches = '$baseUrl/branch/v1';
 
+  // Payments
+  static const String payments = '$baseUrl/payment/v1';
+
   // Headers
   static const String userOrigin = 'nodex-user-origin';
   static const String accessKey = 'nodex-access-key';

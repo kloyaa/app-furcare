@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:furcare_app/core/enums/payment.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
 import 'package:furcare_app/core/helpers/formatters.dart';
+import 'package:furcare_app/presentation/providers/payment_provider.dart';
 import 'package:furcare_app/presentation/routes/customer_router.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_appbar.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_button.dart';
@@ -8,6 +10,53 @@ import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:provider/provider.dart';
+
+class PaymentOption {
+  final String id;
+  final String title;
+  final PaymentType type;
+  final double percentage;
+  final String description;
+  final IconData icon;
+
+  const PaymentOption({
+    required this.id,
+    required this.title,
+    required this.type,
+    required this.percentage,
+    required this.description,
+    required this.icon,
+  });
+}
+
+// Payment type options
+final List<PaymentOption> paymentTypes = [
+  PaymentOption(
+    id: '30_payment',
+    title: '30% Payment',
+    type: PaymentType.partialPayment,
+    percentage: 0.3,
+    description: 'Pay 30% now, remaining later',
+    icon: Icons.payment_outlined,
+  ),
+  PaymentOption(
+    id: '50_payment',
+    title: '50% Payment',
+    type: PaymentType.partialPayment,
+    percentage: 0.5,
+    description: 'Pay 50% now, remaining later',
+    icon: Icons.payment_outlined,
+  ),
+  PaymentOption(
+    id: 'full_payment',
+    title: 'Full Payment',
+    type: PaymentType.fullPayment,
+    percentage: 1.0,
+    description: 'Pay the full amount now',
+    icon: Icons.payment_outlined,
+  ),
+];
 
 class GCashPaymentScreen extends StatefulWidget {
   const GCashPaymentScreen({super.key});
@@ -24,32 +73,10 @@ class _GCashPaymentScreenState extends State<GCashPaymentScreen>
   final FocusNode _referenceFocusNode = FocusNode();
   final FocusNode _phoneFocusNode = FocusNode();
 
-  String? selectedPaymentType;
+  PaymentOption? selectedPayment;
   File? receiptImage;
   bool isSubmitting = false;
   bool _showValidationErrors = false;
-
-  String applicationId = "9XAFGKFKA0242";
-  double paymentAmount = 3000;
-
-  // Payment type options
-  final List<Map<String, dynamic>> paymentTypes = [
-    {
-      'type': '30% Payment',
-      'description': 'Pay 30% now, remaining later',
-      'icon': Icons.payment_outlined,
-    },
-    {
-      'type': 'Half Payment',
-      'description': 'Pay 50% now, remaining later',
-      'icon': Icons.payment_outlined,
-    },
-    {
-      'type': 'Full Payment',
-      'description': 'Pay complete amount',
-      'icon': Icons.account_balance_wallet_outlined,
-    },
-  ];
 
   @override
   void initState() {
@@ -90,17 +117,15 @@ class _GCashPaymentScreenState extends State<GCashPaymentScreen>
   }
 
   double get paymentAmountValue {
-    if (selectedPaymentType == "30% Payment") {
-      return paymentAmount * 0.3;
+    PaymentSettingsProvider provider = context.read<PaymentSettingsProvider>();
+    if (selectedPayment == null) {
+      return provider.amount.toDouble();
     }
-    if (selectedPaymentType == "Half Payment") {
-      return paymentAmount / 2;
-    }
-    return paymentAmount;
+    return provider.amount * selectedPayment!.percentage;
   }
 
   bool _canSubmitPayment() {
-    return selectedPaymentType != null &&
+    return selectedPayment != null &&
         receiptImage != null &&
         _referenceController.text.trim().isNotEmpty &&
         _phoneController.text.trim().isNotEmpty;
@@ -180,6 +205,16 @@ class _GCashPaymentScreenState extends State<GCashPaymentScreen>
     });
 
     try {
+      final provider = context.read<PaymentSettingsProvider>();
+
+      provider.setPaymentType(selectedPayment!.type);
+      provider.setReference(_referenceController.text.trim());
+      provider.setAccountNumber(_phoneController.text.trim());
+      provider.setAmountPaid(paymentAmountValue.toInt());
+      if (receiptImage != null) {
+        provider.setReceipt(receiptImage!);
+      }
+
       // Simulate API call
       await Future.delayed(const Duration(seconds: 2));
 
@@ -188,12 +223,8 @@ class _GCashPaymentScreenState extends State<GCashPaymentScreen>
         context.push(
           CustomerRoute.receipt.ewalletGcashReceipt,
           extra: {
-            'paymentType': selectedPaymentType,
-            'referenceNumber': _referenceController.text.trim(),
             'phoneNumber': _phoneController.text.trim(),
             'receiptImage': receiptImage,
-            'paymentAmount': paymentAmountValue,
-            'applicationId': applicationId,
           },
         );
       }
@@ -229,7 +260,7 @@ class _GCashPaymentScreenState extends State<GCashPaymentScreen>
 
   void _showValidationFeedback() {
     List<String> errors = [];
-    if (selectedPaymentType == null) errors.add('Payment type');
+    if (selectedPayment == null) errors.add('Payment type');
     if (receiptImage == null) errors.add('Receipt image');
     if (_referenceController.text.trim().isEmpty) {
       errors.add('Reference number');
@@ -270,7 +301,7 @@ class _GCashPaymentScreenState extends State<GCashPaymentScreen>
   }
 
   void _handleCancel() {
-    if (selectedPaymentType != null ||
+    if (selectedPayment != null ||
         receiptImage != null ||
         _referenceController.text.isNotEmpty ||
         _phoneController.text.isNotEmpty) {
@@ -309,13 +340,7 @@ class _GCashPaymentScreenState extends State<GCashPaymentScreen>
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
-      appBar: CustomAppBar(
-        title: 'GCash Payment',
-        titleTextStyle: TextStyle(
-          fontSize: AppTextSize.md.size,
-          fontWeight: AppFontWeight.black.value,
-        ),
-      ),
+      appBar: CustomListAppBar(title: 'GCash Payment'),
       body: Column(
         children: [
           // Progress Indicator
@@ -353,8 +378,8 @@ class _GCashPaymentScreenState extends State<GCashPaymentScreen>
                   AnimatedContainer(
                     duration: Duration(milliseconds: 300),
                     curve: Curves.easeInOut,
-                    height: selectedPaymentType != null ? null : 0,
-                    child: selectedPaymentType != null
+                    height: selectedPayment != null ? null : 0,
+                    child: selectedPayment != null
                         ? _buildPaymentDetailsSection(theme, colorScheme)
                         : SizedBox.shrink(),
                   ),
@@ -364,8 +389,7 @@ class _GCashPaymentScreenState extends State<GCashPaymentScreen>
           ),
 
           // Fixed bottom action buttons
-          if (selectedPaymentType != null)
-            _buildFixedBottomActions(theme, colorScheme),
+          _buildFixedBottomActions(theme, colorScheme),
         ],
       ),
     );
@@ -424,7 +448,9 @@ class _GCashPaymentScreenState extends State<GCashPaymentScreen>
 
   Widget _buildProgressIndicator(ThemeData theme) {
     int currentStep = 1;
-    if (selectedPaymentType != null) currentStep = 2;
+    if (selectedPayment != null) {
+      currentStep = 2;
+    }
     if (receiptImage != null &&
         _referenceController.text.isNotEmpty &&
         _phoneController.text.isNotEmpty) {
@@ -574,6 +600,8 @@ class _GCashPaymentScreenState extends State<GCashPaymentScreen>
   }
 
   Widget _buildApplicationDetails(ColorScheme colorScheme) {
+    final provider = context.read<PaymentSettingsProvider>();
+
     return Container(
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -583,11 +611,11 @@ class _GCashPaymentScreenState extends State<GCashPaymentScreen>
       ),
       child: Column(
         children: [
-          _buildInfoRow('Application ID', applicationId, Icons.tag),
+          _buildInfoRow('Application ID', provider.applicationId, Icons.tag),
           Divider(height: 24, color: colorScheme.outline.withAlpha(64)),
           _buildInfoRow(
             'Total Amount',
-            formatToPhpCurrency(paymentAmount),
+            formatToPhpCurrency(provider.amount),
             Icons.account_balance_wallet,
           ),
         ],
@@ -613,14 +641,14 @@ class _GCashPaymentScreenState extends State<GCashPaymentScreen>
   Widget _buildEnhancedPaymentTypeSelection(ColorScheme colorScheme) {
     return Column(
       children: paymentTypes.map((paymentOption) {
-        final isSelected = selectedPaymentType == paymentOption['type'];
+        final isSelected = selectedPayment?.id == paymentOption.id;
 
         return Padding(
           padding: EdgeInsets.only(bottom: 12),
           child: InkWell(
             onTap: () {
               setState(() {
-                selectedPaymentType = paymentOption['type'];
+                selectedPayment = paymentOption;
               });
             },
             borderRadius: BorderRadius.circular(12),
@@ -642,17 +670,17 @@ class _GCashPaymentScreenState extends State<GCashPaymentScreen>
               child: Row(
                 children: [
                   Radio<String>(
-                    value: paymentOption['type'],
-                    groupValue: selectedPaymentType,
+                    value: paymentOption.id,
+                    groupValue: selectedPayment?.id,
                     onChanged: (value) {
                       setState(() {
-                        selectedPaymentType = value;
+                        selectedPayment = paymentOption;
                       });
                     },
                   ),
                   SizedBox(width: 16),
                   Icon(
-                    paymentOption['icon'],
+                    paymentOption.icon,
                     color: isSelected
                         ? colorScheme.primary
                         : colorScheme.onSurface.withAlpha(128),
@@ -664,13 +692,13 @@ class _GCashPaymentScreenState extends State<GCashPaymentScreen>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         CustomText.body(
-                          paymentOption['type'],
+                          paymentOption.title,
                           fontWeight: AppFontWeight.bold.value,
                           color: isSelected ? colorScheme.primary : null,
                         ),
                         SizedBox(height: 4),
                         CustomText.body(
-                          paymentOption['description'],
+                          paymentOption.description,
                           size: AppTextSize.xs,
                           color: colorScheme.onSurface.withAlpha(160),
                         ),
@@ -730,6 +758,8 @@ class _GCashPaymentScreenState extends State<GCashPaymentScreen>
   }
 
   Widget _buildPaymentAmountDisplay(ColorScheme colorScheme) {
+    final provider = context.read<PaymentSettingsProvider>();
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -759,8 +789,7 @@ class _GCashPaymentScreenState extends State<GCashPaymentScreen>
             size: AppTextSize.lg,
             color: colorScheme.primary,
           ),
-          if (selectedPaymentType == "30% Payment" ||
-              selectedPaymentType == "Half Payment") ...[
+          if (selectedPayment != null && selectedPayment!.percentage < 1.0) ...[
             SizedBox(height: 8),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -770,7 +799,7 @@ class _GCashPaymentScreenState extends State<GCashPaymentScreen>
                 border: Border.all(color: Colors.orange.withAlpha(64)),
               ),
               child: CustomText.body(
-                'Remaining: ${formatToPhpCurrency(paymentAmount - paymentAmountValue)}',
+                'Remaining: ${formatToPhpCurrency(provider.amount - paymentAmountValue)}',
                 size: AppTextSize.xs,
                 fontWeight: AppFontWeight.bold.value,
                 color: Colors.orange.shade900,

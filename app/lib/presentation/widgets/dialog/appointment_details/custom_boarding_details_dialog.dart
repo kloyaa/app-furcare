@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:furcare_app/core/enums/payment.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
 import 'package:furcare_app/core/helpers/formatters.dart';
 import 'package:furcare_app/core/utils/boarding.dart';
 import 'package:furcare_app/data/models/boarding/boarding.dart';
 import 'package:furcare_app/data/models/boarding/boarding_request.dart';
 import 'package:furcare_app/presentation/providers/appointment_provider.dart';
+import 'package:furcare_app/presentation/providers/payment_provider.dart';
 import 'package:furcare_app/presentation/routes/customer_router.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_button.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
@@ -92,6 +94,16 @@ class _BoardingAppointmentPreviewDialogState
         });
       }
     }
+  }
+
+  void _handlePay() {
+    PaymentSettingsProvider provider = context.read<PaymentSettingsProvider>();
+
+    provider.setAmount(widget.appointment.remainingBalance);
+    provider.setApplication(widget.appointment.id);
+    provider.setApplicationType(ApplicationModel.boarding);
+
+    context.push(CustomerRoute.payment.paymentMethods);
   }
 
   @override
@@ -238,13 +250,13 @@ class _BoardingAppointmentPreviewDialogState
       ),
       _buildInfoRow(
         'Original Duration',
-        '${widget.appointment.schedule.originalDays} days',
+        '${widget.appointment.schedule.originalDays ?? widget.appointment.schedule.days} day(s)',
         Icons.schedule,
         colorScheme,
       ),
       _buildInfoRow(
         'Current Duration',
-        '${widget.appointment.schedule.days} days',
+        '${widget.appointment.schedule.days} day(s)',
         Icons.update,
         colorScheme,
       ),
@@ -437,7 +449,7 @@ class _BoardingAppointmentPreviewDialogState
         _buildSection('Pricing Summary', [
           _buildPricingRow(
             'Original Booking',
-            '${formatToPhpCurrency(widget.appointment.cage.price)} x ${widget.appointment.schedule.originalDays ?? widget.appointment.schedule.days} days',
+            '${formatToPhpCurrency(widget.appointment.cage.price)} x ${widget.appointment.schedule.originalDays ?? widget.appointment.schedule.days} day(s1)',
             formatToPhpCurrency(widget.appointment.originalPrice),
             colorScheme,
           ),
@@ -505,7 +517,7 @@ class _BoardingAppointmentPreviewDialogState
               "Pay ${formatToPhpCurrency(widget.appointment.remainingBalance)}",
           textSize: AppTextSize.md,
           height: 64,
-          onPressed: () => context.push(CustomerRoute.payment.paymentMethods),
+          onPressed: () => _handlePay(),
           icon: Icons.payment_outlined,
           isOutlined: false,
         ),

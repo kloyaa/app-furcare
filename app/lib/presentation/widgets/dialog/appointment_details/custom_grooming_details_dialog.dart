@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:furcare_app/core/enums/payment.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
 import 'package:furcare_app/core/helpers/formatters.dart';
 import 'package:furcare_app/data/models/grooming/grooming.dart';
+import 'package:furcare_app/presentation/providers/payment_provider.dart';
 import 'package:furcare_app/presentation/routes/customer_router.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_button.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class GroomingAppointmentPreviewDialog extends StatefulWidget {
   final GroomingAppointment appointment;
@@ -22,6 +25,16 @@ class GroomingAppointmentPreviewDialog extends StatefulWidget {
 
 class _GroomingAppointmentPreviewDialogState
     extends State<GroomingAppointmentPreviewDialog> {
+  void _handlePay() {
+    PaymentSettingsProvider provider = context.read<PaymentSettingsProvider>();
+
+    provider.setAmount(widget.appointment.remainingBalance);
+    provider.setApplication(widget.appointment.id);
+    provider.setApplicationType(ApplicationModel.grooming);
+
+    context.push(CustomerRoute.payment.paymentMethods);
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -252,7 +265,7 @@ class _GroomingAppointmentPreviewDialogState
               "Pay ${formatToPhpCurrency(widget.appointment.remainingBalance)}",
           textSize: AppTextSize.md,
           height: 64,
-          onPressed: () => context.push(CustomerRoute.payment.paymentMethods),
+          onPressed: () => _handlePay(),
           icon: Icons.payment_outlined,
           isOutlined: false,
         ),

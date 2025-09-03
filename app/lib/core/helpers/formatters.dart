@@ -1,7 +1,13 @@
+import 'package:furcare_app/core/enums/payment.dart';
 import 'package:intl/intl.dart';
 
 String formatDateToLong(DateTime date) {
   final formatter = DateFormat('MMMM d, y');
+  return formatter.format(date);
+}
+
+String formatDateToShort(DateTime date) {
+  final formatter = DateFormat('MMM d, y h:mm a');
   return formatter.format(date);
 }
 
@@ -25,4 +31,15 @@ String getInitials(String fullName) {
 String formatToPhpCurrency(num amount) {
   final formatCurrency = NumberFormat.currency(locale: 'en_PH', symbol: 'PHP ');
   return formatCurrency.format(amount);
+}
+
+String formatPaymentType(PaymentType type) {
+  switch (type) {
+    case PaymentType.fullPayment:
+      return 'Full Payment';
+    case PaymentType.partialPayment:
+      return 'Partial Payment';
+    default:
+      return '';
+  }
 }

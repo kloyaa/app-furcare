@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:furcare_app/core/enums/payment.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
 import 'package:furcare_app/core/helpers/formatters.dart';
 import 'package:furcare_app/data/models/home_service/home_service.dart';
+import 'package:furcare_app/presentation/providers/payment_provider.dart';
 import 'package:furcare_app/presentation/routes/customer_router.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_button.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class HomeServiceAppointmentPreviewDialog extends StatefulWidget {
   final HomeServiceAppointment appointment;
@@ -23,6 +26,16 @@ class HomeServiceAppointmentPreviewDialog extends StatefulWidget {
 
 class _HomeServiceAppointmentPreviewDialogState
     extends State<HomeServiceAppointmentPreviewDialog> {
+  void _handlePay() {
+    PaymentSettingsProvider provider = context.read<PaymentSettingsProvider>();
+
+    provider.setAmount(widget.appointment.remainingBalance);
+    provider.setApplication(widget.appointment.id);
+    provider.setApplicationType(ApplicationModel.homeService);
+
+    context.push(CustomerRoute.payment.paymentMethods);
+  }
+
   String _formatSchedule() {
     final date = formatDateToLong(
       DateTime.parse(widget.appointment.schedule.date),
@@ -254,7 +267,7 @@ class _HomeServiceAppointmentPreviewDialogState
               "Pay ${formatToPhpCurrency(widget.appointment.remainingBalance)}",
           textSize: AppTextSize.md,
           height: 64,
-          onPressed: () => context.push(CustomerRoute.payment.paymentMethods),
+          onPressed: () => _handlePay(),
           icon: Icons.payment_outlined,
           isOutlined: false,
         ),
