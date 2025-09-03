@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:furcare_app/core/enums/text_enum.dart';
 import 'package:furcare_app/presentation/widgets/common/theme_toggle_button.dart';
+import 'package:go_router/go_router.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
@@ -63,4 +65,33 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize =>
       Size.fromHeight(toolbarHeight + (bottom?.preferredSize.height ?? 0.0));
+}
+
+class CustomListAppBar extends CustomAppBar {
+  const CustomListAppBar({super.key, required String title})
+    : super(title: title, showThemeToggle: false);
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return AppBar(
+      leading: IconButton(
+        onPressed: () => context.pop(),
+        icon: Icon(Icons.close, color: colorScheme.primary),
+      ),
+      title: Text(
+        title ?? '',
+        style: TextStyle(
+          color: colorScheme.primary,
+          fontSize: 14,
+          fontWeight: AppFontWeight.semibold.value,
+        ),
+      ),
+      automaticallyImplyLeading: false,
+      backgroundColor: colorScheme.surface,
+      centerTitle: true,
+      toolbarHeight: toolbarHeight,
+    );
+  }
 }

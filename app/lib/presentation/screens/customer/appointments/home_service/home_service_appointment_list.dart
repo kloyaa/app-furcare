@@ -57,7 +57,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
-      appBar: CustomAppBar(),
+      appBar: CustomListAppBar(title: 'Home Service Appointments'),
       body: RefreshIndicator(
         onRefresh: () async {
           HapticFeedback.lightImpact();

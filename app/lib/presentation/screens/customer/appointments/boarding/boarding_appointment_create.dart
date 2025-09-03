@@ -125,13 +125,7 @@ class _BoardingApptScreenState extends State<BoardingApptScreen> {
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
-      appBar: CustomAppBar(
-        title: formatDateToLong(selectedDate ?? today),
-        titleTextStyle: TextStyle(
-          fontSize: AppTextSize.md.size,
-          fontWeight: AppFontWeight.black.value,
-        ),
-      ),
+      appBar: CustomListAppBar(title: 'Appointment Details'),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(

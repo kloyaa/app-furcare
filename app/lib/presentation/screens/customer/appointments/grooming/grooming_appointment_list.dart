@@ -56,7 +56,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: CustomListAppBar(title: 'Grooming Appointments'),
       body: RefreshIndicator(
         onRefresh: () async {
           HapticFeedback.lightImpact();

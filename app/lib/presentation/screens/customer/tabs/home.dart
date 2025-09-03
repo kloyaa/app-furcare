@@ -41,15 +41,6 @@ class _MainTabScreenState extends State<MainTabScreen>
 
   int _currentBackgroundIndex = 0;
 
-  // Mock booking counts for each service
-  final Map<String, int> bookingCounts = const {
-    "PET_GROOMING": 3,
-    "PET_BOARDING": 1,
-    "HOME_SERVICE": 2,
-    "BRANCH_LOCATION": 0,
-    "PET_TRAINING": 0,
-  };
-
   void _handleNavigateToPetServices(String code) {
     if (code == "PET_GROOMING") {
       context.push('/appointments/grooming');
@@ -233,7 +224,6 @@ class _MainTabScreenState extends State<MainTabScreen>
   }
 
   Widget _buildServiceCard(PetService service, ColorScheme colorScheme) {
-    final count = bookingCounts[service.code] ?? 0;
     final cardImageIndex =
         service.code.hashCode.abs() % backgroundImages.length;
 
@@ -271,15 +261,10 @@ class _MainTabScreenState extends State<MainTabScreen>
                       gradient: LinearGradient(
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
-                        colors: count > 0
-                            ? [
-                                colorScheme.primaryContainer.withAlpha(200),
-                                colorScheme.primaryContainer.withAlpha(100),
-                              ]
-                            : [
-                                colorScheme.surfaceContainerLow.withAlpha(240),
-                                colorScheme.surfaceContainerHigh.withAlpha(220),
-                              ],
+                        colors: [
+                          colorScheme.primaryContainer.withAlpha(200),
+                          colorScheme.primaryContainer.withAlpha(100),
+                        ],
                       ),
                     ),
                   ),
@@ -293,72 +278,47 @@ class _MainTabScreenState extends State<MainTabScreen>
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: count > 0
-                              ? colorScheme.primary.withAlpha(80)
-                              : colorScheme.surfaceContainerHigh.withAlpha(150),
+                          color: colorScheme.primary.withAlpha(80),
                           borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: count > 0
-                                ? colorScheme.primary.withAlpha(100)
-                                : Colors.transparent,
-                            width: 1,
-                          ),
                         ),
                         child: Icon(
                           getServiceIcon(service.code),
-                          size: 50,
-                          color: count > 0
-                              ? colorScheme.primary
-                              : colorScheme.onSurfaceVariant,
+                          size: 60,
+                          color: colorScheme.primary,
                         ),
                       ),
                       const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            CustomText.body(
-                              service.name,
-                              size: AppTextSize.md,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CustomText.body(
+                            service.name,
+                            size: AppTextSize.md,
+                            fontWeight: AppFontWeight.bold.value,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            color: colorScheme.primary,
+                          ),
+                          SizedBox(
+                            width: 200,
+                            child: CustomText.subtitle(
+                              service.description,
+                              size: AppTextSize.xs,
                               fontWeight: AppFontWeight.bold.value,
-                              maxLines: 2,
+                              maxLines: 3,
                               overflow: TextOverflow.ellipsis,
+                              color: colorScheme.primary.withAlpha(100),
                             ),
-                            if (count > 0)
-                              CustomText.body(
-                                '$count Active',
-                                size: AppTextSize.xs,
-                              ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                      if (count > 0)
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color: colorScheme.error,
-                            borderRadius: BorderRadius.circular(8),
-                            boxShadow: [
-                              BoxShadow(
-                                color: colorScheme.error.withAlpha(100),
-                                blurRadius: 4,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                          child: Text(
-                            count.toString(),
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                              color: colorScheme.onError,
-                            ),
-                          ),
-                        ),
+                      Spacer(flex: 1),
+                      Icon(
+                        Icons.arrow_forward_ios_outlined,
+                        color: Colors.grey,
+                        size: 16,
+                      ),
                       const SizedBox(width: 12),
                     ],
                   ),

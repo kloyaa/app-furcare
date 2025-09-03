@@ -79,13 +79,7 @@ class _HomeServiceApptScreenState extends State<HomeServiceApptScreen> {
     final colorScheme = theme.colorScheme;
     return Scaffold(
       backgroundColor: colorScheme.surface,
-      appBar: CustomAppBar(
-        title: "Home Service Appointment",
-        titleTextStyle: TextStyle(
-          fontSize: AppTextSize.sm.size,
-          fontWeight: AppFontWeight.semibold.value,
-        ),
-      ),
+      appBar: CustomListAppBar(title: 'Appointment Details'),
       body: SingleChildScrollView(
         padding: kDefaultBodyPadding,
         child: Column(

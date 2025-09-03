@@ -121,13 +121,7 @@ class _GroomingApptScreenState extends State<GroomingApptScreen> {
     final colorScheme = theme.colorScheme;
     return Scaffold(
       backgroundColor: colorScheme.surface,
-      appBar: CustomAppBar(
-        title: "Grooming Appointment",
-        titleTextStyle: TextStyle(
-          fontSize: AppTextSize.sm.size,
-          fontWeight: AppFontWeight.semibold.value,
-        ),
-      ),
+      appBar: CustomListAppBar(title: 'Appointment Details'),
       body: SingleChildScrollView(
         padding: kDefaultBodyPadding,
         child: Column(
