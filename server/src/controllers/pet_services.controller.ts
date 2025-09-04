@@ -104,76 +104,52 @@ export const getAllCages = async (req: TRequest, res: Response) => {
   }
 };
 
-export const updateCageOccupant = async (req: TRequest, res: Response) => {
-  const error = validateUpdatePetCages(req.body);
-  if (error) {
-    return res.status(400).json({
-      ...statuses['501'],
-      message: error.details[0].message.replace(/['"]/g, ''),
-    });
+export const updateCageOccupant = async (payload: any): Promise<boolean> => {
+  const { action, cage: cageId } = payload;
+  if (!isObjectIdOrHexString(cageId) || (action !== 'add' && action !== 'remove')) {
+    console.log('@updateCageOccupant error', 'Invalid payload');
+    return false;
   }
-  const { action, id } = req.body;
-
   try {
-    const cage = await PetCage.findById(id);
+    const cage = await PetCage.findById(cageId);
     if (!cage) {
-      return res.status(404).json(statuses['02']);
+      console.log('@updateCageOccupant error', 'Cage not found');
+      return false;
     }
 
     if (action === 'add') {
-      if (cage.occupant >= cage.max) {
-        return res.status(400).json({
-          ...statuses['01'],
-          message: 'Cage is already full.',
-        });
-      }
       cage.occupant += 1;
     } else if (action === 'remove') {
-      if (cage.occupant <= 0) {
-        return res.status(400).json({
-          ...statuses['01'],
-          message: 'Cage is already empty.',
-        });
-      }
-
       cage.occupant -= 1;
     }
 
     await cage.save();
-    return res.status(200).json({
-      ...statuses['00'],
-      message: 'Occupant updated successfully.',
-    });
+    return true;
   } catch (error) {
     console.log('@updateCageOccupant error', error);
-    return handleMongooseError(error, res);
+    return false;
   }
 };
 
-export const validateCageAvailability = async (
-  req: TRequest,
-  res: Response
-) => {
+export const validateCageAvailability = async (cageId: any): Promise<boolean> => {
   try {
-    const { id } = req.params;
-    if (!isObjectIdOrHexString(id)) {
-      return res.status(400).json(statuses['0901']);
+    if (!isObjectIdOrHexString(cageId)) {
+      return false;
     }
-    const cage = await PetCage.findById(id);
+    const cage = await PetCage.findById(cageId);
     if (!cage) {
-      return res.status(404).json(statuses['02']);
+      console.log('@updateCageOccupant error', 'Cage not found');
+      return false;
     }
 
     if (cage.occupant >= cage.max) {
-      return res.status(400).json({
-        ...statuses['01'],
-        message: 'Cage is already full.',
-      });
+      console.log('@updateCageOccupant error', 'Cage is full');
+      return false;
     }
 
-    return res.status(200).json(statuses['00']);
+    return true;
   } catch (error) {
     console.log('@validateCageCapacity error', error);
-    return handleMongooseError(error, res);
+    return false;
   }
 };

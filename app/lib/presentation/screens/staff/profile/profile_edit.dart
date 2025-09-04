@@ -11,16 +11,15 @@ import 'package:furcare_app/presentation/widgets/common/default_snackbar.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-class CustomerUpdateProfileScreen extends StatefulWidget {
-  const CustomerUpdateProfileScreen({super.key});
+class StaffUpdateProfileScreen extends StatefulWidget {
+  const StaffUpdateProfileScreen({super.key});
 
   @override
-  State<CustomerUpdateProfileScreen> createState() =>
-      _CustomerUpdateProfileScreenState();
+  State<StaffUpdateProfileScreen> createState() =>
+      _StaffUpdateProfileScreenState();
 }
 
-class _CustomerUpdateProfileScreenState
-    extends State<CustomerUpdateProfileScreen> {
+class _StaffUpdateProfileScreenState extends State<StaffUpdateProfileScreen> {
   final _formKey = GlobalKey<FormState>();
 
   final _fullNameController = TextEditingController();
