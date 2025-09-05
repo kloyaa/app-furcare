@@ -73,7 +73,6 @@ class StaffAppointmentProvider with ChangeNotifier {
         _setFetchAppointmentsState(AppointmentState.error);
         _errorMessage = failure.message;
         _errorCode = failure.code;
-        print('Error fetching appointments: ${failure.message}');
       },
       (response) {
         _setFetchAppointmentsState(AppointmentState.fetched);
@@ -97,7 +96,6 @@ class StaffAppointmentProvider with ChangeNotifier {
         _setUpdateAppointmentStatus(AppointmentState.error);
         _errorMessageUpdate = failure.message;
         _errorCode = failure.code;
-        print('Error updateAppointmentStatus: ${failure.message}');
       },
       (response) {
         fetchNewAppointmentsByStatus(_currentStatus);
@@ -120,7 +118,6 @@ class StaffAppointmentProvider with ChangeNotifier {
         _setFetchNewAppointmentsByStatus(AppointmentState.error);
         _errorMessage = failure.message;
         _errorCode = failure.code;
-        print('Error fetching appointments: ${failure.message}');
       },
       (response) {
         _setFetchNewAppointmentsByStatus(AppointmentState.fetched);
@@ -143,7 +140,6 @@ class StaffAppointmentProvider with ChangeNotifier {
         _setRefetchAppointmentsState(AppointmentState.error);
         _errorMessage = failure.message;
         _errorCode = failure.code;
-        print('Error fetching appointments: ${failure.message}');
       },
       (response) {
         _setRefetchAppointmentsState(AppointmentState.fetched);

@@ -1683,31 +1683,4 @@ class _StaffHomeScreenState extends State<StaffHomeScreen>
       ),
     );
   }
-
-  Widget _buildErrorState(ThemeData theme, String error) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.error_outline, size: 64, color: theme.colorScheme.error),
-          const SizedBox(height: 16),
-          CustomText.title('Error Loading Applications'),
-          const SizedBox(height: 8),
-          CustomText.body(
-            error,
-            color: theme.colorScheme.onSurface.withAlpha(160),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 24),
-          CustomButton(
-            text: 'Try Again',
-            onPressed: () => context
-                .read<StaffAppointmentProvider>()
-                .getCustomerAppointments(),
-            icon: Icons.refresh_outlined,
-          ),
-        ],
-      ),
-    );
-  }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:furcare_app/data/models/activity_log_models.dart';
 import 'package:furcare_app/presentation/screens/shared/activity_log.dart';
 import 'package:furcare_app/presentation/screens/shared/change_password.dart';
 import 'package:furcare_app/presentation/screens/shared/splash_screen.dart';

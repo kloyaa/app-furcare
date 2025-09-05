@@ -152,7 +152,6 @@ class NetworkService {
         options: options,
       );
     } on DioException catch (e) {
-      print('error: ${e.message}');
       throw _handleDioException(e);
     }
   }
