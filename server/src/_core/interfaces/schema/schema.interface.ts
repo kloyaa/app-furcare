@@ -1,12 +1,15 @@
 import { Types } from 'mongoose';
 import { Role } from '../../../schema/role.schema';
 import { ApplicationStatusEnum } from '../../enum/application.enum';
+import { P } from '@faker-js/faker/dist/airline-CLphikKp';
 
 export interface IUser extends Document {
   username: string;
   email: string;
   password: string;
   roles: IRole[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface IPassword extends Document {
@@ -197,6 +200,15 @@ export interface IBranch {
   address: string;
   phone: string;
   open: boolean;
+
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface IApplication {
+  maintenance: boolean;
+
+  isUnderMaintenance: boolean;
 
   createdAt?: Date;
   updatedAt?: Date;

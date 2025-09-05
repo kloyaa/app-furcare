@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:furcare_app/config/activity_dependency.dart';
+import 'package:furcare_app/config/admin_dependency.dart';
 import 'package:furcare_app/config/appointment_dependency.dart';
 import 'package:furcare_app/config/authentication_dependency.dart';
 import 'package:furcare_app/config/branch_dependency.dart';
@@ -11,6 +12,7 @@ import 'package:furcare_app/config/pet_dependency.dart';
 import 'package:furcare_app/config/pet_service_dependency.dart';
 import 'package:furcare_app/core/theme/theme_notifier.dart';
 import 'package:furcare_app/presentation/providers/activity_provider.dart';
+import 'package:furcare_app/presentation/providers/admin/admin_provider.dart';
 import 'package:furcare_app/presentation/providers/appointment_provider.dart';
 import 'package:furcare_app/presentation/providers/auth_provider.dart';
 import 'package:furcare_app/presentation/providers/branch_provider.dart';
@@ -19,7 +21,8 @@ import 'package:furcare_app/presentation/providers/payment_provider.dart';
 import 'package:furcare_app/presentation/providers/pet_provider.dart';
 import 'package:furcare_app/presentation/providers/pet_service_provider.dart';
 import 'package:furcare_app/presentation/providers/staff/appointment_provider.dart';
-import 'package:furcare_app/presentation/routes/customer_router.dart';
+import 'package:furcare_app/presentation/routes/admin_router.dart';
+// import 'package:furcare_app/presentation/routes/customer_router.dart';
 // import 'package:furcare_app/presentation/routes/staff_router.dart';
 import 'package:provider/provider.dart';
 
@@ -36,6 +39,7 @@ Future<void> main() async {
   await appointmentDependencyInjection();
   await branchDependencyInjection();
   await paymentDependencyInjection();
+  await adminDependencyInjection();
 
   runApp(const MainApp());
 }
@@ -75,14 +79,15 @@ class MainApp extends StatelessWidget {
                 ChangeNotifierProvider(
                   create: (_) => getIt<StaffAppointmentProvider>(),
                 ),
+                ChangeNotifierProvider(create: (_) => getIt<AdminProvider>()),
               ],
               child: MaterialApp.router(
                 theme: ThemeNotifier.lightTheme,
                 darkTheme: ThemeNotifier.darkTheme,
                 themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
-                routerConfig: customerRouter,
-                // routerConfig: staffRouter,
                 // routerConfig: customerRouter,
+                // routerConfig: staffRouter,
+                routerConfig: adminRouter,
                 debugShowCheckedModeBanner: false,
                 title: 'Furcare',
               ),

@@ -31,6 +31,9 @@ import boardingRoute from './routes/application/Boarding';
 import paymentRoute from './routes/Payment.routes';
 
 import staffApplicationRoute from './routes/__staff/Application.route';
+import adminApplicationRoute from './routes/__admin/application.route';
+import userApplicationRoute from './routes/__admin/user.route';
+import adminPaymentRoute from './routes/__admin/payment.route';
 
 
 import {
@@ -107,6 +110,11 @@ async function runApp(): Promise<void> {
 
   // Staff routes
   app.use('/api', staffApplicationRoute);
+
+  // Admin routes
+  app.use('/api', adminApplicationRoute);
+  app.use('/api', userApplicationRoute);
+  app.use('/api', adminPaymentRoute);
 
   // Swagger setup
   app.use('/api-docs', swaggerUi.serve);

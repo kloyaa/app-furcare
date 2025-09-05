@@ -22,6 +22,9 @@ class ApiConstants {
   // Staff
   static const String staff = '$baseUrl/staff/v1';
 
+  // Grooming
+  static const String admin = '$baseUrl/admin/v1';
+
   // Others
   static const String activities = '$baseUrl/activity/v1';
   static const String petServices = '$baseUrl/pet-services/v1';
