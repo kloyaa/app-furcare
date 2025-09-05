@@ -42,10 +42,61 @@ class _MainTabScreenState extends State<MainTabScreen>
 
   int _currentBackgroundIndex = 0;
 
-  void _handleNavigateToPetServices(String code) {
-    // Add haptic feedback for better UX
-    HapticFeedback.selectionClick();
+  Future<void> _handleNavigateToPetServices(String code) async {
+    if (code == "PET_GROOMING") {
+      final bool? confirmed = await showDialog<bool>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Service Consent Required'),
+            content: const SingleChildScrollView(
+              child: Text(
+                '''By agreeing to this consent, I consent to the grooming services provided by Furcare Vet Clinic. I understand that grooming involves handling my pet, and I authorize the staff to proceed with the requested services in case of an emergency, I consent to necessary veterinary care, at my expense.
 
+At Furcare Vet Clinic, we prioritize your pet's well-being. While we take great care to ensure a pleasant grooming experience, grooming can sometimes uncover hidden health issues or worsen existing conditions. If needed, I authorize the Furcare immediate, veterinary treatment at my expense.
+
+If I am not present, I give permission for Furcare Vet Clinic to use photos of my pet for promotional purposes. I confirm that my pet is up to date on Rabies, Distemper, and any required vaccinations.
+
+I also acknowledge that I have informed the clinic of any pre-existing medical conditions my pet may have.''',
+                style: TextStyle(fontSize: 14, height: 1.4),
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text(
+                  'Cancel',
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
+                ),
+                child: const Text('I Agree & Continue'),
+              ),
+            ],
+          );
+        },
+      );
+
+      // Only proceed if user confirmed
+      if (confirmed != true) return;
+
+      // Add haptic feedback for better UX (only after confirmation)
+      HapticFeedback.selectionClick();
+      _handleNavigate(code);
+
+      return;
+    }
+
+    _handleNavigate(code);
+  }
+
+  _handleNavigate(String code) {
     if (code == "PET_GROOMING") {
       context.push('/appointments/grooming');
     }
