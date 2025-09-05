@@ -8,8 +8,11 @@ import { validateGetApplicationsByStatus, validateUpdateApplicationStatus, valid
 import Profile from '../../schema/profile.schema';
 import { Document, Types } from 'mongoose';
 import { IGroomingApplication, IBoardingApplication, IHomeServiceApplication } from '../../_core/interfaces/schema/schema.interface';
-import { validateCageAvailability } from '../pet_services.controller';
+import { updateCageOccupant, validateCageAvailability } from '../pet_services.controller';
 import { ApplicationStatusEnum, ApplicationTypeEnum } from '../../_core/enum/application.enum';
+import { emitter } from '../../_core/events/activity.event';
+import { ActivityType, EventName } from '../../_core/enum/activity.enum';
+import { IActivity } from '../../_core/interfaces/activity.interface';
 /**
  * Retrieves all applications based on status with formatted data for staff review
  *
@@ -195,16 +198,35 @@ export const updateApplicationStatus = async (
                     { path: 'pet', select: 'name specie gender' },
                     { path: 'branch', select: 'name' },
                 ]);
+
+                emitter.emit(EventName.ACTIVITY, {
+                    user: req.user.id as any,
+                    description: applicationType + ' application status updated to ' + newStatus,
+                } as IActivity);
                 break;
 
             case ApplicationTypeEnum.BoardingApplication:
                 {
-                    const isCageAvailable = await validateCageAvailability(application);
-                    if (!isCageAvailable) {
-                        return res.status(400).json({
-                            ...statuses['501'],
-                            message: 'Cage is full',
+                    updatedApplication = await BoardingApplication.findById(application);
+                    if (!updatedApplication) {
+                        return res.status(404).json({
+                            ...statuses['02'],
+                            message: 'Application not found'
                         });
+                    }
+
+                    const isRejected = newStatus === ApplicationStatusEnum.REJECTED;
+                    const isCompleted = newStatus === ApplicationStatusEnum.COMPLETED;
+                    const isApproved = newStatus === ApplicationStatusEnum.APPROVED;
+
+                    if (isApproved) {
+                        const isCageAvailable = await validateCageAvailability(updatedApplication.cage);
+                        if (!isCageAvailable) {
+                            return res.status(400).json({
+                                ...statuses['501'],
+                                message: 'Cage is full',
+                            });
+                        }
                     }
 
                     updatedApplication = await BoardingApplication.findByIdAndUpdate(
@@ -217,15 +239,30 @@ export const updateApplicationStatus = async (
                         { path: 'branch', select: 'name' },
                     ]);
 
-                    if (updatedApplication.status === ApplicationStatusEnum.APPROVED) {
-                        const isCageAvailable = await validateCageAvailability(application);
-                        if (!isCageAvailable) {
-                            return res.status(400).json({
-                                ...statuses['501'],
-                                message: 'Cage is full',
-                            });
+                    if (isApproved) {
+                        const isCageUpdated = await updateCageOccupant({
+                            action: 'add',
+                            cage: updatedApplication.cage,
+                        });
+                        if (!isCageUpdated) {
+                            console.log('cage not updated');
                         }
                     }
+
+                    if (isCompleted) {
+                        const isCageUpdated = await updateCageOccupant({
+                            action: 'remove',
+                            cage: updatedApplication.cage,
+                        });
+                        if (!isCageUpdated) {
+                            console.log('cage not updated');
+                        }
+                    }
+
+                    emitter.emit(EventName.ACTIVITY, {
+                        user: req.user.id as any,
+                        description: applicationType + ' application status updated to ' + newStatus,
+                    } as IActivity);
                 }
                 break;
 
@@ -239,6 +276,11 @@ export const updateApplicationStatus = async (
                     { path: 'pet', select: 'name specie gender' },
                     { path: 'branch', select: 'name' },
                 ]);
+
+                emitter.emit(EventName.ACTIVITY, {
+                    user: req.user.id as any,
+                    description: applicationType + ' application status updated to ' + newStatus,
+                } as IActivity);
                 break;
 
             default:

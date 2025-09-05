@@ -4,6 +4,7 @@ import { emitter } from "../../../_core/events/activity.event";
 import { IActivity } from "../../../_core/interfaces/activity.interface";
 import { TRequest, TResponse } from "../../../_core/interfaces/overrides.interface";
 import { handleMongooseError } from "../../../_core/utils/db/error.util";
+import { isEmpty } from "../../../_core/utils/utils";
 import { validateCreateBoardingApplication, validateCreateBoardingApplicationExtension } from "../../../_core/validators/application.validator";
 import { BoardingApplication } from "../../../schema/application/BoardingApplication.schema";
 
@@ -246,10 +247,16 @@ export const getBoardingApplications = async (
 ): Promise<any> => {
     try {
         const status = req.query.status as string;
-        const boardingApplications = await BoardingApplication.find({
-            user: req.user.id,
-            status: status || 'pending',
-        })
+        let query: any = {
+            user: req.user.id
+        };
+        if (!isEmpty(status)) {
+            query = {
+                ...query,
+                status
+            }
+        }
+        const boardingApplications = await BoardingApplication.find(query)
             .sort({ createdAt: -1 })
             .populate('pet')
             .populate('branch')

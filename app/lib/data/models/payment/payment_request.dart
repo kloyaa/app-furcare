@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:furcare_app/core/enums/application.dart';
 import 'package:furcare_app/core/enums/payment.dart';
 
 class PaymentRequest extends Equatable {

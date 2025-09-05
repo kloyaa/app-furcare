@@ -33,3 +33,33 @@ enum ApplicationStatus {
     );
   }
 }
+
+enum ApplicationModel {
+  homeService('HomeServiceApplication'),
+  boarding('BoardingApplication'),
+  grooming('GroomingApplication'),
+  empty('EmptyApplication');
+
+  const ApplicationModel(this.value);
+  final String value;
+
+  static ApplicationModel fromString(String value) {
+    return ApplicationModel.values.firstWhere(
+      (type) => type.value == value,
+      orElse: () => ApplicationModel.grooming,
+    );
+  }
+
+  static ApplicationModel fromStringToModel(String value) {
+    switch (value) {
+      case 'boarding':
+        return ApplicationModel.boarding;
+      case 'homeService':
+        return ApplicationModel.homeService;
+      case 'grooming':
+        return ApplicationModel.grooming;
+      default:
+        return ApplicationModel.empty;
+    }
+  }
+}

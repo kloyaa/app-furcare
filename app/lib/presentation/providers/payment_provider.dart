@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:furcare_app/core/enums/application.dart';
 import 'package:furcare_app/core/enums/payment.dart';
 import 'package:furcare_app/core/errors/failures.dart';
 import 'package:furcare_app/data/models/payment/payment.dart';

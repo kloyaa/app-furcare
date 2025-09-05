@@ -85,7 +85,7 @@ class _StaffUpdateProfileScreenState extends State<StaffUpdateProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(leading: SizedBox()),
+      appBar: CustomListAppBar(title: 'Edit Profile'),
       body: Consumer<ClientProvider>(
         builder: (context, clientProvider, child) {
           final Client client = clientProvider.client;

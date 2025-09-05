@@ -4,6 +4,7 @@ import { emitter } from "../../../_core/events/activity.event";
 import { IActivity } from "../../../_core/interfaces/activity.interface";
 import { TRequest, TResponse } from "../../../_core/interfaces/overrides.interface";
 import { handleMongooseError } from "../../../_core/utils/db/error.util";
+import { isEmpty } from "../../../_core/utils/utils";
 import { validateCreateHomeServiceApplication } from "../../../_core/validators/application.validator";
 import { HomeServiceApplication } from "../../../schema/application/HomeServiceApplication.schema";
 import Branch from "../../../schema/branch.schema";
@@ -69,10 +70,16 @@ export const getHomeServiceApplications = async (
 ): Promise<any> => {
     try {
         const status = req.query.status as string;
-        const homeServiceApplications = await HomeServiceApplication.find({
-            user: req.user.id,
-            status: status || 'pending',
-        })
+        let query: any = {
+            user: req.user.id
+        };
+        if (!isEmpty(status)) {
+            query = {
+                ...query,
+                status
+            }
+        }
+        const homeServiceApplications = await HomeServiceApplication.find(query)
             .sort({ createdAt: -1 })
             .populate('pet')
             .populate('branch');

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:furcare_app/core/enums/application.dart';
 import 'package:furcare_app/core/enums/payment.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
 import 'package:furcare_app/core/helpers/formatters.dart';

@@ -134,6 +134,7 @@ export const updateCageOccupant = async (payload: any): Promise<boolean> => {
 export const validateCageAvailability = async (cageId: any): Promise<boolean> => {
   try {
     if (!isObjectIdOrHexString(cageId)) {
+      console.log('@updateCageOccupant error', 'Invalid cageId');
       return false;
     }
     const cage = await PetCage.findById(cageId);

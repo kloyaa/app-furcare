@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:furcare_app/core/enums/application.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
 import 'package:furcare_app/core/helpers/formatters.dart';
+import 'package:furcare_app/data/models/__staff/appointment_request.dart';
 import 'package:furcare_app/data/models/__staff/appointments_model.dart';
 import 'package:furcare_app/presentation/providers/auth_provider.dart';
 import 'package:furcare_app/presentation/providers/client_provider.dart';
@@ -66,7 +67,44 @@ class _StaffHomeScreenState extends State<StaffHomeScreen>
     }
   }
 
-  void _handleAccept(CustomerAppointment appointment) {
+  void _handleAccept(CustomerAppointment appointment) async {
+    final payload = AppointmentStatusUpdateRequest(
+      application: appointment.id,
+      applicationType: ApplicationModel.fromStringToModel(
+        appointment.applicationType,
+      ).value,
+      status: ApplicationStatus.approved.value,
+    );
+    final appointmentProvider = context.read<StaffAppointmentProvider>();
+
+    await appointmentProvider.updateAppointmentStatus(payload);
+
+    if (!mounted) return;
+
+    if (appointmentProvider.errorMessageUpdate != null) {
+      Navigator.of(context)
+        ..pop()
+        ..pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              const Icon(Icons.close_outlined, color: Colors.white, size: 20),
+              const SizedBox(width: 8),
+              Text(appointmentProvider.errorMessageUpdate!),
+            ],
+          ),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
+    Navigator.of(context)
+      ..pop()
+      ..pop();
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
@@ -80,28 +118,112 @@ class _StaffHomeScreenState extends State<StaffHomeScreen>
         behavior: SnackBarBehavior.floating,
       ),
     );
+  }
+
+  void _handleReject(CustomerAppointment appointment) async {
+    final payload = AppointmentStatusUpdateRequest(
+      application: appointment.id,
+      applicationType: ApplicationModel.fromStringToModel(
+        appointment.applicationType,
+      ).value,
+      status: ApplicationStatus.rejected.value,
+    );
+    final appointmentProvider = context.read<StaffAppointmentProvider>();
+
+    await appointmentProvider.updateAppointmentStatus(payload);
+
+    if (!mounted) return;
+
+    if (appointmentProvider.errorMessageUpdate != null) {
+      Navigator.of(context)
+        ..pop()
+        ..pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              const Icon(Icons.close_outlined, color: Colors.white, size: 20),
+              const SizedBox(width: 8),
+              Text(appointmentProvider.errorMessageUpdate!),
+            ],
+          ),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
     Navigator.of(context)
       ..pop()
       ..pop();
-  }
 
-  void _handleReject(CustomerAppointment appointment) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.cancel, color: Colors.white, size: 20),
+            const Icon(Icons.check_circle, color: Colors.white, size: 20),
             const SizedBox(width: 8),
-            const Text('Application rejected'),
+            const Text('Application rejected successfully'),
           ],
         ),
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.orange,
         behavior: SnackBarBehavior.floating,
       ),
     );
+  }
+
+  void _handleComplete(CustomerAppointment appointment) async {
+    final payload = AppointmentStatusUpdateRequest(
+      application: appointment.id,
+      applicationType: ApplicationModel.fromStringToModel(
+        appointment.applicationType,
+      ).value,
+      status: ApplicationStatus.completed.value,
+    );
+    final appointmentProvider = context.read<StaffAppointmentProvider>();
+
+    await appointmentProvider.updateAppointmentStatus(payload);
+
+    if (!mounted) return;
+
+    if (appointmentProvider.errorMessageUpdate != null) {
+      Navigator.of(context)
+        ..pop()
+        ..pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              const Icon(Icons.close_outlined, color: Colors.white, size: 20),
+              const SizedBox(width: 8),
+              Text(appointmentProvider.errorMessageUpdate!),
+            ],
+          ),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
     Navigator.of(context)
       ..pop()
       ..pop();
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const Icon(Icons.check_circle, color: Colors.white, size: 20),
+            const SizedBox(width: 8),
+            const Text('Application completed successfully'),
+          ],
+        ),
+        backgroundColor: Colors.green,
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
   }
 
   Future<void> _handleLogout() async {
@@ -148,6 +270,7 @@ class _StaffHomeScreenState extends State<StaffHomeScreen>
         backgroundColor: colorScheme.surface,
         elevation: 0,
         centerTitle: true,
+        actions: [_buildRefreshButton(colorScheme)],
       ),
       body: FadeTransition(
         opacity: _fadeAnimation,
@@ -163,10 +286,6 @@ class _StaffHomeScreenState extends State<StaffHomeScreen>
                   if (provider.customerAppointments == null &&
                       !provider.isFetchingAppointments) {
                     return _buildLoadingState();
-                  }
-
-                  if (provider.error != null) {
-                    return _buildErrorState(theme, provider.error!);
                   }
 
                   if (provider.customerAppointments == null) {
@@ -264,7 +383,13 @@ class _StaffHomeScreenState extends State<StaffHomeScreen>
                 _buildDrawerTile(
                   icon: Icons.settings_outlined,
                   title: 'Account Settings',
-                  onTap: () => {},
+                  onTap: () => context.push(StaffRoute.user.changePassword),
+                ),
+                const SizedBox(height: 8),
+                _buildDrawerTile(
+                  icon: Icons.list_outlined,
+                  title: 'Activities',
+                  onTap: () => context.push(StaffRoute.activities),
                 ),
               ],
             ),
@@ -350,7 +475,7 @@ class _StaffHomeScreenState extends State<StaffHomeScreen>
           ? null
           : () => context
                 .read<StaffAppointmentProvider>()
-                .changeAppointmentStatus(status),
+                .fetchNewAppointmentsByStatus(status),
       borderRadius: BorderRadius.circular(20),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
@@ -550,13 +675,7 @@ class _StaffHomeScreenState extends State<StaffHomeScreen>
   Widget _buildSearchSection(ThemeData theme, ColorScheme colorScheme) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Row(
-        children: [
-          Expanded(child: _buildSearchBar(theme, colorScheme)),
-          const SizedBox(width: 8),
-          _buildRefreshButton(colorScheme),
-        ],
-      ),
+      child: _buildSearchBar(theme, colorScheme),
     );
   }
 
@@ -750,211 +869,320 @@ class _StaffHomeScreenState extends State<StaffHomeScreen>
     final serviceIcon = _getServiceIcon(appointment.applicationType);
     final serviceName = _getServiceDisplayName(appointment.applicationType);
     final isFullyPaid = appointment.paymentStatus.toLowerCase() == 'fully_paid';
+    double balance =
+        appointment.totalPrice.toDouble() - appointment.paidAmount.toDouble();
 
-    return Card(
-      elevation: 0,
-      margin: const EdgeInsets.only(bottom: 12),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header Row
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: serviceColor.withAlpha(32),
-                    borderRadius: BorderRadius.circular(8),
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      child: Card(
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: BorderSide(
+            color: theme.colorScheme.outline.withAlpha(32),
+            width: 1,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Clean header section
+              Row(
+                children: [
+                  Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: serviceColor.withAlpha(16),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(serviceIcon, color: serviceColor, size: 24),
                   ),
-                  child: Icon(serviceIcon, color: serviceColor, size: 20),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CustomText.title(
+                          serviceName,
+                          size: AppTextSize.md,
+                          fontWeight: AppFontWeight.bold.value,
+                        ),
+                        const SizedBox(height: 2),
+                        CustomText.body(
+                          '#${appointment.id.substring(0, 8).toUpperCase()}',
+                          size: AppTextSize.sm,
+                          color: theme.colorScheme.onSurface.withAlpha(160),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      CustomText.title(serviceName, size: AppTextSize.md),
+                      _buildMinimalStatusChip(appointment.status, serviceColor),
+                      const SizedBox(height: 4),
                       CustomText.body(
-                        'ID: ${appointment.id.substring(0, 8).toUpperCase()}',
-                        size: AppTextSize.sm,
-                        color: theme.colorScheme.onSurface.withAlpha(160),
+                        appointment.submittedAt.split('T')[0],
+                        size: AppTextSize.xs,
+                        color: theme.colorScheme.onSurface.withAlpha(120),
                       ),
                     ],
                   ),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    _buildStatusChipForCard(appointment.status, theme),
-                    if (isFullyPaid) ...[
-                      const SizedBox(height: 4),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 2,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.green.withAlpha(32),
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: Colors.green.withAlpha(64)),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.paid_outlined,
-                              color: Colors.green,
-                              size: 12,
-                            ),
-                            const SizedBox(width: 4),
-                            CustomText.body(
-                              'PAID',
-                              size: AppTextSize.xs,
-                              fontWeight: AppFontWeight.bold.value,
-                              color: Colors.green.shade700,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-              ],
-            ),
-
-            const Divider(height: 24),
-
-            // Customer & Pet Info
-            Row(
-              children: [
-                Expanded(
-                  child: _buildInfoColumn('Customer', [
-                    appointment.userInfo.fullName,
-                    appointment.userInfo.phoneNumber,
-                  ], theme),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: _buildInfoColumn('Pet', [
-                    appointment.petInfo.name,
-                    appointment.petInfo.breed,
-                  ], theme),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 16),
-
-            // Payment Info & Date
-            Row(
-              children: [
-                Icon(
-                  Icons.account_balance_wallet_outlined,
-                  size: 16,
-                  color: theme.colorScheme.onSurface.withAlpha(160),
-                ),
-                const SizedBox(width: 8),
-                CustomText.body('Total: ', size: AppTextSize.sm),
-                CustomText.body(
-                  formatToPhpCurrency(appointment.totalPrice.toDouble()),
-                  fontWeight: AppFontWeight.bold.value,
-                  size: AppTextSize.sm,
-                  color: serviceColor,
-                ),
-                const Spacer(),
-                Icon(
-                  Icons.date_range_outlined,
-                  size: 16,
-                  color: theme.colorScheme.onSurface.withAlpha(160),
-                ),
-                const SizedBox(width: 8),
-                CustomText.body(
-                  appointment.submittedAt.split('T')[0],
-                  size: AppTextSize.sm,
-                  color: theme.colorScheme.onSurface.withAlpha(160),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 20),
-
-            // Action Button
-            SizedBox(
-              width: double.infinity,
-              child: CustomButton(
-                text: 'Actions',
-                onPressed: () =>
-                    _showActionsDialog(appointment, serviceColor, serviceName),
-                icon: Icons.more_horiz_outlined,
-                backgroundColor: serviceColor.withAlpha(32),
-                textColor: serviceColor,
+                ],
               ),
-            ),
-          ],
+
+              const SizedBox(height: 20),
+
+              // Clean divider
+              Container(
+                height: 1,
+                color: theme.colorScheme.outline.withAlpha(32),
+              ),
+
+              const SizedBox(height: 20),
+
+              // Customer and Pet info in clean grid
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildMinimalInfoSection(
+                      'Customer',
+                      appointment.userInfo.fullName,
+                      appointment.userInfo.phoneNumber,
+                      theme,
+                    ),
+                  ),
+                  const SizedBox(width: 24),
+                  Expanded(
+                    child: _buildMinimalInfoSection(
+                      'Pet',
+                      appointment.petInfo.name,
+                      appointment.petInfo.breed,
+                      theme,
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 24),
+
+              // Payment information with progress indicator
+              _buildMinimalPaymentSection(
+                appointment,
+                serviceColor,
+                theme,
+                balance,
+                isFullyPaid,
+              ),
+
+              const SizedBox(height: 20),
+
+              // Clean action button
+              SizedBox(
+                width: double.infinity,
+                height: 44,
+                child: OutlinedButton.icon(
+                  onPressed: () => _showActionsDialog(
+                    appointment,
+                    serviceColor,
+                    serviceName,
+                  ),
+                  icon: Icon(Icons.more_horiz, size: 18, color: serviceColor),
+                  label: CustomText.body(
+                    'Manage',
+                    color: serviceColor,
+                    fontWeight: AppFontWeight.semibold.value,
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(color: serviceColor.withAlpha(64)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    backgroundColor: serviceColor.withAlpha(8),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildInfoColumn(String title, List<String> info, ThemeData theme) {
+  Widget _buildMinimalStatusChip(String status, Color serviceColor) {
+    Color chipColor;
+
+    switch (status.toLowerCase()) {
+      case 'approved':
+        chipColor = Colors.green;
+        break;
+      case 'pending':
+        chipColor = Colors.orange;
+        break;
+      case 'completed':
+        chipColor = Colors.blue;
+        break;
+      case 'cancelled':
+        chipColor = Colors.red;
+        break;
+      default:
+        chipColor = serviceColor;
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: chipColor.withAlpha(16),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: chipColor.withAlpha(64), width: 1),
+      ),
+      child: CustomText.body(
+        status.toLowerCase() == 'approved'
+            ? 'Approved'
+            : status.toLowerCase() == 'pending'
+            ? 'Pending'
+            : status.toLowerCase() == 'completed'
+            ? 'Completed'
+            : status.toLowerCase() == 'cancelled'
+            ? 'Cancelled'
+            : status,
+        size: AppTextSize.xs,
+        fontWeight: AppFontWeight.semibold.value,
+        color: chipColor,
+      ),
+    );
+  }
+
+  Widget _buildMinimalInfoSection(
+    String title,
+    String primaryText,
+    String secondaryText,
+    ThemeData theme,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CustomText.body(
           title,
-          size: AppTextSize.sm,
-          color: theme.colorScheme.onSurface.withAlpha(160),
+          size: AppTextSize.xs,
+          color: theme.colorScheme.onSurface.withAlpha(120),
+          fontWeight: AppFontWeight.semibold.value,
         ),
-        const SizedBox(height: 4),
-        CustomText.body(info[0], fontWeight: AppFontWeight.bold.value),
+        const SizedBox(height: 6),
         CustomText.body(
-          info[1],
+          primaryText,
           size: AppTextSize.sm,
+          fontWeight: AppFontWeight.semibold.value,
+        ),
+        const SizedBox(height: 2),
+        CustomText.body(
+          secondaryText,
+          size: AppTextSize.xs,
           color: theme.colorScheme.onSurface.withAlpha(160),
         ),
       ],
     );
   }
 
-  Widget _buildStatusChipForCard(String status, ThemeData theme) {
-    Color color;
-    switch (status.toLowerCase()) {
-      case 'pending':
-        color = Colors.orange;
-        break;
-      case 'approved':
-        color = Colors.blue;
-        break;
-      case 'in-progress':
-        color = Colors.indigo;
-        break;
-      case 'completed':
-        color = Colors.green;
-        break;
-      case 'cancelled':
-      case 'rejected':
-        color = Colors.red;
-        break;
-      default:
-        color = Colors.grey;
-    }
+  Widget _buildMinimalPaymentSection(
+    CustomerAppointment appointment,
+    Color serviceColor,
+    ThemeData theme,
+    double balance,
+    bool isFullyPaid,
+  ) {
+    final paymentProgress = appointment.paidAmount / appointment.totalPrice;
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: color.withAlpha(32),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withAlpha(64)),
-      ),
-      child: CustomText.body(
-        status.toUpperCase(),
-        size: AppTextSize.xs,
-        fontWeight: AppFontWeight.bold.value,
-        color: color.withAlpha(200),
-      ),
+    return Column(
+      children: [
+        // Payment progress bar
+        Container(
+          height: 4,
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surfaceContainerHighest.withAlpha(64),
+            borderRadius: BorderRadius.circular(2),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(2),
+            child: LinearProgressIndicator(
+              value: paymentProgress,
+              backgroundColor: Colors.transparent,
+              valueColor: AlwaysStoppedAnimation<Color>(
+                isFullyPaid ? Colors.green : serviceColor,
+              ),
+            ),
+          ),
+        ),
+
+        const SizedBox(height: 12),
+
+        // Payment amounts in clean row
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _buildPaymentItem(
+              'Total',
+              formatToPhpCurrency(appointment.totalPrice.toDouble()),
+              theme.colorScheme.onSurface,
+              theme,
+            ),
+            _buildPaymentItem(
+              balance < 0 ? 'Overpaid by' : 'Balance',
+              balance < 0
+                  ? formatToPhpCurrency(balance.abs())
+                  : formatToPhpCurrency(balance),
+              isFullyPaid ? Colors.green : serviceColor,
+              theme,
+            ),
+          ],
+        ),
+
+        if (isFullyPaid) ...[
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.check_circle_outline, size: 16, color: Colors.green),
+              const SizedBox(width: 4),
+              CustomText.body(
+                'Fully Paid',
+                size: AppTextSize.xs,
+                color: Colors.green,
+                fontWeight: AppFontWeight.semibold.value,
+              ),
+            ],
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildPaymentItem(
+    String label,
+    String amount,
+    Color amountColor,
+    ThemeData theme,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        CustomText.body(
+          label,
+          size: AppTextSize.xs,
+          color: theme.colorScheme.onSurface.withAlpha(120),
+          fontWeight: AppFontWeight.semibold.value,
+        ),
+        const SizedBox(height: 2),
+        CustomText.body(
+          amount,
+          size: AppTextSize.sm,
+          fontWeight: AppFontWeight.bold.value,
+          color: amountColor,
+        ),
+      ],
     );
   }
 
@@ -1066,6 +1294,7 @@ class _StaffHomeScreenState extends State<StaffHomeScreen>
     String serviceName,
   ) {
     final isPending = appointment.status.toLowerCase() == 'pending';
+    final isApproved = appointment.status.toLowerCase() == 'approved';
 
     return Column(
       children: [
@@ -1124,39 +1353,15 @@ class _StaffHomeScreenState extends State<StaffHomeScreen>
               backgroundColor: Colors.green,
             ),
           ),
-        ] else ...[
-          Container(
+        ],
+        if (isApproved) ...[
+          SizedBox(
             width: double.infinity,
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Theme.of(
-                context,
-              ).colorScheme.surfaceContainerHighest.withAlpha(64),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: Theme.of(context).colorScheme.outline.withAlpha(32),
-              ),
-            ),
-            child: Column(
-              children: [
-                Icon(
-                  Icons.info_outline,
-                  color: Theme.of(context).colorScheme.onSurface.withAlpha(160),
-                  size: 24,
-                ),
-                const SizedBox(height: 8),
-                CustomText.body(
-                  'This application is ${appointment.status.toLowerCase()}',
-                  textAlign: TextAlign.center,
-                  color: Theme.of(context).colorScheme.onSurface.withAlpha(160),
-                ),
-                CustomText.body(
-                  'No actions available',
-                  size: AppTextSize.sm,
-                  textAlign: TextAlign.center,
-                  color: Theme.of(context).colorScheme.onSurface.withAlpha(128),
-                ),
-              ],
+            child: CustomButton(
+              text: 'Complete Appointment',
+              onPressed: () => _showCompleteDialog(appointment),
+              icon: Icons.check_outlined,
+              backgroundColor: Colors.green,
             ),
           ),
         ],
@@ -1192,10 +1397,15 @@ class _StaffHomeScreenState extends State<StaffHomeScreen>
             isOutlined: true,
           ),
           const SizedBox(height: 8),
-          CustomButton(
-            text: 'Accept',
-            onPressed: () => _handleAccept(appointment),
-            backgroundColor: Colors.green,
+          Consumer<StaffAppointmentProvider>(
+            builder: (context, provider, child) {
+              return CustomButton(
+                text: 'Accept',
+                onPressed: () => _handleAccept(appointment),
+                backgroundColor: Colors.green,
+                isLoading: provider.isUpdatingAppointmentStatus,
+              );
+            },
           ),
         ],
       ),
@@ -1218,10 +1428,46 @@ class _StaffHomeScreenState extends State<StaffHomeScreen>
             isOutlined: true,
           ),
           const SizedBox(height: 8),
+          Consumer<StaffAppointmentProvider>(
+            builder: (context, provider, child) {
+              return CustomButton(
+                text: 'Reject',
+                onPressed: () => _handleReject(appointment),
+                backgroundColor: Colors.green,
+                isLoading: provider.isUpdatingAppointmentStatus,
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showCompleteDialog(CustomerAppointment appointment) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: CustomText.title('Complete Appointment'),
+        content: CustomText.body(
+          'Are you sure you want to complete this ${_getServiceDisplayName(appointment.applicationType).toLowerCase()} appointment with ${appointment.userInfo.fullName}?',
+        ),
+        actions: [
           CustomButton(
-            text: 'Reject',
-            onPressed: () => _handleReject(appointment),
-            backgroundColor: Colors.red,
+            text: 'Cancel',
+            onPressed: () => Navigator.pop(context),
+            isOutlined: true,
+          ),
+          const SizedBox(height: 8),
+          Consumer<StaffAppointmentProvider>(
+            builder: (context, provider, child) {
+              return CustomButton(
+                text: 'Complete',
+                onPressed: () => _handleComplete(appointment),
+                backgroundColor: Colors.green,
+                isLoading: provider.isUpdatingAppointmentStatus,
+              );
+            },
           ),
         ],
       ),

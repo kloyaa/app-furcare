@@ -1,12 +1,3 @@
-enum ApplicationModel {
-  homeService('HomeServiceApplication'),
-  boarding('BoardingApplication'),
-  grooming('GroomingApplication');
-
-  const ApplicationModel(this.value);
-  final String value;
-}
-
 enum PaymentMethod {
   gcash('gcash'),
   bankTransfer('bank_transfer'),
