@@ -1,40 +1,7 @@
 // _core/validators/payment.validator.ts
 import Joi from 'joi';
 import { CustomJoiHelpers } from '../utils/joi/joi.utils';
-
-// Payment method enum
-const paymentMethodEnum = [
-    'credit_card',
-    'debit_card',
-    'cash',
-    'gcash',
-    'paymaya',
-    'bank_transfer'
-];
-
-// Payment status enum
-const paymentStatusEnum = [
-    'pending',
-    'completed',
-    'failed',
-    'refunded',
-    'cancelled'
-];
-
-// Payment type enum
-const paymentTypeEnum = [
-    'full_payment',
-    'partial_payment',
-    'deposit',
-    'refund'
-];
-
-// Application model enum
-const applicationModelEnum = [
-    'GroomingApplication',
-    'BoardingApplication',
-    'HomeServiceApplication'
-];
+import { applicationModelEnum, paymentMethodEnum, paymentTypeEnum, paymentStatusEnum } from '../const/application.const';
 
 export const validateCreatePayment = (body: any) => {
     const schema = Joi.object({

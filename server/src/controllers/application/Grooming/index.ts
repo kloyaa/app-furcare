@@ -5,6 +5,7 @@ import { emitter } from "../../../_core/events/activity.event";
 import { IActivity } from "../../../_core/interfaces/activity.interface";
 import { TRequest, TResponse } from "../../../_core/interfaces/overrides.interface";
 import { handleMongooseError } from "../../../_core/utils/db/error.util";
+import { isEmpty } from "../../../_core/utils/utils";
 import { validateCreateGroomingApplication } from "../../../_core/validators/application.validator";
 import { GroomingApplication } from "../../../schema/application/GroomingApplication.schema";
 import Branch from "../../../schema/branch.schema";
@@ -118,10 +119,16 @@ export const getGroomingApplications = async (
 ): Promise<any> => {
     try {
         const status = req.query.status as string;
-        const groomingApplications = await GroomingApplication.find({
-            user: req.user.id,
-            status: status || 'pending',
-        })
+        let query: any = {
+            user: req.user.id
+        };
+        if (!isEmpty(status)) {
+            query = {
+                ...query,
+                status
+            }
+        }
+        const groomingApplications = await GroomingApplication.find(query)
             .sort({ createdAt: -1 })
             .populate('pet')
             .populate('branch');

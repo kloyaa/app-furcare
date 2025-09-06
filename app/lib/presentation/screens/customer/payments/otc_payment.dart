@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
 import 'package:furcare_app/core/helpers/formatters.dart';
+import 'package:furcare_app/presentation/providers/payment_provider.dart';
 import 'package:furcare_app/presentation/routes/customer_router.dart';
-import 'package:furcare_app/presentation/widgets/common/custom_appbar.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_button.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class OTCPaymentReceiptScreen extends StatefulWidget {
   const OTCPaymentReceiptScreen({super.key});
@@ -70,27 +70,21 @@ class _OTCPaymentReceiptScreenState extends State<OTCPaymentReceiptScreen>
     super.dispose();
   }
 
+  String get _generateReferenceNumber {
+    final now = DateTime.now();
+    return 'OTC${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}${now.millisecondsSinceEpoch.toString().substring(8)}';
+  }
+
+  String get _validUntil {
+    final validUntil = DateTime.now().add(Duration(hours: 24));
+    return formatDateToShort(validUntil);
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-
-    // Get the data passed from GoRouter with proper null checking
-    // final extra = GoRouterState.of(context).extra;
-
-    // Mock data for testing - remove this when using real navigation
-    final extra = {
-      'paymentType': 'Full Payment',
-      'paymentAmount': 3000.0,
-      'applicationId': '9XAFGKFKA0242',
-    };
-    // ignore: unnecessary_null_comparison, unnecessary_type_check
-    if (extra == null || extra is! Map<String, dynamic>) {
-      return _buildErrorState(theme);
-    }
-
-    final Map<String, dynamic> paymentData = extra;
-    final receiptData = _extractReceiptData(paymentData);
+    final provider = context.read<PaymentSettingsProvider>();
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
@@ -113,7 +107,7 @@ class _OTCPaymentReceiptScreenState extends State<OTCPaymentReceiptScreen>
                     const SizedBox(height: 24),
 
                     // Payment Information Card
-                    _buildPaymentInfoCard(receiptData, theme),
+                    _buildPaymentInfoCard(provider, theme),
                     const SizedBox(height: 16),
 
                     // Counter Instructions Card
@@ -131,39 +125,6 @@ class _OTCPaymentReceiptScreenState extends State<OTCPaymentReceiptScreen>
             ),
           );
         },
-      ),
-    );
-  }
-
-  Widget _buildErrorState(ThemeData theme) {
-    return Scaffold(
-      appBar: CustomAppBar(
-        title: 'Payment Instructions',
-        titleTextStyle: TextStyle(
-          fontSize: AppTextSize.md.size,
-          fontWeight: AppFontWeight.black.value,
-        ),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.error_outline, size: 64, color: theme.colorScheme.error),
-            SizedBox(height: 16),
-            CustomText.title('No Payment Data Found'),
-            SizedBox(height: 8),
-            CustomText.body(
-              'Unable to load payment information.',
-              color: theme.colorScheme.onSurface.withAlpha(160),
-            ),
-            SizedBox(height: 24),
-            CustomButton(
-              text: 'Go Home',
-              onPressed: () => context.go(CustomerRoute.home),
-              icon: Icons.home_outlined,
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -242,7 +203,10 @@ class _OTCPaymentReceiptScreenState extends State<OTCPaymentReceiptScreen>
     );
   }
 
-  Widget _buildPaymentInfoCard(ReceiptData receiptData, ThemeData theme) {
+  Widget _buildPaymentInfoCard(
+    PaymentSettingsProvider provider,
+    ThemeData theme,
+  ) {
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -334,7 +298,7 @@ class _OTCPaymentReceiptScreenState extends State<OTCPaymentReceiptScreen>
                   ),
                   const SizedBox(height: 8),
                   CustomText.title(
-                    formatToPhpCurrency(receiptData.paymentAmount),
+                    formatToPhpCurrency(provider.amount),
                     size: AppTextSize.lg,
                     color: theme.colorScheme.primary,
                     fontWeight: AppFontWeight.black.value,
@@ -344,38 +308,59 @@ class _OTCPaymentReceiptScreenState extends State<OTCPaymentReceiptScreen>
             ),
 
             // Payment Details
-            ...receiptData.getPaymentDetails().map((detail) {
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 16.0),
-                child: Row(
-                  children: [
-                    Icon(
-                      detail['icon'] as IconData,
-                      size: 18,
-                      color: theme.colorScheme.onSurface.withAlpha(128),
-                    ),
-                    SizedBox(width: 12),
-                    Expanded(
-                      child: CustomText.body(
-                        detail['label'] as String,
-                        color: theme.colorScheme.onSurface.withAlpha(160),
-                      ),
-                    ),
-                    Expanded(
-                      child: CustomText.body(
-                        detail['value'] as String,
-                        fontWeight: AppFontWeight.bold.value,
-                        textAlign: TextAlign.right,
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }),
+            ..._buildPaymentDetailRows(provider, theme),
           ],
         ),
       ),
     );
+  }
+
+  List<Widget> _buildPaymentDetailRows(
+    PaymentSettingsProvider provider,
+    ThemeData theme,
+  ) {
+    final details = [
+      {
+        'label': 'Application ID',
+        'value': provider.applicationId,
+        'icon': Icons.tag,
+      },
+      {
+        'label': 'Reference Number',
+        'value': _generateReferenceNumber,
+        'icon': Icons.numbers_outlined,
+      },
+      {'label': 'Valid Until', 'value': _validUntil, 'icon': Icons.schedule},
+    ];
+
+    return details.map((detail) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 16.0),
+        child: Row(
+          children: [
+            Icon(
+              detail['icon'] as IconData,
+              size: 18,
+              color: theme.colorScheme.onSurface.withAlpha(128),
+            ),
+            SizedBox(width: 12),
+            Expanded(
+              child: CustomText.body(
+                detail['label'] as String,
+                color: theme.colorScheme.onSurface.withAlpha(160),
+              ),
+            ),
+            Expanded(
+              child: CustomText.body(
+                detail['value'] as String,
+                fontWeight: AppFontWeight.bold.value,
+                textAlign: TextAlign.right,
+              ),
+            ),
+          ],
+        ),
+      );
+    }).toList();
   }
 
   Widget _buildCounterInstructionsCard(ThemeData theme) {
@@ -561,60 +546,5 @@ class _OTCPaymentReceiptScreenState extends State<OTCPaymentReceiptScreen>
         ],
       ),
     );
-  }
-
-  ReceiptData _extractReceiptData(Map<String, dynamic> paymentData) {
-    return ReceiptData(
-      paymentType: paymentData['paymentType'] as String? ?? 'Unknown',
-      paymentAmount: paymentData['paymentAmount'] as double? ?? 0.0,
-      applicationId: paymentData['applicationId'] as String? ?? 'N/A',
-    );
-  }
-}
-
-class ReceiptData {
-  final String paymentType;
-  final double paymentAmount;
-  final String applicationId;
-
-  ReceiptData({
-    required this.paymentType,
-    required this.paymentAmount,
-    required this.applicationId,
-  });
-
-  String get formattedDateTime {
-    final now = DateTime.now();
-    final formatter = DateFormat('MMM dd, yyyy • hh:mm a');
-    return formatter.format(now);
-  }
-
-  String get referenceNumber {
-    // Generate a simple reference number for OTC payment
-    final now = DateTime.now();
-    return 'OTC${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}${now.millisecondsSinceEpoch.toString().substring(8)}';
-  }
-
-  List<Map<String, dynamic>> getPaymentDetails() {
-    return [
-      {'label': 'Application ID', 'value': applicationId, 'icon': Icons.tag},
-      {
-        'label': 'Payment Type',
-        'value': paymentType,
-        'icon': Icons.payment_outlined,
-      },
-      {
-        'label': 'Reference Number',
-        'value': referenceNumber,
-        'icon': Icons.numbers_outlined,
-      },
-      {
-        'label': 'Valid Until',
-        'value': DateFormat(
-          'MMM dd, yyyy • hh:mm a',
-        ).format(DateTime.now().add(Duration(hours: 24))),
-        'icon': Icons.schedule,
-      },
-    ];
   }
 }

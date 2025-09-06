@@ -12,6 +12,8 @@ import {
   fileFilter,
   storage,
 } from './_core/services/upload/image_upload.service';
+
+import ekycRoute from './routes/Ekyc.route';
 import authRoute from './routes/auth.route';
 import userRoute from './routes/user.route';
 import uploadRoute from './routes/upload.route';
@@ -27,6 +29,12 @@ import groomingRoute from './routes/application/Grooming';
 import boardingRoute from './routes/application/Boarding';
 
 import paymentRoute from './routes/Payment.routes';
+
+import staffApplicationRoute from './routes/__staff/Application.route';
+import adminApplicationRoute from './routes/__admin/application.route';
+import userApplicationRoute from './routes/__admin/user.route';
+import adminPaymentRoute from './routes/__admin/payment.route';
+
 
 import {
   logNetworBody,
@@ -85,6 +93,7 @@ async function runApp(): Promise<void> {
   });
 
   // Routes
+  app.use('/api', ekycRoute);
   app.use('/api', authRoute);
   app.use('/api', userRoute);
   app.use('/api', uploadRoute);
@@ -98,6 +107,14 @@ async function runApp(): Promise<void> {
   app.use('/api', groomingRoute);
   app.use('/api', boardingRoute);
   app.use('/api', paymentRoute);
+
+  // Staff routes
+  app.use('/api', staffApplicationRoute);
+
+  // Admin routes
+  app.use('/api', adminApplicationRoute);
+  app.use('/api', userApplicationRoute);
+  app.use('/api', adminPaymentRoute);
 
   // Swagger setup
   app.use('/api-docs', swaggerUi.serve);

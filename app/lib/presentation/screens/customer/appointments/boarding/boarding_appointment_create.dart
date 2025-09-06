@@ -12,7 +12,7 @@ import 'package:furcare_app/presentation/widgets/common/custom_fields.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_pet_selection.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_select_field.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
-import 'package:furcare_app/presentation/widgets/dialog/custom_boarding_receipt_dialog.dart';
+import 'package:furcare_app/presentation/widgets/dialog/appointment_receipt/custom_boarding_receipt_dialog.dart';
 import 'package:provider/provider.dart';
 
 class BoardingApptScreen extends StatefulWidget {
@@ -125,13 +125,7 @@ class _BoardingApptScreenState extends State<BoardingApptScreen> {
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
-      appBar: CustomAppBar(
-        title: formatDateToLong(selectedDate ?? today),
-        titleTextStyle: TextStyle(
-          fontSize: AppTextSize.md.size,
-          fontWeight: AppFontWeight.black.value,
-        ),
-      ),
+      appBar: CustomListAppBar(title: 'Appointment Details'),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(

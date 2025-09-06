@@ -28,7 +28,7 @@ class _ActivityLogScreenState extends State<ActivityLogScreen> {
     final isDark = ThemeHelper.isDarkMode(context);
 
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: CustomListAppBar(title: 'Activity Log'),
       body: Consumer<ActivityProvider>(
         builder: (context, activityProvider, child) {
           return CustomScrollView(

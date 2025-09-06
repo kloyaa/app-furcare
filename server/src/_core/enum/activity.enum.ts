@@ -30,9 +30,9 @@ export enum ActivityType {
   APPLICATION_HOME_SERVICE_UPDATED = 'Home service application updated',
   APPLICATION_HOME_SERVICE_DELETED = 'Home service application deleted',
 
-  PAYMENT_COMPLETED = "PAYMENT_COMPLETED",
-  PAYMENT_FAILED = "PAYMENT_FAILED",
-  PAYMENT_STATUS_UPDATED = "PAYMENT_STATUS_UPDATED",
-  PAYMENT_CREATED = "PAYMENT_CREATED",
-  PAYMENT_REFUNDED = "PAYMENT_REFUNDED",
+  PAYMENT_COMPLETED = "Payment completed",
+  PAYMENT_FAILED = "Payment failed",
+  PAYMENT_STATUS_UPDATED = "Payment status updated",
+  PAYMENT_CREATED = "Payment created",
+  PAYMENT_REFUNDED = "Payment refunded",
 }

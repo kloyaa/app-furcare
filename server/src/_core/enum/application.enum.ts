@@ -31,10 +31,18 @@ export const groomingPreferencesEnum = [
   'LONG_TRIM',
   'SHORT_TRIM',
 ];
+
 export enum ApplicationStatusEnum {
   PENDING = 'pending',
+  APPROVED = 'approved',
+  REJECTED = 'rejected',
   IN_PROGRESS = 'in-progress',
   COMPLETED = 'completed',
-  CANCELLED = 'cancelled',
-  REJECTED = 'rejected',
+  CANCELLED = 'cancelled'
+}
+
+export enum ApplicationTypeEnum {
+  GroomingApplication = 'GroomingApplication',
+  BoardingApplication = 'BoardingApplication',
+  HomeServiceApplication = 'HomeServiceApplication'
 }

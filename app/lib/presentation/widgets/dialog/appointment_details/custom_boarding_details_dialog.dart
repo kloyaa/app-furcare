@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:furcare_app/core/enums/application.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
 import 'package:furcare_app/core/helpers/formatters.dart';
 import 'package:furcare_app/core/utils/boarding.dart';
 import 'package:furcare_app/data/models/boarding/boarding.dart';
 import 'package:furcare_app/data/models/boarding/boarding_request.dart';
 import 'package:furcare_app/presentation/providers/appointment_provider.dart';
+import 'package:furcare_app/presentation/providers/payment_provider.dart';
 import 'package:furcare_app/presentation/routes/customer_router.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_button.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
@@ -28,6 +30,8 @@ class BoardingAppointmentPreviewDialog extends StatefulWidget {
 
 class _BoardingAppointmentPreviewDialogState
     extends State<BoardingAppointmentPreviewDialog> {
+  bool _needsUpdate = false;
+
   int _currentExtensionDays = 0;
   static const int maxExtensionDays = 12;
   bool _isProcessingExtension = false;
@@ -37,6 +41,7 @@ class _BoardingAppointmentPreviewDialogState
     if (_currentExtensionDays < maxExtensionDays && !_isProcessingExtension) {
       setState(() {
         _currentExtensionDays++;
+        _needsUpdate = true;
       });
       _handleExtensionChange('add', 1);
     }
@@ -46,6 +51,7 @@ class _BoardingAppointmentPreviewDialogState
     if (_currentExtensionDays > 0 && !_isProcessingExtension) {
       setState(() {
         _currentExtensionDays--;
+        _needsUpdate = true;
       });
       _handleExtensionChange('minus', 1);
     }
@@ -92,6 +98,16 @@ class _BoardingAppointmentPreviewDialogState
         });
       }
     }
+  }
+
+  void _handlePay() {
+    final provider = context.read<PaymentSettingsProvider>();
+
+    provider.setAmount(widget.appointment.remainingBalance);
+    provider.setApplication(widget.appointment.id);
+    provider.setApplicationType(ApplicationModel.boarding);
+
+    context.push(CustomerRoute.payment.paymentMethods);
   }
 
   @override
@@ -238,13 +254,13 @@ class _BoardingAppointmentPreviewDialogState
       ),
       _buildInfoRow(
         'Original Duration',
-        '${widget.appointment.schedule.originalDays} days',
+        '${widget.appointment.schedule.originalDays ?? widget.appointment.schedule.days} day(s)',
         Icons.schedule,
         colorScheme,
       ),
       _buildInfoRow(
         'Current Duration',
-        '${widget.appointment.schedule.days} days',
+        '${widget.appointment.schedule.days} day(s)',
         Icons.update,
         colorScheme,
       ),
@@ -437,7 +453,7 @@ class _BoardingAppointmentPreviewDialogState
         _buildSection('Pricing Summary', [
           _buildPricingRow(
             'Original Booking',
-            '${formatToPhpCurrency(widget.appointment.cage.price)} x ${widget.appointment.schedule.originalDays ?? widget.appointment.schedule.days} days',
+            '${formatToPhpCurrency(widget.appointment.cage.price)} x ${widget.appointment.schedule.originalDays ?? widget.appointment.schedule.days} day(s1)',
             formatToPhpCurrency(widget.appointment.originalPrice),
             colorScheme,
           ),
@@ -461,7 +477,9 @@ class _BoardingAppointmentPreviewDialogState
         SizedBox(height: 12),
         _buildDurationSummary(colorScheme),
 
-        _buildTotalSummary(colorScheme),
+        _needsUpdate
+            ? _buildDismissButton(colorScheme)
+            : _buildTotalSummary(colorScheme),
       ],
     );
   }
@@ -505,8 +523,30 @@ class _BoardingAppointmentPreviewDialogState
               "Pay ${formatToPhpCurrency(widget.appointment.remainingBalance)}",
           textSize: AppTextSize.md,
           height: 64,
-          onPressed: () => context.push(CustomerRoute.payment.paymentMethods),
+          onPressed: () => _handlePay(),
           icon: Icons.payment_outlined,
+          isOutlined: false,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDismissButton(ColorScheme colorScheme) {
+    if (widget.appointment.remainingBalance == 0) {
+      return SizedBox(width: double.infinity);
+    }
+    return Column(
+      children: [
+        Container(
+          margin: const EdgeInsets.symmetric(vertical: 24),
+          child: Divider(),
+        ),
+        CustomButton(
+          text: "Submit Request",
+          textSize: AppTextSize.md,
+          height: 64,
+          onPressed: () => context.pop(),
+          icon: Icons.send_outlined,
           isOutlined: false,
         ),
       ],

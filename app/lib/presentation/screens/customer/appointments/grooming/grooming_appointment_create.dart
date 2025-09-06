@@ -11,7 +11,7 @@ import 'package:furcare_app/presentation/widgets/common/custom_appbar.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_button.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_pet_selection.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
-import 'package:furcare_app/presentation/widgets/dialog/custom_grooming_receipt_dialog.dart';
+import 'package:furcare_app/presentation/widgets/dialog/appointment_receipt/custom_grooming_receipt_dialog.dart';
 import 'package:provider/provider.dart';
 
 class GroomingApptScreen extends StatefulWidget {
@@ -121,13 +121,7 @@ class _GroomingApptScreenState extends State<GroomingApptScreen> {
     final colorScheme = theme.colorScheme;
     return Scaffold(
       backgroundColor: colorScheme.surface,
-      appBar: CustomAppBar(
-        title: "Grooming Appointment",
-        titleTextStyle: TextStyle(
-          fontSize: AppTextSize.sm.size,
-          fontWeight: AppFontWeight.semibold.value,
-        ),
-      ),
+      appBar: CustomListAppBar(title: 'Appointment Details'),
       body: SingleChildScrollView(
         padding: kDefaultBodyPadding,
         child: Column(

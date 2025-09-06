@@ -18,3 +18,10 @@ fullname: Test User Two
 phone: 09123450000
 facebook: https://www.facebook.com/testuser2
 messenger: https://www.messenger.com/testuser1
+
+
+ ---- Customer ----
+Account 1:
+username: teststaff1
+password: Test@Password1
+email: teststaff1@example.com

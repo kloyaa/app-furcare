@@ -416,15 +416,14 @@ class _PetsScreenState extends State<PetsScreen> {
     return Scaffold(
       appBar: CustomAppBar(
         leading: SizedBox(),
+        showThemeToggle: false,
         actions: [
           IconButton(
             onPressed: () => context.read<PetProvider>().getPets(),
-            icon: Icon(
-              Icons.refresh_rounded,
-              color: ThemeHelper.getOnPrimaryTextColor(context),
-            ),
+            icon: Icon(Icons.refresh_rounded, color: theme.colorScheme.primary),
           ),
         ],
+        backgroundColor: theme.colorScheme.surface,
       ),
       body: Consumer<PetProvider>(
         builder: (context, petProvider, child) {

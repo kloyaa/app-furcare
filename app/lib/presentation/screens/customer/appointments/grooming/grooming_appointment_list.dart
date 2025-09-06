@@ -8,7 +8,7 @@ import 'package:furcare_app/presentation/providers/appointment_provider.dart';
 import 'package:furcare_app/presentation/routes/customer_router.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_appbar.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
-import 'package:furcare_app/presentation/widgets/dialog/custom_grooming_details_dialog.dart';
+import 'package:furcare_app/presentation/widgets/dialog/appointment_details/custom_grooming_details_dialog.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -56,7 +56,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: CustomListAppBar(title: 'Grooming Appointments'),
       body: RefreshIndicator(
         onRefresh: () async {
           HapticFeedback.lightImpact();

@@ -86,7 +86,7 @@ class _CustomerUpdateProfileScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(leading: SizedBox()),
+      appBar: CustomListAppBar(title: 'Edit Profile'),
       body: Consumer<ClientProvider>(
         builder: (context, clientProvider, child) {
           final Client client = clientProvider.client;
@@ -172,8 +172,8 @@ class _CustomerUpdateProfileScreenState
 
                   // Facebook URL Field (Optional)
                   CustomInputField(
-                    label: 'Facebook Profile (Optional)',
-                    hintText: 'https://www.facebook.com/yourprofile',
+                    label: 'Facebook Name',
+                    hintText: 'e.g., John Doe',
                     controller: _facebookDisplayNameController,
                     prefixIcon: Icons.facebook_outlined,
                     keyboardType: TextInputType.url,

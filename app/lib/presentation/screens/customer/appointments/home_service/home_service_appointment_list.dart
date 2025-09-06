@@ -8,7 +8,7 @@ import 'package:furcare_app/presentation/providers/appointment_provider.dart';
 import 'package:furcare_app/presentation/routes/customer_router.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_appbar.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
-import 'package:furcare_app/presentation/widgets/dialog/custom_home_service_details_dialog.dart';
+import 'package:furcare_app/presentation/widgets/dialog/appointment_details/custom_home_service_details_dialog.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -57,7 +57,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
-      appBar: CustomAppBar(),
+      appBar: CustomListAppBar(title: 'Home Service Appointments'),
       body: RefreshIndicator(
         onRefresh: () async {
           HapticFeedback.lightImpact();

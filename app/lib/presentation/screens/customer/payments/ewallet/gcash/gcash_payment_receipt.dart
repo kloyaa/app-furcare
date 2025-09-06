@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
 import 'package:furcare_app/core/helpers/formatters.dart';
+import 'package:furcare_app/presentation/providers/payment_provider.dart';
 import 'package:furcare_app/presentation/routes/customer_router.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_appbar.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_button.dart';
@@ -8,6 +9,7 @@ import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
 import 'dart:io';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class GCashPaymentReceiptScreen extends StatefulWidget {
   const GCashPaymentReceiptScreen({super.key});
@@ -21,7 +23,6 @@ class _GCashPaymentReceiptScreenState extends State<GCashPaymentReceiptScreen>
     with TickerProviderStateMixin {
   late AnimationController _successAnimationController;
   late AnimationController _slideAnimationController;
-  late Animation<double> _successAnimation;
   late Animation<double> _slideAnimation;
   late Animation<double> _fadeAnimation;
 
@@ -37,13 +38,6 @@ class _GCashPaymentReceiptScreenState extends State<GCashPaymentReceiptScreen>
     _slideAnimationController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
-    );
-
-    _successAnimation = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(
-        parent: _successAnimationController,
-        curve: Curves.elasticOut,
-      ),
     );
 
     _slideAnimation = Tween<double>(begin: 50, end: 0).animate(
@@ -109,9 +103,6 @@ class _GCashPaymentReceiptScreenState extends State<GCashPaymentReceiptScreen>
       return _buildErrorState(theme);
     }
 
-    final Map<String, dynamic> paymentData = extra;
-    final receiptData = _extractReceiptData(paymentData);
-
     return Scaffold(
       backgroundColor: colorScheme.surface,
       body: AnimatedBuilder(
@@ -127,13 +118,8 @@ class _GCashPaymentReceiptScreenState extends State<GCashPaymentReceiptScreen>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 40),
-
-                    // Animated Success Header
-                    _buildAnimatedSuccessHeader(colorScheme),
-                    const SizedBox(height: 24),
-
                     // Receipt Summary Card
-                    _buildReceiptSummaryCard(receiptData, theme),
+                    _buildReceiptSummaryCard(theme),
                     const SizedBox(height: 16),
 
                     // Payment Details Card
@@ -141,10 +127,7 @@ class _GCashPaymentReceiptScreenState extends State<GCashPaymentReceiptScreen>
                       title: 'Payment Details',
                       icon: Icons.receipt_long_outlined,
                       theme: theme,
-                      children: _buildPaymentDetailRows(
-                        receiptData,
-                        colorScheme,
-                      ),
+                      children: _buildPaymentDetailRows(colorScheme),
                     ),
                     const SizedBox(height: 16),
 
@@ -153,10 +136,7 @@ class _GCashPaymentReceiptScreenState extends State<GCashPaymentReceiptScreen>
                     const SizedBox(height: 16),
 
                     // Receipt Image Card
-                    _buildEnhancedReceiptImageCard(
-                      receiptData.receiptImage,
-                      theme,
-                    ),
+                    _buildEnhancedReceiptImageCard(theme),
                     const SizedBox(height: 24),
 
                     // Action Buttons
@@ -207,81 +187,9 @@ class _GCashPaymentReceiptScreenState extends State<GCashPaymentReceiptScreen>
     );
   }
 
-  Widget _buildAnimatedSuccessHeader(ColorScheme colorScheme) {
-    return AnimatedBuilder(
-      animation: _successAnimation,
-      builder: (context, child) {
-        return Transform.scale(
-          scale: _successAnimation.value,
-          child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Colors.green.shade50,
-                  Colors.green.shade100.withAlpha(128),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.green.shade200),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.green.withAlpha(32),
-                  blurRadius: 12,
-                  offset: Offset(0, 4),
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  padding: EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.green,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.green.withAlpha(64),
-                        blurRadius: 8,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Icon(
-                    Icons.check_circle_outline,
-                    color: Colors.white,
-                    size: 32,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                CustomText.title(
-                  'Success!',
-                  color: Colors.green.shade800,
-                  size: AppTextSize.lg,
-                  textAlign: TextAlign.center,
-                  fontWeight: AppFontWeight.bold.value,
-                ),
-                const SizedBox(height: 8),
-                CustomText.body(
-                  'Your GCash payment has been received and is being processed',
-                  color: Colors.green.shade700,
-                  size: AppTextSize.sm,
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
+  Widget _buildReceiptSummaryCard(ThemeData theme) {
+    final provider = context.read<PaymentSettingsProvider>();
 
-  Widget _buildReceiptSummaryCard(ReceiptData receiptData, ThemeData theme) {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -321,7 +229,7 @@ class _GCashPaymentReceiptScreenState extends State<GCashPaymentReceiptScreen>
                         size: AppTextSize.md,
                       ),
                       CustomText.body(
-                        'Application: ${receiptData.applicationId}',
+                        'Application: ${provider.applicationId}',
                         size: AppTextSize.sm,
                         color: theme.colorScheme.onSurface.withAlpha(160),
                       ),
@@ -339,7 +247,7 @@ class _GCashPaymentReceiptScreenState extends State<GCashPaymentReceiptScreen>
                   children: [
                     CustomText.body('Amount Paid', size: AppTextSize.sm),
                     CustomText.title(
-                      formatToPhpCurrency(receiptData.paymentAmount),
+                      formatToPhpCurrency(provider.amountPaid),
                       size: AppTextSize.lg,
                       color: Colors.blue.shade700,
                     ),
@@ -392,21 +300,23 @@ class _GCashPaymentReceiptScreenState extends State<GCashPaymentReceiptScreen>
     );
   }
 
-  List<Widget> _buildPaymentDetailRows(
-    ReceiptData receiptData,
-    ColorScheme colorScheme,
-  ) {
+  List<Widget> _buildPaymentDetailRows(ColorScheme colorScheme) {
+    final provider = context.read<PaymentSettingsProvider>();
     final details = [
-      ('Application ID', receiptData.applicationId, Icons.tag),
-      ('Payment Type', receiptData.paymentType, Icons.payment_outlined),
-      ('Mobile Number', receiptData.phoneNumber, Icons.phone_outlined),
-      ('Reference Number', receiptData.referenceNumber, Icons.numbers_outlined),
+      ('Application ID', provider.applicationId, Icons.tag),
+      (
+        'Payment Type',
+        formatPaymentType(provider.paymentType),
+        Icons.payment_outlined,
+      ),
+      ('Mobile Number', provider.accountNumber, Icons.phone_outlined),
+      ('Reference Number', provider.reference, Icons.numbers_outlined),
       (
         'Amount Paid',
-        formatToPhpCurrency(receiptData.paymentAmount),
+        formatToPhpCurrency(provider.amountPaid),
         Icons.account_balance_wallet,
       ),
-      ('Date & Time', receiptData.formattedDateTime, Icons.schedule),
+      ('Date & Time', formatDateToShort(DateTime.now()), Icons.schedule),
       ('Status', 'Processing', Icons.hourglass_empty),
     ];
 
@@ -549,8 +459,10 @@ class _GCashPaymentReceiptScreenState extends State<GCashPaymentReceiptScreen>
     );
   }
 
-  Widget _buildEnhancedReceiptImageCard(File? receiptImage, ThemeData theme) {
-    if (receiptImage == null) {
+  Widget _buildEnhancedReceiptImageCard(ThemeData theme) {
+    final provider = context.read<PaymentSettingsProvider>();
+    final receipt = provider.receipt;
+    if (receipt == null) {
       return SizedBox.shrink();
     }
 
@@ -587,7 +499,7 @@ class _GCashPaymentReceiptScreenState extends State<GCashPaymentReceiptScreen>
                   ),
                 ),
                 IconButton(
-                  onPressed: () => _showFullScreenImage(receiptImage),
+                  onPressed: () => _showFullScreenImage(receipt),
                   icon: Icon(Icons.fullscreen_outlined),
                   tooltip: 'View Full Screen',
                 ),
@@ -595,7 +507,7 @@ class _GCashPaymentReceiptScreenState extends State<GCashPaymentReceiptScreen>
             ),
             const SizedBox(height: 16),
             InkWell(
-              onTap: () => _showFullScreenImage(receiptImage),
+              onTap: () => _showFullScreenImage(receipt),
               borderRadius: BorderRadius.circular(12),
               child: Container(
                 width: double.infinity,
@@ -611,7 +523,7 @@ class _GCashPaymentReceiptScreenState extends State<GCashPaymentReceiptScreen>
                   child: Stack(
                     fit: StackFit.expand,
                     children: [
-                      Image.file(receiptImage, fit: BoxFit.cover),
+                      Image.file(receipt, fit: BoxFit.cover),
                       Positioned(
                         bottom: 8,
                         right: 8,
@@ -738,17 +650,6 @@ class _GCashPaymentReceiptScreenState extends State<GCashPaymentReceiptScreen>
           );
         },
       ),
-    );
-  }
-
-  ReceiptData _extractReceiptData(Map<String, dynamic> paymentData) {
-    return ReceiptData(
-      paymentType: paymentData['paymentType'] as String? ?? 'Unknown',
-      referenceNumber: paymentData['referenceNumber'] as String? ?? 'N/A',
-      phoneNumber: paymentData['phoneNumber'] as String? ?? 'N/A',
-      receiptImage: paymentData['receiptImage'] as File?,
-      paymentAmount: paymentData['paymentAmount'] as double? ?? 0.0,
-      applicationId: paymentData['applicationId'] as String? ?? 'N/A',
     );
   }
 }

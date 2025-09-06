@@ -19,12 +19,24 @@ class ApiConstants {
   // Appointments
   static const String appointment = '$baseUrl/application/v1';
 
+  // Staff
+  static const String staff = '$baseUrl/staff/v1';
+
+  // Ekyc
+  static const String ekyc = '$baseUrl/ekyc/v1';
+
+  // Grooming
+  static const String admin = '$baseUrl/admin/v1';
+
   // Others
   static const String activities = '$baseUrl/activity/v1';
   static const String petServices = '$baseUrl/pet-services/v1';
 
   // Branches
   static const String branches = '$baseUrl/branch/v1';
+
+  // Payments
+  static const String payments = '$baseUrl/payment/v1';
 
   // Headers
   static const String userOrigin = 'nodex-user-origin';
@@ -36,6 +48,8 @@ class ApiConstants {
 
   // Header values
   static const String userOriginValue = 'mobile';
+  static const String webOriginValue = 'web';
+
   static const String accessKeyValue = AppConfig.accessKeyValue;
   static const String secretKeyValue = AppConfig.secretKeyValue;
   static const String roleForValue = 'user';
@@ -53,6 +67,11 @@ class ApiConstants {
   static Map<String, String> get registerHeaders => {
     ...defaultHeaders,
     roleFor: roleForValue,
+  };
+
+  static Map<String, String> get webApplicationHeaders => {
+    ...defaultHeaders,
+    userOrigin: webOriginValue,
   };
 
   // Headers with bearer token
