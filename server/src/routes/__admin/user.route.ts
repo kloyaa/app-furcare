@@ -25,6 +25,6 @@ router.patch('/admin/v1/users/activate', activateUser);
  * @body userId - The ID of the user to disable
  * @access Admin only
  */
-router.patch('/admin/v1/users/disable', disableUser);
+router.patch('/admin/v1/users/deactivate', disableUser);
 
 export default router;

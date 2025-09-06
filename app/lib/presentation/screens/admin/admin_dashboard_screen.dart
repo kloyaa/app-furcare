@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
 import 'package:furcare_app/core/helpers/formatters.dart';
+import 'package:furcare_app/presentation/providers/admin/admin_application_provider.dart';
 import 'package:furcare_app/presentation/providers/admin/admin_provider.dart';
+import 'package:furcare_app/presentation/providers/admin/admin_user_provider.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
 import 'package:provider/provider.dart';
 
@@ -26,10 +28,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     final adminProvider = context.read<AdminProvider>();
 
     await Future.wait([
-      adminProvider.fetchApplications(),
-      adminProvider.fetchPayments(),
-      adminProvider.fetchStatistics(),
-      adminProvider.fetchUsers(),
+      adminProvider.applicationProvider.fetchApplications(),
+      adminProvider.paymentProvider.fetchPayments(),
+      adminProvider.statisticsProvider.fetchStatistics(),
+      adminProvider.userProvider.fetchUsers(),
     ]);
   }
 
@@ -111,7 +113,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   }
 
   Widget _buildStatsGrid(ThemeData theme) {
-    return Consumer<AdminProvider>(
+    return Consumer<AdminApplicationProvider>(
       builder: (context, adminProvider, child) {
         final applications = adminProvider.applications;
         return GridView.count(
@@ -134,7 +136,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             _buildStatCard(
               theme,
               title: 'Grooming Services',
-              value: adminProvider.groomingApplicationsCount.toString(),
+              value: adminProvider.groomingCount.toString(),
               icon: Icons.pets_outlined,
               color: Colors.orange,
               subtitle: 'Active bookings',
@@ -142,7 +144,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             _buildStatCard(
               theme,
               title: 'Boarding Services',
-              value: adminProvider.boardingApplicationsCount.toString(),
+              value: adminProvider.boardingCount.toString(),
               icon: Icons.hotel_outlined,
               color: Colors.purple,
               subtitle: 'Current guests',
@@ -150,7 +152,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             _buildStatCard(
               theme,
               title: 'Home Services',
-              value: adminProvider.homeServiceApplicationsCount.toString(),
+              value: adminProvider.homeServiceCount.toString(),
               icon: Icons.home_outlined,
               color: Colors.blue,
               subtitle: 'Current guests',
@@ -315,11 +317,11 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   }
 
   Widget _buildServiceDistribution(ThemeData theme) {
-    return Consumer<AdminProvider>(
+    return Consumer<AdminApplicationProvider>(
       builder: (context, adminProvider, child) {
-        final groomingCount = adminProvider.groomingApplicationsCount;
-        final boardingCount = adminProvider.boardingApplicationsCount;
-        final homeServiceCount = adminProvider.homeServiceApplicationsCount;
+        final groomingCount = adminProvider.groomingCount;
+        final boardingCount = adminProvider.boardingCount;
+        final homeServiceCount = adminProvider.homeServiceCount;
         final totalCount = groomingCount + boardingCount + homeServiceCount;
 
         return Card(

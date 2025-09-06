@@ -4,9 +4,11 @@ import 'package:furcare_app/core/errors/exceptions.dart';
 import 'package:furcare_app/core/network/network_service.dart';
 import 'package:furcare_app/data/datasources/remote/auth_header_provider.dart';
 import 'package:furcare_app/data/models/__admin/admin_application_models.dart';
+import 'package:furcare_app/data/models/__admin/admin_create_user_models.dart';
 import 'package:furcare_app/data/models/__admin/admin_payment_models.dart';
 import 'package:furcare_app/data/models/__admin/admin_statistics_models.dart';
 import 'package:furcare_app/data/models/__admin/admin_user_models.dart';
+import 'package:furcare_app/data/models/default_models.dart';
 
 abstract class AdminRemoteDatasource {
   Future<List<AdminUser>> getUsers({
@@ -37,6 +39,13 @@ abstract class AdminRemoteDatasource {
   Future<AdminUser> getUserById(String userId);
   Future<AdminApplication> getApplicationById(String applicationId);
   Future<AdminApplicationPayment> getPaymentById(String paymentId);
+
+  // User management
+  Future<CreateUserResponse> createUser(CreateUserRequest request);
+  Future<DefaultResponse> updateUser(UpdateUserInfoRequest request);
+
+  Future<UpdateUserStatusResponse> activateUser(ActivateUserRequest user);
+  Future<UpdateUserStatusResponse> deactivateUser(DeactivateUserRequest user);
 }
 
 class AdminRemoteDatasourceImpl implements AdminRemoteDatasource {
@@ -286,6 +295,116 @@ class AdminRemoteDatasourceImpl implements AdminRemoteDatasource {
       }
       throw ServerException(
         message: 'An error occurred during fetching payment',
+      );
+    }
+  }
+
+  // User management
+  @override
+  Future<CreateUserResponse> createUser(CreateUserRequest request) async {
+    try {
+      final response = await _networkService.post(
+        ApiConstants.ekyc,
+        data: request.toJson(),
+        options: Options(headers: await _authHeaderProvider.getHeaders()),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return const CreateUserResponse(
+          success: true,
+          message: 'User created successfully',
+        );
+      } else {
+        throw ServerException(
+          message: response.data?['message'] ?? 'Error creating user',
+          code: response.data?['code'],
+        );
+      }
+    } catch (e) {
+      if (e is ServerException || e is NetworkException) {
+        rethrow;
+      }
+      throw ServerException(message: 'An error occurred while creating user');
+    }
+  }
+
+  @override
+  Future<DefaultResponse> updateUser(UpdateUserInfoRequest request) async {
+    try {
+      final response = await _networkService.put(
+        ApiConstants.ekyc,
+        data: request.toJson(),
+        options: Options(headers: await _authHeaderProvider.getHeaders()),
+      );
+
+      if (response.statusCode == 200) {
+        return DefaultResponse.fromJson(response.data);
+      } else {
+        throw ServerException(
+          message: response.data?['message'] ?? 'Error updating user',
+          code: response.data?['code'],
+        );
+      }
+    } catch (e) {
+      if (e is ServerException || e is NetworkException) {
+        rethrow;
+      }
+      throw ServerException(message: 'An error occurred while updating user');
+    }
+  }
+
+  @override
+  Future<UpdateUserStatusResponse> activateUser(
+    ActivateUserRequest request,
+  ) async {
+    try {
+      final response = await _networkService.patch(
+        '${ApiConstants.admin}/users/activate',
+        data: request.toJson(),
+        options: Options(headers: await _authHeaderProvider.getHeaders()),
+      );
+
+      if (response.statusCode == 200) {
+        return UpdateUserStatusResponse.fromJson(response.data);
+      } else {
+        throw ServerException(
+          message: response.data?['message'] ?? 'Error activating user',
+          code: response.data?['code'],
+        );
+      }
+    } catch (e) {
+      if (e is ServerException || e is NetworkException) {
+        rethrow;
+      }
+      throw ServerException(message: 'An error occurred while activating user');
+    }
+  }
+
+  @override
+  Future<UpdateUserStatusResponse> deactivateUser(
+    DeactivateUserRequest request,
+  ) async {
+    try {
+      final response = await _networkService.patch(
+        '${ApiConstants.admin}/users/deactivate',
+        data: request.toJson(),
+        options: Options(headers: await _authHeaderProvider.getHeaders()),
+      );
+
+      if (response.statusCode == 200) {
+        return UpdateUserStatusResponse.fromJson(response.data);
+      } else {
+        throw ServerException(
+          message: response.data?['message'] ?? 'Error deactivating user',
+          code: response.data?['code'],
+        );
+      }
+    } catch (e) {
+      if (e is ServerException || e is NetworkException) {
+        rethrow;
+      }
+      throw ServerException(
+        message: 'An error occurred while deactivating user',
       );
     }
   }

@@ -10,48 +10,83 @@ export const getAllUsers = async (
     res: TResponse
 ): Promise<any> => {
     try {
-        const users = await User.find({})
-            .populate('roles', 'name description')
+        const { search, isActive } = req.query;
+
+        // Base query for users
+        const userQuery: any = {};
+        if (search) {
+            userQuery.$or = [
+                { username: { $regex: search, $options: "i" } },
+                { email: { $regex: search, $options: "i" } },
+            ];
+        }
+
+        // Fetch users
+        const users = await User.find(userQuery)
+            .populate("roles", "name description")
             .sort({ createdAt: -1 })
-            .select('_id username email createdAt updatedAt')
+            .select("_id username email createdAt updatedAt roles")
             .lean();
 
-        // Get profile data for users
-        const userIds = users.map(user => user._id);
-        const profiles = await Profile.find({ user: { $in: userIds } })
-            .select('user fullName contact address isActive')
+        if (!users.length) {
+            return res.status(200).json([]);
+        }
+
+        // Get related profiles
+        const userIds = users.map((user) => user._id);
+        const profileQuery: any = { user: { $in: userIds } };
+
+        if (typeof isActive !== "undefined" && isActive !== "") {
+            profileQuery.isActive = isActive === "true";
+        }
+
+        if (search) {
+            profileQuery.$or = [
+                { fullName: { $regex: search, $options: "i" } },
+                { "contact.phoneNumber": { $regex: search, $options: "i" } },
+                { "contact.facebookDisplayName": { $regex: search, $options: "i" } },
+            ];
+        }
+
+        const profiles = await Profile.find(profileQuery)
+            .select("user fullName contact address isActive")
             .lean();
 
-        // Create a map for quick profile lookup
         const profileMap = profiles.reduce((acc, profile) => {
             acc[profile.user.toString()] = profile;
             return acc;
         }, {} as any);
 
-        // Combine user data with profile data
-        const usersWithProfiles = users.map(user => {
-            const profile = profileMap[user._id.toString()];
-            return {
-                _id: user._id,
-                username: user.username,
-                email: user.email,
-                fullName: profile?.fullName || 'N/A',
-                address: profile?.address || 'N/A',
-                contact: profile?.contact || 'N/A',
-                roles: user.roles,
-                isActive: profile?.isActive ?? true,
-                createdAt: user.createdAt,
-                updatedAt: user.updatedAt
-            };
-        });
+        // Merge user + profile
+        const usersWithProfiles = users
+            .map((user) => {
+                const profile = profileMap[user._id.toString()];
+                return {
+                    _id: user._id,
+                    username: user.username,
+                    email: user.email,
+                    fullName: profile?.fullName || "N/A",
+                    address: profile?.address || "N/A",
+                    contact: profile?.contact || "N/A",
+                    roles: user.roles,
+                    isActive: profile?.isActive ?? true,
+                    createdAt: user.createdAt,
+                    updatedAt: user.updatedAt,
+                };
+            })
+            // If isActive filter is applied but some users don’t have profiles, remove them
+            .filter((u) =>
+                typeof isActive !== "undefined" && isActive !== ""
+                    ? u.isActive === (isActive === "true")
+                    : true
+            );
 
         return res.status(200).json(usersWithProfiles);
     } catch (error) {
-        console.log('@getAllUsers error', error);
+        console.log("@getAllUsers error", error);
         return handleMongooseError(error, res);
     }
 };
-
 
 export const activateUser = async (
     req: TRequest,

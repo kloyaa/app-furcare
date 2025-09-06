@@ -11,7 +11,7 @@ import { User } from '../schema/user.schema';
 import Profile from '../schema/profile.schema';
 import { Role } from '../schema/role.schema';
 import { UserRole } from '../schema/user_role.schema';
-import { validateEKYCRegistration } from '../_core/validators/eky.validator';
+import { validateEKYCRegistration, validateEKYCUpdate } from '../_core/validators/eky.validator';
 
 /**
  * Creates a new user and profile through eKYC process in a single transaction.
@@ -124,6 +124,123 @@ export const createEKYCAccount = async (
   } catch (error) {
     await session.abortTransaction();
     console.log('@createEKYCAccount error', error);
+    return res.status(500).json(statuses['0900']);
+  } finally {
+    session.endSession();
+  }
+};
+
+
+/**
+ * Updates an existing user and profile through eKYC process in a single transaction.
+ *
+ * @param {TRequest} req - The request object containing the updated eKYC data.
+ * @param {Response} res - The response object used to send the response.
+ * @return {Promise<void>} A promise that resolves when the user and profile are updated successfully or rejects with an error.
+ */
+export const updateEKYCAccount = async (
+  req: TRequest,
+  res: Response
+): Promise<void | Response> => {
+  const error = validateEKYCUpdate(req.body);
+  if (error) {
+    return res.status(400).json({
+      ...statuses['501'],
+      message: error.details[0].message.replace(/['"]/g, ''),
+    });
+  }
+
+  const session = await startSession();
+  session.startTransaction();
+
+  try {
+    const {
+      user: userId, // must be passed in request
+      email,
+      password,
+      fullName,
+      address,
+      contact,
+    } = req.body;
+
+    const user = await User.findById(userId).session(session);
+    if (!user) {
+      await session.abortTransaction();
+      return res.status(404).json({
+        ...statuses['02'],
+        message: 'User not found',
+      });
+    }
+
+    // ✅ Email uniqueness check
+    if (email && email !== user.email) {
+      const duplicateEmail = await User.findOne({
+        email,
+        _id: { $ne: userId },
+      }).session(session);
+      if (duplicateEmail) {
+        await session.abortTransaction();
+        return res.status(409).json({
+          ...statuses['0052'],
+          message: 'Email already registered',
+        });
+      }
+      user.email = email;
+    }
+
+    // ✅ Mobile uniqueness check
+    if (contact?.phoneNumber) {
+      const duplicatePhoneProfile = await Profile.findOne({
+        'contact.phoneNumber': contact.phoneNumber,
+        user: { $ne: userId },
+      }).session(session);
+      if (duplicatePhoneProfile) {
+        await session.abortTransaction();
+        return res.status(409).json({
+          ...statuses['0052'],
+          message: 'Phone number already registered',
+        });
+      }
+    }
+
+    // ✅ Update password if provided
+    if (password) {
+      const saltRounds = 10;
+      const salt = await bcrypt.genSalt(saltRounds);
+      user.password = await bcrypt.hash(password, salt);
+    }
+
+    await user.save({ session });
+
+    // ✅ Update profile
+    const profile = await Profile.findOne({ user: userId }).session(session);
+    if (!profile) {
+      await session.abortTransaction();
+      return res.status(404).json({
+        ...statuses['0051'],
+        message: 'Profile not found',
+      });
+    }
+
+    if (fullName) profile.fullName = fullName;
+    if (address) profile.address = address;
+    if (contact?.facebookDisplayName !== undefined)
+      profile.contact.facebookDisplayName = contact.facebookDisplayName;
+    if (contact?.phoneNumber) profile.contact.phoneNumber = contact.phoneNumber;
+
+    await profile.save({ session });
+
+    await session.commitTransaction();
+
+    emitter.emit(EventName.ACTIVITY, {
+      user: userId,
+      description: ActivityType.PROFILE_UPDATED,
+    } as IActivity);
+
+    return res.status(200).json(statuses['00']);
+  } catch (error) {
+    await session.abortTransaction();
+    console.log('@updateEKYCAccount error', error);
     return res.status(500).json(statuses['0900']);
   } finally {
     session.endSession();

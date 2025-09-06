@@ -3,9 +3,11 @@ import 'package:furcare_app/core/errors/exceptions.dart';
 import 'package:furcare_app/core/errors/failures.dart';
 import 'package:furcare_app/data/datasources/remote/admin/admin_remote_datasource.dart';
 import 'package:furcare_app/data/models/__admin/admin_application_models.dart';
+import 'package:furcare_app/data/models/__admin/admin_create_user_models.dart';
 import 'package:furcare_app/data/models/__admin/admin_payment_models.dart';
 import 'package:furcare_app/data/models/__admin/admin_statistics_models.dart';
 import 'package:furcare_app/data/models/__admin/admin_user_models.dart';
+import 'package:furcare_app/data/models/default_models.dart';
 
 abstract class AdminRepository {
   Future<Either<Failure, List<AdminUser>>> getUsers({
@@ -44,6 +46,23 @@ abstract class AdminRepository {
 
   Future<Either<Failure, AdminApplicationPayment>> getPaymentById(
     String paymentId,
+  );
+
+  // Admin
+  Future<Either<Failure, CreateUserResponse>> createUser(
+    CreateUserRequest request,
+  );
+
+  Future<Either<Failure, DefaultResponse>> updateUser(
+    UpdateUserInfoRequest request,
+  );
+
+  Future<Either<Failure, UpdateUserStatusResponse>> activateUser(
+    ActivateUserRequest user,
+  );
+
+  Future<Either<Failure, UpdateUserStatusResponse>> deactivateUser(
+    DeactivateUserRequest user,
   );
 }
 
@@ -200,6 +219,79 @@ class AdminRepositoryImpl implements AdminRepository {
     try {
       final payment = await _remoteDataSource.getPaymentById(paymentId);
       return Right(payment);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message, code: e.code));
+    } on NetworkException catch (e) {
+      return Left(NetworkFailure(message: e.message));
+    } on CacheException catch (e) {
+      return Left(CacheFailure(message: e.message));
+    } catch (e) {
+      return Left(ServerFailure(message: 'An unexpected error occurred'));
+    }
+  }
+
+  // Admin
+  @override
+  Future<Either<Failure, CreateUserResponse>> createUser(
+    CreateUserRequest request,
+  ) async {
+    try {
+      final response = await _remoteDataSource.createUser(request);
+      return Right(response);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message, code: e.code));
+    } on NetworkException catch (e) {
+      return Left(NetworkFailure(message: e.message));
+    } on CacheException catch (e) {
+      return Left(CacheFailure(message: e.message));
+    } catch (e) {
+      return Left(ServerFailure(message: 'An unexpected error occurred'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, DefaultResponse>> updateUser(
+    UpdateUserInfoRequest request,
+  ) async {
+    try {
+      final response = await _remoteDataSource.updateUser(request);
+      return Right(response);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message, code: e.code));
+    } on NetworkException catch (e) {
+      return Left(NetworkFailure(message: e.message));
+    } on CacheException catch (e) {
+      return Left(CacheFailure(message: e.message));
+    } catch (e) {
+      return Left(ServerFailure(message: 'An unexpected error occurred'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, UpdateUserStatusResponse>> activateUser(
+    ActivateUserRequest request,
+  ) async {
+    try {
+      final response = await _remoteDataSource.activateUser(request);
+      return Right(response);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message, code: e.code));
+    } on NetworkException catch (e) {
+      return Left(NetworkFailure(message: e.message));
+    } on CacheException catch (e) {
+      return Left(CacheFailure(message: e.message));
+    } catch (e) {
+      return Left(ServerFailure(message: 'An unexpected error occurred'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, UpdateUserStatusResponse>> deactivateUser(
+    DeactivateUserRequest request,
+  ) async {
+    try {
+      final response = await _remoteDataSource.deactivateUser(request);
+      return Right(response);
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message, code: e.code));
     } on NetworkException catch (e) {

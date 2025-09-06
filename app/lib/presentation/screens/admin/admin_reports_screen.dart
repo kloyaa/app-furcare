@@ -3,6 +3,7 @@ import 'package:furcare_app/core/enums/text_enum.dart';
 import 'package:furcare_app/core/helpers/formatters.dart';
 import 'package:furcare_app/data/models/__admin/admin_statistics_models.dart';
 import 'package:furcare_app/presentation/providers/admin/admin_provider.dart';
+import 'package:furcare_app/presentation/providers/admin/admin_statistics_provider.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -23,7 +24,7 @@ class _AdminReportsScreenState extends State<AdminReportsScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
     // Schedule the data loading after the widget is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadReportsData();
@@ -39,12 +40,12 @@ class _AdminReportsScreenState extends State<AdminReportsScreen>
   Future<void> _loadReportsData() async {
     final adminProvider = context.read<AdminProvider>();
     await Future.wait([
-      adminProvider.fetchStatistics(
+      adminProvider.statisticsProvider.fetchStatistics(
         year: _selectedDate.year,
         month: _selectedPeriod == 'month' ? _selectedDate.month : null,
       ),
-      adminProvider.fetchApplications(),
-      adminProvider.fetchPayments(),
+      adminProvider.applicationProvider.fetchApplications(),
+      adminProvider.paymentProvider.fetchPayments(),
     ]);
   }
 
@@ -138,7 +139,9 @@ class _AdminReportsScreenState extends State<AdminReportsScreen>
         _buildStatCard(
           theme,
           title: 'Total Revenue',
-          value: formatToPhpCurrency(adminProvider.totalRevenue),
+          value: formatToPhpCurrency(
+            adminProvider.statisticsProvider.totalRevenue,
+          ),
           icon: Icons.monetization_on_outlined,
           color: Colors.green,
           change: '+12.5%',
@@ -154,7 +157,8 @@ class _AdminReportsScreenState extends State<AdminReportsScreen>
         _buildStatCard(
           theme,
           title: 'Payments',
-          value: adminProvider.completedPayments.length.toString(),
+          value: adminProvider.paymentProvider.completedPayments.length
+              .toString(),
           icon: Icons.payment_outlined,
           color: Colors.purple,
           change: '+15.2%',
@@ -162,7 +166,7 @@ class _AdminReportsScreenState extends State<AdminReportsScreen>
         _buildStatCard(
           theme,
           title: 'Active Users',
-          value: adminProvider.activeUsersCount.toString(),
+          value: adminProvider.userProvider.activeCount.toString(),
           icon: Icons.people_outline,
           color: Colors.orange,
           change: '+5.7%',
@@ -244,7 +248,7 @@ class _AdminReportsScreenState extends State<AdminReportsScreen>
             _buildServiceRankItem(
               theme,
               'Grooming',
-              adminProvider.groomingApplicationsCount,
+              adminProvider.applicationProvider.groomingCount,
               Colors.orange,
               1,
             ),
@@ -252,7 +256,7 @@ class _AdminReportsScreenState extends State<AdminReportsScreen>
             _buildServiceRankItem(
               theme,
               'Boarding',
-              adminProvider.boardingApplicationsCount,
+              adminProvider.applicationProvider.boardingCount,
               Colors.purple,
               2,
             ),
@@ -260,7 +264,7 @@ class _AdminReportsScreenState extends State<AdminReportsScreen>
             _buildServiceRankItem(
               theme,
               'Home Service',
-              adminProvider.homeServiceApplicationsCount,
+              adminProvider.applicationProvider.homeServiceCount,
               Colors.blue,
               3,
             ),
@@ -312,7 +316,7 @@ class _AdminReportsScreenState extends State<AdminReportsScreen>
     ThemeData theme,
     AdminProvider adminProvider,
   ) {
-    final recentPayments = adminProvider.recentPayments;
+    final recentPayments = adminProvider.paymentProvider.recentPayments;
 
     return Card(
       child: Padding(
@@ -428,8 +432,14 @@ class _AdminReportsScreenState extends State<AdminReportsScreen>
 
   Widget _buildPaymentMethodChart(AdminProvider adminProvider) {
     final data = [
-      {'method': 'GCash', 'count': adminProvider.gcashPayments.length},
-      {'method': 'Cash', 'count': adminProvider.cashPayments.length},
+      {
+        'method': 'GCash',
+        'count': adminProvider.paymentProvider.gcashPayments.length,
+      },
+      {
+        'method': 'Cash',
+        'count': adminProvider.paymentProvider.cashPayments.length,
+      },
     ];
 
     return SizedBox(
@@ -505,7 +515,9 @@ class _AdminReportsScreenState extends State<AdminReportsScreen>
                   child: _buildRevenueMetric(
                     theme,
                     'Total Revenue',
-                    formatToPhpCurrency(adminProvider.totalRevenue),
+                    formatToPhpCurrency(
+                      adminProvider.statisticsProvider.totalRevenue,
+                    ),
                     Colors.green,
                   ),
                 ),
@@ -580,7 +592,7 @@ class _AdminReportsScreenState extends State<AdminReportsScreen>
                   child: _buildPaymentMethodCard(
                     theme,
                     'GCash',
-                    adminProvider.gcashPayments.length,
+                    adminProvider.paymentProvider.gcashPayments.length,
                     Icons.phone_android,
                     Colors.blue,
                   ),
@@ -590,7 +602,7 @@ class _AdminReportsScreenState extends State<AdminReportsScreen>
                   child: _buildPaymentMethodCard(
                     theme,
                     'Cash',
-                    adminProvider.cashPayments.length,
+                    adminProvider.paymentProvider.cashPayments.length,
                     Icons.payments_outlined,
                     Colors.green,
                   ),

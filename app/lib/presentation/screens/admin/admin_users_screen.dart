@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
-import 'package:furcare_app/presentation/providers/admin/admin_provider.dart';
+import 'package:furcare_app/data/models/__admin/admin_create_user_models.dart';
+import 'package:furcare_app/data/models/__admin/admin_user_models.dart';
+import 'package:furcare_app/presentation/providers/admin/admin_user_provider.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
+import 'package:furcare_app/presentation/widgets/dialog/__admin/create_user_dialog.dart';
+import 'package:furcare_app/presentation/widgets/dialog/__admin/update_user_dialog.dart';
 import 'package:provider/provider.dart';
 
 class AdminUsersScreen extends StatefulWidget {
@@ -31,23 +35,41 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
   }
 
   Future<void> _loadUsers() async {
-    final adminProvider = context.read<AdminProvider>();
-    await adminProvider.fetchUsers();
+    final adminUserProvider = context.read<AdminUserProvider>();
+    await adminUserProvider.fetchUsers();
+  }
+
+  Future<void> _refreshUsers() async {
+    final adminUserProvider = context.read<AdminUserProvider>();
+    await adminUserProvider.refreshUsers();
   }
 
   void _handleSearch(String query) {
-    final adminProvider = context.read<AdminProvider>();
-    adminProvider.searchUsers(query.isEmpty ? null : query);
+    final adminUserProvider = context.read<AdminUserProvider>();
+    // Update the controller if needed (for programmatic updates)
+    if (_searchController.text != query) {
+      _searchController.text = query;
+    }
+    adminUserProvider.searchUsers(query.isEmpty ? null : query);
   }
 
   void _handleStatusFilter(String? status) {
     setState(() {
       _selectedStatusFilter = status;
     });
-    final adminProvider = context.read<AdminProvider>();
-    adminProvider.filterUsersByStatus(
+    final adminUserProvider = context.read<AdminUserProvider>();
+    adminUserProvider.filterByStatus(
       status == null ? null : status == 'active',
     );
+  }
+
+  void _clearAllFilters() {
+    setState(() {
+      _selectedStatusFilter = null;
+      _searchController.clear();
+    });
+    final adminUserProvider = context.read<AdminUserProvider>();
+    adminUserProvider.clearFilters();
   }
 
   @override
@@ -56,20 +78,37 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
 
     return Scaffold(
       backgroundColor: theme.colorScheme.surfaceContainerLowest,
-      body: RefreshIndicator(
-        onRefresh: _loadUsers,
-        child: CustomScrollView(
-          slivers: [
-            // _buildHeader(theme),
-            _buildFilters(theme),
-            _buildUsersList(theme),
-          ],
-        ),
+      body: Consumer<AdminUserProvider>(
+        builder: (context, adminUserProvider, child) {
+          // Handle error state
+          if (adminUserProvider.error != null) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Error: ${adminUserProvider.error}'),
+                  backgroundColor: Colors.red,
+                  action: SnackBarAction(label: 'Retry', onPressed: _loadUsers),
+                ),
+              );
+              adminUserProvider.clearError();
+            });
+          }
+
+          return RefreshIndicator(
+            onRefresh: _loadUsers,
+            child: CustomScrollView(
+              slivers: [
+                _buildFilters(theme, adminUserProvider),
+                _buildUsersList(theme, adminUserProvider),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
 
-  Widget _buildFilters(ThemeData theme) {
+  Widget _buildFilters(ThemeData theme, AdminUserProvider adminUserProvider) {
     return SliverToBoxAdapter(
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
@@ -93,7 +132,6 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
                               ? IconButton(
                                   icon: const Icon(Icons.clear),
                                   onPressed: () {
-                                    _searchController.clear();
                                     _handleSearch('');
                                   },
                                 )
@@ -132,15 +170,49 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
                       ),
                     ),
                     const SizedBox(width: 16),
+                    // Clear Filters Button
+                    OutlinedButton.icon(
+                      onPressed:
+                          (_searchController.text.isNotEmpty ||
+                              _selectedStatusFilter != null)
+                          ? _clearAllFilters
+                          : null,
+                      icon: const Icon(Icons.clear_all),
+                      label: const Text('Clear'),
+                    ),
+                    const SizedBox(width: 12),
+                    // Add User Button
+                    FilledButton.icon(
+                      onPressed: adminUserProvider.isLoading
+                          ? null
+                          : _showAddUserDialog,
+                      icon: const Icon(Icons.person_add),
+                      label: const Text('Add User'),
+                      style: FilledButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 20,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
                     IconButton(
-                      onPressed: _loadUsers,
-                      icon: const Icon(Icons.refresh),
+                      onPressed: adminUserProvider.isRefreshing
+                          ? null
+                          : _refreshUsers,
+                      icon: adminUserProvider.isRefreshing
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : const Icon(Icons.refresh),
                       tooltip: 'Refresh',
                     ),
                   ],
                 ),
                 const SizedBox(height: 16),
-                _buildStatsRow(theme),
+                _buildStatsRow(theme, adminUserProvider),
               ],
             ),
           ),
@@ -149,34 +221,56 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
     );
   }
 
-  Widget _buildStatsRow(ThemeData theme) {
-    return Consumer<AdminProvider>(
-      builder: (context, adminProvider, child) {
-        return Row(
-          children: [
-            _buildStatChip(
-              theme,
-              'Total Users',
-              adminProvider.totalUsersCount.toString(),
-              Colors.blue,
-            ),
-            const SizedBox(width: 12),
-            _buildStatChip(
-              theme,
-              'Active',
-              adminProvider.activeUsersCount.toString(),
-              Colors.green,
-            ),
-            const SizedBox(width: 12),
-            _buildStatChip(
-              theme,
-              'Inactive',
-              adminProvider.inactiveUsersCount.toString(),
-              Colors.orange,
-            ),
-          ],
-        );
-      },
+  // Add User Dialog
+  void _showAddUserDialog() async {
+    final result = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const CreateUserDialog(),
+    );
+
+    if (result == true) {
+      // Refresh the users list after successful creation
+      await _loadUsers();
+    }
+  }
+
+  void _showEditUserDialog(AdminUser user) async {
+    final result = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => UpdateUserDialog(user: user),
+    );
+
+    if (result == true) {
+      await _loadUsers(); // refresh list after update
+    }
+  }
+
+  Widget _buildStatsRow(ThemeData theme, AdminUserProvider adminUserProvider) {
+    return Row(
+      children: [
+        _buildStatChip(
+          theme,
+          'Total Users',
+          adminUserProvider.totalCount.toString(),
+          Colors.blue,
+        ),
+        const SizedBox(width: 12),
+        _buildStatChip(
+          theme,
+          'Active',
+          adminUserProvider.activeCount.toString(),
+          Colors.green,
+        ),
+        const SizedBox(width: 12),
+        _buildStatChip(
+          theme,
+          'Inactive',
+          adminUserProvider.inactiveCount.toString(),
+          Colors.orange,
+        ),
+      ],
     );
   }
 
@@ -216,60 +310,68 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
     );
   }
 
-  Widget _buildUsersList(ThemeData theme) {
-    return Consumer<AdminProvider>(
-      builder: (context, adminProvider, child) {
-        if (adminProvider.isLoadingUsers) {
-          return const SliverFillRemaining(
-            child: Center(child: CircularProgressIndicator()),
-          );
-        }
+  Widget _buildUsersList(ThemeData theme, AdminUserProvider adminUserProvider) {
+    if (adminUserProvider.isLoading) {
+      return const SliverFillRemaining(
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
 
-        if (adminProvider.users.isEmpty) {
-          return SliverFillRemaining(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.people_outline,
-                    size: 64,
-                    color: theme.colorScheme.onSurface.withAlpha(100),
-                  ),
-                  const SizedBox(height: 16),
-                  CustomText.body(
-                    'No users found',
-                    size: AppTextSize.lg,
-                    color: theme.colorScheme.onSurface.withAlpha(160),
-                  ),
-                  const SizedBox(height: 8),
-                  CustomText.body(
-                    'Try adjusting your search or filters',
-                    color: theme.colorScheme.onSurface.withAlpha(125),
-                  ),
-                ],
+    if (adminUserProvider.users.isEmpty) {
+      return SliverFillRemaining(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.people_outline,
+                size: 64,
+                color: theme.colorScheme.onSurface.withAlpha(100),
               ),
-            ),
-          );
-        }
-
-        return SliverPadding(
-          padding: const EdgeInsets.all(24),
-          sliver: SliverList(
-            delegate: SliverChildBuilderDelegate((context, index) {
-              final user = adminProvider.users[index];
-              return Container(
-                margin: const EdgeInsets.only(bottom: 12),
-                child: _buildUserCard(theme, user),
-              );
-            }, childCount: adminProvider.users.length),
+              const SizedBox(height: 16),
+              CustomText.body(
+                'No users found',
+                size: AppTextSize.lg,
+                color: theme.colorScheme.onSurface.withAlpha(160),
+              ),
+              const SizedBox(height: 8),
+              CustomText.body(
+                'Try adjusting your search or filters',
+                color: theme.colorScheme.onSurface.withAlpha(125),
+              ),
+              const SizedBox(height: 16),
+              if (adminUserProvider.searchQuery != null ||
+                  adminUserProvider.activeFilter != null)
+                OutlinedButton.icon(
+                  onPressed: _clearAllFilters,
+                  icon: const Icon(Icons.clear_all),
+                  label: const Text('Clear Filters'),
+                ),
+            ],
           ),
-        );
-      },
+        ),
+      );
+    }
+
+    return SliverPadding(
+      padding: const EdgeInsets.all(24),
+      sliver: SliverList(
+        delegate: SliverChildBuilderDelegate((context, index) {
+          final user = adminUserProvider.users[index];
+          return Container(
+            margin: const EdgeInsets.only(bottom: 12),
+            child: _buildUserCard(theme, user, adminUserProvider),
+          );
+        }, childCount: adminUserProvider.users.length),
+      ),
     );
   }
 
-  Widget _buildUserCard(ThemeData theme, user) {
+  Widget _buildUserCard(
+    ThemeData theme,
+    AdminUser user,
+    AdminUserProvider adminUserProvider,
+  ) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -390,6 +492,7 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
                 ),
                 PopupMenuButton(
                   icon: const Icon(Icons.more_vert),
+                  enabled: !adminUserProvider.isLoading,
                   itemBuilder: (context) => [
                     PopupMenuItem(
                       value: 'edit',
@@ -420,22 +523,9 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
                         ],
                       ),
                     ),
-                    PopupMenuItem(
-                      value: 'delete',
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.delete_outline,
-                            size: 20,
-                            color: Colors.red,
-                          ),
-                          const SizedBox(width: 8),
-                          CustomText.body('Delete', color: Colors.red),
-                        ],
-                      ),
-                    ),
                   ],
-                  onSelected: (value) => _handleUserAction(value, user),
+                  onSelected: (value) =>
+                      _handleUserAction(value, user, adminUserProvider),
                 ),
               ],
             ),
@@ -445,7 +535,7 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
     );
   }
 
-  void _showUserDetails(user) {
+  void _showUserDetails(AdminUser user) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -512,43 +602,22 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
     }
   }
 
-  void _handleUserAction(String action, user) {
+  void _handleUserAction(
+    String action,
+    AdminUser user,
+    AdminUserProvider adminUserProvider,
+  ) {
     switch (action) {
       case 'edit':
         _showEditUserDialog(user);
         break;
       case 'toggle_status':
-        _toggleUserStatus(user);
-        break;
-      case 'delete':
-        _showDeleteUserDialog(user);
+        _toggleUserStatus(user, adminUserProvider);
         break;
     }
   }
 
-  void _showEditUserDialog(user) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: CustomText.title('Edit User'),
-        content: const Text(
-          'Edit user functionality would be implemented here.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Save'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _toggleUserStatus(user) {
+  void _toggleUserStatus(AdminUser user, AdminUserProvider adminUserProvider) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -562,16 +631,40 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
             child: const Text('Cancel'),
           ),
           FilledButton(
-            onPressed: () {
+            onPressed: () async {
               Navigator.of(context).pop();
-              // TODO: Implement status toggle
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    'User ${user.isActive ? 'deactivated' : 'activated'} successfully',
-                  ),
-                ),
-              );
+
+              try {
+                if (user.isActive) {
+                  await adminUserProvider.deactivateUser(
+                    DeactivateUserRequest(user: user.id),
+                  );
+                } else {
+                  await adminUserProvider.activateUser(
+                    ActivateUserRequest(user: user.id),
+                  );
+                }
+
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'User ${user.isActive ? 'deactivated' : 'activated'} successfully',
+                      ),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                }
+              } catch (e) {
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Failed to update user: $e'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              }
             },
             child: Text(user.isActive ? 'Deactivate' : 'Activate'),
           ),
@@ -579,56 +672,4 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
       ),
     );
   }
-
-  void _showDeleteUserDialog(user) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: CustomText.title('Delete User'),
-        content: const Text(
-          'Are you sure you want to delete this user? This action cannot be undone.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
-          ),
-          FilledButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              // TODO: Implement user deletion
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('User deleted successfully')),
-              );
-            },
-            style: FilledButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Delete'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // void _showAddUserDialog() {
-  //   showDialog(
-  //     context: context,
-  //     builder: (context) => AlertDialog(
-  //       title: CustomText.title('Add New User'),
-  //       content: const SizedBox(
-  //         width: 400,
-  //         child: Text('Add new user form would be implemented here.'),
-  //       ),
-  //       actions: [
-  //         TextButton(
-  //           onPressed: () => Navigator.of(context).pop(),
-  //           child: const Text('Cancel'),
-  //         ),
-  //         FilledButton(
-  //           onPressed: () => Navigator.of(context).pop(),
-  //           child: const Text('Add User'),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 }
