@@ -61,12 +61,10 @@ class AdminUserProvider extends BaseAdminProvider {
 
     result.fold(
       (failure) {
-        print('Error fetching users: ${failure.message}');
         handleError(failure.message, failure.code);
         _setState(AdminState.error);
       },
       (users) {
-        print('Fetched ${users.length} users');
         _users = users;
         clearError(); // Clear any previous errors
         _setState(AdminState.fetched);

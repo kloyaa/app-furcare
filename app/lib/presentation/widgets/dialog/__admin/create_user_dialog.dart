@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:furcare_app/data/models/__admin/admin_create_user_models.dart';
-import 'package:furcare_app/presentation/providers/admin/admin_provider.dart';
 import 'package:furcare_app/presentation/providers/admin/admin_user_provider.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
 import 'package:provider/provider.dart';

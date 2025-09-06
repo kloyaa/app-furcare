@@ -617,6 +617,26 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
     }
   }
 
+  void _showStatusUpdateDialog(AdminUser user) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'User ${user.isActive ? 'deactivated' : 'activated'} successfully',
+        ),
+        backgroundColor: Colors.green,
+      ),
+    );
+  }
+
+  void _showStatusUpdateDialogError(dynamic e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Failed to update user: $e'),
+        backgroundColor: Colors.red,
+      ),
+    );
+  }
+
   void _toggleUserStatus(AdminUser user, AdminUserProvider adminUserProvider) {
     showDialog(
       context: context,
@@ -644,26 +664,9 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
                     ActivateUserRequest(user: user.id),
                   );
                 }
-
-                if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        'User ${user.isActive ? 'deactivated' : 'activated'} successfully',
-                      ),
-                      backgroundColor: Colors.green,
-                    ),
-                  );
-                }
+                _showStatusUpdateDialog(user);
               } catch (e) {
-                if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Failed to update user: $e'),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                }
+                _showStatusUpdateDialogError(e);
               }
             },
             child: Text(user.isActive ? 'Deactivate' : 'Activate'),

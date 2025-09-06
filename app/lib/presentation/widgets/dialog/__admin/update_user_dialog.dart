@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:furcare_app/core/enums/state.dart';
 import 'package:furcare_app/data/models/__admin/admin_create_user_models.dart';
 import 'package:furcare_app/data/models/__admin/admin_user_models.dart';
-import 'package:furcare_app/presentation/providers/admin/admin_provider.dart';
 import 'package:furcare_app/presentation/providers/admin/admin_user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -95,7 +94,7 @@ class _UpdateUserDialogState extends State<UpdateUserDialog> {
     await adminProvider.updateUser(payload);
 
     if (mounted) {
-      if (adminProvider.isUpdating == AdminState.success) {
+      if (adminProvider.updateState == AdminState.success) {
         Navigator.of(context).pop(true); // return success
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("User updated successfully")),
@@ -177,8 +176,6 @@ class _UpdateUserDialogState extends State<UpdateUserDialog> {
                     final adminProvider = context.watch<AdminUserProvider>();
                     final isLastStep = _currentStep == 2;
                     final isLoading = adminProvider.isUpdating;
-
-                    print('isLoading: $isLoading');
 
                     return Row(
                       children: [

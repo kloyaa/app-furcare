@@ -3,7 +3,6 @@ import 'package:furcare_app/core/enums/text_enum.dart';
 import 'package:furcare_app/core/helpers/formatters.dart';
 import 'package:furcare_app/presentation/providers/admin/admin_application_provider.dart';
 import 'package:furcare_app/presentation/providers/admin/admin_provider.dart';
-import 'package:furcare_app/presentation/providers/admin/admin_user_provider.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
 import 'package:provider/provider.dart';
 
