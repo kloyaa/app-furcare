@@ -5,7 +5,6 @@ import multer from 'multer';
 import swaggerUi from 'swagger-ui-express';
 import { connectDB } from './_core/utils/db/db.util';
 import { getEnv } from './_core/config/env.config';
-import { maintenanceModeMiddleware } from './_core/middlewares/maintenance-mode.middleware';
 import { requestLoggerMiddleware } from './_core/middlewares/request-logger.middleware';
 import { allowApiAccessMiddleware } from './_core/middlewares/allow-access.middleware';
 import {
