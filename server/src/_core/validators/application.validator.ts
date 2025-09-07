@@ -71,13 +71,8 @@ export const validateCreateBoardingApplicationExtension = (body: any) => {
       .trim()
       .required()
       .custom(CustomJoiHelpers.isValidObjectId, 'ObjectId validation'),
-    type: Joi
-      .string()
-      .required()
-      .valid('add', 'minus', 'set'),
-    count: Joi
-      .number()
-      .required()
+    type: Joi.string().required().valid('add', 'minus', 'set'),
+    count: Joi.number().required(),
   });
 
   const { error } = schema.validate(body);

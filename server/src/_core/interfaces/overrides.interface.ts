@@ -1,4 +1,4 @@
-import { Request } from 'express-jwt';
+import { type Request } from 'express-jwt';
 import { type Response } from 'express';
 
 export type TRequest = Request & {
@@ -9,4 +9,4 @@ export type TRequest = Request & {
   from: string;
 };
 
-export type TResponse = Response; 
+export type TResponse = Response;

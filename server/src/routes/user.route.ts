@@ -7,10 +7,11 @@ import {
 import { isAuthenticated } from '../_core/middlewares/jwt.middleware';
 import { authorize } from '../_core/middlewares/authorization.middleware';
 import { RoleName } from '../_core/enum/roles.enum';
+import { maintenanceModeMiddleware } from '../_core/middlewares/maintenance-mode.middleware';
 
 const router = Router();
 
-const commonMiddlewares = [isAuthenticated];
+const commonMiddlewares = [maintenanceModeMiddleware, isAuthenticated];
 
 router.post(
   '/user/v1/profile',

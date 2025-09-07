@@ -14,19 +14,24 @@ const maintenance_mode_middleware_1 = require("./_core/middlewares/maintenance-m
 const request_logger_middleware_1 = require("./_core/middlewares/request-logger.middleware");
 const allow_access_middleware_1 = require("./_core/middlewares/allow-access.middleware");
 const image_upload_service_1 = require("./_core/services/upload/image_upload.service");
+const Ekyc_route_1 = __importDefault(require("./routes/Ekyc.route"));
 const auth_route_1 = __importDefault(require("./routes/auth.route"));
 const user_route_1 = __importDefault(require("./routes/user.route"));
 const upload_route_1 = __importDefault(require("./routes/upload.route"));
 const auxiliary_route_1 = __importDefault(require("./routes/auxiliary.route"));
 const activity_route_1 = __importDefault(require("./routes/activity.route"));
-const pet_services_route_1 = __importDefault(require("./routes/pet_services.route"));
+const pet_services_route_1 = __importDefault(require("./routes/pet-services.route"));
 const pet_route_1 = __importDefault(require("./routes/pet.route"));
 const branch_route_1 = __importDefault(require("./routes/branch.route"));
 const health_route_1 = __importDefault(require("./routes/health.route"));
-const HomeService_1 = __importDefault(require("./routes/application/HomeService"));
-const Grooming_1 = __importDefault(require("./routes/application/Grooming"));
-const Boarding_1 = __importDefault(require("./routes/application/Boarding"));
-const Payment_routes_1 = __importDefault(require("./routes/Payment.routes"));
+const home_service_1 = __importDefault(require("./routes/application/home-service"));
+const grooming_1 = __importDefault(require("./routes/application/grooming"));
+const boarding_1 = __importDefault(require("./routes/application/boarding"));
+const payment_route_1 = __importDefault(require("./routes/payment.route"));
+const application_route_1 = __importDefault(require("./routes/staff/application.route"));
+const application_route_2 = __importDefault(require("./routes/__admin/application.route"));
+const user_route_2 = __importDefault(require("./routes/__admin/user.route"));
+const payment_route_2 = __importDefault(require("./routes/__admin/payment.route"));
 const default_middleware_1 = require("./_core/middlewares/default.middleware");
 const common_const_1 = require("./_core/const/common.const");
 // import { swaggerSetup } from './swagger/swagger';
@@ -66,6 +71,7 @@ async function runApp() {
         next();
     });
     // Routes
+    app.use('/api', Ekyc_route_1.default);
     app.use('/api', auth_route_1.default);
     app.use('/api', user_route_1.default);
     app.use('/api', upload_route_1.default);
@@ -74,10 +80,16 @@ async function runApp() {
     app.use('/api', pet_services_route_1.default);
     app.use('/api', pet_route_1.default);
     app.use('/api', branch_route_1.default);
-    app.use('/api', HomeService_1.default);
-    app.use('/api', Grooming_1.default);
-    app.use('/api', Boarding_1.default);
-    app.use('/api', Payment_routes_1.default);
+    app.use('/api', home_service_1.default);
+    app.use('/api', grooming_1.default);
+    app.use('/api', boarding_1.default);
+    app.use('/api', payment_route_1.default);
+    // Staff routes
+    app.use('/api', application_route_1.default);
+    // Admin routes
+    app.use('/api', application_route_2.default);
+    app.use('/api', user_route_2.default);
+    app.use('/api', payment_route_2.default);
     // Swagger setup
     app.use('/api-docs', swagger_ui_express_1.default.serve);
     app.use('/api-docs', swagger_ui_express_1.default.setup(swagger_json_1.default, swaggerOptions));

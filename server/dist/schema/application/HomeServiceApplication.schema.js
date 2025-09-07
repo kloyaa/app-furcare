@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.HomeServiceApplication = void 0;
 const mongoose_1 = require("mongoose");
-const PaymentMixin_1 = require("../../mixins/PaymentMixin");
+const payment_mixin_1 = require("../../mixins/payment-mixin");
 const BaseApplicationSchema_1 = require("../base/BaseApplicationSchema");
 const homeServiceApplicationSchema = new mongoose_1.Schema({
     ...BaseApplicationSchema_1.baseApplicationFields,
@@ -34,11 +34,11 @@ const homeServiceApplicationSchema = new mongoose_1.Schema({
             message: 'Price cannot be negative',
         },
     },
-    ...PaymentMixin_1.paymentFields,
+    ...payment_mixin_1.paymentFields,
 }, BaseApplicationSchema_1.baseSchemaOptions);
 // Add payment functionality
-(0, PaymentMixin_1.addPaymentVirtuals)(homeServiceApplicationSchema);
-(0, PaymentMixin_1.addPaymentMethods)(homeServiceApplicationSchema);
+(0, payment_mixin_1.addPaymentVirtuals)(homeServiceApplicationSchema);
+(0, payment_mixin_1.addPaymentMethods)(homeServiceApplicationSchema);
 // Indexes
 homeServiceApplicationSchema.index({ user: 1, paymentStatus: 1 });
 homeServiceApplicationSchema.index({ branch: 1, 'schedule.date': 1 });

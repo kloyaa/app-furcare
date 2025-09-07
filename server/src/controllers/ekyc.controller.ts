@@ -11,7 +11,10 @@ import { User } from '../schema/user.schema';
 import Profile from '../schema/profile.schema';
 import { Role } from '../schema/role.schema';
 import { UserRole } from '../schema/user_role.schema';
-import { validateEKYCRegistration, validateEKYCUpdate } from '../_core/validators/eky.validator';
+import {
+  validateEKYCRegistration,
+  validateEKYCUpdate,
+} from '../_core/validators/eky.validator';
 
 /**
  * Creates a new user and profile through eKYC process in a single transaction.
@@ -71,9 +74,7 @@ export const createEKYCAccount = async (
       });
     }
 
-    const userRole = await Role
-      .findOne({ name: 'user' })
-      .session(session);
+    const userRole = await Role.findOne({ name: 'user' }).session(session);
 
     if (!userRole) {
       await session.abortTransaction();
@@ -93,10 +94,15 @@ export const createEKYCAccount = async (
 
     const createdUser = await newUser.save({ session });
 
-    await UserRole.create([{
-      user: createdUser._id,
-      role: userRole._id,
-    }], { session });
+    await UserRole.create(
+      [
+        {
+          user: createdUser._id,
+          role: userRole._id,
+        },
+      ],
+      { session }
+    );
 
     // Create profile with eKYC data
     const newProfile = new Profile({
@@ -129,7 +135,6 @@ export const createEKYCAccount = async (
     session.endSession();
   }
 };
-
 
 /**
  * Updates an existing user and profile through eKYC process in a single transaction.

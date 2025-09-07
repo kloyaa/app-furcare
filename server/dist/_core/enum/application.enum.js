@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ApplicationStatusEnum = exports.groomingPreferencesEnum = exports.groomingOptionsEnum = exports.groomingScheduleEnum = exports.applicationStatusEnum = void 0;
+exports.ApplicationTypeEnum = exports.ApplicationStatusEnum = exports.groomingPreferencesEnum = exports.groomingOptionsEnum = exports.groomingScheduleEnum = exports.applicationStatusEnum = void 0;
 exports.applicationStatusEnum = [
     'pending',
     'in-progress',
@@ -35,8 +35,15 @@ exports.groomingPreferencesEnum = [
 var ApplicationStatusEnum;
 (function (ApplicationStatusEnum) {
     ApplicationStatusEnum["PENDING"] = "pending";
+    ApplicationStatusEnum["APPROVED"] = "approved";
+    ApplicationStatusEnum["REJECTED"] = "rejected";
     ApplicationStatusEnum["IN_PROGRESS"] = "in-progress";
     ApplicationStatusEnum["COMPLETED"] = "completed";
     ApplicationStatusEnum["CANCELLED"] = "cancelled";
-    ApplicationStatusEnum["REJECTED"] = "rejected";
 })(ApplicationStatusEnum || (exports.ApplicationStatusEnum = ApplicationStatusEnum = {}));
+var ApplicationTypeEnum;
+(function (ApplicationTypeEnum) {
+    ApplicationTypeEnum["GroomingApplication"] = "GroomingApplication";
+    ApplicationTypeEnum["BoardingApplication"] = "BoardingApplication";
+    ApplicationTypeEnum["HomeServiceApplication"] = "HomeServiceApplication";
+})(ApplicationTypeEnum || (exports.ApplicationTypeEnum = ApplicationTypeEnum = {}));

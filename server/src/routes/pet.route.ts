@@ -6,9 +6,10 @@ import {
   getPets,
 } from '../controllers/pet.controller';
 import { isAuthenticated } from '../_core/middlewares/jwt.middleware';
+import { maintenanceModeMiddleware } from '../_core/middlewares/maintenance-mode.middleware';
 const router = Router();
 
-const commonMiddlewares = [isAuthenticated];
+const commonMiddlewares = [maintenanceModeMiddleware, isAuthenticated];
 
 router.post('/pet/v1', commonMiddlewares, createPet as any);
 router.get('/pet/v1', commonMiddlewares, getPets as any);

@@ -13,28 +13,27 @@ import {
   storage,
 } from './_core/services/upload/image_upload.service';
 
-import ekycRoute from './routes/Ekyc.route';
+import ekycRoute from './routes/ekyc.route';
 import authRoute from './routes/auth.route';
 import userRoute from './routes/user.route';
 import uploadRoute from './routes/upload.route';
 import auxiliaryRoute from './routes/auxiliary.route';
 import activityRoute from './routes/activity.route';
-import petServicesRoute from './routes/pet_services.route';
+import petServicesRoute from './routes/pet-services.route';
 import petRoute from './routes/pet.route';
 import branchRoute from './routes/branch.route';
 import healthRoute from './routes/health.route';
 
-import homeServiceRoute from './routes/application/HomeService';
-import groomingRoute from './routes/application/Grooming';
-import boardingRoute from './routes/application/Boarding';
+import homeServiceRoute from './routes/application/home-service';
+import groomingRoute from './routes/application/grooming';
+import boardingRoute from './routes/application/boarding';
 
-import paymentRoute from './routes/Payment.routes';
+import paymentRoute from './routes/payment.route';
 
-import staffApplicationRoute from './routes/__staff/Application.route';
-import adminApplicationRoute from './routes/__admin/application.route';
-import userApplicationRoute from './routes/__admin/user.route';
-import adminPaymentRoute from './routes/__admin/payment.route';
-
+import staffApplicationRoute from './routes/staff/application.route';
+import adminApplicationRoute from './routes/admin/application.route';
+import userApplicationRoute from './routes/admin/user.route';
+import adminPaymentRoute from './routes/admin/payment.route';
 
 import {
   logNetworBody,
@@ -49,7 +48,6 @@ import swaggerDocument from './swagger/swagger.json';
 // import { connectRedisDb } from './_core/services/redis/redis-client.service';
 import { delay } from './_core/utils/utils';
 
-
 const app: Application = express();
 
 const swaggerOptions: swaggerUi.SwaggerUiOptions = {
@@ -63,16 +61,16 @@ const swaggerOptions: swaggerUi.SwaggerUiOptions = {
  */
 async function runApp(): Promise<void> {
   const env = await getEnv();
-
-  app.get('/', healthRoute);
-
-  // Middleware
   app.use(helmet()); // Apply standard security headers
   app.use(
     cors({
+      origin: '*',
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
       exposedHeaders: ['X-Nodex-DateTime'],
     })
   );
+
+  app.get('/', healthRoute);
 
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
@@ -81,7 +79,6 @@ async function runApp(): Promise<void> {
   app.use(multer({ storage, fileFilter }).array('media'));
 
   app.use(allowApiAccessMiddleware);
-  app.use(maintenanceModeMiddleware);
   app.use(logNetworkRequests);
   app.use(logNetworkHeaders);
   app.use(logNetworBody);

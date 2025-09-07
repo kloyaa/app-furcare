@@ -2,9 +2,9 @@
 import 'package:furcare_app/core/constants/___generated.dart';
 
 class ApiConstants {
-  static const String baseUrl = AppConfig.generatedBaseUrl;
+  static const String host = AppConfig.generatedBaseUrl;
+  static const String baseUrl = '${AppConfig.generatedBaseUrl}/api';
 
-  // Auth endpoints
   static const String login = '$baseUrl/auth/v1/login';
   static const String register = '$baseUrl/auth/v1/register';
   static const String changePassword =
@@ -57,6 +57,8 @@ class ApiConstants {
 
   // Default headers for authentication
   static Map<String, String> get defaultHeaders => {
+    'Access-Control-Allow-Origin': '*',
+    'Accept': 'application/json',
     userOrigin: userOriginValue,
     accessKey: accessKeyValue,
     secretKey: secretKeyValue,

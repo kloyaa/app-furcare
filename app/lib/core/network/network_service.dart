@@ -11,6 +11,7 @@ class NetworkService {
     _dio = Dio(
       BaseOptions(
         baseUrl: ApiConstants.baseUrl,
+        contentType: 'application/json',
         connectTimeout: const Duration(seconds: 30),
         receiveTimeout: const Duration(seconds: 30),
         sendTimeout: const Duration(seconds: 30),
@@ -209,9 +210,7 @@ class NetworkService {
         if (statusCode != null && statusCode >= 400 && statusCode < 500) {
           return ServerException(message: message, code: code);
         } else if (statusCode != null && statusCode >= 500) {
-          return ServerException(
-            message: 'Server error. Please try again later.',
-          );
+          return ServerException(message: message);
         }
 
         return ServerException(message: message, code: code);

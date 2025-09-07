@@ -7,36 +7,7 @@ exports.validateBulkUpdatePayments = exports.validatePaymentAmount = exports.val
 // _core/validators/payment.validator.ts
 const joi_1 = __importDefault(require("joi"));
 const joi_utils_1 = require("../utils/joi/joi.utils");
-// Payment method enum
-const paymentMethodEnum = [
-    'credit_card',
-    'debit_card',
-    'cash',
-    'gcash',
-    'paymaya',
-    'bank_transfer'
-];
-// Payment status enum
-const paymentStatusEnum = [
-    'pending',
-    'completed',
-    'failed',
-    'refunded',
-    'cancelled'
-];
-// Payment type enum
-const paymentTypeEnum = [
-    'full_payment',
-    'partial_payment',
-    'deposit',
-    'refund'
-];
-// Application model enum
-const applicationModelEnum = [
-    'GroomingApplication',
-    'BoardingApplication',
-    'HomeServiceApplication'
-];
+const application_const_1 = require("../const/application.const");
 const validateCreatePayment = (body) => {
     const schema = joi_1.default.object({
         application: joi_1.default.string()
@@ -46,7 +17,7 @@ const validateCreatePayment = (body) => {
         applicationModel: joi_1.default.string()
             .trim()
             .required()
-            .valid(...applicationModelEnum),
+            .valid(...application_const_1.applicationModelEnum),
         amount: joi_1.default.number()
             .min(0.01)
             .max(999999)
@@ -55,10 +26,10 @@ const validateCreatePayment = (body) => {
         paymentMethod: joi_1.default.string()
             .trim()
             .required()
-            .valid(...paymentMethodEnum),
+            .valid(...application_const_1.paymentMethodEnum),
         paymentType: joi_1.default.string()
             .trim()
-            .valid(...paymentTypeEnum)
+            .valid(...application_const_1.paymentTypeEnum)
             .default('full_payment'),
         notes: joi_1.default.string()
             .trim()
@@ -75,7 +46,7 @@ const validateUpdatePaymentStatus = (body) => {
         status: joi_1.default.string()
             .trim()
             .required()
-            .valid(...paymentStatusEnum),
+            .valid(...application_const_1.paymentStatusEnum),
         transactionId: joi_1.default.string()
             .trim()
             .min(1)
@@ -131,11 +102,11 @@ const validateGetPayments = (query) => {
     const schema = joi_1.default.object({
         status: joi_1.default.string()
             .trim()
-            .valid(...paymentStatusEnum)
+            .valid(...application_const_1.paymentStatusEnum)
             .optional(),
         paymentMethod: joi_1.default.string()
             .trim()
-            .valid(...paymentMethodEnum)
+            .valid(...application_const_1.paymentMethodEnum)
             .optional(),
         page: joi_1.default.number()
             .integer()
@@ -215,7 +186,7 @@ const validateBulkUpdatePayments = (body) => {
         status: joi_1.default.string()
             .trim()
             .required()
-            .valid(...paymentStatusEnum),
+            .valid(...application_const_1.paymentStatusEnum),
         notes: joi_1.default.string()
             .trim()
             .max(500)

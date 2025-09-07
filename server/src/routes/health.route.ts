@@ -9,7 +9,7 @@ router.get('', async (_, res) => {
   const application = await Application.find();
   return res.status(200).json({
     database: database?.ok === 1 ? true : false,
-    isUnderMaintenance: application[0].isUnderMaintenance || true,
+    isUnderMaintenance: application[0].maintenance,
   });
 });
 

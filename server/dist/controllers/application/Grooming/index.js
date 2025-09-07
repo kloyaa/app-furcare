@@ -9,6 +9,7 @@ const pet_srvices_const_1 = require("../../../_core/const/pet_srvices.const");
 const activity_enum_1 = require("../../../_core/enum/activity.enum");
 const activity_event_1 = require("../../../_core/events/activity.event");
 const error_util_1 = require("../../../_core/utils/db/error.util");
+const utils_1 = require("../../../_core/utils/utils");
 const application_validator_1 = require("../../../_core/validators/application.validator");
 const GroomingApplication_schema_1 = require("../../../schema/application/GroomingApplication.schema");
 const branch_schema_1 = __importDefault(require("../../../schema/branch.schema"));
@@ -92,10 +93,16 @@ exports.createGroomingApplication = createGroomingApplication;
 const getGroomingApplications = async (req, res) => {
     try {
         const status = req.query.status;
-        const groomingApplications = await GroomingApplication_schema_1.GroomingApplication.find({
-            user: req.user.id,
-            status: status || 'pending',
-        })
+        let query = {
+            user: req.user.id
+        };
+        if (!(0, utils_1.isEmpty)(status)) {
+            query = {
+                ...query,
+                status
+            };
+        }
+        const groomingApplications = await GroomingApplication_schema_1.GroomingApplication.find(query)
             .sort({ createdAt: -1 })
             .populate('pet')
             .populate('branch');

@@ -8,7 +8,6 @@ const pet_srvices_const_1 = require("../_core/const/pet_srvices.const");
 const pet_services_schema_1 = __importDefault(require("../schema/pet_services.schema"));
 const api_statuses_1 = require("../_core/const/api.statuses");
 const error_util_1 = require("../_core/utils/db/error.util");
-const pet_services_validator_1 = require("../_core/validators/pet_services.validator");
 const mongoose_1 = require("mongoose");
 /**
  * @description Get all pet services
@@ -91,71 +90,53 @@ const getAllCages = async (req, res) => {
     }
 };
 exports.getAllCages = getAllCages;
-const updateCageOccupant = async (req, res) => {
-    const error = (0, pet_services_validator_1.validateUpdatePetCages)(req.body);
-    if (error) {
-        return res.status(400).json({
-            ...api_statuses_1.statuses['501'],
-            message: error.details[0].message.replace(/['"]/g, ''),
-        });
+const updateCageOccupant = async (payload) => {
+    const { action, cage: cageId } = payload;
+    if (!(0, mongoose_1.isObjectIdOrHexString)(cageId) || (action !== 'add' && action !== 'remove')) {
+        console.log('@updateCageOccupant error', 'Invalid payload');
+        return false;
     }
-    const { action, id } = req.body;
     try {
-        const cage = await pet_services_schema_1.default.findById(id);
+        const cage = await pet_services_schema_1.default.findById(cageId);
         if (!cage) {
-            return res.status(404).json(api_statuses_1.statuses['02']);
+            console.log('@updateCageOccupant error', 'Cage not found');
+            return false;
         }
         if (action === 'add') {
-            if (cage.occupant >= cage.max) {
-                return res.status(400).json({
-                    ...api_statuses_1.statuses['01'],
-                    message: 'Cage is already full.',
-                });
-            }
             cage.occupant += 1;
         }
         else if (action === 'remove') {
-            if (cage.occupant <= 0) {
-                return res.status(400).json({
-                    ...api_statuses_1.statuses['01'],
-                    message: 'Cage is already empty.',
-                });
-            }
             cage.occupant -= 1;
         }
         await cage.save();
-        return res.status(200).json({
-            ...api_statuses_1.statuses['00'],
-            message: 'Occupant updated successfully.',
-        });
+        return true;
     }
     catch (error) {
         console.log('@updateCageOccupant error', error);
-        return (0, error_util_1.handleMongooseError)(error, res);
+        return false;
     }
 };
 exports.updateCageOccupant = updateCageOccupant;
-const validateCageAvailability = async (req, res) => {
+const validateCageAvailability = async (cageId) => {
     try {
-        const { id } = req.params;
-        if (!(0, mongoose_1.isObjectIdOrHexString)(id)) {
-            return res.status(400).json(api_statuses_1.statuses['0901']);
+        if (!(0, mongoose_1.isObjectIdOrHexString)(cageId)) {
+            console.log('@updateCageOccupant error', 'Invalid cageId');
+            return false;
         }
-        const cage = await pet_services_schema_1.default.findById(id);
+        const cage = await pet_services_schema_1.default.findById(cageId);
         if (!cage) {
-            return res.status(404).json(api_statuses_1.statuses['02']);
+            console.log('@updateCageOccupant error', 'Cage not found');
+            return false;
         }
         if (cage.occupant >= cage.max) {
-            return res.status(400).json({
-                ...api_statuses_1.statuses['01'],
-                message: 'Cage is already full.',
-            });
+            console.log('@updateCageOccupant error', 'Cage is full');
+            return false;
         }
-        return res.status(200).json(api_statuses_1.statuses['00']);
+        return true;
     }
     catch (error) {
         console.log('@validateCageCapacity error', error);
-        return (0, error_util_1.handleMongooseError)(error, res);
+        return false;
     }
 };
 exports.validateCageAvailability = validateCageAvailability;
