@@ -1,4 +1,4 @@
-import { Role } from '../../schema/role.schema';
+import { Role } from '../../schema/Role.schema';
 import { RoleName } from '../enum/roles.enum';
 import { closeDB, connectDB } from '../utils/db/db.util';
 

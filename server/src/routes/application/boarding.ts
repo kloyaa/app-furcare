@@ -1,11 +1,11 @@
 import { Router } from 'express';
-import { isAuthenticated } from '../../../_core/middlewares/jwt.middleware';
+import { isAuthenticated } from '../../_core/middlewares/jwt.middleware';
 import {
   createBoardingApplication,
   createBoardingApplicationExtension,
   getBoardingApplications,
-} from '../../../controllers/application/boarding';
-import { maintenanceModeMiddleware } from '../../../_core/middlewares/maintenance-mode.middleware';
+} from '../../controllers/application/boarding';
+import { maintenanceModeMiddleware } from '../../_core/middlewares/maintenance-mode.middleware';
 
 const router = Router();
 const commonMiddlewares = [maintenanceModeMiddleware, isAuthenticated];

@@ -16,7 +16,7 @@ import {
   validateUpdateApplicationStatus,
   validateGetApplicationDetails,
 } from '../../_core/validators/staff/application.validator';
-import Profile from '../../schema/profile.schema';
+import Profile from '../../schema/Profile.schema';
 import { Document, Types } from 'mongoose';
 import {
   IGroomingApplication,
@@ -26,7 +26,7 @@ import {
 import {
   updateCageOccupant,
   validateCageAvailability,
-} from '../pet_services.controller';
+} from '../pet-services.controller';
 import {
   ApplicationStatusEnum,
   ApplicationTypeEnum,

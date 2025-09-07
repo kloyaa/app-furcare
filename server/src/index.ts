@@ -13,7 +13,7 @@ import {
   storage,
 } from './_core/services/upload/image_upload.service';
 
-import ekycRoute from './routes/ekyc.route';
+import enrollmentRoute from './routes/enrollment.route';
 import authRoute from './routes/auth.route';
 import userRoute from './routes/user.route';
 import uploadRoute from './routes/upload.route';
@@ -90,7 +90,7 @@ async function runApp(): Promise<void> {
   });
 
   // Routes
-  app.use('/api', ekycRoute);
+  app.use('/api', enrollmentRoute);
   app.use('/api', authRoute);
   app.use('/api', userRoute);
   app.use('/api', uploadRoute);

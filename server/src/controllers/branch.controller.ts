@@ -4,7 +4,7 @@ import { TRequest } from '../_core/interfaces/overrides.interface';
 import { statuses } from '../_core/const/api.statuses';
 import { handleMongooseError } from '../_core/utils/db/error.util';
 import { generateRandomNumber } from '../_core/utils/utils';
-import Branch from '../schema/branch.schema';
+import Branch from '../schema/Branch.schema';
 
 export const createRandomBranches = async (
   req: TRequest,

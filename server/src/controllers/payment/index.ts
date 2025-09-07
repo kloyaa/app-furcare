@@ -18,7 +18,7 @@ import {
   BoardingApplication,
   HomeServiceApplication,
 } from '../../schema/application';
-import { Payment } from '../../schema/payment.schema';
+import { Payment } from '../../schema/Payment.schema';
 
 export const createPayment = async (
   req: TRequest,

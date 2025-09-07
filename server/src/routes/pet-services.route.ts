@@ -8,7 +8,7 @@ import {
   getPetServices,
   getGroomingExtra,
   getGroomingPreferences,
-} from '../controllers/pet_services.controller';
+} from '../controllers/pet-services.controller';
 import { isAuthenticated } from '../_core/middlewares/jwt.middleware';
 import { maintenanceModeMiddleware } from '../_core/middlewares/maintenance-mode.middleware';
 const router = Router();

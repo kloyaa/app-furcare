@@ -12,13 +12,13 @@ import { IActivity } from '../_core/interfaces/activity.interface';
 import { generateJwt } from '../_core/utils/jwt/jwt.util';
 import { getEnv } from '../_core/config/env.config';
 
-import { Password, User } from '../schema/user.schema';
+import { Password, User } from '../schema/User.schema';
 import { encrypt } from '../_core/utils/security/encryption.util';
 import { TRequest } from '../_core/interfaces/overrides.interface';
 import { isPasswordAlreadyUsed } from '../_core/services/user/user.service';
 import { toObjectId } from '../_core/utils/odm';
-import { Role } from '../schema/role.schema';
-import { UserRole } from '../schema/user_role.schema';
+import { Role } from '../schema/Role.schema';
+import { UserRole } from '../schema/UserRole.schema';
 import { startSession } from 'mongoose';
 
 export const login = async (

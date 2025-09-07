@@ -2,7 +2,7 @@ import { Response, NextFunction } from 'express';
 import { TRequest } from '../interfaces/overrides.interface';
 import { statuses } from '../const/api.statuses';
 import { RoleName } from '../enum/roles.enum';
-import { UserRole } from '../../schema/user_role.schema';
+import { UserRole } from '../../schema/UserRole.schema';
 
 export const authorize = (...allowedRoles: RoleName[]) => {
   return async (req: TRequest, res: Response, next: NextFunction) => {
