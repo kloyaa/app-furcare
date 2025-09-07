@@ -25,7 +25,8 @@ class HealthCheckProvider with ChangeNotifier {
 
   // Computed properties
   bool get isDatabaseConnected => _healthStatus?.database ?? false;
-  bool get isUnderMaintenance => _healthStatus?.isUnderMaintenance ?? false;
+  bool get isUnderMaintenance => _healthStatus?.maintenance.value ?? false;
+  String get maintenanceMessage => _healthStatus?.maintenance.message ?? '';
   bool get isSystemHealthy => _healthStatus?.isHealthy ?? false;
 
   Future<void> checkHealth() async {

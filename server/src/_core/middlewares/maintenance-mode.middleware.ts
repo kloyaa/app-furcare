@@ -18,11 +18,7 @@ export const maintenanceModeMiddleware = async (
   const application = await Application.find();
   console.log('application', application);
   if (application[0].maintenance) {
-    console.log(
-      'application[0].isUnderMaintenance',
-      application[0].maintenance
-    );
-    return res.status(500).json(statuses['500']);
+    return res.status(500).json(statuses['503']);
   }
   next();
 };
