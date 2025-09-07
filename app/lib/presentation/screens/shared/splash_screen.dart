@@ -39,7 +39,7 @@ class _SplashScreenState extends State<SplashScreen> {
       return;
     }
 
-    if (healthStatus.isUnderMaintenance) {
+    if (healthStatus.maintenance.value) {
       _showMaintenanceDialog();
       return;
     }
@@ -80,42 +80,37 @@ class _SplashScreenState extends State<SplashScreen> {
           ),
         ),
         title: CustomText.title('Maintenance', textAlign: TextAlign.center),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CustomText.body(
-              'We\'re currently performing system maintenance to improve your experience. Please check back shortly.',
-              textAlign: TextAlign.center,
-              color: Theme.of(context).colorScheme.onSurface.withAlpha(200),
-            ),
-            const SizedBox(height: 24),
-            Consumer<HealthCheckProvider>(
-              builder: (context, healthProvider, child) {
-                return SizedBox(
+        content: Consumer<HealthCheckProvider>(
+          builder: (context, healthProvider, child) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CustomText.body(
+                  healthProvider.maintenanceMessage,
+                  textAlign: TextAlign.center,
+                  color: Theme.of(context).colorScheme.onSurface.withAlpha(200),
+                ),
+                const SizedBox(height: 24),
+                SizedBox(
                   width: 200,
                   child: CustomButton(
                     text: healthProvider.isLoading
                         ? 'Checking...'
                         : 'Check Again',
-                    onPressed: healthProvider.isLoading
-                        ? null
-                        : () async {
-                            await healthProvider.checkHealth();
-                            if (!mounted) return;
+                    onPressed: () async {
+                      await healthProvider.checkHealth();
+                      if (!mounted) return;
 
-                            if (!healthProvider.hasError &&
-                                healthProvider
-                                        .healthStatus
-                                        ?.isUnderMaintenance ==
-                                    false) {
-                              _initializeApp();
-                            }
-                          },
+                      if (healthProvider.healthStatus?.maintenance.value ==
+                          false) {
+                        _initializeApp();
+                      }
+                    },
                   ),
-                );
-              },
-            ),
-          ],
+                ),
+              ],
+            );
+          },
         ),
       ),
     );

@@ -169,6 +169,10 @@ export const statuses = {
     message: 'Incorrect payload format.',
     code: '502',
   },
+  '503': {
+    message: "Access disabled by the author for maintenance. Try again later.",
+    code: '503',
+  },
   '10010': {
     message: 'Aws S3 JWT_SECRET is incorrect/invalid',
     code: '10010',

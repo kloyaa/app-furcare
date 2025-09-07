@@ -205,6 +205,7 @@ export interface IBranch {
 
 export interface IApplication {
   maintenance: boolean;
+  maintenanceMessage: string;
 
   isUnderMaintenance: boolean;
 
