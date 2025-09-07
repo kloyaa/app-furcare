@@ -1,22 +1,22 @@
-import { statuses } from '../../../_core/const/api.statuses';
+import { statuses } from '../../_core/const/api.statuses';
 import {
   groomingOptions,
   groomingPreferences,
   groomingServiceSchedules,
-} from '../../../_core/const/pet_srvices.const';
-import { EventName, ActivityType } from '../../../_core/enum/activity.enum';
-import { emitter } from '../../../_core/events/activity.event';
-import { IActivity } from '../../../_core/interfaces/activity.interface';
+} from '../../_core/const/pet_srvices.const';
+import { EventName, ActivityType } from '../../_core/enum/activity.enum';
+import { emitter } from '../../_core/events/activity.event';
+import { IActivity } from '../../_core/interfaces/activity.interface';
 import {
   TRequest,
   TResponse,
-} from '../../../_core/interfaces/overrides.interface';
-import { handleMongooseError } from '../../../_core/utils/db/error.util';
-import { isEmpty } from '../../../_core/utils/utils';
-import { validateCreateGroomingApplication } from '../../../_core/validators/application.validator';
-import { GroomingApplication } from '../../../schema/application/GroomingApplication.schema';
-import Branch from '../../../schema/branch.schema';
-import Pet from '../../../schema/pet.schema';
+} from '../../_core/interfaces/overrides.interface';
+import { handleMongooseError } from '../../_core/utils/db/error.util';
+import { isEmpty } from '../../_core/utils/utils';
+import { validateCreateGroomingApplication } from '../../_core/validators/application.validator';
+import { GroomingApplication } from '../../schema/application/GroomingApplication.schema';
+import Branch from '../../schema/Branch.schema';
+import Pet from '../../schema/Pet.schema';
 
 export const createGroomingApplication = async (
   req: TRequest,

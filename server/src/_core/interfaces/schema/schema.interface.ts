@@ -1,5 +1,5 @@
 import { Types } from 'mongoose';
-import { Role } from '../../../schema/role.schema';
+import { Role } from '../../../schema/Role.schema';
 import { ApplicationStatusEnum } from '../../enum/application.enum';
 import { P } from '@faker-js/faker/dist/airline-CLphikKp';
 

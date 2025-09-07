@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import mongoose from 'mongoose';
-import Application from '../schema/app.schema';
+import Application from '../schema/App.schema';
 
 const router = Router();
 

@@ -1,22 +1,22 @@
-import { statuses } from '../../../_core/const/api.statuses';
-import { EventName, ActivityType } from '../../../_core/enum/activity.enum';
-import { emitter } from '../../../_core/events/activity.event';
-import { IActivity } from '../../../_core/interfaces/activity.interface';
+import { statuses } from '../../_core/const/api.statuses';
+import { EventName, ActivityType } from '../../_core/enum/activity.enum';
+import { emitter } from '../../_core/events/activity.event';
+import { IActivity } from '../../_core/interfaces/activity.interface';
 import {
   TRequest,
   TResponse,
-} from '../../../_core/interfaces/overrides.interface';
-import { handleMongooseError } from '../../../_core/utils/db/error.util';
-import { isEmpty } from '../../../_core/utils/utils';
+} from '../../_core/interfaces/overrides.interface';
+import { handleMongooseError } from '../../_core/utils/db/error.util';
+import { isEmpty } from '../../_core/utils/utils';
 import {
   validateCreateBoardingApplication,
   validateCreateBoardingApplicationExtension,
-} from '../../../_core/validators/application.validator';
-import { BoardingApplication } from '../../../schema/application/BoardingApplication.schema';
+} from '../../_core/validators/application.validator';
+import { BoardingApplication } from '../../schema/application/BoardingApplication.schema';
 
-import Branch from '../../../schema/branch.schema';
-import Pet from '../../../schema/pet.schema';
-import PetCage from '../../../schema/pet_services.schema';
+import Branch from '../../schema/Branch.schema';
+import Pet from '../../schema/Pet.schema';
+import PetCage from '../../schema/PetServices.schema';
 
 export const createBoardingApplication = async (
   req: TRequest,

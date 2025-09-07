@@ -7,7 +7,7 @@ import {
   petCages,
   petServices,
 } from '../_core/const/pet_srvices.const';
-import PetCage from '../schema/pet_services.schema';
+import PetCage from '../schema/PetServices.schema';
 import { statuses } from '../_core/const/api.statuses';
 import { handleMongooseError } from '../_core/utils/db/error.util';
 import { validateUpdatePetCages } from '../_core/validators/pet_services.validator';

@@ -4,7 +4,7 @@ import {
   RegionSchema,
   StateSchema,
   SubRegionSchema,
-} from '../../schema/address.schema';
+} from '../../schema/Address.schema';
 import { connectDB, closeDB } from '../utils/db/db.util';
 import { ReadAddress } from './services/address';
 

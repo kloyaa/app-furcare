@@ -1,6 +1,6 @@
 import { type Response } from 'express';
 import { TRequest } from '../_core/interfaces/overrides.interface';
-import Activity from '../schema/activity.schema';
+import Activity from '../schema/Activity.schema';
 
 /**
  *   * Retrieves the activity log and returns it as a JSON response.
