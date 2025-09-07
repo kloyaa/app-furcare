@@ -8,6 +8,7 @@ const api_statuses_1 = require("../../../_core/const/api.statuses");
 const activity_enum_1 = require("../../../_core/enum/activity.enum");
 const activity_event_1 = require("../../../_core/events/activity.event");
 const error_util_1 = require("../../../_core/utils/db/error.util");
+const utils_1 = require("../../../_core/utils/utils");
 const application_validator_1 = require("../../../_core/validators/application.validator");
 const BoardingApplication_schema_1 = require("../../../schema/application/BoardingApplication.schema");
 const branch_schema_1 = __importDefault(require("../../../schema/branch.schema"));
@@ -206,10 +207,16 @@ exports.createBoardingApplicationExtension = createBoardingApplicationExtension;
 const getBoardingApplications = async (req, res) => {
     try {
         const status = req.query.status;
-        const boardingApplications = await BoardingApplication_schema_1.BoardingApplication.find({
-            user: req.user.id,
-            status: status || 'pending',
-        })
+        let query = {
+            user: req.user.id
+        };
+        if (!(0, utils_1.isEmpty)(status)) {
+            query = {
+                ...query,
+                status
+            };
+        }
+        const boardingApplications = await BoardingApplication_schema_1.BoardingApplication.find(query)
             .sort({ createdAt: -1 })
             .populate('pet')
             .populate('branch')

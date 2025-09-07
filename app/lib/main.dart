@@ -7,6 +7,7 @@ import 'package:furcare_app/config/branch_dependency.dart';
 import 'package:furcare_app/config/client_dependency.dart';
 import 'package:furcare_app/config/core_dependency.dart';
 import 'package:furcare_app/config/dependency_instance.dart';
+import 'package:furcare_app/config/health_check_dependency.dart';
 import 'package:furcare_app/config/payment_dependency.dart';
 import 'package:furcare_app/config/pet_dependency.dart';
 import 'package:furcare_app/config/pet_service_dependency.dart';
@@ -21,6 +22,7 @@ import 'package:furcare_app/presentation/providers/appointment_provider.dart';
 import 'package:furcare_app/presentation/providers/auth_provider.dart';
 import 'package:furcare_app/presentation/providers/branch_provider.dart';
 import 'package:furcare_app/presentation/providers/client_provider.dart';
+import 'package:furcare_app/presentation/providers/health_check_provider.dart';
 import 'package:furcare_app/presentation/providers/payment_provider.dart';
 import 'package:furcare_app/presentation/providers/pet_provider.dart';
 import 'package:furcare_app/presentation/providers/pet_service_provider.dart';
@@ -34,6 +36,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await ThemeNotifier.initializeTheme();
 
+  await healthCheckDependencies();
   await coreDependencyInjection();
   await authDependencyInjection();
   await clientDependencyInjection();
@@ -61,6 +64,9 @@ class MainApp extends StatelessWidget {
           builder: (context, value, child) {
             return MultiProvider(
               providers: [
+                ChangeNotifierProvider(
+                  create: (_) => getIt<HealthCheckProvider>(),
+                ),
                 ChangeNotifierProvider(create: (_) => getIt<AuthProvider>()),
                 ChangeNotifierProvider(create: (_) => getIt<ClientProvider>()),
                 ChangeNotifierProvider(

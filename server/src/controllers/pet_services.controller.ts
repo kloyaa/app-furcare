@@ -106,7 +106,10 @@ export const getAllCages = async (req: TRequest, res: Response) => {
 
 export const updateCageOccupant = async (payload: any): Promise<boolean> => {
   const { action, cage: cageId } = payload;
-  if (!isObjectIdOrHexString(cageId) || (action !== 'add' && action !== 'remove')) {
+  if (
+    !isObjectIdOrHexString(cageId) ||
+    (action !== 'add' && action !== 'remove')
+  ) {
     console.log('@updateCageOccupant error', 'Invalid payload');
     return false;
   }
@@ -131,7 +134,9 @@ export const updateCageOccupant = async (payload: any): Promise<boolean> => {
   }
 };
 
-export const validateCageAvailability = async (cageId: any): Promise<boolean> => {
+export const validateCageAvailability = async (
+  cageId: any
+): Promise<boolean> => {
   try {
     if (!isObjectIdOrHexString(cageId)) {
       console.log('@updateCageOccupant error', 'Invalid cageId');

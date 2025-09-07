@@ -85,7 +85,10 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Error: ${adminUserProvider.error}'),
+                  content: Text(
+                    adminUserProvider.error ??
+                        'Something went wrong. Please try again.',
+                  ),
                   backgroundColor: Colors.red,
                   action: SnackBarAction(label: 'Retry', onPressed: _loadUsers),
                 ),

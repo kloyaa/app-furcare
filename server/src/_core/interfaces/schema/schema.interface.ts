@@ -165,7 +165,7 @@ export interface IBoardingApplication extends Document {
   status: string;
   createdAt?: Date;
   updatedAt?: Date;
-  extensions: any[]
+  extensions: any[];
 
   // Virtual fields
   extensionDays: number;

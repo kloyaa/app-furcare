@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BoardingApplication = void 0;
 const mongoose_1 = require("mongoose");
 const BaseApplicationSchema_1 = require("../base/BaseApplicationSchema");
-const PaymentMixin_1 = require("../../mixins/PaymentMixin");
+const payment_mixin_1 = require("../../mixins/payment-mixin");
 const boardingApplicationSchema = new mongoose_1.Schema({
     ...BaseApplicationSchema_1.baseApplicationFields,
     cage: {
@@ -79,7 +79,7 @@ const boardingApplicationSchema = new mongoose_1.Schema({
                 required: true,
             },
         }],
-    ...PaymentMixin_1.paymentFields,
+    ...payment_mixin_1.paymentFields,
 }, BaseApplicationSchema_1.baseSchemaOptions);
 // Virtual fields
 boardingApplicationSchema.virtual('extensionDays').get(function () {
@@ -120,8 +120,8 @@ boardingApplicationSchema.methods.addExtension = function (extensionData) {
     });
 };
 // Add payment functionality
-(0, PaymentMixin_1.addPaymentVirtuals)(boardingApplicationSchema);
-(0, PaymentMixin_1.addPaymentMethods)(boardingApplicationSchema);
+(0, payment_mixin_1.addPaymentVirtuals)(boardingApplicationSchema);
+(0, payment_mixin_1.addPaymentMethods)(boardingApplicationSchema);
 // Add indexes
 boardingApplicationSchema.index({ user: 1, status: 1 });
 boardingApplicationSchema.index({ branch: 1, 'schedule.date': 1 });

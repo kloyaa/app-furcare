@@ -38,11 +38,11 @@ export enum ApplicationStatusEnum {
   REJECTED = 'rejected',
   IN_PROGRESS = 'in-progress',
   COMPLETED = 'completed',
-  CANCELLED = 'cancelled'
+  CANCELLED = 'cancelled',
 }
 
 export enum ApplicationTypeEnum {
   GroomingApplication = 'GroomingApplication',
   BoardingApplication = 'BoardingApplication',
-  HomeServiceApplication = 'HomeServiceApplication'
+  HomeServiceApplication = 'HomeServiceApplication',
 }

@@ -2,9 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const jwt_middleware_1 = require("../../../_core/middlewares/jwt.middleware");
-const Grooming_1 = require("../../../controllers/application/Grooming");
+const grooming_1 = require("../../../controllers/application/grooming");
 const router = (0, express_1.Router)();
 const commonMiddlewares = [jwt_middleware_1.isAuthenticated];
-router.post('/application/v1/grooming', commonMiddlewares, Grooming_1.createGroomingApplication);
-router.get('/application/v1/grooming', commonMiddlewares, Grooming_1.getGroomingApplications);
+router.post('/application/v1/grooming', commonMiddlewares, grooming_1.createGroomingApplication);
+router.get('/application/v1/grooming', commonMiddlewares, grooming_1.getGroomingApplications);
 exports.default = router;

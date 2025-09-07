@@ -1,15 +1,15 @@
 import {
-    formatDistanceToNow,
-    format,
-    isValid,
-    parseISO,
-    differenceInSeconds,
-    differenceInMinutes,
-    differenceInHours,
-    differenceInDays,
-    differenceInMonths,
-    differenceInYears,
-    isFuture
+  formatDistanceToNow,
+  format,
+  isValid,
+  parseISO,
+  differenceInSeconds,
+  differenceInMinutes,
+  differenceInHours,
+  differenceInDays,
+  differenceInMonths,
+  differenceInYears,
+  isFuture,
 } from 'date-fns';
 
 /**
@@ -18,59 +18,59 @@ import {
  * @returns Formatted relative time string
  */
 export const formatRelativeTime = (date: Date | string): string => {
-    if (!date) return 'N/A';
+  if (!date) return 'N/A';
 
-    let targetDate: Date;
+  let targetDate: Date;
 
-    // Handle string dates (ISO format)
-    if (typeof date === 'string') {
-        targetDate = parseISO(date);
-    } else {
-        targetDate = date;
-    }
+  // Handle string dates (ISO format)
+  if (typeof date === 'string') {
+    targetDate = parseISO(date);
+  } else {
+    targetDate = date;
+  }
 
-    // Validate the date
-    if (!isValid(targetDate)) {
-        return 'N/A';
-    }
+  // Validate the date
+  if (!isValid(targetDate)) {
+    return 'N/A';
+  }
 
-    const now = new Date();
+  const now = new Date();
 
-    // Check if date is in the future
-    if (isFuture(targetDate)) {
-        return 'in the future';
-    }
+  // Check if date is in the future
+  if (isFuture(targetDate)) {
+    return 'in the future';
+  }
 
-    // Calculate differences
-    const diffInSeconds = differenceInSeconds(now, targetDate);
-    const diffInMinutes = differenceInMinutes(now, targetDate);
-    const diffInHours = differenceInHours(now, targetDate);
-    const diffInDays = differenceInDays(now, targetDate);
-    const diffInMonths = differenceInMonths(now, targetDate);
-    const diffInYears = differenceInYears(now, targetDate);
+  // Calculate differences
+  const diffInSeconds = differenceInSeconds(now, targetDate);
+  const diffInMinutes = differenceInMinutes(now, targetDate);
+  const diffInHours = differenceInHours(now, targetDate);
+  const diffInDays = differenceInDays(now, targetDate);
+  const diffInMonths = differenceInMonths(now, targetDate);
+  const diffInYears = differenceInYears(now, targetDate);
 
-    // Return appropriate format based on time difference
-    if (diffInSeconds < 60) {
-        return `${diffInSeconds}s ago`;
-    }
+  // Return appropriate format based on time difference
+  if (diffInSeconds < 60) {
+    return `${diffInSeconds}s ago`;
+  }
 
-    if (diffInMinutes < 60) {
-        return `${diffInMinutes}m ago`;
-    }
+  if (diffInMinutes < 60) {
+    return `${diffInMinutes}m ago`;
+  }
 
-    if (diffInHours < 24) {
-        return `${diffInHours}h ago`;
-    }
+  if (diffInHours < 24) {
+    return `${diffInHours}h ago`;
+  }
 
-    if (diffInDays < 30) {
-        return `${diffInDays}d ago`;
-    }
+  if (diffInDays < 30) {
+    return `${diffInDays}d ago`;
+  }
 
-    if (diffInMonths < 12) {
-        return `${diffInMonths}mo ago`;
-    }
+  if (diffInMonths < 12) {
+    return `${diffInMonths}mo ago`;
+  }
 
-    return `${diffInYears}y ago`;
+  return `${diffInYears}y ago`;
 };
 
 /**
@@ -79,23 +79,23 @@ export const formatRelativeTime = (date: Date | string): string => {
  * @returns Formatted date string
  */
 export const formatDate = (date: Date | string): string => {
-    if (!date) return 'N/A';
+  if (!date) return 'N/A';
 
-    let targetDate: Date;
+  let targetDate: Date;
 
-    // Handle string dates (ISO format)
-    if (typeof date === 'string') {
-        targetDate = parseISO(date);
-    } else {
-        targetDate = date;
-    }
+  // Handle string dates (ISO format)
+  if (typeof date === 'string') {
+    targetDate = parseISO(date);
+  } else {
+    targetDate = date;
+  }
 
-    // Validate the date
-    if (!isValid(targetDate)) {
-        return 'N/A';
-    }
+  // Validate the date
+  if (!isValid(targetDate)) {
+    return 'N/A';
+  }
 
-    return format(targetDate, 'MMM dd, yyyy • hh:mm a');
+  return format(targetDate, 'MMM dd, yyyy • hh:mm a');
 };
 
 /**
@@ -104,21 +104,21 @@ export const formatDate = (date: Date | string): string => {
  * @returns Formatted relative time string (e.g., "about 2 hours ago", "3 days ago")
  */
 export const formatNaturalRelativeTime = (date: Date | string): string => {
-    if (!date) return 'N/A';
+  if (!date) return 'N/A';
 
-    let targetDate: Date;
+  let targetDate: Date;
 
-    // Handle string dates (ISO format)
-    if (typeof date === 'string') {
-        targetDate = parseISO(date);
-    } else {
-        targetDate = date;
-    }
+  // Handle string dates (ISO format)
+  if (typeof date === 'string') {
+    targetDate = parseISO(date);
+  } else {
+    targetDate = date;
+  }
 
-    // Validate the date
-    if (!isValid(targetDate)) {
-        return 'N/A';
-    }
+  // Validate the date
+  if (!isValid(targetDate)) {
+    return 'N/A';
+  }
 
-    return formatDistanceToNow(targetDate, { addSuffix: true });
+  return formatDistanceToNow(targetDate, { addSuffix: true });
 };

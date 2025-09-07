@@ -1,5 +1,6 @@
-import { getEnv } from '../config/env.config';
+import Application from '../../schema/app.schema';
 import { statuses } from '../const/api.statuses';
+import { TRequest, TResponse } from '../interfaces/overrides.interface';
 
 /**
  * Middleware function that checks if the application is in maintenance mode.
@@ -10,12 +11,17 @@ import { statuses } from '../const/api.statuses';
  * @return {Promise<void | Response>} - Returns a Promise that resolves when the middleware is done.
  */
 export const maintenanceModeMiddleware = async (
-  req: any,
-  res: any,
+  req: TRequest,
+  res: TResponse,
   next: any
-): Promise<void | Response> => {
-  const env = await getEnv();
-  if (env?.ENVIRONMENT_MAINTENANCE === 'true') {
+): Promise<any> => {
+  const application = await Application.find();
+  console.log('application', application);
+  if (application[0].maintenance) {
+    console.log(
+      'application[0].isUnderMaintenance',
+      application[0].maintenance
+    );
     return res.status(500).json(statuses['500']);
   }
   next();

@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.GroomingApplication = void 0;
 const mongoose_1 = require("mongoose");
 const BaseApplicationSchema_1 = require("../base/BaseApplicationSchema");
-const PaymentMixin_1 = require("../../mixins/PaymentMixin");
+const payment_mixin_1 = require("../../mixins/payment-mixin");
 const groomingApplicationSchema = new mongoose_1.Schema({
     ...BaseApplicationSchema_1.baseApplicationFields,
     scheduleCode: {
@@ -38,11 +38,11 @@ const groomingApplicationSchema = new mongoose_1.Schema({
         required: true,
         default: false,
     },
-    ...PaymentMixin_1.paymentFields,
+    ...payment_mixin_1.paymentFields,
 }, BaseApplicationSchema_1.baseSchemaOptions);
 // Add payment functionality
-(0, PaymentMixin_1.addPaymentVirtuals)(groomingApplicationSchema);
-(0, PaymentMixin_1.addPaymentMethods)(groomingApplicationSchema);
+(0, payment_mixin_1.addPaymentVirtuals)(groomingApplicationSchema);
+(0, payment_mixin_1.addPaymentMethods)(groomingApplicationSchema);
 // Add indexes
 groomingApplicationSchema.index({ user: 1, status: 1 });
 groomingApplicationSchema.index({ branch: 1, createdAt: -1 });
