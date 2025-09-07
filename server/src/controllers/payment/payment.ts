@@ -1,4 +1,4 @@
-import { isObjectIdOrHexString, isValidObjectId, model, Types } from 'mongoose';
+import { isObjectIdOrHexString, model, Types } from 'mongoose';
 import { statuses } from '../../_core/const/api.statuses';
 import { EventName, ActivityType } from '../../_core/enum/activity.enum';
 import { emitter } from '../../_core/events/activity.event';
@@ -13,12 +13,11 @@ import {
   validateProcessPayment,
   validateUpdatePaymentStatus,
 } from '../../_core/validators/Payment.validator';
-import {
-  GroomingApplication,
-  BoardingApplication,
-  HomeServiceApplication,
-} from '../../schema/application';
-import { Payment } from '../../schema/Payment.schema';
+
+import { Payment } from '../../schema/payment.schema';
+import { BoardingApplication } from '../../schema/application/boarding-application.schema';
+import { GroomingApplication } from '../../schema/application/grooming-application.schema';
+import { HomeServiceApplication } from '../../schema/application/home-service-application.schema';
 
 export const createPayment = async (
   req: TRequest,

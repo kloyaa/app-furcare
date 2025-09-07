@@ -7,22 +7,13 @@ import {
 } from '../../_core/interfaces/overrides.interface';
 import { formatRelativeTime } from '../../_core/utils/Date.util';
 import {
-  GroomingApplication,
-  BoardingApplication,
-  HomeServiceApplication,
-} from '../../schema/application';
-import {
   validateGetApplicationsByStatus,
   validateUpdateApplicationStatus,
   validateGetApplicationDetails,
 } from '../../_core/validators/staff/application.validator';
-import Profile from '../../schema/Profile.schema';
+import Profile from '../../schema/profile.schema';
 import { Document, Types } from 'mongoose';
-import {
-  IGroomingApplication,
-  IBoardingApplication,
-  IHomeServiceApplication,
-} from '../../_core/interfaces/schema/schema.interface';
+
 import {
   updateCageOccupant,
   validateCageAvailability,
@@ -32,8 +23,12 @@ import {
   ApplicationTypeEnum,
 } from '../../_core/enum/application.enum';
 import { emitter } from '../../_core/events/activity.event';
-import { ActivityType, EventName } from '../../_core/enum/activity.enum';
+import { EventName } from '../../_core/enum/activity.enum';
 import { IActivity } from '../../_core/interfaces/activity.interface';
+
+import { BoardingApplication } from '../../schema/application/boarding-application.schema';
+import { GroomingApplication } from '../../schema/application/grooming-application.schema';
+import { HomeServiceApplication } from '../../schema/application/home-service-application.schema';
 /**
  * Retrieves all applications based on status with formatted data for staff review
  *

@@ -1,8 +1,8 @@
 import EventEmitter from 'eventemitter3';
 import { EventName } from '../enum/activity.enum';
 import { IActivity } from '../interfaces/activity.interface';
-import Activity from '../../schema/Activity.schema';
-import RequestLog from '../../schema/RequestLog.schema';
+import Activity from '../../schema/activity.schema';
+import RequestLog from '../../schema/request-log.schema';
 import { IRequestLog } from '../interfaces/schema/schema.interface';
 
 // Create an EventEmitter instance

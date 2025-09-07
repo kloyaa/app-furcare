@@ -7,14 +7,14 @@ import { ActivityType, EventName } from '../_core/enum/activity.enum';
 import { IActivity } from '../_core/interfaces/activity.interface';
 import { TRequest } from '../_core/interfaces/overrides.interface';
 
-import { User } from '../schema/User.schema';
-import Profile from '../schema/Profile.schema';
-import { Role } from '../schema/Role.schema';
-import { UserRole } from '../schema/UserRole.schema';
+import Profile from '../schema/profile.schema';
+import { Role } from '../schema/role.schema';
+import { UserRole } from '../schema/user-role.schema';
 import {
   validateEKYCRegistration,
   validateEKYCUpdate,
 } from '../_core/validators/eky.validator';
+import { User } from '../schema/user.schema';
 
 /**
  * Creates a new user and profile through eKYC process in a single transaction.

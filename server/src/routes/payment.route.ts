@@ -6,7 +6,7 @@ import {
   getPaymentsByApplication,
   getPaymentStatistics,
   processPayment,
-} from '../controllers/payment';
+} from '../controllers/payment/payment';
 import { maintenanceModeMiddleware } from '../_core/middlewares/maintenance-mode.middleware';
 
 const router = Router();

@@ -1,7 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { IPassword, IUser } from '../_core/interfaces/schema/schema.interface';
 
-
 const userSchema = new Schema<IUser>(
   {
     username: {

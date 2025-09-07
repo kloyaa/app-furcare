@@ -9,9 +9,9 @@ import {
 import { handleMongooseError } from '../../_core/utils/db/error.util';
 import { isEmpty } from '../../_core/utils/utils';
 import { validateCreateHomeServiceApplication } from '../../_core/validators/application.validator';
-import { HomeServiceApplication } from '../../schema/application/HomeServiceApplication.schema';
-import Branch from '../../schema/Branch.schema';
-import Pet from '../../schema/Pet.schema';
+import { HomeServiceApplication } from '../../schema/application/home-service-application.schema';
+import Branch from '../../schema/branch.schema';
+import Pet from '../../schema/pet.schema';
 
 export const createHomeServiceApplication = async (
   req: TRequest,

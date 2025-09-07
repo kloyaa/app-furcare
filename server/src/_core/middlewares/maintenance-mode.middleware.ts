@@ -1,4 +1,4 @@
-import Application from '../../schema/App.schema';
+import Application from '../../schema/app.schema';
 import { statuses } from '../const/api.statuses';
 import { TRequest, TResponse } from '../interfaces/overrides.interface';
 

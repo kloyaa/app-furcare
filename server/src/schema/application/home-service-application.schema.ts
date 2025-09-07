@@ -7,7 +7,7 @@ import {
 import {
   baseApplicationFields,
   baseSchemaOptions,
-} from '../base/BaseApplicationSchema';
+} from '../base/base-application-schema';
 import { IHomeServiceApplication } from '../../_core/interfaces/schema/schema.interface';
 
 const homeServiceApplicationSchema = new Schema<IHomeServiceApplication>(
