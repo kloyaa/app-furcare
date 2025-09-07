@@ -2,7 +2,7 @@ import { Schema, model, Document } from 'mongoose';
 import {
   baseApplicationFields,
   baseSchemaOptions,
-} from '../base/BaseApplicationSchema';
+} from '../base/base-application-schema';
 import { IBoardingApplication } from '../../_core/interfaces/schema/schema.interface';
 import {
   addPaymentMethods,

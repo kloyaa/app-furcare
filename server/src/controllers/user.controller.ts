@@ -1,5 +1,5 @@
 import { type Response } from 'express';
-import Profile from '../schema/Profile.schema';
+import Profile from '../schema/profile.schema';
 import { validateCreateProfile } from '../_core/validators/user.validator';
 import { statuses } from '../_core/const/api.statuses';
 import { emitter } from '../_core/events/activity.event';

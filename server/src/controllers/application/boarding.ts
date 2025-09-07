@@ -12,11 +12,11 @@ import {
   validateCreateBoardingApplication,
   validateCreateBoardingApplicationExtension,
 } from '../../_core/validators/application.validator';
-import { BoardingApplication } from '../../schema/application/BoardingApplication.schema';
+import { BoardingApplication } from '../../schema/application/boarding-application.schema';
 
-import Branch from '../../schema/Branch.schema';
-import Pet from '../../schema/Pet.schema';
-import PetCage from '../../schema/PetServices.schema';
+import Branch from '../../schema/branch.schema';
+import Pet from '../../schema/pet.schema';
+import PetCage from '../../schema/pet-services.schema';
 
 export const createBoardingApplication = async (
   req: TRequest,

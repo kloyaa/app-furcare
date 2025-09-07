@@ -1,10 +1,10 @@
 import bcrypt from 'bcrypt';
 import { Types } from 'mongoose';
-import Profile from '../../../schema/Profile.schema';
-import { Password, User } from '../../../schema/User.schema';
-import Activity from '../../../schema/Activity.schema';
+import Profile from '../../../schema/profile.schema';
+import { Password, User } from '../../../schema/user.schema';
+import Activity from '../../../schema/activity.schema';
 import { ActivityType } from '../../enum/activity.enum';
-import { UserRole } from '../../../schema/UserRole.schema';
+import { UserRole } from '../../../schema/user-role.schema';
 
 export const isUserActive = async (user: Types.ObjectId) => {
   try {

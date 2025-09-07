@@ -1,6 +1,6 @@
 import { TRequest } from '../_core/interfaces/overrides.interface';
 import { type Response } from 'express';
-import Pet from '../schema/Pet.schema';
+import Pet from '../schema/pet.schema';
 import { statuses } from '../_core/const/api.statuses';
 import { validateCreatePet } from '../_core/validators/pet.validator';
 import { emitter } from '../_core/events/activity.event';

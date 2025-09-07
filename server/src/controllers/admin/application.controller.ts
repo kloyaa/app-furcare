@@ -7,11 +7,10 @@ import {
 import { handleMongooseError } from '../../_core/utils/db/error.util';
 import { isEmpty } from '../../_core/utils/utils';
 import { validateApplicationFilters } from '../../_core/validators/admin';
-import {
-  GroomingApplication,
-  BoardingApplication,
-  HomeServiceApplication,
-} from '../../schema/application';
+
+import { BoardingApplication } from '../../schema/application/boarding-application.schema';
+import { GroomingApplication } from '../../schema/application/grooming-application.schema';
+import { HomeServiceApplication } from '../../schema/application/home-service-application.schema';
 
 export const getAllApplications = async (
   req: TRequest,

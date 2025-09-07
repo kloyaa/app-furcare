@@ -1,6 +1,6 @@
 // mixins/PaymentMixin.ts
 import { Schema } from 'mongoose';
-import { Payment } from '../schema/Payment.schema';
+import { Payment } from '../schema/payment.schema';
 
 export const paymentFields = {
   paidAmount: {

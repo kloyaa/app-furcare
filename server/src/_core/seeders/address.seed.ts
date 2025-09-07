@@ -1,10 +1,10 @@
 import {
-  CitySchema,
-  CountrySchema,
   RegionSchema,
-  StateSchema,
   SubRegionSchema,
-} from '../../schema/Address.schema';
+  CountrySchema,
+  CitySchema,
+  StateSchema,
+} from '../../schema/address.schema';
 import { connectDB, closeDB } from '../utils/db/db.util';
 import { ReadAddress } from './services/address';
 
