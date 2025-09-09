@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:furcare_app/core/enums/application.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
-import 'package:furcare_app/core/helpers/formatters.dart';
+import 'package:furcare_app/core/utils/currency.dart';
+import 'package:furcare_app/core/utils/date.dart';
 import 'package:furcare_app/data/models/home_service/home_service.dart';
 import 'package:furcare_app/presentation/providers/payment_provider.dart';
 import 'package:furcare_app/presentation/routes/customer_router.dart';
@@ -37,7 +38,7 @@ class _HomeServiceAppointmentPreviewDialogState
   }
 
   String _formatSchedule() {
-    final date = formatDateToLong(
+    final date = DateTimeUtils.formatDateToLong(
       DateTime.parse(widget.appointment.schedule.date),
     );
     final time = widget.appointment.schedule.time;
@@ -264,7 +265,7 @@ class _HomeServiceAppointmentPreviewDialogState
         ),
         CustomButton(
           text:
-              "Pay ${formatToPhpCurrency(widget.appointment.remainingBalance)}",
+              "Pay ${CurrencyUtils.toPHP(widget.appointment.remainingBalance)}",
           textSize: AppTextSize.md,
           height: 64,
           onPressed: () => _handlePay(),

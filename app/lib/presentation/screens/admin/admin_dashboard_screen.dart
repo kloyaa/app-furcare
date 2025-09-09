@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
-import 'package:furcare_app/core/helpers/formatters.dart';
+import 'package:furcare_app/core/utils/currency.dart';
 import 'package:furcare_app/presentation/providers/admin/admin_application_provider.dart';
 import 'package:furcare_app/presentation/providers/admin/admin_provider.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
@@ -260,7 +260,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         CustomText.title(
-                          formatToPhpCurrency(statistics.yearlyTotals.revenue),
+                          CurrencyUtils.toPHP(statistics.yearlyTotals.revenue),
                           size: AppTextSize.xl,
                           fontWeight: AppFontWeight.black.value,
                           color: Colors.green.shade700,
@@ -491,7 +491,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             CustomText.body(
-                              formatToPhpCurrency(application.totalPrice),
+                              CurrencyUtils.toPHP(application.totalPrice),
                               fontWeight: AppFontWeight.bold.value,
                               color: Colors.green.shade700,
                             ),

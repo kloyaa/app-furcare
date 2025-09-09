@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
-import 'package:furcare_app/core/helpers/formatters.dart';
-import 'package:furcare_app/core/helpers/widget_helpers.dart';
+import 'package:furcare_app/core/utils/currency.dart';
+import 'package:furcare_app/core/utils/date.dart';
+import 'package:furcare_app/core/utils/widget.dart';
 import 'package:furcare_app/data/models/home_service/home_service.dart';
 import 'package:furcare_app/presentation/providers/appointment_provider.dart';
 import 'package:furcare_app/presentation/routes/customer_router.dart';
@@ -292,7 +293,7 @@ class _HomeServiceAppointmentCardState
   }
 
   String _formatSchedule() {
-    final date = formatDateToLong(
+    final date = DateTimeUtils.formatDateToLong(
       DateTime.parse(widget.appointment.schedule.date),
     );
     final time = widget.appointment.schedule.time;
@@ -510,7 +511,7 @@ class _HomeServiceAppointmentCardState
                             ),
                             const Spacer(),
                             Text(
-                              formatToPhpCurrency(
+                              CurrencyUtils.toPHP(
                                 widget.appointment.totalPrice,
                               ),
                               style: TextStyle(
@@ -540,7 +541,7 @@ class _HomeServiceAppointmentCardState
                                       ),
                                     ),
                                     Text(
-                                      formatToPhpCurrency(
+                                      CurrencyUtils.toPHP(
                                         widget.appointment.paidAmount,
                                       ),
                                       style: TextStyle(
@@ -566,7 +567,7 @@ class _HomeServiceAppointmentCardState
                                         ),
                                       ),
                                       Text(
-                                        formatToPhpCurrency(
+                                        CurrencyUtils.toPHP(
                                           widget.appointment.remainingBalance,
                                         ),
                                         style: TextStyle(
@@ -593,7 +594,7 @@ class _HomeServiceAppointmentCardState
                                         ),
                                       ),
                                       Text(
-                                        formatToPhpCurrency(
+                                        CurrencyUtils.toPHP(
                                           widget.appointment.paidAmount -
                                               widget.appointment.totalPrice,
                                         ),

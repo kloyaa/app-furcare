@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:furcare_app/core/constants/padding_constant.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
-import 'package:furcare_app/core/helpers/validate.dart';
+import 'package:furcare_app/core/utils/validate.dart';
 import 'package:furcare_app/presentation/providers/auth_provider.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_button.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_fields.dart';

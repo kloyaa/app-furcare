@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:furcare_app/core/enums/application.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
-import 'package:furcare_app/core/helpers/formatters.dart';
 import 'package:furcare_app/core/utils/boarding.dart';
+import 'package:furcare_app/core/utils/currency.dart';
+import 'package:furcare_app/core/utils/date.dart';
 import 'package:furcare_app/data/models/boarding/boarding.dart';
 import 'package:furcare_app/data/models/boarding/boarding_request.dart';
 import 'package:furcare_app/presentation/providers/appointment_provider.dart';
@@ -242,7 +243,9 @@ class _BoardingAppointmentPreviewDialogState
     return _buildSection('Boarding Details', [
       _buildInfoRow(
         'Check-in Date',
-        formatDateToLong(DateTime.parse(widget.appointment.schedule.date)),
+        DateTimeUtils.formatDateToLong(
+          DateTime.parse(widget.appointment.schedule.date),
+        ),
         Icons.calendar_today,
         colorScheme,
       ),
@@ -289,7 +292,7 @@ class _BoardingAppointmentPreviewDialogState
       ),
       _buildInfoRow(
         'Daily Rate',
-        formatToPhpCurrency(widget.appointment.cage.price),
+        CurrencyUtils.toPHP(widget.appointment.cage.price),
         Icons.attach_money,
         colorScheme,
       ),
@@ -425,7 +428,7 @@ class _BoardingAppointmentPreviewDialogState
                     ),
                   ),
                   Text(
-                    '${extension.priceChange >= 0 ? '+' : ''}${formatToPhpCurrency(extension.priceChange.abs())}',
+                    '${extension.priceChange >= 0 ? '+' : ''}${CurrencyUtils.toPHP(extension.priceChange.abs())}',
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
@@ -453,15 +456,15 @@ class _BoardingAppointmentPreviewDialogState
         _buildSection('Pricing Summary', [
           _buildPricingRow(
             'Original Booking',
-            '${formatToPhpCurrency(widget.appointment.cage.price)} x ${widget.appointment.schedule.originalDays ?? widget.appointment.schedule.days} day(s1)',
-            formatToPhpCurrency(widget.appointment.originalPrice),
+            '${CurrencyUtils.toPHP(widget.appointment.cage.price)} x ${widget.appointment.schedule.originalDays ?? widget.appointment.schedule.days} day(s1)',
+            CurrencyUtils.toPHP(widget.appointment.originalPrice),
             colorScheme,
           ),
           if (widget.appointment.extensionDays > 0) ...[
             _buildPricingRow(
               'Extension Cost',
-              '${formatToPhpCurrency(widget.appointment.cage.price)} x ${widget.appointment.extensionDays} days',
-              formatToPhpCurrency(widget.appointment.extensionPrice),
+              '${CurrencyUtils.toPHP(widget.appointment.cage.price)} x ${widget.appointment.extensionDays} days',
+              CurrencyUtils.toPHP(widget.appointment.extensionPrice),
               colorScheme,
             ),
           ],
@@ -520,7 +523,7 @@ class _BoardingAppointmentPreviewDialogState
         ),
         CustomButton(
           text:
-              "Pay ${formatToPhpCurrency(widget.appointment.remainingBalance)}",
+              "Pay ${CurrencyUtils.toPHP(widget.appointment.remainingBalance)}",
           textSize: AppTextSize.md,
           height: 64,
           onPressed: () => _handlePay(),
@@ -673,7 +676,7 @@ class _BoardingAppointmentPreviewDialogState
             style: TextStyle(fontSize: 14, color: colorScheme.onSurface),
           ),
           Text(
-            formatToPhpCurrency(
+            CurrencyUtils.toPHP(
               widget.appointment.cage.price * _currentExtensionDays,
             ),
             style: TextStyle(

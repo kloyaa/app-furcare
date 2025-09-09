@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
-import 'package:furcare_app/core/helpers/formatters.dart';
-import 'package:furcare_app/core/helpers/theme.dart';
+import 'package:furcare_app/core/utils/currency.dart';
+import 'package:furcare_app/core/utils/theme.dart';
 import 'package:furcare_app/data/models/home_service/home_service.dart'
     show HomeServiceSchedule;
 import 'package:furcare_app/data/models/home_service/home_service_request.dart';
@@ -243,7 +243,7 @@ class _HomeServiceReceiptDialogState extends State<HomeServiceReceiptDialog> {
                               color: colorScheme.onErrorContainer,
                             ),
                             CustomText.body(
-                              formatToPhpCurrency(widget.totalPrice),
+                              CurrencyUtils.toPHP(widget.totalPrice),
                               fontWeight: AppFontWeight.bold.value,
                               color: colorScheme.onErrorContainer,
                             ),

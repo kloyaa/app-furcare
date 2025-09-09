@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:furcare_app/core/constants/padding_constant.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
-import 'package:furcare_app/core/helpers/formatters.dart';
+import 'package:furcare_app/core/utils/currency.dart';
 import 'package:furcare_app/data/models/pet_models.dart';
 import 'package:furcare_app/data/models/pet_service.models.dart';
 import 'package:furcare_app/presentation/providers/pet_provider.dart';
@@ -471,7 +471,7 @@ class _GroomingApptScreenState extends State<GroomingApptScreen> {
                   fontWeight: AppFontWeight.bold.value,
                 ),
                 CustomText.body(
-                  formatToPhpCurrency(totalPrice),
+                  CurrencyUtils.toPHP(totalPrice),
                   size: AppTextSize.mlg,
                   color: theme.colorScheme.onErrorContainer,
                 ),

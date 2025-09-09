@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
-import 'package:furcare_app/core/helpers/formatters.dart';
+import 'package:furcare_app/core/utils/currency.dart';
+import 'package:furcare_app/core/utils/date.dart';
 import 'package:furcare_app/presentation/providers/payment_provider.dart';
 import 'package:furcare_app/presentation/routes/customer_router.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_button.dart';
@@ -77,7 +78,7 @@ class _OTCPaymentReceiptScreenState extends State<OTCPaymentReceiptScreen>
 
   String get _validUntil {
     final validUntil = DateTime.now().add(Duration(hours: 24));
-    return formatDateToShort(validUntil);
+    return DateTimeUtils.formatDateToShort(validUntil);
   }
 
   @override
@@ -298,7 +299,7 @@ class _OTCPaymentReceiptScreenState extends State<OTCPaymentReceiptScreen>
                   ),
                   const SizedBox(height: 8),
                   CustomText.title(
-                    formatToPhpCurrency(provider.amount),
+                    CurrencyUtils.toPHP(provider.amount),
                     size: AppTextSize.lg,
                     color: theme.colorScheme.primary,
                     fontWeight: AppFontWeight.black.value,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:furcare_app/core/enums/payment.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
-import 'package:furcare_app/core/helpers/formatters.dart';
+import 'package:furcare_app/core/utils/currency.dart';
 import 'package:furcare_app/data/models/payment/payment_customer_details.dart';
 import 'package:furcare_app/data/models/payment/payment_process_request.dart';
 import 'package:furcare_app/data/models/payment/payment_request.dart';
@@ -632,7 +632,7 @@ class _BankPaymentScreenState extends State<BankPaymentScreen>
           Divider(height: 24, color: colorScheme.outline.withAlpha(64)),
           _buildInfoRow(
             'Total Amount',
-            formatToPhpCurrency(provider.amount),
+            CurrencyUtils.toPHP(provider.amount),
             Icons.account_balance_wallet,
           ),
         ],
@@ -793,7 +793,7 @@ class _BankPaymentScreenState extends State<BankPaymentScreen>
           ),
           const SizedBox(height: 8),
           CustomText.title(
-            formatToPhpCurrency(paymentAmountValue),
+            CurrencyUtils.toPHP(paymentAmountValue),
             size: AppTextSize.lg,
             color: colorScheme.primary,
           ),
@@ -807,7 +807,7 @@ class _BankPaymentScreenState extends State<BankPaymentScreen>
                 border: Border.all(color: Colors.orange.withAlpha(64)),
               ),
               child: CustomText.body(
-                'Remaining: ${formatToPhpCurrency(provider.amount - paymentAmountValue)}',
+                'Remaining: ${CurrencyUtils.toPHP(provider.amount - paymentAmountValue)}',
                 size: AppTextSize.xs,
                 fontWeight: AppFontWeight.bold.value,
                 color: Colors.orange.shade900,

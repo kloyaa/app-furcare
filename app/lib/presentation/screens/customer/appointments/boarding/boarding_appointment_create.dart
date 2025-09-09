@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
-import 'package:furcare_app/core/helpers/date.dart';
-import 'package:furcare_app/core/helpers/formatters.dart';
+import 'package:furcare_app/core/utils/currency.dart';
+import 'package:furcare_app/core/utils/date.dart';
 import 'package:furcare_app/data/models/pet_models.dart';
 import 'package:furcare_app/data/models/pet_service.models.dart';
 import 'package:furcare_app/presentation/providers/pet_service_provider.dart';
@@ -73,7 +73,7 @@ class _BoardingApptScreenState extends State<BoardingApptScreen> {
 
   int get totalPrice {
     if (selectedCage != null && selectedDay != null) {
-      return parseDays(selectedDay) * selectedCage!.price;
+      return DateTimeUtils.parseDays(selectedDay) * selectedCage!.price;
     }
     return 0;
   }
@@ -93,7 +93,7 @@ class _BoardingApptScreenState extends State<BoardingApptScreen> {
   void _showReceiptDialog() {
     return BoardingReceiptDialog.show(
       context: context,
-      schedule: formatDateToLong(selectedDate ?? today),
+      schedule: DateTimeUtils.formatDateToLong(selectedDate ?? today),
       selectedPet: selectedPet,
       selectedTime: selectedTime,
       selectedDay: selectedDay,
@@ -302,7 +302,7 @@ class _BoardingApptScreenState extends State<BoardingApptScreen> {
                   fontWeight: AppFontWeight.bold.value,
                 ),
                 CustomText.body(
-                  formatToPhpCurrency(totalPrice),
+                  CurrencyUtils.toPHP(totalPrice),
                   size: AppTextSize.mlg,
                   color: theme.colorScheme.onErrorContainer,
                 ),

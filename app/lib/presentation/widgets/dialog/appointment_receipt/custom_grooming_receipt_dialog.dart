@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
-import 'package:furcare_app/core/helpers/formatters.dart';
-import 'package:furcare_app/core/helpers/theme.dart';
+import 'package:furcare_app/core/utils/currency.dart';
+import 'package:furcare_app/core/utils/theme.dart';
 import 'package:furcare_app/data/models/grooming/grooming_request.dart';
 import 'package:furcare_app/data/models/pet_models.dart';
 import 'package:furcare_app/data/models/pet_service.models.dart';
@@ -374,7 +374,7 @@ class _GroomingReceiptDialogState extends State<GroomingReceiptDialog> {
                                 }
 
                                 return CustomText.body(
-                                  formatToPhpCurrency(totalPrice),
+                                  CurrencyUtils.toPHP(totalPrice),
                                   fontWeight: AppFontWeight.bold.value,
                                   color: colorScheme.onErrorContainer,
                                 );

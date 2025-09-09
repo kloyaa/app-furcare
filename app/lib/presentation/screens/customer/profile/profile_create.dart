@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:furcare_app/core/constants/padding_constant.dart';
-import 'package:furcare_app/core/helpers/theme.dart';
-import 'package:furcare_app/core/helpers/validate.dart';
+import 'package:furcare_app/core/utils/theme.dart';
+import 'package:furcare_app/core/utils/validate.dart';
 import 'package:furcare_app/data/models/client_models.dart';
 import 'package:furcare_app/presentation/providers/auth_provider.dart';
 import 'package:furcare_app/presentation/providers/client_provider.dart';
