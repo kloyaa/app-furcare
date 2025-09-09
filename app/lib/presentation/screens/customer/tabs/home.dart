@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:furcare_app/core/constants/padding_constant.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
-import 'package:furcare_app/core/helpers/widget_helpers.dart';
+import 'package:furcare_app/core/utils/widget.dart';
 import 'package:furcare_app/core/services/location_service.dart';
 import 'package:furcare_app/data/models/pet_service.models.dart';
 import 'package:furcare_app/presentation/providers/pet_service_provider.dart';

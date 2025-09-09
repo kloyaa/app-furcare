@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:furcare_app/core/enums/application.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
-import 'package:furcare_app/core/helpers/formatters.dart';
+import 'package:furcare_app/core/utils/currency.dart';
 import 'package:furcare_app/data/models/__staff/appointment_request.dart';
 import 'package:furcare_app/data/models/__staff/appointments_model.dart';
 import 'package:furcare_app/presentation/providers/auth_provider.dart';
@@ -1125,15 +1125,15 @@ class _StaffHomeScreenState extends State<StaffHomeScreen>
           children: [
             _buildPaymentItem(
               'Total',
-              formatToPhpCurrency(appointment.totalPrice.toDouble()),
+              CurrencyUtils.toPHP(appointment.totalPrice.toDouble()),
               theme.colorScheme.onSurface,
               theme,
             ),
             _buildPaymentItem(
               balance < 0 ? 'Overpaid by' : 'Balance',
               balance < 0
-                  ? formatToPhpCurrency(balance.abs())
-                  : formatToPhpCurrency(balance),
+                  ? CurrencyUtils.toPHP(balance.abs())
+                  : CurrencyUtils.toPHP(balance),
               isFullyPaid ? Colors.green : serviceColor,
               theme,
             ),
@@ -1557,7 +1557,7 @@ class _StaffHomeScreenState extends State<StaffHomeScreen>
                   _buildPreviewRow('Branch', appointment.branchName),
                   _buildPreviewRow(
                     'Total Price',
-                    formatToPhpCurrency(appointment.totalPrice.toDouble()),
+                    CurrencyUtils.toPHP(appointment.totalPrice.toDouble()),
                   ),
                   _buildPreviewRow(
                     'Payment Status',

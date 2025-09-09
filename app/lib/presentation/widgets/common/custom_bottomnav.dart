@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
-import 'package:furcare_app/core/helpers/theme.dart';
+import 'package:furcare_app/core/utils/theme.dart';
 
 // Bottom Navigation Item Model
 class BottomNavItem {

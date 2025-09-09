@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
-import 'package:furcare_app/core/helpers/formatters.dart';
-import 'package:furcare_app/core/helpers/widget_helpers.dart';
+import 'package:furcare_app/core/utils/currency.dart';
+import 'package:furcare_app/core/utils/widget.dart';
 import 'package:furcare_app/data/models/grooming/grooming.dart';
 import 'package:furcare_app/presentation/providers/appointment_provider.dart';
 import 'package:furcare_app/presentation/routes/customer_router.dart';
@@ -493,7 +493,7 @@ class _AppointmentCardState extends State<_AppointmentCard>
                             ),
                             const Spacer(),
                             Text(
-                              formatToPhpCurrency(
+                              CurrencyUtils.toPHP(
                                 widget.appointment.totalPrice,
                               ),
                               style: TextStyle(
@@ -523,7 +523,7 @@ class _AppointmentCardState extends State<_AppointmentCard>
                                       ),
                                     ),
                                     Text(
-                                      formatToPhpCurrency(
+                                      CurrencyUtils.toPHP(
                                         widget.appointment.paidAmount,
                                       ),
                                       style: TextStyle(
@@ -549,7 +549,7 @@ class _AppointmentCardState extends State<_AppointmentCard>
                                         ),
                                       ),
                                       Text(
-                                        formatToPhpCurrency(
+                                        CurrencyUtils.toPHP(
                                           widget.appointment.remainingBalance,
                                         ),
                                         style: TextStyle(
@@ -576,7 +576,7 @@ class _AppointmentCardState extends State<_AppointmentCard>
                                         ),
                                       ),
                                       Text(
-                                        formatToPhpCurrency(
+                                        CurrencyUtils.toPHP(
                                           widget.appointment.paidAmount -
                                               widget.appointment.totalPrice,
                                         ),

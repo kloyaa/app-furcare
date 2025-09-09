@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
-import 'package:furcare_app/core/helpers/formatters.dart';
+import 'package:furcare_app/core/utils/currency.dart';
 import 'package:furcare_app/data/models/pet_service.models.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
 
@@ -227,7 +227,7 @@ class _CageSelectionState extends State<CageSelection>
                       ),
                       const SizedBox(height: 10),
                       CustomText.title(
-                        formatToPhpCurrency(cage.price),
+                        CurrencyUtils.toPHP(cage.price),
                         size: AppTextSize.md,
                         fontWeight:
                             selectedCage != null && selectedCage.id == cage.id

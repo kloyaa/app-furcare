@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
-import 'package:furcare_app/core/helpers/formatters.dart';
-import 'package:furcare_app/core/helpers/validate.dart';
+import 'package:furcare_app/core/utils/date.dart';
+import 'package:furcare_app/core/utils/formatters.dart';
+import 'package:furcare_app/core/utils/validate.dart';
 import 'package:furcare_app/data/models/client_models.dart';
 import 'package:furcare_app/presentation/providers/client_provider.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_appbar.dart';
@@ -137,7 +138,9 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                   _buildInfoRow('Address', client.address, Icons.location_on),
                   _buildInfoRow(
                     'Member Since',
-                    formatDateToLong(DateTime.parse(client.createdAt!)),
+                    DateTimeUtils.formatDateToLong(
+                      DateTime.parse(client.createdAt!),
+                    ),
                     Icons.calendar_today,
                   ),
                 ]),
@@ -153,7 +156,7 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                   _buildInfoRow(
                     'Last Password Change',
                     isValidDate(client.others.lastChangePassword)
-                        ? formatDateToLong(
+                        ? DateTimeUtils.formatDateToLong(
                             DateTime.parse(client.others.lastChangePassword),
                           )
                         : "N/A",

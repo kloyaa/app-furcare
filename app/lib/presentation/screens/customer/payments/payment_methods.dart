@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:furcare_app/core/enums/payment.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
-import 'package:furcare_app/core/helpers/formatters.dart';
+import 'package:furcare_app/core/utils/currency.dart';
 import 'package:furcare_app/presentation/providers/payment_provider.dart';
 import 'package:furcare_app/presentation/routes/customer_router.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_appbar.dart';
@@ -185,7 +185,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen>
   Widget _buildPaymentSummaryHeader(ThemeData theme) {
     PaymentSettingsProvider provider = context.read<PaymentSettingsProvider>();
     String applicationId = provider.applicationId;
-    String paymentAmount = formatToPhpCurrency(provider.amount);
+    String paymentAmount = CurrencyUtils.toPHP(provider.amount);
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(20),

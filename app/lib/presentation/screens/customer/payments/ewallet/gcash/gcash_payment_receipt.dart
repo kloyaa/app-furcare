@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
-import 'package:furcare_app/core/helpers/formatters.dart';
+import 'package:furcare_app/core/utils/currency.dart';
+import 'package:furcare_app/core/utils/date.dart';
+import 'package:furcare_app/core/utils/formatters.dart';
 import 'package:furcare_app/presentation/providers/payment_provider.dart';
 import 'package:furcare_app/presentation/routes/customer_router.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_appbar.dart';
@@ -247,7 +249,7 @@ class _GCashPaymentReceiptScreenState extends State<GCashPaymentReceiptScreen>
                   children: [
                     CustomText.body('Amount Paid', size: AppTextSize.sm),
                     CustomText.title(
-                      formatToPhpCurrency(provider.amountPaid),
+                      CurrencyUtils.toPHP(provider.amountPaid),
                       size: AppTextSize.lg,
                       color: Colors.blue.shade700,
                     ),
@@ -313,10 +315,14 @@ class _GCashPaymentReceiptScreenState extends State<GCashPaymentReceiptScreen>
       ('Reference Number', provider.reference, Icons.numbers_outlined),
       (
         'Amount Paid',
-        formatToPhpCurrency(provider.amountPaid),
+        CurrencyUtils.toPHP(provider.amountPaid),
         Icons.account_balance_wallet,
       ),
-      ('Date & Time', formatDateToShort(DateTime.now()), Icons.schedule),
+      (
+        'Date & Time',
+        DateTimeUtils.formatDateToShort(DateTime.now()),
+        Icons.schedule,
+      ),
       ('Status', 'Processing', Icons.hourglass_empty),
     ];
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:furcare_app/core/enums/application.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
-import 'package:furcare_app/core/helpers/formatters.dart';
+import 'package:furcare_app/core/utils/currency.dart';
 import 'package:furcare_app/data/models/grooming/grooming.dart';
 import 'package:furcare_app/presentation/providers/payment_provider.dart';
 import 'package:furcare_app/presentation/routes/customer_router.dart';
@@ -142,7 +142,7 @@ class _GroomingAppointmentPreviewDialogState
                       ),
                       _buildInfoRow(
                         'Total Price',
-                        formatToPhpCurrency(widget.appointment.totalPrice),
+                        CurrencyUtils.toPHP(widget.appointment.totalPrice),
                         Icons.attach_money,
                         colorScheme,
                       ),
@@ -204,7 +204,7 @@ class _GroomingAppointmentPreviewDialogState
                             .map(
                               (option) => _buildServiceRow(
                                 option.name,
-                                formatToPhpCurrency(option.price),
+                                CurrencyUtils.toPHP(option.price),
                                 colorScheme,
                               ),
                             )
@@ -220,7 +220,7 @@ class _GroomingAppointmentPreviewDialogState
                             .map(
                               (option) => _buildServiceRow(
                                 option.name,
-                                formatToPhpCurrency(option.price),
+                                CurrencyUtils.toPHP(option.price),
                                 colorScheme,
                               ),
                             )
@@ -232,7 +232,7 @@ class _GroomingAppointmentPreviewDialogState
                     _buildSection('Schedule ', [
                       _buildServiceRow(
                         'Price',
-                        formatToPhpCurrency(widget.appointment.schedule.price),
+                        CurrencyUtils.toPHP(widget.appointment.schedule.price),
                         colorScheme,
                       ),
                     ], colorScheme),
@@ -262,7 +262,7 @@ class _GroomingAppointmentPreviewDialogState
         ),
         CustomButton(
           text:
-              "Pay ${formatToPhpCurrency(widget.appointment.remainingBalance)}",
+              "Pay ${CurrencyUtils.toPHP(widget.appointment.remainingBalance)}",
           textSize: AppTextSize.md,
           height: 64,
           onPressed: () => _handlePay(),

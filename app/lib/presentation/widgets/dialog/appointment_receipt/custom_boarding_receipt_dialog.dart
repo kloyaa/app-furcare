@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
-import 'package:furcare_app/core/helpers/date.dart';
-import 'package:furcare_app/core/helpers/formatters.dart';
-import 'package:furcare_app/core/helpers/theme.dart';
+import 'package:furcare_app/core/utils/currency.dart';
+import 'package:furcare_app/core/utils/date.dart';
+import 'package:furcare_app/core/utils/theme.dart';
 import 'package:furcare_app/data/models/boarding/boarding.dart';
 import 'package:furcare_app/data/models/boarding/boarding_request.dart';
 import 'package:furcare_app/data/models/pet_models.dart';
@@ -102,7 +102,7 @@ class _BoardingReceiptDialogState extends State<BoardingReceiptDialog> {
         schedule: BoardingSchedule(
           date: widget.schedule ?? '',
           time: widget.selectedTime ?? '',
-          days: parseDays(widget.selectedDay),
+          days: DateTimeUtils.parseDays(widget.selectedDay),
         ),
         instructions: widget.instructions ?? 'No instructions',
         requestAntiRabiesVaccination:
@@ -330,7 +330,7 @@ class _BoardingReceiptDialogState extends State<BoardingReceiptDialog> {
                               color: colorScheme.onErrorContainer,
                             ),
                             CustomText.body(
-                              formatToPhpCurrency(widget.totalPrice),
+                              CurrencyUtils.toPHP(widget.totalPrice),
                               fontWeight: AppFontWeight.bold.value,
                               color: colorScheme.onErrorContainer,
                             ),
@@ -350,7 +350,7 @@ class _BoardingReceiptDialogState extends State<BoardingReceiptDialog> {
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
-                          'Calculation: ${parseDays(widget.selectedDay)} days × PHP ${widget.selectedCage?.price ?? 0} per day',
+                          'Calculation: ${DateTimeUtils.parseDays(widget.selectedDay)} days × PHP ${widget.selectedCage?.price ?? 0} per day',
                           style: TextStyle(
                             fontSize: 12,
                             color: colorScheme.onSurface.withAlpha(179),

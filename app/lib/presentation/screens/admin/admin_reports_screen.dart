@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
-import 'package:furcare_app/core/helpers/formatters.dart';
+import 'package:furcare_app/core/utils/currency.dart';
 import 'package:furcare_app/data/models/__admin/admin_statistics_models.dart';
 import 'package:furcare_app/presentation/providers/admin/admin_provider.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
@@ -138,7 +138,7 @@ class _AdminReportsScreenState extends State<AdminReportsScreen>
         _buildStatCard(
           theme,
           title: 'Total Revenue',
-          value: formatToPhpCurrency(
+          value: CurrencyUtils.toPHP(
             adminProvider.statisticsProvider.totalRevenue,
           ),
           icon: Icons.monetization_on_outlined,
@@ -370,7 +370,7 @@ class _AdminReportsScreenState extends State<AdminReportsScreen>
                         ),
                       ),
                       CustomText.body(
-                        formatToPhpCurrency(payment.amount),
+                        CurrencyUtils.toPHP(payment.amount),
                         size: AppTextSize.sm,
                         fontWeight: AppFontWeight.bold.value,
                         color: Colors.green.shade700,
@@ -514,7 +514,7 @@ class _AdminReportsScreenState extends State<AdminReportsScreen>
                   child: _buildRevenueMetric(
                     theme,
                     'Total Revenue',
-                    formatToPhpCurrency(
+                    CurrencyUtils.toPHP(
                       adminProvider.statisticsProvider.totalRevenue,
                     ),
                     Colors.green,
@@ -524,7 +524,7 @@ class _AdminReportsScreenState extends State<AdminReportsScreen>
                   child: _buildRevenueMetric(
                     theme,
                     'Paid Amount',
-                    formatToPhpCurrency(adminProvider.totalPaidAmount),
+                    CurrencyUtils.toPHP(adminProvider.totalPaidAmount),
                     Colors.blue,
                   ),
                 ),
@@ -532,7 +532,7 @@ class _AdminReportsScreenState extends State<AdminReportsScreen>
                   child: _buildRevenueMetric(
                     theme,
                     'Outstanding',
-                    formatToPhpCurrency(adminProvider.totalOutstandingAmount),
+                    CurrencyUtils.toPHP(adminProvider.totalOutstandingAmount),
                     Colors.orange,
                   ),
                 ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
-import 'package:furcare_app/core/helpers/theme.dart';
+import 'package:furcare_app/core/utils/theme.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
 
 class CustomInputField extends StatefulWidget {
