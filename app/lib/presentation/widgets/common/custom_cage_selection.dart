@@ -169,7 +169,9 @@ class _CageSelectionState extends State<CageSelection>
 
   Widget _buildRoomCard(PetCage cage, PetCage? selectedCage, int index) {
     final isFullyOccupied = cage.occupant >= cage.max;
-    final occupancyPercentage = cage.occupant / cage.max;
+    final occupancyPercentage = cage.max > 0
+        ? (cage.occupant / cage.max).clamp(0.0, 1.0)
+        : 0.0;
     final colorScheme = Theme.of(context).colorScheme;
 
     return TweenAnimationBuilder(
@@ -304,7 +306,7 @@ class _CageSelectionState extends State<CageSelection>
       ),
       child: FractionallySizedBox(
         alignment: Alignment.centerLeft,
-        widthFactor: percentage,
+        widthFactor: percentage, // always between 0.0 and 1.0 now
         child: Container(
           decoration: BoxDecoration(
             color: _getOccupancyColor(percentage),
