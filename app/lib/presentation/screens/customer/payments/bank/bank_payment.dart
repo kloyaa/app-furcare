@@ -755,7 +755,7 @@ class _BankPaymentScreenState extends State<BankPaymentScreen>
 
         // Receipt Upload Section
         _buildEnhancedSectionCard(
-          title: 'Upload Receipt',
+          title: 'Upload QR',
           icon: Icons.receipt_long_outlined,
           theme: theme,
           child: _buildEnhancedReceiptUpload(theme),
@@ -901,7 +901,7 @@ class _BankPaymentScreenState extends State<BankPaymentScreen>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CustomText.body(
-          'Upload a clear photo of your bank transfer receipt',
+          'Upload a clear photo of your QR code',
           size: AppTextSize.sm,
           color: theme.colorScheme.onSurface.withAlpha(160),
         ),
@@ -940,7 +940,7 @@ class _BankPaymentScreenState extends State<BankPaymentScreen>
                   ),
                   const SizedBox(height: 12),
                   CustomText.body(
-                    'Tap to upload receipt',
+                    'Tap to upload QR Code',
                     fontWeight: AppFontWeight.bold.value,
                     color: theme.colorScheme.primary,
                   ),
