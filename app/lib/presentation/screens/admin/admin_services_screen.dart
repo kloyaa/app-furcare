@@ -20,8 +20,12 @@ class _AdminServicesScreenState extends State<AdminServicesScreen> {
   void initState() {
     super.initState();
     Future.microtask(() {
-      context.read<StaffAppointmentProvider>().getCustomerAppointments();
+      fetchCustomerAppointments();
     });
+  }
+
+  fetchCustomerAppointments() {
+    context.read<StaffAppointmentProvider>().getCustomerAppointments();
   }
 
   @override
