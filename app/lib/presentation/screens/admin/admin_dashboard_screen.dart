@@ -544,21 +544,4 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         return Icons.bookmark_outline;
     }
   }
-
-  Color _getStatusColor(String status) {
-    switch (status.toLowerCase()) {
-      case 'pending':
-        return Colors.orange;
-      case 'confirmed':
-      case 'approved':
-        return Colors.blue;
-      case 'completed':
-        return Colors.green;
-      case 'cancelled':
-      case 'rejected':
-        return Colors.red;
-      default:
-        return Colors.grey;
-    }
-  }
 }
