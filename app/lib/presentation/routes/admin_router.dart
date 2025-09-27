@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:furcare_app/presentation/screens/admin/admin_dashboard_screen.dart';
 import 'package:furcare_app/presentation/screens/admin/admin_reports_screen.dart';
+import 'package:furcare_app/presentation/screens/admin/admin_services_screen.dart';
 import 'package:furcare_app/presentation/screens/admin/admin_users_screen.dart';
 import 'package:furcare_app/presentation/screens/admin/admin_layout_screen.dart';
 import 'package:furcare_app/presentation/screens/admin/login.dart';
@@ -14,6 +15,7 @@ class AdminRoute {
   static const String activities = '/activity';
   static const String users = '/admin/users';
   static const String reports = '/admin/reports';
+  static const String appointments = '/admin/appointments';
 }
 
 final GoRouter adminRouter = GoRouter(
@@ -72,6 +74,18 @@ final GoRouter adminRouter = GoRouter(
             return AdminLayoutScreen(
               currentRoute: AdminRoute.activities,
               child: const Placeholder(), // Replace with your activities screen
+            );
+          },
+        ),
+
+        // Admin Appointments route (if you want to add layout here too)
+        GoRoute(
+          path: AdminRoute.appointments,
+          builder: (BuildContext context, GoRouterState state) {
+            return AdminLayoutScreen(
+              currentRoute: AdminRoute.appointments,
+              child:
+                  const AdminServicesScreen(), // Replace with your appointments screen
             );
           },
         ),

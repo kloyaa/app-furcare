@@ -3,7 +3,10 @@ import 'package:furcare_app/core/enums/text_enum.dart';
 import 'package:furcare_app/core/utils/currency.dart';
 import 'package:furcare_app/presentation/providers/admin/admin_application_provider.dart';
 import 'package:furcare_app/presentation/providers/admin/admin_provider.dart';
+import 'package:furcare_app/presentation/providers/admin/admin_statistics_provider.dart';
+import 'package:furcare_app/presentation/routes/admin_router.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class AdminDashboardScreen extends StatefulWidget {
@@ -17,7 +20,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   @override
   void initState() {
     super.initState();
-    // Schedule the data loading after the widget is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadDashboardData();
     });
@@ -113,8 +115,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
 
   Widget _buildStatsGrid(ThemeData theme) {
     return Consumer<AdminApplicationProvider>(
-      builder: (context, adminProvider, child) {
-        final applications = adminProvider.applications;
+      builder: (context, appProvider, child) {
+        final applications = appProvider.applications;
         return GridView.count(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
@@ -131,11 +133,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               color: Colors.pink,
               subtitle: 'All time',
             ),
-
             _buildStatCard(
               theme,
               title: 'Grooming Services',
-              value: adminProvider.groomingCount.toString(),
+              value: appProvider.groomingCount.toString(),
               icon: Icons.pets_outlined,
               color: Colors.orange,
               subtitle: 'Active bookings',
@@ -143,7 +144,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             _buildStatCard(
               theme,
               title: 'Boarding Services',
-              value: adminProvider.boardingCount.toString(),
+              value: appProvider.boardingCount.toString(),
               icon: Icons.hotel_outlined,
               color: Colors.purple,
               subtitle: 'Current guests',
@@ -151,7 +152,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             _buildStatCard(
               theme,
               title: 'Home Services',
-              value: adminProvider.homeServiceCount.toString(),
+              value: appProvider.homeServiceCount.toString(),
               icon: Icons.home_outlined,
               color: Colors.blue,
               subtitle: 'Current guests',
@@ -249,15 +250,16 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               ],
             ),
             const SizedBox(height: 24),
-            Consumer<AdminProvider>(
-              builder: (context, adminProvider, child) {
-                final statistics = adminProvider.statistics;
+            Consumer<AdminStatisticsProvider>(
+              builder: (context, statsProvider, child) {
+                final statistics = statsProvider.statistics;
 
                 if (statistics != null) {
                   return SizedBox(
                     height: 200,
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         CustomText.title(
                           CurrencyUtils.toPHP(statistics.yearlyTotals.revenue),
@@ -317,10 +319,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
 
   Widget _buildServiceDistribution(ThemeData theme) {
     return Consumer<AdminApplicationProvider>(
-      builder: (context, adminProvider, child) {
-        final groomingCount = adminProvider.groomingCount;
-        final boardingCount = adminProvider.boardingCount;
-        final homeServiceCount = adminProvider.homeServiceCount;
+      builder: (context, appProvider, child) {
+        final groomingCount = appProvider.groomingCount;
+        final boardingCount = appProvider.boardingCount;
+        final homeServiceCount = appProvider.homeServiceCount;
         final totalCount = groomingCount + boardingCount + homeServiceCount;
 
         return Card(
@@ -404,10 +406,30 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   }
 
   Widget _buildRecentActivity(ThemeData theme) {
-    return Consumer<AdminProvider>(
-      builder: (context, adminProvider, child) {
-        final applications = adminProvider.applications;
-        final recentApplications = applications.take(5).toList();
+    return Consumer<AdminApplicationProvider>(
+      builder: (context, appProvider, child) {
+        final applications = appProvider.applications;
+
+        final grooming = applications
+            .where((a) => a.applicationType.toLowerCase() == 'grooming')
+            .take(5)
+            .toList();
+        final boarding = applications
+            .where((a) => a.applicationType.toLowerCase() == 'boarding')
+            .take(5)
+            .toList();
+        final homeService = applications
+            .where(
+              (a) =>
+                  a.applicationType.toLowerCase() == 'home service' ||
+                  a.applicationType.toLowerCase() == 'homeservice',
+            )
+            .take(5)
+            .toList();
+
+        // Merge & sort by createdAt (descending)
+        final recentApplications = [...grooming, ...boarding, ...homeService]
+          ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
         return Card(
           child: Padding(
@@ -427,16 +449,14 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                         ),
                         const SizedBox(height: 4),
                         CustomText.body(
-                          'Latest customer applications',
+                          'Latest customer applications (per service)',
                           size: AppTextSize.sm,
                           color: theme.colorScheme.onSurface.withAlpha(160),
                         ),
                       ],
                     ),
                     TextButton(
-                      onPressed: () {
-                        // Navigate to full applications list
-                      },
+                      onPressed: () => context.go(AdminRoute.appointments),
                       child: CustomText.body(
                         'View All',
                         color: theme.colorScheme.primary,
@@ -482,37 +502,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                           fontWeight: AppFontWeight.bold.value,
                         ),
                         subtitle: CustomText.body(
-                          '${application.applicationType} • ${application.pet.name} (${application.pet.specie})',
+                          application.createdAt.split('T')[0],
                           size: AppTextSize.sm,
                           color: theme.colorScheme.onSurface.withAlpha(160),
-                        ),
-                        trailing: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            CustomText.body(
-                              CurrencyUtils.toPHP(application.totalPrice),
-                              fontWeight: AppFontWeight.bold.value,
-                              color: Colors.green.shade700,
-                            ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 2,
-                              ),
-                              decoration: BoxDecoration(
-                                color: _getStatusColor(
-                                  application.status,
-                                ).withAlpha(20),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: CustomText.body(
-                                application.status,
-                                size: AppTextSize.xs,
-                                color: _getStatusColor(application.status),
-                              ),
-                            ),
-                          ],
                         ),
                       ),
                     );

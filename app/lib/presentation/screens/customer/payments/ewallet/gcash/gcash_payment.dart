@@ -773,7 +773,7 @@ class _GCashPaymentScreenState extends State<GCashPaymentScreen>
 
         // Receipt Upload Section
         _buildEnhancedSectionCard(
-          title: 'Upload Receipt',
+          title: 'Upload QR',
           icon: Icons.receipt_long_outlined,
           theme: theme,
           child: _buildEnhancedReceiptUpload(theme),
@@ -957,7 +957,7 @@ class _GCashPaymentScreenState extends State<GCashPaymentScreen>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CustomText.body(
-          'Upload a clear photo of your GCash payment receipt',
+          'Upload a clear photo of your QR code',
           size: AppTextSize.sm,
           color: theme.colorScheme.onSurface.withAlpha(160),
         ),
@@ -996,7 +996,7 @@ class _GCashPaymentScreenState extends State<GCashPaymentScreen>
                   ),
                   const SizedBox(height: 12),
                   CustomText.body(
-                    'Tap to upload receipt',
+                    'Tap to upload QR Code',
                     fontWeight: AppFontWeight.bold.value,
                     color: theme.colorScheme.primary,
                   ),
