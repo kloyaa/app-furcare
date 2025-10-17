@@ -12,7 +12,7 @@ import {
   validateCreatePayment,
   validateProcessPayment,
   validateUpdatePaymentStatus,
-} from '../../_core/validators/payment.validator';
+} from '../../_core/validators/user-payment.validator';
 
 import { Payment } from '../../schema/payment.schema';
 import { BoardingApplication } from '../../schema/application/boarding-application.schema';
