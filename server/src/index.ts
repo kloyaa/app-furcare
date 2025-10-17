@@ -28,6 +28,7 @@ import groomingRoute from './routes/application/grooming';
 import boardingRoute from './routes/application/boarding';
 
 import paymentRoute from './routes/payment.route';
+import uploadPaymentRoute from './routes/payment-uploads.route';
 
 import staffApplicationRoute from './routes/staff/application.route';
 import adminApplicationRoute from './routes/admin/application.route';
@@ -103,6 +104,7 @@ async function runApp(): Promise<void> {
   app.use('/api', groomingRoute);
   app.use('/api', boardingRoute);
   app.use('/api', paymentRoute);
+  app.use('/api', uploadPaymentRoute);
 
   // Staff routes
   app.use('/api', staffApplicationRoute);

@@ -20,7 +20,7 @@ export const fileFilter = (req: any, file: any, callback: any) => {
   } else callback(null, false);
 };
 
-export const storage = multer.diskStorage({});
+export const storage = multer.memoryStorage();
 
 export const uploadImage = async (files: any, scope: string = 'temp') => {
   const cloudOptions = {

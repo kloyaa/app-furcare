@@ -1,4 +1,3 @@
-// _core/validators/payment.validator.ts
 import Joi from 'joi';
 import { CustomJoiHelpers } from '../utils/joi/joi.utils';
 import {
@@ -10,6 +9,11 @@ import {
 
 export const validateCreatePayment = (body: any) => {
   const schema = Joi.object({
+    accountNumber: Joi.string()
+      .trim()
+      .min(1)
+      .max(100)
+      .required(),
     application: Joi.string()
       .trim()
       .required()

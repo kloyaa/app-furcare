@@ -263,6 +263,8 @@ export const getBoardingApplications = async (
         status,
       };
     }
+
+    console.log('query', query);
     const boardingApplications = await BoardingApplication.find(query)
       .sort({ createdAt: -1 })
       .populate('pet')

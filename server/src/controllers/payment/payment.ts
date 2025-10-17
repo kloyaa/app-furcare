@@ -12,12 +12,13 @@ import {
   validateCreatePayment,
   validateProcessPayment,
   validateUpdatePaymentStatus,
-} from '../../_core/validators/Payment.validator';
+} from '../../_core/validators/payment.validator';
 
 import { Payment } from '../../schema/payment.schema';
 import { BoardingApplication } from '../../schema/application/boarding-application.schema';
 import { GroomingApplication } from '../../schema/application/grooming-application.schema';
 import { HomeServiceApplication } from '../../schema/application/home-service-application.schema';
+import { generateTransactionRef } from '../../_core/utils/utils';
 
 export const createPayment = async (
   req: TRequest,
@@ -39,6 +40,7 @@ export const createPayment = async (
       paymentMethod,
       paymentType,
       notes,
+      accountNumber
     } = req.body;
 
     // Get the correct model
@@ -75,6 +77,8 @@ export const createPayment = async (
       paymentType: paymentType || 'full_payment',
       notes,
       paymentStatus: 'pending',
+      accountNumber,
+      transactionReference: generateTransactionRef(applicationModel.slice(0, 3).toUpperCase()),
     });
 
     emitter.emit(EventName.ACTIVITY, {

@@ -24,6 +24,15 @@ const paymentSchema = new Schema<IPayment>(
       required: true,
       index: true,
     },
+    accountNumber: {
+      type: String,
+      index: true,
+      required: true,
+    },
+    transactionReference: {
+      type: String,
+      required: true,
+    },
     amount: {
       type: Number,
       required: true,
@@ -78,5 +87,6 @@ const paymentSchema = new Schema<IPayment>(
 paymentSchema.index({ user: 1, paymentStatus: 1 });
 paymentSchema.index({ application: 1, paymentStatus: 1 });
 paymentSchema.index({ createdAt: -1 });
+paymentSchema.index({ accountNumber: 1 });
 
 export const Payment = model<IPayment>('Payment', paymentSchema);

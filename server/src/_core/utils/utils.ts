@@ -51,3 +51,19 @@ export const generateRandomNumber = (length: number): string => {
 
   return Array.from({ length }, () => Math.floor(Math.random() * 10)).join('');
 };
+
+export const generateTransactionRef = (prefix: string = ''): string => {
+  const now = new Date();
+
+  // Format date as YYYYMMDD
+  const datePart = now
+    .toISOString()
+    .slice(0, 10)
+    .replace(/-/g, '');
+
+  // Generate 8-char random alphanumeric code
+  const randomPart = Math.random().toString(36).substring(2, 10).toUpperCase();
+
+  // Combine
+  return `${prefix}-${datePart}-${randomPart}`;
+};

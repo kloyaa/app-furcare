@@ -224,6 +224,8 @@ export interface IPayment extends Document {
   application: Types.ObjectId;
   applicationModel: string;
   user: Types.ObjectId;
+  accountNumber: string;
+  transactionReference: string;
   amount: number;
   paymentMethod: string;
   paymentStatus: string;

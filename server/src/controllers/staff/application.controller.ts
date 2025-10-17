@@ -29,6 +29,7 @@ import { IActivity } from '../../_core/interfaces/activity.interface';
 import { BoardingApplication } from '../../schema/application/boarding-application.schema';
 import { GroomingApplication } from '../../schema/application/grooming-application.schema';
 import { HomeServiceApplication } from '../../schema/application/home-service-application.schema';
+import { PaymentUpload } from '../../schema/payment-upload.schema';
 /**
  * Retrieves all applications based on status with formatted data for staff review
  *
@@ -121,66 +122,72 @@ export const getAllApplicationsByStatus = async (
     );
 
     // Format applications with consistent structure
-    const formatApplications = (applications: any[]) => {
-      return applications.map(app => {
-        // Get user profile from the map
-        const userProfile = profileMap.get(app.user?._id?.toString());
+    const formatApplications = async (applications: any[]) => {
+      const formatted = await Promise.all(
+        applications.map(async (app) => {
+          const userProfile = profileMap.get(app.user?._id?.toString());
+          const paymentUploads = await PaymentUpload.find({ application: app._id }).sort({ createdAt: -1 }).lean().exec();
 
-        return {
-          _id: app._id,
-          user: app.user?._id || null,
-          applicationType: app.applicationType,
-          userInfo: {
-            username: app.user?.username || 'N/A',
-            email: app.user?.email || 'N/A',
-            fullName: userProfile?.fullName || 'N/A',
-            address: userProfile?.address || 'N/A',
-            phoneNumber: userProfile?.contact?.phoneNumber || 'N/A',
-            facebookDisplayName:
-              userProfile?.contact?.facebookDisplayName || 'N/A',
-          },
-          petInfo: {
-            name: app.pet?.name || 'N/A',
-            breed: app.pet?.specie || 'N/A',
-            gender: app.pet?.gender || 'N/A',
-          },
-          totalPrice: app.totalPrice || 0,
-          paidAmount: app.paidAmount || 0,
-          paymentStatus: app.paymentStatus || 'unpaid',
-          submittedAt: formatRelativeTime(app.createdAt),
-          branchName: app.branch?.name || 'N/A',
-          status: app.status || 'pending',
-        };
-      });
-    };
+          return {
+            _id: app._id,
+            user: app.user?._id || null,
+            applicationType: app.applicationType,
+            userInfo: {
+              username: app.user?.username || 'N/A',
+              email: app.user?.email || 'N/A',
+              fullName: userProfile?.fullName || 'N/A',
+              address: userProfile?.address || 'N/A',
+              phoneNumber: userProfile?.contact?.phoneNumber || 'N/A',
+              facebookDisplayName:
+                userProfile?.contact?.facebookDisplayName || 'N/A',
+            },
+            petInfo: {
+              name: app.pet?.name || 'N/A',
+              breed: app.pet?.specie || 'N/A',
+              gender: app.pet?.gender || 'N/A',
+            },
+            totalPrice: app.totalPrice || 0,
+            paidAmount: app.paidAmount || 0,
+            paymentStatus: app.paymentStatus || 'unpaid',
+            submittedAt: formatRelativeTime(app.createdAt),
+            branchName: app.branch?.name || 'N/A',
+            status: app.status || 'pending',
+            paymentUploads, // ✅ Include the uploads if you want
+          };
+        })
+      );
 
-    // Format and sort all applications by creation date
-    const formattedApplications = formatApplications(applications).sort(
-      (a, b) => {
+      console.log(formatted)
+      // ✅ Sort after promises resolved
+      return formatted.sort((a, b) => {
         const aApp = applications.find(
-          app => app._id.toString() === a._id.toString()
+          (app) => app._id.toString() === a._id.toString()
         );
         const bApp = applications.find(
-          app => app._id.toString() === b._id.toString()
+          (app) => app._id.toString() === b._id.toString()
         );
 
         const aDate = aApp?.createdAt ? new Date(aApp.createdAt).getTime() : 0;
         const bDate = bApp?.createdAt ? new Date(bApp.createdAt).getTime() : 0;
 
         return bDate - aDate; // Most recent first
-      }
-    );
+      });
+    }
 
-    // Count by type
     const typeCount = {
-      grooming: applications.filter(app => app.applicationType === 'grooming')
+      grooming: applications
+        .filter(app => app.applicationType === 'grooming')
         .length,
-      boarding: applications.filter(app => app.applicationType === 'boarding')
+      boarding: applications
+        .filter(app => app.applicationType === 'boarding')
         .length,
-      homeService: applications.filter(
-        app => app.applicationType === 'homeService'
-      ).length,
+      homeService: applications
+        .filter(
+          app => app.applicationType === 'homeService'
+        ).length,
     };
+
+    const formattedApplications = await formatApplications(applications);
 
     return res.status(200).json({
       applications: formattedApplications,
