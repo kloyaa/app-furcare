@@ -37,14 +37,6 @@ class PaymentOption {
 // Payment type options
 final List<PaymentOption> paymentTypes = [
   PaymentOption(
-    id: '30_payment',
-    title: '30% Payment',
-    type: PaymentType.partialPayment,
-    percentage: 0.3,
-    description: 'Pay 30% now, remaining later',
-    icon: Icons.payment_outlined,
-  ),
-  PaymentOption(
     id: '50_payment',
     title: '50% Payment',
     type: PaymentType.partialPayment,

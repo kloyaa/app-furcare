@@ -263,6 +263,7 @@ class AppointmentRemoteDatasourceImpl implements AppointmentRemoteDatasource {
       );
 
       if (response.statusCode == 200) {
+        print(CustomerAppointments.fromJson(response.data));
         return CustomerAppointments.fromJson(response.data);
       } else {
         throw ServerException(

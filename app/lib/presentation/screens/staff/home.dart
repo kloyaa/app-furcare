@@ -30,6 +30,7 @@ class _StaffHomeScreenState extends State<StaffHomeScreen>
 
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
+  final Map<String, bool> _paymentsExpanded = {};
 
   void _initializeAnimations() {
     _fadeAnimationController = AnimationController(
@@ -970,6 +971,103 @@ class _StaffHomeScreenState extends State<StaffHomeScreen>
               const SizedBox(height: 24),
 
               // Payment information with progress indicator
+              if (appointment.paymentUploads.isNotEmpty) ...[
+                const SizedBox(height: 16),
+                CustomText.body(
+                  'Payment Proofs',
+                  size: AppTextSize.sm,
+                  fontWeight: AppFontWeight.bold.value,
+                  color: theme.colorScheme.onSurface.withAlpha(160),
+                ),
+                const SizedBox(height: 8),
+                SizedBox(
+                  height: 80,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: appointment.paymentUploads.length,
+                    separatorBuilder: (_, __) => const SizedBox(width: 12),
+                    itemBuilder: (context, index) {
+                      final proof = appointment.paymentUploads[index];
+                      return GestureDetector(
+                        onTap: () async {
+                          final url = proof.url;
+                          if (await canLaunchUrl(Uri.parse(url))) {
+                            await launchUrl(Uri.parse(url));
+                          }
+                        },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: GestureDetector(
+                            onTap: () => _showImagePreview(proof.url),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: Image.network(
+                                proof.url,
+                                width: 120,
+                                height: 60,
+                                fit: BoxFit.cover,
+                                errorBuilder: (_, __, ___) => Container(
+                                  width: 80,
+                                  height: 120,
+                                  color: Colors.grey.withAlpha(32),
+                                  child: const Icon(
+                                    Icons.broken_image_outlined,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+              // Add after payment proof section in _buildAppointmentCard
+              if (appointment.payments.isNotEmpty) ...[
+                const SizedBox(height: 16),
+                CustomText.body(
+                  'Payment Records',
+                  size: AppTextSize.sm,
+                  fontWeight: AppFontWeight.bold.value,
+                  color: theme.colorScheme.onSurface.withAlpha(160),
+                ),
+                const SizedBox(height: 8),
+                Container(
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.surfaceContainerHighest.withAlpha(
+                      64,
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: theme.colorScheme.outline.withAlpha(32),
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      ..._buildPaymentList(appointment, theme),
+                      if (appointment.payments.length > 3)
+                        TextButton(
+                          onPressed: () {
+                            setState(() {
+                              _paymentsExpanded[appointment.id] =
+                                  !(_paymentsExpanded[appointment.id] ?? false);
+                            });
+                          },
+                          child: CustomText.body(
+                            _paymentsExpanded[appointment.id] == true
+                                ? 'Show Less'
+                                : 'Show All',
+                            size: AppTextSize.xs,
+                            color: theme.colorScheme.primary,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ],
+              const SizedBox(height: 20),
+
               _buildMinimalPaymentSection(
                 appointment,
                 serviceColor,
@@ -977,9 +1075,6 @@ class _StaffHomeScreenState extends State<StaffHomeScreen>
                 balance,
                 isFullyPaid,
               ),
-
-              const SizedBox(height: 20),
-
               // Clean action button
               SizedBox(
                 width: double.infinity,
@@ -1003,6 +1098,113 @@ class _StaffHomeScreenState extends State<StaffHomeScreen>
                     ),
                     backgroundColor: serviceColor.withAlpha(8),
                   ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  List<Widget> _buildPaymentList(
+    CustomerAppointment appointment,
+    ThemeData theme,
+  ) {
+    final isExpanded = _paymentsExpanded[appointment.id] ?? false;
+    final paymentsToShow = isExpanded
+        ? appointment.payments
+        : appointment.payments.take(3).toList();
+
+    return paymentsToShow.map((payment) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: theme.colorScheme.outline.withAlpha(32),
+              width: 1,
+            ),
+          ),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CustomText.body(
+                    payment.transactionReference,
+                    size: AppTextSize.xs,
+                    fontWeight: AppFontWeight.bold.value,
+                  ),
+                  const SizedBox(height: 2),
+                  CustomText.body(
+                    payment.accountNumber,
+                    size: AppTextSize.xs,
+                    color: theme.colorScheme.onSurface.withAlpha(160),
+                  ),
+                  const SizedBox(height: 2),
+                  CustomText.body(
+                    CurrencyUtils.toPHP(payment.amount.toDouble()),
+                    size: AppTextSize.sm,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green,
+                  ),
+                ],
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                CustomText.body(
+                  payment.paymentMethod.toUpperCase(),
+                  size: AppTextSize.xs,
+                  fontWeight: AppFontWeight.semibold.value,
+                ),
+                const SizedBox(height: 2),
+                CustomText.body(
+                  payment.createdAt.split('T')[0],
+                  size: AppTextSize.xs,
+                  color: theme.colorScheme.onSurface.withAlpha(160),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    }).toList();
+  }
+
+  void _showImagePreview(String imageUrl) {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        insetPadding: const EdgeInsets.all(16),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        child: Container(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height,
+          ),
+          child: Stack(
+            children: [
+              Center(
+                child: Image.network(
+                  imageUrl,
+                  fit: BoxFit.fill,
+                  height: double.maxFinite,
+                  errorBuilder: (_, __, ___) => Container(
+                    color: Theme.of(context).colorScheme.outline.withAlpha(32),
+                    child: const Icon(Icons.broken_image_outlined, size: 48),
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 0,
+                right: 0,
+                child: IconButton(
+                  icon: const Icon(Icons.close_outlined, size: 28),
+                  onPressed: () => Navigator.pop(context),
                 ),
               ),
             ],
@@ -1139,22 +1341,24 @@ class _StaffHomeScreenState extends State<StaffHomeScreen>
             ),
           ],
         ),
+        const SizedBox(height: 12),
 
         if (isFullyPaid) ...[
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Icon(Icons.check_circle_outline, size: 16, color: Colors.green),
+              Icon(Icons.check_circle_outline, size: 24, color: Colors.green),
               const SizedBox(width: 4),
               CustomText.body(
-                'Fully Paid',
-                size: AppTextSize.xs,
+                'FULLY PAID',
+                size: AppTextSize.md,
                 color: Colors.green,
-                fontWeight: AppFontWeight.semibold.value,
+                fontWeight: AppFontWeight.black.value,
               ),
             ],
           ),
+          const SizedBox(height: 24),
         ],
       ],
     );
@@ -1583,6 +1787,80 @@ class _StaffHomeScreenState extends State<StaffHomeScreen>
                   ),
                 ]),
 
+                if (appointment.paymentUploads.isNotEmpty) ...[
+                  const SizedBox(height: 16),
+                  _buildPreviewSection('Payment Proofs', [
+                    SizedBox(
+                      height: 120,
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: appointment.paymentUploads.length,
+                        separatorBuilder: (_, __) => const SizedBox(width: 12),
+                        itemBuilder: (context, index) {
+                          final proof = appointment.paymentUploads[index];
+                          return GestureDetector(
+                            onTap: () async {
+                              final url = proof.url;
+                              if (await canLaunchUrl(Uri.parse(url))) {
+                                await launchUrl(Uri.parse(url));
+                              }
+                            },
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: GestureDetector(
+                                onTap: () => _showImagePreview(proof.url),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Image.network(
+                                    proof.url,
+                                    width: 120,
+                                    height: 60,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (_, __, ___) => Container(
+                                      width: 80,
+                                      height: 80,
+                                      color: Colors.grey.withAlpha(32),
+                                      child: const Icon(
+                                        Icons.broken_image_outlined,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ]),
+                ],
+                if (appointment.payments.isNotEmpty) ...[
+                  const SizedBox(height: 16),
+                  _buildPreviewSection('Payment Records', [
+                    Column(
+                      children: [
+                        ..._buildPaymentList(appointment, Theme.of(context)),
+                        if (appointment.payments.length > 3)
+                          TextButton(
+                            onPressed: () {
+                              setState(() {
+                                _paymentsExpanded[appointment.id] =
+                                    !(_paymentsExpanded[appointment.id] ??
+                                        false);
+                              });
+                            },
+                            child: CustomText.body(
+                              _paymentsExpanded[appointment.id] == true
+                                  ? 'Show Less'
+                                  : 'Show All',
+                              size: AppTextSize.xs,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ]),
+                ],
                 const SizedBox(height: 24),
 
                 SizedBox(

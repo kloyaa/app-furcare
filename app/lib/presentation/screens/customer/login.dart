@@ -63,6 +63,11 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
                 isError: true,
               );
             });
+
+            // delayed execution to clear error after showing snackbar
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              authProvider.clearError();
+            });
           }
 
           // Navigate to home if authenticated

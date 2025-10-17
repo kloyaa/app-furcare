@@ -66,6 +66,8 @@ class CustomerAppointment extends Equatable {
   final String submittedAt;
   final String branchName;
   final String status;
+  final List<PaymentUpload> paymentUploads;
+  final List<Payment> payments; // <-- new property
 
   const CustomerAppointment({
     required this.id,
@@ -79,6 +81,8 @@ class CustomerAppointment extends Equatable {
     required this.submittedAt,
     required this.branchName,
     required this.status,
+    this.paymentUploads = const [],
+    this.payments = const [],
   });
 
   factory CustomerAppointment.fromJson(Map<String, dynamic> json) {
@@ -94,6 +98,16 @@ class CustomerAppointment extends Equatable {
       submittedAt: json['submittedAt'] as String? ?? '',
       branchName: json['branchName'] as String? ?? '',
       status: json['status'] as String? ?? '',
+      paymentUploads:
+          (json['paymentUploads'] as List<dynamic>?)
+              ?.map((e) => PaymentUpload.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+      payments:
+          (json['payments'] as List<dynamic>?)
+              ?.map((e) => Payment.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
     );
   }
 
@@ -110,6 +124,8 @@ class CustomerAppointment extends Equatable {
       'submittedAt': submittedAt,
       'branchName': branchName,
       'status': status,
+      'paymentUploads': paymentUploads.map((e) => e.toJson()).toList(),
+      'payments': payments.map((e) => e.toJson()).toList(),
     };
   }
 
@@ -125,6 +141,8 @@ class CustomerAppointment extends Equatable {
     String? submittedAt,
     String? branchName,
     String? status,
+    List<PaymentUpload>? paymentUploads,
+    List<Payment>? payments,
   }) {
     return CustomerAppointment(
       id: id ?? this.id,
@@ -138,6 +156,8 @@ class CustomerAppointment extends Equatable {
       submittedAt: submittedAt ?? this.submittedAt,
       branchName: branchName ?? this.branchName,
       status: status ?? this.status,
+      paymentUploads: paymentUploads ?? this.paymentUploads,
+      payments: payments ?? this.payments,
     );
   }
 
@@ -154,6 +174,148 @@ class CustomerAppointment extends Equatable {
     submittedAt,
     branchName,
     status,
+    paymentUploads,
+    payments,
+  ];
+}
+
+class Payment extends Equatable {
+  final String id;
+  final String application;
+  final String applicationModel;
+  final String user;
+  final String accountNumber;
+  final String transactionReference;
+  final int amount;
+  final String paymentMethod;
+  final String paymentStatus;
+  final String? paymentGatewayResponse;
+  final String paymentType;
+  final String notes;
+  final String createdAt;
+  final String updatedAt;
+
+  const Payment({
+    required this.id,
+    required this.application,
+    required this.applicationModel,
+    required this.user,
+    required this.accountNumber,
+    required this.transactionReference,
+    required this.amount,
+    required this.paymentMethod,
+    required this.paymentStatus,
+    this.paymentGatewayResponse,
+    required this.paymentType,
+    required this.notes,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory Payment.fromJson(Map<String, dynamic> json) {
+    return Payment(
+      id: json['_id'] as String? ?? '',
+      application: json['application'] as String? ?? '',
+      applicationModel: json['applicationModel'] as String? ?? '',
+      user: json['user'] as String? ?? '',
+      accountNumber: json['accountNumber'] as String? ?? '',
+      transactionReference: json['transactionReference'] as String? ?? '',
+      amount: json['amount'] as int? ?? 0,
+      paymentMethod: json['paymentMethod'] as String? ?? '',
+      paymentStatus: json['paymentStatus'] as String? ?? '',
+      paymentGatewayResponse: json['paymentGatewayResponse'] as String?,
+      paymentType: json['paymentType'] as String? ?? '',
+      notes: json['notes'] as String? ?? '',
+      createdAt: json['createdAt'] as String? ?? '',
+      updatedAt: json['updatedAt'] as String? ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'application': application,
+      'applicationModel': applicationModel,
+      'user': user,
+      'accountNumber': accountNumber,
+      'transactionReference': transactionReference,
+      'amount': amount,
+      'paymentMethod': paymentMethod,
+      'paymentStatus': paymentStatus,
+      'paymentGatewayResponse': paymentGatewayResponse,
+      'paymentType': paymentType,
+      'notes': notes,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
+    };
+  }
+
+  @override
+  List<Object?> get props => [
+    id,
+    application,
+    applicationModel,
+    user,
+    accountNumber,
+    transactionReference,
+    amount,
+    paymentMethod,
+    paymentStatus,
+    paymentGatewayResponse,
+    paymentType,
+    notes,
+    createdAt,
+    updatedAt,
+  ];
+}
+
+class PaymentUpload extends Equatable {
+  final String id;
+  final String application;
+  final String applicationModel;
+  final String url;
+  final String createdAt;
+  final String updatedAt;
+
+  const PaymentUpload({
+    required this.id,
+    required this.application,
+    required this.applicationModel,
+    required this.url,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory PaymentUpload.fromJson(Map<String, dynamic> json) {
+    return PaymentUpload(
+      id: json['_id'] as String? ?? '',
+      application: json['application'] as String? ?? '',
+      applicationModel: json['applicationModel'] as String? ?? '',
+      url: json['url'] as String? ?? '',
+      createdAt: json['createdAt'] as String? ?? '',
+      updatedAt: json['updatedAt'] as String? ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'application': application,
+      'applicationModel': applicationModel,
+      'url': url,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
+    };
+  }
+
+  @override
+  List<Object?> get props => [
+    id,
+    application,
+    applicationModel,
+    url,
+    createdAt,
+    updatedAt,
   ];
 }
 

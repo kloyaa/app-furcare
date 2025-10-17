@@ -30,6 +30,7 @@ import { BoardingApplication } from '../../schema/application/boarding-applicati
 import { GroomingApplication } from '../../schema/application/grooming-application.schema';
 import { HomeServiceApplication } from '../../schema/application/home-service-application.schema';
 import { PaymentUpload } from '../../schema/payment-upload.schema';
+import { Payment } from '../../schema/payment.schema';
 /**
  * Retrieves all applications based on status with formatted data for staff review
  *
@@ -127,7 +128,7 @@ export const getAllApplicationsByStatus = async (
         applications.map(async (app) => {
           const userProfile = profileMap.get(app.user?._id?.toString());
           const paymentUploads = await PaymentUpload.find({ application: app._id }).sort({ createdAt: -1 }).lean().exec();
-
+          const payments = await Payment.find({ application: app._id }).sort({ createdAt: -1 }).lean().exec();
           return {
             _id: app._id,
             user: app.user?._id || null,
@@ -153,6 +154,7 @@ export const getAllApplicationsByStatus = async (
             branchName: app.branch?.name || 'N/A',
             status: app.status || 'pending',
             paymentUploads, // ✅ Include the uploads if you want
+            payments, // ✅ Include the payments if you want
           };
         })
       );
