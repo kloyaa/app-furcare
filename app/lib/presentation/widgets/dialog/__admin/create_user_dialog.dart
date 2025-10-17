@@ -139,7 +139,7 @@ class _CreateUserDialogState extends State<CreateUserDialog> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
-                    "Create New User",
+                    "Create Staff Account",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   IconButton(
