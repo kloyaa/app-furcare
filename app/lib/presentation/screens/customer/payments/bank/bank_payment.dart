@@ -63,9 +63,14 @@ class BankPaymentScreen extends StatefulWidget {
 
 class _BankPaymentScreenState extends State<BankPaymentScreen>
     with TickerProviderStateMixin {
-  final TextEditingController _referenceController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
+
+  final TextEditingController _referenceController = TextEditingController();
   final FocusNode _referenceFocusNode = FocusNode();
+
+  final TextEditingController _accountNumberController =
+      TextEditingController();
+  final FocusNode _accountNumberFocusNode = FocusNode();
 
   PaymentOption? selectedPayment;
   File? receiptImage;
@@ -197,12 +202,27 @@ class _BankPaymentScreenState extends State<BankPaymentScreen>
         paymentSettingProvider.setReceipt(receiptImage!);
       }
 
+      await paymentProvider.uploadPaymentReceipts(
+        application: paymentSettingProvider.application,
+        applicationModel: paymentSettingProvider.applicationType.value,
+        media: [receiptImage!],
+      );
+
+      if (paymentProvider.uploadMessage == null) {
+        throw Exception('Failed to upload receipt');
+      }
+
+      if (paymentProvider.uploadMessage == null) {
+        throw Exception('Failed to upload receipt');
+      }
+
       final paymentRequest = PaymentRequest(
         application: paymentSettingProvider.application,
         applicationModel: paymentSettingProvider.applicationType,
         amount: paymentSettingProvider.amountPaid.toDouble(),
         paymentMethod: paymentSettingProvider.paymentMethod,
         paymentType: paymentSettingProvider.paymentType,
+        accountNumber: paymentProvider.uploadMessage!,
       );
 
       await paymentProvider.createPayment(paymentRequest);
@@ -854,6 +874,50 @@ class _BankPaymentScreenState extends State<BankPaymentScreen>
                       icon: Icon(Icons.clear),
                       onPressed: () {
                         _referenceController.clear();
+                        setState(() {});
+                      },
+                    )
+                  : null,
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.all(16),
+              errorStyle: TextStyle(height: 0),
+            ),
+            keyboardType: TextInputType.text,
+            textCapitalization: TextCapitalization.characters,
+          ),
+        ),
+        SizedBox(height: 16),
+        AnimatedContainer(
+          duration: Duration(milliseconds: 200),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: hasError
+                  ? theme.colorScheme.error
+                  : _referenceFocusNode.hasFocus
+                  ? theme.colorScheme.primary
+                  : theme.colorScheme.outline.withAlpha(64),
+              width: 2,
+            ),
+          ),
+          child: TextFormField(
+            controller: _accountNumberController,
+            focusNode: _accountNumberFocusNode,
+            decoration: InputDecoration(
+              hintText: 'Account number',
+              prefixIcon: Icon(
+                Icons.credit_card_outlined,
+                color: hasError
+                    ? theme.colorScheme.error
+                    : _accountNumberFocusNode.hasFocus
+                    ? theme.colorScheme.primary
+                    : null,
+              ),
+              suffixIcon: _accountNumberController.text.isNotEmpty
+                  ? IconButton(
+                      icon: Icon(Icons.clear),
+                      onPressed: () {
+                        _accountNumberController.clear();
                         setState(() {});
                       },
                     )

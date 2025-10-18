@@ -76,7 +76,6 @@ async function runApp(): Promise<void> {
   app.use(express.json());
   app.use(setDefaultDateTime);
   app.use(requestLoggerMiddleware);
-  app.use(multer({ storage, fileFilter }).array('media'));
 
   app.use(allowApiAccessMiddleware);
   app.use(logNetworkRequests);
@@ -85,7 +84,9 @@ async function runApp(): Promise<void> {
 
   // delay route
   app.use(async (req, res, next) => {
-    await delay(1_000);
+    const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+    const randomDelay = Math.floor(Math.random() * 5000) + 1000;
+    await delay(randomDelay);
     next();
   });
 

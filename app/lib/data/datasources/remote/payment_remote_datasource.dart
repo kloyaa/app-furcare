@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:furcare_app/core/constants/api_constants.dart';
 import 'package:furcare_app/core/errors/exceptions.dart';
@@ -17,6 +19,12 @@ abstract class PaymentRemoteDatasource {
     String paymentId,
     PaymentProcessRequest request,
   );
+  // ✅ NEW: Upload payment receipts
+  Future<DefaultResponse> uploadPaymentReceipts({
+    required String application,
+    required String applicationModel,
+    required List<File> media,
+  });
   Future<Payments> getPayments({
     int? page,
     int? limit,
@@ -61,6 +69,57 @@ class PaymentRemoteDatasourceImpl implements PaymentRemoteDatasource {
       throw ServerException(
         message: 'An error occurred during payment creation',
       );
+    }
+  }
+
+  @override
+  Future<DefaultResponse> uploadPaymentReceipts({
+    required String application,
+    required String applicationModel,
+    required List<File> media,
+  }) async {
+    try {
+      final headers = await _authHeaderProvider.getHeaders();
+      final formData = FormData();
+
+      formData.fields.addAll([
+        MapEntry('application', application),
+        MapEntry('applicationModel', applicationModel),
+      ]);
+
+      const uploadField = 'media'; // must match backend
+
+      for (final file in media) {
+        formData.files.add(
+          MapEntry(
+            uploadField,
+            await MultipartFile.fromFile(
+              file.path,
+              filename: file.path.split('/').last,
+              contentType: DioMediaType('image', 'jpeg'), // <— explicit mime
+            ),
+          ),
+        );
+      }
+
+      final response = await _networkService.post(
+        ApiConstants.uploadPaymentReceipts,
+        data: formData,
+        options: Options(headers: headers),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return DefaultResponse.fromJson(response.data);
+      } else {
+        throw ServerException(
+          message: response.data?['message'] ?? 'Failed to upload receipts',
+          code: response.data?['code'],
+        );
+      }
+    } catch (e) {
+      print('❌ Upload error: $e');
+      if (e is ServerException || e is NetworkException) rethrow;
+      throw ServerException(message: 'Error uploading receipts');
     }
   }
 

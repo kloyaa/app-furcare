@@ -21,6 +21,8 @@ enum PaymentState {
   fetched,
   updated,
   processed,
+  uploading,
+  uploaded,
 }
 
 class PaymentProvider with ChangeNotifier {
@@ -35,6 +37,8 @@ class PaymentProvider with ChangeNotifier {
   PaymentState _fetchPaymentsState = PaymentState.initial;
   PaymentState _fetchPaymentByIdState = PaymentState.initial;
   PaymentState _fetchStatisticsState = PaymentState.initial;
+  PaymentState _uploadState = PaymentState.initial;
+  String? _uploadMessage;
 
   Payments? _payments;
   Payment? _selectedPayment;
@@ -54,6 +58,9 @@ class PaymentProvider with ChangeNotifier {
       _fetchPaymentByIdState == PaymentState.loading;
   bool get isFetchingStatistics =>
       _fetchStatisticsState == PaymentState.loading;
+
+  bool get isUploading => _uploadState == PaymentState.uploading;
+  String? get uploadMessage => _uploadMessage;
 
   Payments? get payments => _payments;
   Payment? get selectedPayment => _selectedPayment;
@@ -78,6 +85,34 @@ class PaymentProvider with ChangeNotifier {
         _setCreatePaymentState(PaymentState.created);
       },
     );
+  }
+
+  Future<void> uploadPaymentReceipts({
+    required String application,
+    required String applicationModel,
+    required List<File> media,
+  }) async {
+    clearError();
+    _uploadState = PaymentState.uploading;
+    notifyListeners();
+
+    final result = await _paymentRepository.uploadPaymentReceipts(
+      application: application,
+      applicationModel: applicationModel,
+      media: media,
+    );
+
+    result.fold(
+      (failure) {
+        _uploadState = PaymentState.error;
+        _handleFailure(failure);
+      },
+      (response) {
+        _uploadMessage = response.message;
+        _uploadState = PaymentState.uploaded;
+      },
+    );
+    notifyListeners();
   }
 
   // Process Payment

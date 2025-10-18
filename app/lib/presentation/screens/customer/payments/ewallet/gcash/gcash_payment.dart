@@ -206,12 +206,19 @@ class _GCashPaymentScreenState extends State<GCashPaymentScreen>
         paymentSettingProvider.setReceipt(receiptImage!);
       }
 
+      await paymentProvider.uploadPaymentReceipts(
+        application: paymentSettingProvider.application,
+        applicationModel: paymentSettingProvider.applicationType.value,
+        media: [receiptImage!],
+      );
+
       final paymentRequest = PaymentRequest(
         application: paymentSettingProvider.application,
         applicationModel: paymentSettingProvider.applicationType,
         amount: paymentSettingProvider.amountPaid.toDouble(),
         paymentMethod: paymentSettingProvider.paymentMethod,
         paymentType: paymentSettingProvider.paymentType,
+        accountNumber: _phoneController.text.trim(),
       );
 
       await paymentProvider.createPayment(paymentRequest);

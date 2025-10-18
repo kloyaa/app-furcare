@@ -6,6 +6,9 @@ import { uploadToS3 } from '../../_core/services/aws/aws.service';
 import { uploadPaymentValidator } from '../../_core/validators/payment-uploads.validator';
 
 export const uploadPaymentReceipts = async (req: Request, res: Response) => {
+    console.log('Files:', req.files);
+    console.log('File:', req.file);
+
     try {
         const error = uploadPaymentValidator(req.body);
         if (error) {

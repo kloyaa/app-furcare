@@ -37,6 +37,8 @@ class ApiConstants {
 
   // Payments
   static const String payments = '$baseUrl/payment/v1';
+  static const String uploadPaymentReceipts =
+      '$baseUrl/upload/v1/payment/receipts';
 
   // Headers
   static const String userOrigin = 'nodex-user-origin';

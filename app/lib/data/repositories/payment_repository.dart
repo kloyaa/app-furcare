@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dartz/dartz.dart';
 import 'package:furcare_app/core/errors/exceptions.dart';
 import 'package:furcare_app/core/errors/failures.dart';
@@ -19,6 +21,12 @@ abstract class PaymentRepository {
     String paymentId,
     PaymentProcessRequest request,
   );
+
+  Future<Either<Failure, DefaultResponse>> uploadPaymentReceipts({
+    required String application,
+    required String applicationModel,
+    required List<File> media,
+  });
 
   Future<Either<Failure, Payments>> getPayments({
     int? page,
@@ -75,6 +83,28 @@ class PaymentRepositoryImpl implements PaymentRepository {
       return Left(CacheFailure(message: e.message));
     } catch (e) {
       return Left(ServerFailure(message: 'An unexpected error occurred'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, DefaultResponse>> uploadPaymentReceipts({
+    required String application,
+    required String applicationModel,
+    required List<File> media,
+  }) async {
+    try {
+      final response = await _remoteDataSource.uploadPaymentReceipts(
+        application: application,
+        applicationModel: applicationModel,
+        media: media,
+      );
+      return Right(response);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message, code: e.code));
+    } on NetworkException catch (e) {
+      return Left(NetworkFailure(message: e.message));
+    } catch (_) {
+      return Left(ServerFailure(message: 'Error uploading receipts'));
     }
   }
 

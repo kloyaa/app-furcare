@@ -16,7 +16,6 @@ export const maintenanceModeMiddleware = async (
   next: any
 ): Promise<any> => {
   const application = await Application.find();
-  console.log('application', application);
   if (application[0].maintenance) {
     return res.status(500).json(statuses['503']);
   }

@@ -26,6 +26,7 @@ export const createPayment = async (
 ): Promise<any> => {
   const error = validateCreatePayment(req.body);
   if (error) {
+    console.log('[error]', error);
     return res.status(400).json({
       ...statuses['501'],
       message: error.details[0].message.replace(/['"]/g, ''),
