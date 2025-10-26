@@ -55,8 +55,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               _buildStatsGrid(theme),
               const SizedBox(height: 24),
               _buildChartsSection(theme),
-              const SizedBox(height: 24),
-              _buildRecentActivity(theme),
+              // const SizedBox(height: 24),
+              // _buildRecentActivity(theme),
             ],
           ),
         ),
@@ -127,7 +127,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           children: [
             _buildStatCard(
               theme,
-              title: 'Total Applications',
+              title: 'Total Appointments',
               value: applications.length.toString(),
               icon: Icons.calendar_today_outlined,
               color: Colors.pink,
@@ -235,7 +235,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CustomText.title(
-                      'Revenue Overview',
+                      'Payments',
                       fontWeight: AppFontWeight.bold.value,
                     ),
                     const SizedBox(height: 4),
@@ -405,117 +405,117 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     );
   }
 
-  Widget _buildRecentActivity(ThemeData theme) {
-    return Consumer<AdminApplicationProvider>(
-      builder: (context, appProvider, child) {
-        final applications = appProvider.applications;
+  // Widget _buildRecentActivity(ThemeData theme) {
+  //   return Consumer<AdminApplicationProvider>(
+  //     builder: (context, appProvider, child) {
+  //       final applications = appProvider.applications;
 
-        final grooming = applications
-            .where((a) => a.applicationType.toLowerCase() == 'grooming')
-            .take(5)
-            .toList();
-        final boarding = applications
-            .where((a) => a.applicationType.toLowerCase() == 'boarding')
-            .take(5)
-            .toList();
-        final homeService = applications
-            .where(
-              (a) =>
-                  a.applicationType.toLowerCase() == 'home service' ||
-                  a.applicationType.toLowerCase() == 'homeservice',
-            )
-            .take(5)
-            .toList();
+  //       final grooming = applications
+  //           .where((a) => a.applicationType.toLowerCase() == 'grooming')
+  //           .take(5)
+  //           .toList();
+  //       final boarding = applications
+  //           .where((a) => a.applicationType.toLowerCase() == 'boarding')
+  //           .take(5)
+  //           .toList();
+  //       final homeService = applications
+  //           .where(
+  //             (a) =>
+  //                 a.applicationType.toLowerCase() == 'home service' ||
+  //                 a.applicationType.toLowerCase() == 'homeservice',
+  //           )
+  //           .take(5)
+  //           .toList();
 
-        // Merge & sort by createdAt (descending)
-        final recentApplications = [...grooming, ...boarding, ...homeService]
-          ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+  //       // Merge & sort by createdAt (descending)
+  //       final recentApplications = [...grooming, ...boarding, ...homeService]
+  //         ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
-        return Card(
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CustomText.title(
-                          'Recent Applications',
-                          fontWeight: AppFontWeight.bold.value,
-                        ),
-                        const SizedBox(height: 4),
-                        CustomText.body(
-                          'Latest customer applications (per service)',
-                          size: AppTextSize.sm,
-                          color: theme.colorScheme.onSurface.withAlpha(160),
-                        ),
-                      ],
-                    ),
-                    TextButton(
-                      onPressed: () => context.go(AdminRoute.appointments),
-                      child: CustomText.body(
-                        'View All',
-                        color: theme.colorScheme.primary,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                if (recentApplications.isEmpty)
-                  Container(
-                    height: 100,
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.surfaceContainerHighest
-                          .withAlpha(70),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Center(
-                      child: CustomText.body(
-                        'No recent applications',
-                        color: theme.colorScheme.onSurface.withAlpha(160),
-                      ),
-                    ),
-                  )
-                else
-                  ...recentApplications.map((application) {
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: _getServiceColor(
-                            application.applicationType,
-                          ).withAlpha(20),
-                          child: Icon(
-                            _getServiceIcon(application.applicationType),
-                            color: _getServiceColor(
-                              application.applicationType,
-                            ),
-                            size: 20,
-                          ),
-                        ),
-                        title: CustomText.body(
-                          application.user.username,
-                          fontWeight: AppFontWeight.bold.value,
-                        ),
-                        subtitle: CustomText.body(
-                          application.createdAt.split('T')[0],
-                          size: AppTextSize.sm,
-                          color: theme.colorScheme.onSurface.withAlpha(160),
-                        ),
-                      ),
-                    );
-                  }),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
+  //       return Card(
+  //         child: Padding(
+  //           padding: const EdgeInsets.all(24),
+  //           child: Column(
+  //             crossAxisAlignment: CrossAxisAlignment.start,
+  //             children: [
+  //               Row(
+  //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                 children: [
+  //                   Column(
+  //                     crossAxisAlignment: CrossAxisAlignment.start,
+  //                     children: [
+  //                       CustomText.title(
+  //                         'Recent Applications',
+  //                         fontWeight: AppFontWeight.bold.value,
+  //                       ),
+  //                       const SizedBox(height: 4),
+  //                       CustomText.body(
+  //                         'Latest customer applications (per service)',
+  //                         size: AppTextSize.sm,
+  //                         color: theme.colorScheme.onSurface.withAlpha(160),
+  //                       ),
+  //                     ],
+  //                   ),
+  //                   TextButton(
+  //                     onPressed: () => context.go(AdminRoute.appointments),
+  //                     child: CustomText.body(
+  //                       'View All',
+  //                       color: theme.colorScheme.primary,
+  //                     ),
+  //                   ),
+  //                 ],
+  //               ),
+  //               const SizedBox(height: 20),
+  //               if (recentApplications.isEmpty)
+  //                 Container(
+  //                   height: 100,
+  //                   decoration: BoxDecoration(
+  //                     color: theme.colorScheme.surfaceContainerHighest
+  //                         .withAlpha(70),
+  //                     borderRadius: BorderRadius.circular(12),
+  //                   ),
+  //                   child: Center(
+  //                     child: CustomText.body(
+  //                       'No recent applications',
+  //                       color: theme.colorScheme.onSurface.withAlpha(160),
+  //                     ),
+  //                   ),
+  //                 )
+  //               else
+  //                 ...recentApplications.map((application) {
+  //                   return Padding(
+  //                     padding: const EdgeInsets.only(bottom: 12),
+  //                     child: ListTile(
+  //                       leading: CircleAvatar(
+  //                         backgroundColor: _getServiceColor(
+  //                           application.applicationType,
+  //                         ).withAlpha(20),
+  //                         child: Icon(
+  //                           _getServiceIcon(application.applicationType),
+  //                           color: _getServiceColor(
+  //                             application.applicationType,
+  //                           ),
+  //                           size: 20,
+  //                         ),
+  //                       ),
+  //                       title: CustomText.body(
+  //                         application.user.username,
+  //                         fontWeight: AppFontWeight.bold.value,
+  //                       ),
+  //                       subtitle: CustomText.body(
+  //                         application.createdAt.split('T')[0],
+  //                         size: AppTextSize.sm,
+  //                         color: theme.colorScheme.onSurface.withAlpha(160),
+  //                       ),
+  //                     ),
+  //                   );
+  //                 }),
+  //             ],
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
   Color _getServiceColor(String serviceType) {
     switch (serviceType.toLowerCase()) {

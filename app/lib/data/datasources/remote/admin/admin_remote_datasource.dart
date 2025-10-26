@@ -127,7 +127,7 @@ class AdminRemoteDatasourceImpl implements AdminRemoteDatasource {
         return AdminApplicationsResponse.fromJson(response.data);
       } else {
         throw ServerException(
-          message: response.data?['message'] ?? 'Error fetching applications',
+          message: response.data?['message'] ?? 'Error fetching appointments',
           code: response.data?['code'],
         );
       }
@@ -136,7 +136,7 @@ class AdminRemoteDatasourceImpl implements AdminRemoteDatasource {
         rethrow;
       }
       throw ServerException(
-        message: 'An error occurred during fetching applications',
+        message: 'An error occurred during fetching appointments',
       );
     }
   }

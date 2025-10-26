@@ -157,10 +157,7 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
                           ),
                         ),
                         items: const [
-                          DropdownMenuItem(
-                            value: null,
-                            child: Text('All Users'),
-                          ),
+                          DropdownMenuItem(value: null, child: Text('All')),
                           DropdownMenuItem(
                             value: 'active',
                             child: Text('Active'),
@@ -190,7 +187,7 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
                           ? null
                           : _showAddUserDialog,
                       icon: const Icon(Icons.person_add),
-                      label: const Text('Add User'),
+                      label: const Text('Add Account'),
                       style: FilledButton.styleFrom(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 20,

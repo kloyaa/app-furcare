@@ -116,6 +116,8 @@ class _BoardingApptScreenState extends State<BoardingApptScreen> {
         }
       });
     }
+
+    _instructionsController.text = 'Not applicable';
   }
 
   @override

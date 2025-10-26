@@ -548,7 +548,7 @@ class _StaffHomeScreenState extends State<StaffHomeScreen>
                 children: [
                   Expanded(
                     child: CustomText.body(
-                      'Applications Overview - ${provider.currentStatus.displayName}',
+                      'Appointments Overview - ${provider.currentStatus.displayName}',
                       fontWeight: AppFontWeight.bold.value,
                       size: AppTextSize.sm,
                       color: colorScheme.onSurface.withAlpha(160),
@@ -685,7 +685,7 @@ class _StaffHomeScreenState extends State<StaffHomeScreen>
       controller: _searchController,
       onChanged: (value) => setState(() => _searchQuery = value),
       decoration: InputDecoration(
-        hintText: 'Search applications...',
+        hintText: 'Search appointments...',
         hintStyle: TextStyle(
           color: colorScheme.onSurface.withAlpha(160),
           fontSize: AppTextSize.sm.size,
@@ -1506,7 +1506,7 @@ class _StaffHomeScreenState extends State<StaffHomeScreen>
         SizedBox(
           width: double.infinity,
           child: CustomButton(
-            text: 'Preview Application',
+            text: 'Preview Appointment',
             onPressed: () {
               Navigator.pop(context);
               _showPreviewDialog(appointment, serviceColor, serviceName);
@@ -1735,7 +1735,7 @@ class _StaffHomeScreenState extends State<StaffHomeScreen>
                             size: AppTextSize.md,
                           ),
                           CustomText.body(
-                            'Application Preview',
+                            'Appointment Preview',
                             size: AppTextSize.sm,
                             color: Theme.of(
                               context,
@@ -1936,13 +1936,13 @@ class _StaffHomeScreenState extends State<StaffHomeScreen>
             fontWeight: AppFontWeight.bold.value,
             _searchQuery.isNotEmpty
                 ? 'No Search Results'
-                : 'No Applications Found',
+                : 'No appointments Found',
           ),
           const SizedBox(height: 8),
           CustomText.body(
             _searchQuery.isNotEmpty
-                ? 'No applications match your search criteria'
-                : 'There are no applications in this category.',
+                ? 'No appointments match your search criteria'
+                : 'There are no appointments in this category.',
             color: Theme.of(context).colorScheme.onSurface.withAlpha(160),
             textAlign: TextAlign.center,
           ),
@@ -1970,7 +1970,7 @@ class _StaffHomeScreenState extends State<StaffHomeScreen>
         children: [
           const CircularProgressIndicator(),
           const SizedBox(height: 16),
-          CustomText.body('Loading applications...'),
+          CustomText.body('Loading appointments...'),
         ],
       ),
     );

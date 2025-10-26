@@ -2,7 +2,6 @@ enum ApplicationStatus {
   pending('pending'),
   approved('approved'),
   rejected('rejected'),
-  inProgress('in-progress'),
   completed('completed'),
   cancelled('cancelled');
 
@@ -17,8 +16,6 @@ enum ApplicationStatus {
         return 'Approved';
       case ApplicationStatus.rejected:
         return 'Rejected';
-      case ApplicationStatus.inProgress:
-        return 'In Progress';
       case ApplicationStatus.completed:
         return 'Completed';
       case ApplicationStatus.cancelled:

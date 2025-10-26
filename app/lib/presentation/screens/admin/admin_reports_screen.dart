@@ -81,7 +81,10 @@ class _AdminReportsScreenState extends State<AdminReportsScreen>
             indicatorColor: theme.colorScheme.primary,
             tabs: const [
               Tab(text: 'Overview', icon: Icon(Icons.dashboard_outlined)),
-              Tab(text: 'Revenue', icon: Icon(Icons.monetization_on_outlined)),
+              Tab(
+                text: 'Monthly Revenue Report',
+                icon: Icon(Icons.monetization_on_outlined),
+              ),
             ],
           ),
         ),
@@ -132,22 +135,22 @@ class _AdminReportsScreenState extends State<AdminReportsScreen>
       physics: const NeverScrollableScrollPhysics(),
       crossAxisCount: MediaQuery.of(context).size.width > 1200 ? 4 : 2,
       crossAxisSpacing: 16,
-      mainAxisSpacing: 16,
-      childAspectRatio: 1.2,
+      mainAxisSpacing: 15,
+      childAspectRatio: 1.9,
       children: [
+        // _buildStatCard(
+        //   theme,
+        //   title: 'Total Revenue',
+        //   value: CurrencyUtils.toPHP(
+        //     adminProvider.statisticsProvider.totalRevenue,
+        //   ),
+        //   icon: Icons.monetization_on_outlined,
+        //   color: Colors.green,
+        //   change: '+12.5%',
+        // ),
         _buildStatCard(
           theme,
-          title: 'Total Revenue',
-          value: CurrencyUtils.toPHP(
-            adminProvider.statisticsProvider.totalRevenue,
-          ),
-          icon: Icons.monetization_on_outlined,
-          color: Colors.green,
-          change: '+12.5%',
-        ),
-        _buildStatCard(
-          theme,
-          title: 'Applications',
+          title: 'Appointments',
           value: adminProvider.applications.length.toString(),
           icon: Icons.assignment_outlined,
           color: Colors.blue,
@@ -391,10 +394,10 @@ class _AdminReportsScreenState extends State<AdminReportsScreen>
         return SingleChildScrollView(
           child: Column(
             children: [
-              _buildRevenueOverview(theme, adminProvider),
-              const SizedBox(height: 24),
-              _buildPaymentMethods(theme, adminProvider),
-              const SizedBox(height: 24),
+              // _buildRevenueOverview(theme, adminProvider),
+              // const SizedBox(height: 24),
+              // _buildPaymentMethods(theme, adminProvider),
+              // const SizedBox(height: 24),
               _buildRevenueTrend(adminProvider),
             ],
           ),
@@ -468,13 +471,8 @@ class _AdminReportsScreenState extends State<AdminReportsScreen>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CustomText.title(
-              'Monthly Revenue Trend',
-              fontWeight: AppFontWeight.bold.value,
-            ),
-            const SizedBox(height: 20),
             SizedBox(
-              height: 300,
+              height: 550,
               child: SfCartesianChart(
                 primaryXAxis: CategoryAxis(),
                 primaryYAxis: NumericAxis(),
@@ -496,82 +494,82 @@ class _AdminReportsScreenState extends State<AdminReportsScreen>
     );
   }
 
-  Widget _buildRevenueOverview(ThemeData theme, AdminProvider adminProvider) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CustomText.title(
-              'Revenue Overview',
-              fontWeight: AppFontWeight.bold.value,
-            ),
-            const SizedBox(height: 20),
-            Row(
-              children: [
-                Expanded(
-                  child: _buildRevenueMetric(
-                    theme,
-                    'Total Revenue',
-                    CurrencyUtils.toPHP(
-                      adminProvider.statisticsProvider.totalRevenue,
-                    ),
-                    Colors.green,
-                  ),
-                ),
-                Expanded(
-                  child: _buildRevenueMetric(
-                    theme,
-                    'Paid Amount',
-                    CurrencyUtils.toPHP(adminProvider.totalPaidAmount),
-                    Colors.blue,
-                  ),
-                ),
-                Expanded(
-                  child: _buildRevenueMetric(
-                    theme,
-                    'Outstanding',
-                    CurrencyUtils.toPHP(adminProvider.totalOutstandingAmount),
-                    Colors.orange,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  // Widget _buildRevenueOverview(ThemeData theme, AdminProvider adminProvider) {
+  //   return Card(
+  //     child: Padding(
+  //       padding: const EdgeInsets.all(24),
+  //       child: Column(
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: [
+  //           CustomText.title(
+  //             'Payments Overview',
+  //             fontWeight: AppFontWeight.bold.value,
+  //           ),
+  //           const SizedBox(height: 20),
+  //           Row(
+  //             children: [
+  //               // Expanded(
+  //               //   child: _buildRevenueMetric(
+  //               //     theme,
+  //               //     'Total Revenue',
+  //               //     CurrencyUtils.toPHP(
+  //               //       adminProvider.statisticsProvider.totalRevenue,
+  //               //     ),
+  //               //     Colors.green,
+  //               //   ),
+  //               // ),
+  //               Expanded(
+  //                 child: _buildRevenueMetric(
+  //                   theme,
+  //                   'Paid Amount',
+  //                   CurrencyUtils.toPHP(adminProvider.totalPaidAmount),
+  //                   Colors.blue,
+  //                 ),
+  //               ),
+  //               Expanded(
+  //                 child: _buildRevenueMetric(
+  //                   theme,
+  //                   'Outstanding',
+  //                   CurrencyUtils.toPHP(adminProvider.totalOutstandingAmount),
+  //                   Colors.orange,
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
-  Widget _buildRevenueMetric(
-    ThemeData theme,
-    String title,
-    String value,
-    Color color,
-  ) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      margin: const EdgeInsets.symmetric(horizontal: 8),
-      decoration: BoxDecoration(
-        color: color.withAlpha(20),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withAlpha(70)),
-      ),
-      child: Column(
-        children: [
-          CustomText.title(
-            value,
-            size: AppTextSize.lg,
-            fontWeight: AppFontWeight.black.value,
-            color: color,
-          ),
-          const SizedBox(height: 4),
-          CustomText.body(title, size: AppTextSize.sm, color: color),
-        ],
-      ),
-    );
-  }
+  // Widget _buildRevenueMetric(
+  //   ThemeData theme,
+  //   String title,
+  //   String value,
+  //   Color color,
+  // ) {
+  //   return Container(
+  //     padding: const EdgeInsets.all(16),
+  //     margin: const EdgeInsets.symmetric(horizontal: 8),
+  //     decoration: BoxDecoration(
+  //       color: color.withAlpha(20),
+  //       borderRadius: BorderRadius.circular(12),
+  //       border: Border.all(color: color.withAlpha(70)),
+  //     ),
+  //     child: Column(
+  //       children: [
+  //         CustomText.title(
+  //           value,
+  //           size: AppTextSize.lg,
+  //           fontWeight: AppFontWeight.black.value,
+  //           color: color,
+  //         ),
+  //         const SizedBox(height: 4),
+  //         CustomText.body(title, size: AppTextSize.sm, color: color),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget _buildPaymentMethods(ThemeData theme, AdminProvider adminProvider) {
     return Card(
