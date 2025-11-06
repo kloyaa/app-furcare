@@ -13,30 +13,31 @@ class CustomerAppointments extends Equatable {
 
   factory CustomerAppointments.fromJson(Map<String, dynamic> json) {
     return CustomerAppointments(
-      appointments:
-          (json['applications'] as List<dynamic>?)
-              ?.map(
-                (item) =>
-                    CustomerAppointment.fromJson(item as Map<String, dynamic>),
-              )
-              .toList() ??
-          [],
-      statistics: ApplicationStatistics.fromJson(
-        json['statistics'] as Map<String, dynamic>,
-      ),
-      filter: ApplicationFilter.fromJson(
-        json['filter'] as Map<String, dynamic>,
-      ),
+      appointments: (json['applications'] is List)
+          ? (json['applications'] as List)
+                .whereType<Map<String, dynamic>>()
+                .map(CustomerAppointment.fromJson)
+                .toList()
+          : [],
+      statistics: json['statistics'] is Map<String, dynamic>
+          ? ApplicationStatistics.fromJson(json['statistics'])
+          : const ApplicationStatistics(
+              total: 0,
+              grooming: 0,
+              boarding: 0,
+              homeService: 0,
+            ),
+      filter: json['filter'] is Map<String, dynamic>
+          ? ApplicationFilter.fromJson(json['filter'])
+          : const ApplicationFilter(status: '', applicationType: ''),
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'applications': appointments.map((app) => app.toJson()).toList(),
-      'statistics': statistics.toJson(),
-      'filter': filter.toJson(),
-    };
-  }
+  Map<String, dynamic> toJson() => {
+    'applications': appointments.map((e) => e.toJson()).toList(),
+    'statistics': statistics.toJson(),
+    'filter': filter.toJson(),
+  };
 
   CustomerAppointments copyWith({
     List<CustomerAppointment>? applications,
@@ -67,7 +68,7 @@ class CustomerAppointment extends Equatable {
   final String branchName;
   final String status;
   final List<PaymentUpload> paymentUploads;
-  final List<Payment> payments; // <-- new property
+  final List<Payment> payments;
 
   const CustomerAppointment({
     required this.id,
@@ -87,79 +88,57 @@ class CustomerAppointment extends Equatable {
 
   factory CustomerAppointment.fromJson(Map<String, dynamic> json) {
     return CustomerAppointment(
-      id: json['_id'] as String? ?? '',
-      user: json['user'] as String? ?? '',
-      applicationType: json['applicationType'] as String? ?? '',
-      userInfo: UserInfo.fromJson(json['userInfo'] as Map<String, dynamic>),
-      petInfo: PetInfo.fromJson(json['petInfo'] as Map<String, dynamic>),
-      totalPrice: json['totalPrice'] as int? ?? 0,
-      paidAmount: json['paidAmount'] as int? ?? 0,
-      paymentStatus: json['paymentStatus'] as String? ?? '',
-      submittedAt: json['submittedAt'] as String? ?? '',
-      branchName: json['branchName'] as String? ?? '',
-      status: json['status'] as String? ?? '',
-      paymentUploads:
-          (json['paymentUploads'] as List<dynamic>?)
-              ?.map((e) => PaymentUpload.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          [],
-      payments:
-          (json['payments'] as List<dynamic>?)
-              ?.map((e) => Payment.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          [],
+      id: json['_id']?.toString() ?? '',
+      user: json['user']?.toString() ?? '',
+      applicationType: json['applicationType']?.toString() ?? '',
+      userInfo: json['userInfo'] is Map<String, dynamic>
+          ? UserInfo.fromJson(json['userInfo'])
+          : const UserInfo(
+              username: '',
+              email: '',
+              fullName: '',
+              address: '',
+              phoneNumber: '',
+            ),
+      petInfo: json['petInfo'] is Map<String, dynamic>
+          ? PetInfo.fromJson(json['petInfo'])
+          : const PetInfo(name: '', breed: '', gender: ''),
+      totalPrice: _safeInt(json['totalPrice']),
+      paidAmount: _safeInt(json['paidAmount']),
+      paymentStatus: json['paymentStatus']?.toString() ?? '',
+      submittedAt: json['submittedAt']?.toString() ?? '',
+      branchName: json['branchName']?.toString() ?? '',
+      status: json['status']?.toString() ?? '',
+      paymentUploads: (json['paymentUploads'] is List)
+          ? (json['paymentUploads'] as List)
+                .whereType<Map<String, dynamic>>()
+                .map(PaymentUpload.fromJson)
+                .toList()
+          : [],
+      payments: (json['payments'] is List)
+          ? (json['payments'] as List)
+                .whereType<Map<String, dynamic>>()
+                .map(Payment.fromJson)
+                .toList()
+          : [],
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      '_id': id,
-      'user': user,
-      'applicationType': applicationType,
-      'userInfo': userInfo.toJson(),
-      'petInfo': petInfo.toJson(),
-      'totalPrice': totalPrice,
-      'paidAmount': paidAmount,
-      'paymentStatus': paymentStatus,
-      'submittedAt': submittedAt,
-      'branchName': branchName,
-      'status': status,
-      'paymentUploads': paymentUploads.map((e) => e.toJson()).toList(),
-      'payments': payments.map((e) => e.toJson()).toList(),
-    };
-  }
-
-  CustomerAppointment copyWith({
-    String? id,
-    String? user,
-    String? applicationType,
-    UserInfo? userInfo,
-    PetInfo? petInfo,
-    int? totalPrice,
-    int? paidAmount,
-    String? paymentStatus,
-    String? submittedAt,
-    String? branchName,
-    String? status,
-    List<PaymentUpload>? paymentUploads,
-    List<Payment>? payments,
-  }) {
-    return CustomerAppointment(
-      id: id ?? this.id,
-      user: user ?? this.user,
-      applicationType: applicationType ?? this.applicationType,
-      userInfo: userInfo ?? this.userInfo,
-      petInfo: petInfo ?? this.petInfo,
-      totalPrice: totalPrice ?? this.totalPrice,
-      paidAmount: paidAmount ?? this.paidAmount,
-      paymentStatus: paymentStatus ?? this.paymentStatus,
-      submittedAt: submittedAt ?? this.submittedAt,
-      branchName: branchName ?? this.branchName,
-      status: status ?? this.status,
-      paymentUploads: paymentUploads ?? this.paymentUploads,
-      payments: payments ?? this.payments,
-    );
-  }
+  Map<String, dynamic> toJson() => {
+    '_id': id,
+    'user': user,
+    'applicationType': applicationType,
+    'userInfo': userInfo.toJson(),
+    'petInfo': petInfo.toJson(),
+    'totalPrice': totalPrice,
+    'paidAmount': paidAmount,
+    'paymentStatus': paymentStatus,
+    'submittedAt': submittedAt,
+    'branchName': branchName,
+    'status': status,
+    'paymentUploads': paymentUploads.map((e) => e.toJson()).toList(),
+    'payments': payments.map((e) => e.toJson()).toList(),
+  };
 
   @override
   List<Object?> get props => [
@@ -178,6 +157,16 @@ class CustomerAppointment extends Equatable {
     payments,
   ];
 }
+
+// ---------- Helper for int parsing ----------
+int _safeInt(dynamic value) {
+  if (value == null) return 0;
+  if (value is int) return value;
+  if (value is String) return int.tryParse(value) ?? 0;
+  return 0;
+}
+
+// ---------- Payment Models ----------
 
 class Payment extends Equatable {
   final String id;
@@ -214,41 +203,39 @@ class Payment extends Equatable {
 
   factory Payment.fromJson(Map<String, dynamic> json) {
     return Payment(
-      id: json['_id'] as String? ?? '',
-      application: json['application'] as String? ?? '',
-      applicationModel: json['applicationModel'] as String? ?? '',
-      user: json['user'] as String? ?? '',
-      accountNumber: json['accountNumber'] as String? ?? '',
-      transactionReference: json['transactionReference'] as String? ?? '',
-      amount: json['amount'] as int? ?? 0,
-      paymentMethod: json['paymentMethod'] as String? ?? '',
-      paymentStatus: json['paymentStatus'] as String? ?? '',
-      paymentGatewayResponse: json['paymentGatewayResponse'] as String?,
-      paymentType: json['paymentType'] as String? ?? '',
-      notes: json['notes'] as String? ?? '',
-      createdAt: json['createdAt'] as String? ?? '',
-      updatedAt: json['updatedAt'] as String? ?? '',
+      id: json['_id']?.toString() ?? '',
+      application: json['application']?.toString() ?? '',
+      applicationModel: json['applicationModel']?.toString() ?? '',
+      user: json['user']?.toString() ?? '',
+      accountNumber: json['accountNumber']?.toString() ?? '',
+      transactionReference: json['transactionReference']?.toString() ?? '',
+      amount: _safeInt(json['amount']),
+      paymentMethod: json['paymentMethod']?.toString() ?? '',
+      paymentStatus: json['paymentStatus']?.toString() ?? '',
+      paymentGatewayResponse: json['paymentGatewayResponse']?.toString(),
+      paymentType: json['paymentType']?.toString() ?? '',
+      notes: json['notes']?.toString() ?? '',
+      createdAt: json['createdAt']?.toString() ?? '',
+      updatedAt: json['updatedAt']?.toString() ?? '',
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      '_id': id,
-      'application': application,
-      'applicationModel': applicationModel,
-      'user': user,
-      'accountNumber': accountNumber,
-      'transactionReference': transactionReference,
-      'amount': amount,
-      'paymentMethod': paymentMethod,
-      'paymentStatus': paymentStatus,
-      'paymentGatewayResponse': paymentGatewayResponse,
-      'paymentType': paymentType,
-      'notes': notes,
-      'createdAt': createdAt,
-      'updatedAt': updatedAt,
-    };
-  }
+  Map<String, dynamic> toJson() => {
+    '_id': id,
+    'application': application,
+    'applicationModel': applicationModel,
+    'user': user,
+    'accountNumber': accountNumber,
+    'transactionReference': transactionReference,
+    'amount': amount,
+    'paymentMethod': paymentMethod,
+    'paymentStatus': paymentStatus,
+    'paymentGatewayResponse': paymentGatewayResponse,
+    'paymentType': paymentType,
+    'notes': notes,
+    'createdAt': createdAt,
+    'updatedAt': updatedAt,
+  };
 
   @override
   List<Object?> get props => [
@@ -288,25 +275,23 @@ class PaymentUpload extends Equatable {
 
   factory PaymentUpload.fromJson(Map<String, dynamic> json) {
     return PaymentUpload(
-      id: json['_id'] as String? ?? '',
-      application: json['application'] as String? ?? '',
-      applicationModel: json['applicationModel'] as String? ?? '',
-      url: json['url'] as String? ?? '',
-      createdAt: json['createdAt'] as String? ?? '',
-      updatedAt: json['updatedAt'] as String? ?? '',
+      id: json['_id']?.toString() ?? '',
+      application: json['application']?.toString() ?? '',
+      applicationModel: json['applicationModel']?.toString() ?? '',
+      url: json['url']?.toString() ?? '',
+      createdAt: json['createdAt']?.toString() ?? '',
+      updatedAt: json['updatedAt']?.toString() ?? '',
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      '_id': id,
-      'application': application,
-      'applicationModel': applicationModel,
-      'url': url,
-      'createdAt': createdAt,
-      'updatedAt': updatedAt,
-    };
-  }
+  Map<String, dynamic> toJson() => {
+    '_id': id,
+    'application': application,
+    'applicationModel': applicationModel,
+    'url': url,
+    'createdAt': createdAt,
+    'updatedAt': updatedAt,
+  };
 
   @override
   List<Object?> get props => [
@@ -318,6 +303,8 @@ class PaymentUpload extends Equatable {
     updatedAt,
   ];
 }
+
+// ---------- User and Pet Info ----------
 
 class UserInfo extends Equatable {
   final String username;
@@ -338,43 +325,23 @@ class UserInfo extends Equatable {
 
   factory UserInfo.fromJson(Map<String, dynamic> json) {
     return UserInfo(
-      username: json['username'] as String? ?? '',
-      email: json['email'] as String? ?? '',
-      fullName: json['fullName'] as String? ?? '',
-      address: json['address'] as String? ?? '',
-      phoneNumber: json['phoneNumber'] as String? ?? '',
-      facebookDisplayName: json['facebookDisplayName'] as String?,
+      username: json['username']?.toString() ?? '',
+      email: json['email']?.toString() ?? '',
+      fullName: json['fullName']?.toString() ?? '',
+      address: json['address']?.toString() ?? '',
+      phoneNumber: json['phoneNumber']?.toString() ?? '',
+      facebookDisplayName: json['facebookDisplayName']?.toString(),
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'username': username,
-      'email': email,
-      'fullName': fullName,
-      'address': address,
-      'phoneNumber': phoneNumber,
-      'facebookDisplayName': facebookDisplayName,
-    };
-  }
-
-  UserInfo copyWith({
-    String? username,
-    String? email,
-    String? fullName,
-    String? address,
-    String? phoneNumber,
-    String? facebookDisplayName,
-  }) {
-    return UserInfo(
-      username: username ?? this.username,
-      email: email ?? this.email,
-      fullName: fullName ?? this.fullName,
-      address: address ?? this.address,
-      phoneNumber: phoneNumber ?? this.phoneNumber,
-      facebookDisplayName: facebookDisplayName ?? this.facebookDisplayName,
-    );
-  }
+  Map<String, dynamic> toJson() => {
+    'username': username,
+    'email': email,
+    'fullName': fullName,
+    'address': address,
+    'phoneNumber': phoneNumber,
+    'facebookDisplayName': facebookDisplayName,
+  };
 
   @override
   List<Object?> get props => [
@@ -400,27 +367,23 @@ class PetInfo extends Equatable {
 
   factory PetInfo.fromJson(Map<String, dynamic> json) {
     return PetInfo(
-      name: json['name'] as String? ?? '',
-      breed: json['breed'] as String? ?? '',
-      gender: json['gender'] as String? ?? '',
+      name: json['name']?.toString() ?? '',
+      breed: json['breed']?.toString() ?? '',
+      gender: json['gender']?.toString() ?? '',
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {'name': name, 'breed': breed, 'gender': gender};
-  }
-
-  PetInfo copyWith({String? name, String? breed, String? gender}) {
-    return PetInfo(
-      name: name ?? this.name,
-      breed: breed ?? this.breed,
-      gender: gender ?? this.gender,
-    );
-  }
+  Map<String, dynamic> toJson() => {
+    'name': name,
+    'breed': breed,
+    'gender': gender,
+  };
 
   @override
   List<Object?> get props => [name, breed, gender];
 }
+
+// ---------- Statistics & Filter ----------
 
 class ApplicationStatistics extends Equatable {
   final int total;
@@ -437,35 +400,19 @@ class ApplicationStatistics extends Equatable {
 
   factory ApplicationStatistics.fromJson(Map<String, dynamic> json) {
     return ApplicationStatistics(
-      total: json['total'] as int? ?? 0,
-      grooming: json['grooming'] as int? ?? 0,
-      boarding: json['boarding'] as int? ?? 0,
-      homeService: json['homeService'] as int? ?? 0,
+      total: _safeInt(json['total']),
+      grooming: _safeInt(json['grooming']),
+      boarding: _safeInt(json['boarding']),
+      homeService: _safeInt(json['homeService']),
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'total': total,
-      'grooming': grooming,
-      'boarding': boarding,
-      'homeService': homeService,
-    };
-  }
-
-  ApplicationStatistics copyWith({
-    int? total,
-    int? grooming,
-    int? boarding,
-    int? homeService,
-  }) {
-    return ApplicationStatistics(
-      total: total ?? this.total,
-      grooming: grooming ?? this.grooming,
-      boarding: boarding ?? this.boarding,
-      homeService: homeService ?? this.homeService,
-    );
-  }
+  Map<String, dynamic> toJson() => {
+    'total': total,
+    'grooming': grooming,
+    'boarding': boarding,
+    'homeService': homeService,
+  };
 
   @override
   List<Object?> get props => [total, grooming, boarding, homeService];
@@ -482,21 +429,15 @@ class ApplicationFilter extends Equatable {
 
   factory ApplicationFilter.fromJson(Map<String, dynamic> json) {
     return ApplicationFilter(
-      status: json['status'] as String? ?? '',
-      applicationType: json['applicationType'] as String? ?? '',
+      status: json['status']?.toString() ?? '',
+      applicationType: json['applicationType']?.toString() ?? '',
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {'status': status, 'applicationType': applicationType};
-  }
-
-  ApplicationFilter copyWith({String? status, String? applicationType}) {
-    return ApplicationFilter(
-      status: status ?? this.status,
-      applicationType: applicationType ?? this.applicationType,
-    );
-  }
+  Map<String, dynamic> toJson() => {
+    'status': status,
+    'applicationType': applicationType,
+  };
 
   @override
   List<Object?> get props => [status, applicationType];

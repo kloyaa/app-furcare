@@ -52,7 +52,10 @@ class _StaffHomeScreenState extends State<StaffHomeScreen>
   void _loadAppointments() {
     Future.microtask(() {
       if (mounted) {
-        context.read<StaffAppointmentProvider>().getCustomerAppointments();
+        // Pass the pending status explicitly or let it use the default
+        context.read<StaffAppointmentProvider>().getCustomerAppointments(
+          status: ApplicationStatus.pending,
+        );
       }
     });
   }
@@ -284,11 +287,12 @@ class _StaffHomeScreenState extends State<StaffHomeScreen>
             Expanded(
               child: Consumer<StaffAppointmentProvider>(
                 builder: (context, provider, child) {
-                  if (provider.customerAppointments == null &&
-                      !provider.isFetchingAppointments) {
+                  // Show loading if currently fetching
+                  if (provider.isFetchingAppointments) {
                     return _buildLoadingState();
                   }
 
+                  // Show loading if data is null (initial state)
                   if (provider.customerAppointments == null) {
                     return _buildLoadingState();
                   }
