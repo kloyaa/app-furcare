@@ -71,6 +71,10 @@ class _StaffHomeScreenState extends State<StaffHomeScreen>
     }
   }
 
+  void _handlePaid(CustomerAppointment appointment) {
+    // context.read<StaffAppointmentProvider>().setPaid(appointment);
+  }
+
   void _handleAccept(CustomerAppointment appointment) async {
     final payload = AppointmentStatusUpdateRequest(
       application: appointment.id,
@@ -1575,22 +1579,7 @@ class _StaffHomeScreenState extends State<StaffHomeScreen>
         ],
 
         const SizedBox(height: 64),
-        SizedBox(
-          width: double.infinity,
-          child: CustomButton(
-            text: 'Mark as Paid',
-            onPressed: () {
-              Navigator.pop(context);
-              _handleCall(appointment.userInfo.phoneNumber);
-            },
-            icon: Icons.check_outlined,
-            backgroundColor: Colors.green.withAlpha(32),
-            textColor: Colors.green,
-          ),
-        ),
 
-        const SizedBox(height: 12),
-        // Close Button
         SizedBox(
           width: double.infinity,
           child: CustomButton(
