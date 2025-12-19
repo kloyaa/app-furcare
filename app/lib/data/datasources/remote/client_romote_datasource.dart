@@ -41,33 +41,34 @@ class ClientRemoteDataSourceImpl implements ClientRemoteDataSource {
       if (e is ServerException || e is NetworkException) {
         rethrow;
       }
-      throw ServerException(message: 'An error occurred during login');
+      throw ServerException(message: 'An error occurred during get profile');
     }
   }
 
   @override
   Future<Client> createProfile(ClientRequest request) async {
-    try {
-      final response = await _networkService.post(
-        ApiConstants.clientProfile,
-        data: request,
-        options: Options(headers: await _authHeaderProvider.getHeaders()),
-      );
+    // try {
+    final response = await _networkService.post(
+      ApiConstants.clientProfile,
+      data: request,
+      options: Options(headers: await _authHeaderProvider.getHeaders()),
+    );
 
-      if (response.statusCode == 201) {
-        return Client.fromJson(response.data);
-      } else {
-        throw ServerException(
-          message: response.data?['message'] ?? 'Profile creation failed',
-          code: response.data?['code'],
-        );
-      }
-    } catch (e) {
-      if (e is ServerException || e is NetworkException) {
-        rethrow;
-      }
-      throw ServerException(message: 'An error occurred during login');
+    if (response.statusCode == 201) {
+      return Client.fromJson(response.data);
+    } else {
+      throw ServerException(
+        message: response.data?['message'] ?? 'Profile creation failed',
+        code: response.data?['code'],
+      );
     }
+    // } catch (e) {
+
+    // if (e is ServerException || e is NetworkException) {
+    //   rethrow;
+    // }
+    // throw ServerException(message: 'An error occurred during create profile');
+    // }
   }
 
   @override
@@ -91,7 +92,7 @@ class ClientRemoteDataSourceImpl implements ClientRemoteDataSource {
       if (e is ServerException || e is NetworkException) {
         rethrow;
       }
-      throw ServerException(message: 'An error occurred during login');
+      throw ServerException(message: 'An error occurred during update profile');
     }
   }
 }

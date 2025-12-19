@@ -7,7 +7,6 @@ import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
 class CageSelection extends StatefulWidget {
   final List<PetCage>? cages;
   final PetCage? selectedCage;
-
   final bool isLoading;
   final VoidCallback? onRefresh;
   final Function(PetCage) onCageSelected;
@@ -27,23 +26,6 @@ class CageSelection extends StatefulWidget {
 
 class _CageSelectionState extends State<CageSelection>
     with TickerProviderStateMixin {
-  late AnimationController _shimmerController;
-
-  @override
-  void initState() {
-    super.initState();
-    _shimmerController = AnimationController(
-      duration: const Duration(milliseconds: 2000),
-      vsync: this,
-    )..repeat();
-  }
-
-  @override
-  void dispose() {
-    _shimmerController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     if (widget.isLoading) {
@@ -54,221 +36,147 @@ class _CageSelectionState extends State<CageSelection>
       return _buildEmptyState();
     }
 
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 5,
-        mainAxisSpacing: 12,
-        childAspectRatio: 1.4, // Adjust this to control card height
-      ),
-      itemCount: widget.cages!.length,
-      itemBuilder: (context, index) {
-        return _buildRoomCard(widget.cages![index], widget.selectedCage, index);
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = constraints.maxWidth;
+        final crossAxisCount = width < 360
+            ? 1
+            : width < 600
+            ? 2
+            : 3;
+        final aspectRatio = width < 360 ? 1.1 : 1.35;
+
+        return GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: crossAxisCount,
+            mainAxisSpacing: 12,
+            crossAxisSpacing: 8,
+            childAspectRatio: aspectRatio,
+          ),
+          itemCount: widget.cages!.length,
+          itemBuilder: (context, index) {
+            return _buildRoomCard(
+              widget.cages![index],
+              widget.selectedCage,
+              index,
+            );
+          },
+        );
       },
     );
   }
 
-  Widget _buildLoadingState() {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2, // Match actual grid (was 3, now 2)
-        crossAxisSpacing: 5, // Match actual spacing
-        mainAxisSpacing: 12, // Match actual spacing
-        childAspectRatio: 1.4, // Match actual aspect ratio
-      ),
-      itemCount: 3, // Show 6 skeleton cards
-      itemBuilder: (context, index) => _buildSkeletonCard(),
-    );
-  }
-
-  Widget _buildSkeletonCard() {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final skeletonColor = isDark ? Colors.grey[800]! : Colors.grey[300]!;
-
-    return Card(
-      elevation: 0,
-      color: Theme.of(
-        context,
-      ).colorScheme.surfaceContainerHighest.withAlpha(77),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Size badge skeleton (top right)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  width: 40,
-                  height: 18,
-                  decoration: BoxDecoration(
-                    color: skeletonColor,
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                ),
-                const Spacer(),
-              ],
-            ),
-            const SizedBox(height: 10),
-
-            // Price skeleton
-            Container(
-              width: 80,
-              height: 20,
-              decoration: BoxDecoration(
-                color: skeletonColor,
-                borderRadius: BorderRadius.circular(4),
-              ),
-            ),
-            const SizedBox(height: 10),
-
-            // Occupancy info skeleton
-            Row(
-              children: [
-                Container(
-                  width: 16,
-                  height: 16,
-                  decoration: BoxDecoration(
-                    color: skeletonColor,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-                const SizedBox(width: 4),
-                Container(
-                  width: 30,
-                  height: 14,
-                  decoration: BoxDecoration(
-                    color: skeletonColor,
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 6),
-
-            // Occupancy bar skeleton
-            Container(
-              height: 4,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: skeletonColor,
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildRoomCard(PetCage cage, PetCage? selectedCage, int index) {
+    final isSelected = selectedCage?.id == cage.id;
+
     final isFullyOccupied = cage.occupant >= cage.max;
-    final occupancyPercentage = cage.max > 0
+    final percentage = cage.max > 0
         ? (cage.occupant / cage.max).clamp(0.0, 1.0)
         : 0.0;
-    final colorScheme = Theme.of(context).colorScheme;
 
-    return TweenAnimationBuilder(
-      duration: Duration(milliseconds: 200 + (index * 50)),
-      tween: Tween<double>(begin: 0.0, end: 1.0),
+    final fillColor = _getOccupancyColor(percentage);
+    final scheme = Theme.of(context).colorScheme;
+
+    return TweenAnimationBuilder<double>(
+      duration: Duration(milliseconds: 250 + index * 40),
+      tween: Tween(begin: 0, end: 1),
       curve: Curves.easeOutCubic,
-      builder: (context, double value, child) {
+      builder: (context, value, _) {
         return Transform.scale(
           scale: value,
           child: Opacity(
-            opacity: isFullyOccupied ? 0.3 : 1.0,
+            opacity: isFullyOccupied ? 0.1 : 1,
             child: Card(
               elevation: 0,
-              color: isFullyOccupied
-                  ? colorScheme.errorContainer
-                  : selectedCage != null && selectedCage.id == cage.id
-                  ? colorScheme.primaryContainer
-                  : colorScheme.surfaceContainerHighest.withAlpha(77),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: InkWell(
-                borderRadius: BorderRadius.circular(12),
-                onTap: isFullyOccupied
-                    ? null
-                    : () => widget.onCageSelected(cage),
-                child: Container(
-                  padding: const EdgeInsets.all(12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Size badge and full indicator
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              color: isSelected ? scheme.primaryContainer.withAlpha(255) : null,
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: FractionallySizedBox(
+                        heightFactor: percentage,
+                        widthFactor: 1,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: fillColor.withAlpha(45),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  // Content
+                  InkWell(
+                    onTap: isFullyOccupied
+                        ? null
+                        : () => widget.onCageSelected(cage),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 4,
+                          _buildSizeBadge(cage),
+                          const SizedBox(height: 8),
+                          Flexible(
+                            child: CustomText.title(
+                              CurrencyUtils.toPHP(cage.price),
+                              size: AppTextSize.md,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              fontWeight: selectedCage?.id == cage.id
+                                  ? AppFontWeight.black.value
+                                  : AppFontWeight.normal.value,
                             ),
-                            decoration: BoxDecoration(
-                              color: _getSizeColor(cage.size).withAlpha(26),
-                              borderRadius: BorderRadius.circular(5),
+                          ),
+                          const SizedBox(height: 6),
+                          Flexible(
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.pets_outlined,
+                                  size: 14,
+                                  color: scheme.onSurface.withAlpha(153),
+                                ),
+                                const SizedBox(width: 4),
+                                Flexible(
+                                  child: CustomText.body(
+                                    '${cage.occupant}/${cage.max}',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
                             ),
-                            child: Text(
-                              cage.size.toUpperCase(),
-                              style: TextStyle(
-                                color: _getSizeColor(cage.size),
-                                fontWeight: FontWeight.w600,
-                                fontSize: 10,
+                          ),
+                          if (isFullyOccupied) ...[
+                            const SizedBox(height: 4),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 6,
+                                vertical: 2,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.red.withAlpha(20),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: const Text(
+                                'Full',
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 9,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                             ),
-                          ),
+                          ],
                         ],
                       ),
-                      const SizedBox(height: 10),
-                      CustomText.title(
-                        CurrencyUtils.toPHP(cage.price),
-                        size: AppTextSize.md,
-                        fontWeight:
-                            selectedCage != null && selectedCage.id == cage.id
-                            ? AppFontWeight.black.value
-                            : AppFontWeight.normal.value,
-                      ),
-                      const SizedBox(height: 10),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.pets_outlined,
-                            size: 16,
-                            color: colorScheme.onSurface.withAlpha(153),
-                          ),
-                          const SizedBox(width: 4),
-                          Flexible(
-                            child: CustomText.body(
-                              '${cage.occupant}/${cage.max}',
-                              fontWeight:
-                                  selectedCage != null &&
-                                      selectedCage.id == cage.id
-                                  ? AppFontWeight.black.value
-                                  : AppFontWeight.thin.value,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 6),
-
-                      // Occupancy bar
-                      Stack(
-                        children: [
-                          _buildOccupancyBarBackground(),
-                          _buildOccupancyBar(occupancyPercentage),
-                        ],
-                      ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
           ),
@@ -277,123 +185,50 @@ class _CageSelectionState extends State<CageSelection>
     );
   }
 
-  Widget _buildOccupancyBarBackground() {
+  Widget _buildSizeBadge(PetCage cage) {
+    final color = _getSizeColor(cage.size);
     return Container(
-      height: 4,
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.onSurface.withAlpha(26),
-        borderRadius: BorderRadius.circular(2),
+        color: color.withAlpha(26),
+        borderRadius: BorderRadius.circular(6),
       ),
-      child: FractionallySizedBox(
-        alignment: Alignment.centerLeft,
-        widthFactor: 1,
-        child: Container(
-          decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 250, 250, 250).withAlpha(26),
-            borderRadius: BorderRadius.circular(2),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildOccupancyBar(double percentage) {
-    return Container(
-      height: 4,
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.onSurface.withAlpha(26),
-        borderRadius: BorderRadius.circular(2),
-      ),
-      child: FractionallySizedBox(
-        alignment: Alignment.centerLeft,
-        widthFactor: percentage, // always between 0.0 and 1.0 now
-        child: Container(
-          decoration: BoxDecoration(
-            color: _getOccupancyColor(percentage),
-            borderRadius: BorderRadius.circular(2),
-          ),
+      child: Text(
+        cage.size.toUpperCase(),
+        style: TextStyle(
+          fontSize: 9,
+          fontWeight: FontWeight.w600,
+          color: color,
         ),
       ),
     );
   }
 
   Color _getSizeColor(String size) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final scheme = Theme.of(context).colorScheme;
     switch (size.toLowerCase()) {
       case 'small':
-        return colorScheme.primary;
+        return scheme.primary;
       case 'medium':
-        return colorScheme.secondary;
+        return scheme.secondary;
       case 'large':
-        return colorScheme.tertiary;
+        return scheme.tertiary;
       default:
-        return colorScheme.primary;
+        return scheme.primary;
     }
   }
 
   Color _getOccupancyColor(double percentage) {
-    if (percentage < 0.5) {
-      return Colors.green;
-    } else if (percentage < 0.8) {
-      return Colors.orange;
-    } else {
-      return Colors.red;
-    }
+    if (percentage < 0.5) return Colors.green;
+    if (percentage < 0.8) return Colors.orange;
+    return Colors.red;
+  }
+
+  Widget _buildLoadingState() {
+    return const Center(child: CircularProgressIndicator());
   }
 
   Widget _buildEmptyState() {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return Container(
-      padding: const EdgeInsets.all(32),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: colorScheme.primary.withAlpha(26),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.hotel_outlined,
-              size: 48,
-              color: colorScheme.primary,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'No rooms available',
-            style: Theme.of(
-              context,
-            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Check back later or try refreshing',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: colorScheme.onSurface.withAlpha(153),
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 20),
-          if (widget.onRefresh != null)
-            ElevatedButton.icon(
-              onPressed: widget.onRefresh,
-              icon: const Icon(Icons.refresh, size: 18),
-              label: const Text('Refresh'),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 12,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-            ),
-        ],
-      ),
-    );
+    return const Center(child: Text('No rooms available'));
   }
 }

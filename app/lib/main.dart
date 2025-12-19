@@ -27,9 +27,8 @@ import 'package:furcare_app/presentation/providers/payment_provider.dart';
 import 'package:furcare_app/presentation/providers/pet_provider.dart';
 import 'package:furcare_app/presentation/providers/pet_service_provider.dart';
 import 'package:furcare_app/presentation/providers/staff/appointment_provider.dart';
-import 'package:furcare_app/presentation/routes/staff_router.dart';
 // import 'package:furcare_app/presentation/routes/admin_router.dart';
-// import 'package:furcare_app/presentation/routes/customer_router.dart';
+import 'package:furcare_app/presentation/routes/customer_router.dart';
 // import 'package:furcare_app/presentation/routes/staff_router.dart';
 import 'package:provider/provider.dart';
 
@@ -110,8 +109,8 @@ class MainApp extends StatelessWidget {
                 theme: ThemeNotifier.lightTheme,
                 darkTheme: ThemeNotifier.darkTheme,
                 themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
-                // routerConfig: customerRouter,
-                routerConfig: staffRouter,
+                routerConfig: customerRouter,
+                // routerConfig: staffRouter,
                 // routerConfig: adminRouter,
                 debugShowCheckedModeBanner: false,
                 title: 'Furcare',

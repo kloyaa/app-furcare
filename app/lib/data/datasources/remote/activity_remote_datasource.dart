@@ -40,7 +40,9 @@ class ActivityRemoteDatasourceImpl implements ActivityRemoteDatasource {
       if (e is ServerException || e is NetworkException) {
         rethrow;
       }
-      throw ServerException(message: 'An error occurred during login');
+      throw ServerException(
+        message: 'An error occurred during activity fetching',
+      );
     }
   }
 }
