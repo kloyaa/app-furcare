@@ -8,6 +8,7 @@ import {
   getPetServices,
   getGroomingExtra,
   getGroomingPreferences,
+  updateCageData,
 } from '../controllers/pet-services.controller';
 import { isAuthenticated } from '../_core/middlewares/jwt.middleware';
 import { maintenanceModeMiddleware } from '../_core/middlewares/maintenance-mode.middleware';
@@ -40,7 +41,7 @@ router.post('/pet-services/v1/cages', commonMiddlewares, insertCages as any);
 router.put(
   '/pet-services/v1/cages',
   commonMiddlewares,
-  updateCageOccupant as any
+  updateCageData as any
 );
 router.get(
   '/pet-services/v1/cages/availability/:id',

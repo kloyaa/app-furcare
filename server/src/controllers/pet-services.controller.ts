@@ -120,8 +120,14 @@ export const updateCageOccupant = async (payload: any): Promise<boolean> => {
     }
 
     if (action === 'add') {
+      if (cage.occupant >= cage.max) {
+        return false;
+      }
       cage.occupant += 1;
     } else if (action === 'remove') {
+      if (cage.occupant <= 0) {
+        return false;
+      }
       cage.occupant -= 1;
     }
 
@@ -132,6 +138,54 @@ export const updateCageOccupant = async (payload: any): Promise<boolean> => {
     return false;
   }
 };
+
+export const updateCageData = async (
+  req: TRequest,
+  res: Response
+): Promise<any> => {
+  const { action, cage: cageId } = req.body;
+
+  if (
+    !isObjectIdOrHexString(cageId) ||
+    (action !== 'add' && action !== 'remove')
+  ) {
+    return res.status(400).json(statuses['03']);
+  }
+
+  try {
+    const cage = await PetCage.findById(cageId);
+    if (!cage) {
+      return res.status(404).json(statuses['04']); // not found
+    }
+
+    if (action === 'add') {
+      if (cage.occupant >= cage.max) {
+        return res.status(409).json({
+          ...statuses['03'],
+          message: 'Cage is already full',
+        });
+      }
+      cage.occupant += 1;
+    }
+
+    if (action === 'remove') {
+      if (cage.occupant <= 0) {
+        return res.status(409).json({
+          ...statuses['03'],
+          message: 'Cage is already empty',
+        });
+      }
+      cage.occupant -= 1;
+    }
+
+    await cage.save();
+    return res.status(200).json(statuses['00']);
+  } catch (error) {
+    console.log('@updateCageData error', error);
+    return res.status(400).json(statuses['03']);
+  }
+};
+
 
 export const validateCageAvailability = async (
   cageId: any
