@@ -105,7 +105,6 @@ class Client extends Equatable {
 
   factory Client.fromJson(Map<String, dynamic> json) {
     return Client(
-      contact: Contact.fromJson(json['contact'] as Map<String, dynamic>),
       id: json['_id'] as String?,
       user: json['user'] as String? ?? '',
       fullName: json['fullName'] as String? ?? '',
@@ -114,7 +113,10 @@ class Client extends Equatable {
       createdAt: json['createdAt'] as String?,
       updatedAt: json['updatedAt'] as String?,
       v: json['__v'] as int?,
-      others: Others.fromJson(json['others'] as Map<String, dynamic>),
+      contact: Contact.fromJson(json['contact'] as Map<String, dynamic>),
+      others: json['others'] != null
+          ? Others.fromJson(json['others'] as Map<String, dynamic>)
+          : const Others(lastLogin: '', lastChangePassword: ''),
     );
   }
 

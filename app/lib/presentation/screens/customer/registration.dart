@@ -19,6 +19,8 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
+  AuthState? _previousState;
+
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _usernameController = TextEditingController();
@@ -58,34 +60,25 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     return Scaffold(
       body: Consumer<AuthProvider>(
         builder: (context, authProvider, child) {
-          final hasError = authProvider.errorMessage != null;
-          final errorCode = authProvider.errorCode;
-          // Handle specific error codes
-          if (errorCode == "0052") {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              authProvider.clearError();
-              context.go(
-                "/pre-login",
-                extra: {"username": _usernameController.text.trim()},
-              );
-            });
-          }
+          if (_previousState != authProvider.state) {
+            _previousState = authProvider.state;
 
-          if (hasError) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              showCustomSnackBar(
-                context,
-                authProvider.errorMessage!,
-                isError: true,
-              );
-            });
-          }
+            if (authProvider.state == AuthState.error &&
+                authProvider.errorMessage != null) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                showCustomSnackBar(
+                  context,
+                  authProvider.errorMessage!,
+                  isError: true,
+                );
+              });
+            }
 
-          // Navigate to home if authenticated
-          if (authProvider.isAuthenticated) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              context.go("/me/profile/create");
-            });
+            if (authProvider.state == AuthState.authenticated) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                context.go("/me/profile/create");
+              });
+            }
           }
           return SafeArea(
             child: SingleChildScrollView(
