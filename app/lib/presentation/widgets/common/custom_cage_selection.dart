@@ -87,10 +87,10 @@ class _CageSelectionState extends State<CageSelection>
         return Transform.scale(
           scale: value,
           child: Opacity(
-            opacity: isFullyOccupied ? 0.2 : 1,
+            opacity: isFullyOccupied ? 0.1 : 1,
             child: Card(
               elevation: 0,
-              color: isSelected ? scheme.primaryContainer.withAlpha(120) : null,
+              color: isSelected ? scheme.primaryContainer.withAlpha(255) : null,
               child: Stack(
                 children: [
                   Positioned.fill(
