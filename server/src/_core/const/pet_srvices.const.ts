@@ -39,19 +39,19 @@ export const groomingServiceSchedules = [
     code: 'SCHEDULE_3',
     schedule: '12:00 PM - 01:00 PM',
     price: 30,
-    available: false,
+    available: true,
   },
   {
     code: 'SCHEDULE_4',
     schedule: '02:00 PM - 03:00 PM',
     price: 30,
-    available: false,
+    available: true,
   },
   {
     code: 'SCHEDULE_5',
     schedule: '04:00 PM - 05:00 PM',
     price: 30,
-    available: false,
+    available: true,
   },
 ];
 
