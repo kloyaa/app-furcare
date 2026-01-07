@@ -420,36 +420,18 @@ class _GroomingReceiptDialogState extends State<GroomingReceiptDialog> {
                 child: CustomButton(
                   text: 'Submit',
                   onPressed: () async {
-                    setState(() {
-                      isLoading = true;
-                    });
+                    setState(() => isLoading = true);
+                    await _processAppointment();
 
-                    try {
-                      await _processAppointment();
-                      if (context.mounted) {
-                        ConfirmationDialog.show(
-                          context: context,
-                          title: 'Appointment Booked!',
-                          message:
-                              'Your grooming appointment has been successfully booked.',
-                          confirmText: 'OK',
-                          confirmColor: ThemeHelper.getOnBackgroundTextColor(
-                            context,
-                          ),
-                          cancelText: "",
-                          onConfirm: () {
-                            Navigator.of(context)
-                              ..pop() // Close dialog
-                              ..pop(); // Close booking screen
-                            context.push(CustomerRoute.payment.paymentMethods);
-                          },
-                        );
-                      }
-                    } catch (e) {
-                      setState(() {
-                        isLoading = false;
-                      });
+                    if (context.mounted) {
+                      Navigator.of(context)
+                        ..pop() // Close dialog
+                        ..pop(); // Close booking screen
+
+                      context.push(CustomerRoute.payment.paymentMethods);
                     }
+
+                    setState(() => isLoading = false);
                   },
                   isOutlined: true,
                   icon: Icons.book_outlined,

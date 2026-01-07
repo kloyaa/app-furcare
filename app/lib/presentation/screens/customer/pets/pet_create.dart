@@ -260,60 +260,6 @@ class _CompanionCreationScreenState extends State<CompanionCreationScreen> {
                   isOutlined: true,
                   isLoading: false,
                 ),
-
-                const SizedBox(height: 24),
-
-                // Preview Section
-                if (_nameController.text.isNotEmpty ||
-                    _specieController.text.isNotEmpty)
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.surfaceContainerHighest
-                          .withAlpha(77),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: theme.colorScheme.outline.withAlpha(51),
-                      ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CustomText.title(
-                          'Preview',
-                          size: AppTextSize.md,
-                          fontWeight: AppFontWeight.semibold.value,
-                          color: theme.colorScheme.onSurface,
-                        ),
-
-                        const SizedBox(height: 8),
-
-                        if (_nameController.text.isNotEmpty)
-                          CustomText.title(
-                            'Name: ${_nameController.text}',
-                            size: AppTextSize.sm,
-                            fontWeight: AppFontWeight.normal.value,
-                            color: theme.colorScheme.onSurface.withAlpha(204),
-                          ),
-
-                        if (_specieController.text.isNotEmpty)
-                          CustomText.title(
-                            'Species: ${_specieController.text}',
-                            size: AppTextSize.sm,
-                            fontWeight: AppFontWeight.normal.value,
-                            color: theme.colorScheme.onSurface.withAlpha(204),
-                          ),
-
-                        CustomText.title(
-                          'Gender: $_selectedGender',
-                          size: AppTextSize.sm,
-                          fontWeight: AppFontWeight.normal.value,
-                          color: theme.colorScheme.onSurface.withAlpha(204),
-                        ),
-                      ],
-                    ),
-                  ),
               ],
             ),
           ),
