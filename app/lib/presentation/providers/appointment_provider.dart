@@ -2,10 +2,13 @@ import 'package:flutter/foundation.dart';
 import 'package:furcare_app/core/errors/failures.dart';
 import 'package:furcare_app/data/models/boarding/boarding.dart';
 import 'package:furcare_app/data/models/boarding/boarding_request.dart';
+import 'package:furcare_app/data/models/boarding/boarding_response.dart';
 import 'package:furcare_app/data/models/grooming/grooming.dart';
 import 'package:furcare_app/data/models/grooming/grooming_request.dart';
+import 'package:furcare_app/data/models/grooming/grooming_response.dart';
 import 'package:furcare_app/data/models/home_service/home_service.dart';
 import 'package:furcare_app/data/models/home_service/home_service_request.dart';
+import 'package:furcare_app/data/models/home_service/home_service_response.dart';
 import 'package:furcare_app/data/repositories/appointment_repository.dart';
 
 enum AppointmentState {
@@ -31,6 +34,19 @@ class AppointmentProvider with ChangeNotifier {
   List<GroomingAppointment> _groomingAppointments = [];
   List<BoardingAppointment> _boardingAppointments = [];
   List<HomeServiceAppointment> _homeServiceAppointments = [];
+
+  BoardingAppointmentRes? _createBoardingAppointment;
+  GroomingAppointmentRes? _createGroomingAppointment;
+  HomeServiceAppointmentRes? _createHomeServiceAppointment;
+
+  BoardingAppointmentRes? get boardinggAppointmentRes =>
+      _createBoardingAppointment;
+
+  GroomingAppointmentRes? get groominggAppointmentRes =>
+      _createGroomingAppointment;
+
+  HomeServiceAppointmentRes? get homeServicegAppointmentRes =>
+      _createHomeServiceAppointment;
 
   String? _errorMessage;
   String? _errorCode;
@@ -65,6 +81,7 @@ class AppointmentProvider with ChangeNotifier {
         _handleFailure(failure);
       },
       (response) {
+        _createGroomingAppointment = response;
         _setCreateGroomingAppointment(AppointmentState.created);
       },
     );
@@ -86,6 +103,7 @@ class AppointmentProvider with ChangeNotifier {
         _handleFailure(failure);
       },
       (response) {
+        _createBoardingAppointment = response;
         _setCreateBoardingAppointment(AppointmentState.created);
       },
     );
@@ -105,6 +123,7 @@ class AppointmentProvider with ChangeNotifier {
         _handleFailure(failure);
       },
       (response) {
+        _createHomeServiceAppointment = response;
         _setCreateHomeServiceAppointment(AppointmentState.created);
       },
     );

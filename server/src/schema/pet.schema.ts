@@ -20,6 +20,11 @@ const petSchema = new Schema<IPet>(
       type: String,
       required: true,
     },
+    size: {
+      type: String,
+      enum: ['sm', 'md', 'lg'],
+      required: true,
+    }
   },
   { timestamps: true }
 );

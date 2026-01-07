@@ -7,6 +7,7 @@ import 'package:furcare_app/core/enums/text_enum.dart';
 import 'package:furcare_app/core/utils/widget.dart';
 import 'package:furcare_app/core/services/location_service.dart';
 import 'package:furcare_app/data/models/pet_service.models.dart';
+import 'package:furcare_app/presentation/providers/branch_provider.dart';
 import 'package:furcare_app/presentation/providers/pet_service_provider.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
 import 'package:furcare_app/presentation/widgets/dialog/custom_location_dialog.dart';
@@ -153,6 +154,7 @@ I also acknowledge that I have informed the clinic of any pre-existing medical c
     Future.microtask(() {
       if (mounted) {
         context.read<PetServiceProvider>().getPetServices();
+        context.read<BranchProvider>().fetchBranches();
       }
     });
   }

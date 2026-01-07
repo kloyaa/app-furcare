@@ -32,10 +32,6 @@ class _CageSelectionState extends State<CageSelection>
       return _buildLoadingState();
     }
 
-    if (widget.cages == null || widget.cages!.isEmpty) {
-      return _buildEmptyState();
-    }
-
     return LayoutBuilder(
       builder: (context, constraints) {
         final width = constraints.maxWidth;
@@ -109,9 +105,19 @@ class _CageSelectionState extends State<CageSelection>
                   ),
                   // Content
                   InkWell(
-                    onTap: isFullyOccupied
-                        ? null
-                        : () => widget.onCageSelected(cage),
+                    onTap: () {
+                      if (isFullyOccupied) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('This cage is full.'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                        return;
+                      }
+                      widget.onCageSelected(cage);
+                    },
+
                     child: Padding(
                       padding: const EdgeInsets.all(12),
                       child: Column(
@@ -226,9 +232,5 @@ class _CageSelectionState extends State<CageSelection>
 
   Widget _buildLoadingState() {
     return const Center(child: CircularProgressIndicator());
-  }
-
-  Widget _buildEmptyState() {
-    return const Center(child: Text('No rooms available'));
   }
 }

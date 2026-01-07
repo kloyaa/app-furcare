@@ -44,6 +44,7 @@ class HomeServiceAppointment extends Equatable {
               id: "",
               name: "Record not found",
               specie: "Unknown",
+              size: "Unknown",
             ),
       branch: Branch.fromJson(json['branch']),
       totalPrice: json['totalPrice'] as int,

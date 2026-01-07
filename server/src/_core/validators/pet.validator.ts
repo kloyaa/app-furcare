@@ -6,7 +6,7 @@ export const validateCreatePet = (body: any) => {
     name: Joi.string().trim().min(1).max(100).required(),
     specie: Joi.string().trim().min(1).max(100).required(),
     gender: Joi.string().trim().valid('Male', 'Female', 'Other').required(),
-
+    size: Joi.string().trim().valid('sm', 'md', 'lg').required(),
     // Optional: add timestamps if you ever allow manual entry (not needed if auto-generated)
   });
 

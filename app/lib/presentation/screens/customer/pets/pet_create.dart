@@ -24,7 +24,9 @@ class _CompanionCreationScreenState extends State<CompanionCreationScreen> {
   final _specieController = TextEditingController();
 
   String _selectedGender = 'Male';
-  final List<String> _genderOptions = ['Male', 'Female', 'Other'];
+  String _selectedSize = 'Small';
+  final List<String> _genderOptions = ['Male', 'Female'];
+  final List<String> _petSizeOptions = ['sm', 'md', 'lg'];
 
   // Track the last error message shown to prevent duplicate snackbars
   String? _lastShownErrorMessage;
@@ -44,6 +46,7 @@ class _CompanionCreationScreenState extends State<CompanionCreationScreen> {
         name: _nameController.text,
         specie: _specieController.text,
         gender: _selectedGender,
+        size: _selectedSize,
       );
       await petProvider.createPet(pet);
 
@@ -61,6 +64,16 @@ class _CompanionCreationScreenState extends State<CompanionCreationScreen> {
   void _resetForm() {
     _nameController.clear();
     _specieController.clear();
+  }
+
+  String _readablePetSize(String petSize) {
+    if (petSize == 'sm') {
+      return 'Small';
+    } else if (petSize == 'md') {
+      return 'Medium';
+    } else {
+      return 'Large';
+    }
   }
 
   @override
@@ -165,7 +178,53 @@ class _CompanionCreationScreenState extends State<CompanionCreationScreen> {
                     ),
                   ],
                 ),
+                const SizedBox(height: 20),
 
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CustomText.title(
+                      'Size',
+                      size: AppTextSize.md,
+                      fontWeight: AppFontWeight.semibold.value,
+                      color: theme.colorScheme.onSurface,
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: theme.colorScheme.outline.withAlpha(77),
+                        ),
+                      ),
+                      child: Column(
+                        children: _petSizeOptions.map((size) {
+                          return RadioListTile<String>(
+                            title: CustomText.title(
+                              _readablePetSize(size),
+                              size: AppTextSize.sm,
+                              fontWeight: AppFontWeight.normal.value,
+                              color: theme.colorScheme.onSurface,
+                            ),
+                            value: size,
+                            groupValue: _selectedSize,
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedSize = value!;
+                              });
+                            },
+                            activeColor: theme.colorScheme.primary,
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ],
+                ),
                 const SizedBox(height: 40),
 
                 // Action Buttons

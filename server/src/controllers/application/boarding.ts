@@ -31,7 +31,7 @@ export const createBoardingApplication = async (
   }
 
   try {
-    const { pet, branch, cage, schedule } = req.body;
+    const { pet, branch, cage, schedule, requestAntiRabiesVaccination } = req.body;
 
     const [findPet, findBranch, findCage] = await Promise.all([
       Pet.findById(pet),
@@ -59,14 +59,18 @@ export const createBoardingApplication = async (
         message: 'Cage not found.',
       });
     }
+    let totalPrice = findCage.price * schedule.days;
+    if (requestAntiRabiesVaccination) {
+      totalPrice += 300;
+    }
 
-    await BoardingApplication.create({
+    const response = await BoardingApplication.create({
       ...req.body,
       user: req.user.id,
       branch,
       pet,
       schedule,
-      totalPrice: findCage.price * schedule.days,
+      totalPrice,
       status: 'pending',
     });
 
@@ -75,7 +79,7 @@ export const createBoardingApplication = async (
       description: ActivityType.APPLICATION_BOARDING_SUBMITTED,
     } as IActivity);
 
-    return res.status(201).json(statuses['00']);
+    return res.status(201).json(response);
   } catch (err) {
     console.log('@createBoardingApplication error', err);
     return handleMongooseError(err, res);

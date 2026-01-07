@@ -21,7 +21,6 @@ class CustomerHomeScreen extends StatefulWidget {
 class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
   int _currentIndex = 0;
 
-  bool _hasBranchesLoaded = false;
   bool _hasProfileLoaded = false;
 
   // Define your navigation items here - easily add more!
@@ -34,7 +33,6 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
     Future.microtask(() {
       if (mounted) {
         _getProfile();
-        _getBranches();
       }
     });
 
@@ -66,54 +64,8 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
         setState(() {
           _hasProfileLoaded = true;
         });
-        _checkAndShowBranchSelection();
       }
     });
-  }
-
-  void _getBranches() {
-    context.read<BranchProvider>().fetchBranches().then((_) {
-      if (mounted) {
-        setState(() {
-          _hasBranchesLoaded = true;
-        });
-        _checkAndShowBranchSelection();
-      }
-    });
-  }
-
-  void _checkAndShowBranchSelection() {
-    final clientProvider = context.read<ClientProvider>();
-    final branchProvider = context.read<BranchProvider>();
-
-    // Only show branch selection if:
-    // 1. Profile is loaded successfully (not loading, no error code "02")
-    // 2. Branches are loaded
-    // 3. No branch is currently selected
-    if (_hasProfileLoaded &&
-        _hasBranchesLoaded &&
-        !clientProvider.isLoading &&
-        clientProvider.errorCode != "02" &&
-        !branchProvider.hasSelectedBranch &&
-        branchProvider.branches.isNotEmpty) {
-      // Show branch selection modal
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _showBranchSelectionModal();
-      });
-    }
-  }
-
-  void _showBranchSelectionModal() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => BranchSelectionDialog(
-        onBranchSelected: () {
-          // Optional: Add any additional logic after branch selection
-          // For example, refresh data or show a success message
-        },
-      ),
-    );
   }
 
   @override

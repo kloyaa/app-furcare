@@ -19,6 +19,15 @@ phone: 09123450000
 facebook: https://www.facebook.com/testuser2
 messenger: https://www.messenger.com/testuser1
 
+Account 2:
+username: testuser3
+password: Test@Password3
+email: testuser3@example.com
+fullname: Test User Three
+phone: 09123450003
+facebook: https://www.facebook.com/testuser3
+messenger: https://www.messenger.com/testuser3
+
 
  ---- Customer ----
 Account 1:

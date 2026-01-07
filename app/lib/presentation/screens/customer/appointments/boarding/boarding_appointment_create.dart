@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
 import 'package:furcare_app/core/utils/currency.dart';
@@ -13,6 +14,7 @@ import 'package:furcare_app/presentation/widgets/common/custom_pet_selection.dar
 import 'package:furcare_app/presentation/widgets/common/custom_select_field.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
 import 'package:furcare_app/presentation/widgets/dialog/appointment_receipt/custom_boarding_receipt_dialog.dart';
+import 'package:furcare_app/presentation/widgets/dialog/custom_branch_selection_dialog.dart';
 import 'package:provider/provider.dart';
 
 class BoardingApptScreen extends StatefulWidget {
@@ -65,6 +67,22 @@ class _BoardingApptScreenState extends State<BoardingApptScreen> {
   bool isPetAccordionExpanded = false;
   bool? requestAntiRabiesVaccination = false;
 
+  void _showBranchSelectionModal() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => BranchSelectionDialog(
+        onBranchSelected: () {
+          // Optional: Add any additional logic after branch selection
+          // For example, refresh data or show a success message
+          if (kDebugMode) {
+            print('Branch selected');
+          }
+        },
+      ),
+    );
+  }
+
   void handleSelectedCage(PetCage? cage) {
     setState(() {
       selectedCage = cage;
@@ -73,16 +91,25 @@ class _BoardingApptScreenState extends State<BoardingApptScreen> {
 
   int get totalPrice {
     if (selectedCage != null && selectedDay != null) {
-      return DateTimeUtils.parseDays(selectedDay) * selectedCage!.price;
+      final daysCount = DateTimeUtils.parseDays(selectedDay);
+      int totalPrice = daysCount * selectedCage!.price;
+
+      if (requestAntiRabiesVaccination == true) {
+        totalPrice = totalPrice + 300;
+      }
+
+      return totalPrice;
     }
     return 0;
   }
 
   bool _canBookAppointment() {
+    if (selectedCage == null) return false;
+    if (selectedCage!.occupant >= selectedCage!.max) return false;
+
     return selectedPet != null &&
         selectedTime != null &&
         selectedDay != null &&
-        selectedCage != null &&
         _instructionsController.text.isNotEmpty;
   }
 
@@ -104,6 +131,22 @@ class _BoardingApptScreenState extends State<BoardingApptScreen> {
     );
   }
 
+  String normalizePetSize(String petSize) {
+    switch (petSize.toLowerCase()) {
+      case 'small':
+      case 'sm':
+        return 'small';
+      case 'medium':
+      case 'md':
+        return 'medium';
+      case 'large':
+      case 'lg':
+        return 'large';
+      default:
+        return 'small';
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -113,6 +156,8 @@ class _BoardingApptScreenState extends State<BoardingApptScreen> {
       Future.microtask(() {
         if (mounted) {
           context.read<PetServiceProvider>().getPetCages();
+
+          _showBranchSelectionModal();
         }
       });
     }
@@ -139,9 +184,29 @@ class _BoardingApptScreenState extends State<BoardingApptScreen> {
               selectedPetObject: selectedPetObject,
               isPetAccordionExpanded: isPetAccordionExpanded,
               onPetSelected: (petId, petObject) {
+                final cages = context.read<PetServiceProvider>().petCages;
+                final petSize = normalizePetSize(petObject!.size);
+
+                final matchingCage = cages.firstWhere(
+                  (c) => c.size.toLowerCase() == petSize,
+                  orElse: () => cages.first,
+                );
+
                 setState(() {
                   selectedPet = petObject;
+                  selectedCage = matchingCage;
                 });
+
+                if (matchingCage.occupant >= matchingCage.max) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        'Selected cage is already full. Booking cannot proceed.',
+                      ),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
               },
               onAccordionToggle: (isExpanded) {
                 setState(() {
@@ -197,10 +262,20 @@ class _BoardingApptScreenState extends State<BoardingApptScreen> {
             const SizedBox(height: 16),
             Consumer<PetServiceProvider>(
               builder: (context, petServiceProvider, child) {
+                final petSize = selectedPet != null
+                    ? normalizePetSize(selectedPet!.size)
+                    : null;
+
+                final filteredCages = petSize == null
+                    ? <PetCage>[]
+                    : petServiceProvider.petCages
+                          .where((c) => c.size.toLowerCase() == petSize)
+                          .toList();
+
                 return CageSelection(
                   selectedCage: selectedCage,
                   isLoading: petServiceProvider.isFetchingPetCages,
-                  cages: petServiceProvider.petCages,
+                  cages: filteredCages,
                   onCageSelected: handleSelectedCage,
                 );
               },

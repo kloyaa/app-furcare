@@ -99,6 +99,7 @@ class BoardingAppointment extends Equatable {
               name: "Record not found",
               specie: "Unknown",
               gender: "Unknown",
+              size: "Unknown",
             ),
       branch: Branch.fromJson(json['branch'] as Map<String, dynamic>),
       cage: PetCage.fromJson(json['cage'] as Map<String, dynamic>),

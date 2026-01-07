@@ -8,24 +8,26 @@ import 'package:furcare_app/data/models/__staff/appointment_update_response.dart
 import 'package:furcare_app/data/models/__staff/appointments_model.dart';
 import 'package:furcare_app/data/models/boarding/boarding.dart';
 import 'package:furcare_app/data/models/boarding/boarding_request.dart';
+import 'package:furcare_app/data/models/boarding/boarding_response.dart';
 import 'package:furcare_app/data/models/default_models.dart';
 import 'package:furcare_app/data/models/grooming/grooming.dart';
 import 'package:furcare_app/data/models/grooming/grooming_request.dart';
+import 'package:furcare_app/data/models/grooming/grooming_response.dart';
 import 'package:furcare_app/data/models/home_service/home_service.dart';
 import 'package:furcare_app/data/models/home_service/home_service_request.dart';
+import 'package:furcare_app/data/models/home_service/home_service_response.dart';
 
 abstract class AppointmentRepository {
-  Future<Either<Failure, DefaultResponse>> createGroomingAppointment(
+  Future<Either<Failure, GroomingAppointmentRes>> createGroomingAppointment(
     GroomingAppointmentRequest request,
   );
 
-  Future<Either<Failure, DefaultResponse>> createBoardingAppointment(
+  Future<Either<Failure, BoardingAppointmentRes>> createBoardingAppointment(
     BoardingAppointmentRequest request,
   );
 
-  Future<Either<Failure, DefaultResponse>> createHomeServiceAppointment(
-    HomeServiceAppointmentRequest request,
-  );
+  Future<Either<Failure, HomeServiceAppointmentRes>>
+  createHomeServiceAppointment(HomeServiceAppointmentRequest request);
 
   Future<Either<Failure, List<GroomingAppointment>>> getGroomingAppointments();
   Future<Either<Failure, List<BoardingAppointment>>> getBoardingAppointments();
@@ -53,7 +55,7 @@ class AppointmentRepositoryImpl implements AppointmentRepository {
   }) : _remoteDataSource = remoteDataSource;
 
   @override
-  Future<Either<Failure, DefaultResponse>> createGroomingAppointment(
+  Future<Either<Failure, GroomingAppointmentRes>> createGroomingAppointment(
     GroomingAppointmentRequest pet,
   ) async {
     try {
@@ -71,7 +73,7 @@ class AppointmentRepositoryImpl implements AppointmentRepository {
   }
 
   @override
-  Future<Either<Failure, DefaultResponse>> createBoardingAppointment(
+  Future<Either<Failure, BoardingAppointmentRes>> createBoardingAppointment(
     BoardingAppointmentRequest pet,
   ) async {
     try {
@@ -140,9 +142,8 @@ class AppointmentRepositoryImpl implements AppointmentRepository {
   }
 
   @override
-  Future<Either<Failure, DefaultResponse>> createHomeServiceAppointment(
-    HomeServiceAppointmentRequest request,
-  ) async {
+  Future<Either<Failure, HomeServiceAppointmentRes>>
+  createHomeServiceAppointment(HomeServiceAppointmentRequest request) async {
     try {
       final response = await _remoteDataSource.createHomeServiceAppointment(
         request,
