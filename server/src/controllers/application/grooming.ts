@@ -94,7 +94,7 @@ export const createGroomingApplication = async (
       });
     }
 
-    await GroomingApplication.create({
+    const response = await GroomingApplication.create({
       user: req.user.id,
       branch,
       pet,
@@ -113,7 +113,7 @@ export const createGroomingApplication = async (
       description: ActivityType.APPLICATION_GROOMING_SUBMITTED,
     } as IActivity);
 
-    return res.status(201).json(statuses['00']);
+    return res.status(201).json(response);
   } catch (err) {
     console.log('@createGroomingApplication error', err);
     return handleMongooseError(err, res);

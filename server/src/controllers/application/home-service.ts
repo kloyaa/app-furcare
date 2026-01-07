@@ -47,7 +47,7 @@ export const createHomeServiceApplication = async (
       });
     }
 
-    await HomeServiceApplication.create({
+    const response = await HomeServiceApplication.create({
       user: req.user.id,
       branch,
       pet,
@@ -60,7 +60,7 @@ export const createHomeServiceApplication = async (
       description: ActivityType.APPLICATION_HOME_SERVICE_SUBMITTED,
     } as IActivity);
 
-    return res.status(201).json(statuses['00']);
+    return res.status(201).json(response);
   } catch (err) {
     console.log('@createHomeServiceApplication error', err);
     return handleMongooseError(err, res);

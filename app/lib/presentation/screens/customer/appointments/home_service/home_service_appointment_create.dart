@@ -23,7 +23,7 @@ class HomeServiceApptScreen extends StatefulWidget {
 class _HomeServiceApptScreenState extends State<HomeServiceApptScreen> {
   final DateTime today = DateTime.now();
 
-  final int defaultHomeServicePrice = 320;
+  final int defaultHomeServicePrice = 390;
 
   String? selectedPet;
   Pet? selectedPetObject;

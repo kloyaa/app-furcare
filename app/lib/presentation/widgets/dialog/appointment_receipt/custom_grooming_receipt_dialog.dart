@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:furcare_app/core/enums/application.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
 import 'package:furcare_app/core/utils/currency.dart';
 import 'package:furcare_app/core/utils/theme.dart';
@@ -7,6 +8,7 @@ import 'package:furcare_app/data/models/pet_models.dart';
 import 'package:furcare_app/data/models/pet_service.models.dart';
 import 'package:furcare_app/presentation/providers/appointment_provider.dart';
 import 'package:furcare_app/presentation/providers/branch_provider.dart';
+import 'package:furcare_app/presentation/providers/payment_provider.dart';
 import 'package:furcare_app/presentation/providers/pet_service_provider.dart';
 import 'package:furcare_app/presentation/routes/customer_router.dart';
 import 'package:furcare_app/presentation/widgets/dialog/custom_branch_selection_dialog.dart';
@@ -102,6 +104,23 @@ class _GroomingReceiptDialogState extends State<GroomingReceiptDialog> {
 
       if (mounted) {
         context.read<AppointmentProvider>().createGroomingAppointment(payload);
+
+        if (!mounted) {
+          return;
+        }
+
+        final appointment = context.read<AppointmentProvider>();
+
+        final provider = context.read<PaymentSettingsProvider>();
+        final appointmentResponse = appointment.groominggAppointmentRes;
+
+        if (appointmentResponse == null) {
+          return;
+        }
+
+        provider.setAmount(appointmentResponse.remainingBalance);
+        provider.setApplication(appointmentResponse.id);
+        provider.setApplicationType(ApplicationModel.grooming);
       }
     }
   }
@@ -422,7 +441,7 @@ class _GroomingReceiptDialogState extends State<GroomingReceiptDialog> {
                             Navigator.of(context)
                               ..pop() // Close dialog
                               ..pop(); // Close booking screen
-                            context.push(CustomerRoute.me.grooming);
+                            context.push(CustomerRoute.payment.paymentMethods);
                           },
                         );
                       }

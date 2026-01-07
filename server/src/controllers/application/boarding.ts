@@ -60,7 +60,7 @@ export const createBoardingApplication = async (
       });
     }
 
-    await BoardingApplication.create({
+    const response = await BoardingApplication.create({
       ...req.body,
       user: req.user.id,
       branch,
@@ -75,7 +75,7 @@ export const createBoardingApplication = async (
       description: ActivityType.APPLICATION_BOARDING_SUBMITTED,
     } as IActivity);
 
-    return res.status(201).json(statuses['00']);
+    return res.status(201).json(response);
   } catch (err) {
     console.log('@createBoardingApplication error', err);
     return handleMongooseError(err, res);

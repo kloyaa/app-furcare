@@ -9,23 +9,26 @@ import 'package:furcare_app/data/models/__staff/appointment_update_response.dart
 import 'package:furcare_app/data/models/__staff/appointments_model.dart';
 import 'package:furcare_app/data/models/boarding/boarding.dart';
 import 'package:furcare_app/data/models/boarding/boarding_request.dart';
+import 'package:furcare_app/data/models/boarding/boarding_response.dart';
 import 'package:furcare_app/data/models/default_models.dart';
 import 'package:furcare_app/data/models/grooming/grooming.dart';
 import 'package:furcare_app/data/models/grooming/grooming_request.dart';
+import 'package:furcare_app/data/models/grooming/grooming_response.dart';
 import 'package:furcare_app/data/models/home_service/home_service.dart';
 import 'package:furcare_app/data/models/home_service/home_service_request.dart';
+import 'package:furcare_app/data/models/home_service/home_service_response.dart';
 
 abstract class AppointmentRemoteDatasource {
-  Future<DefaultResponse> createGroomingAppointment(
+  Future<GroomingAppointmentRes> createGroomingAppointment(
     GroomingAppointmentRequest request,
   );
-  Future<DefaultResponse> createBoardingAppointment(
+  Future<BoardingAppointmentRes> createBoardingAppointment(
     BoardingAppointmentRequest request,
   );
   Future<DefaultResponse> createBoardingAppointmentExtension(
     AppointmentExtensionRequest request,
   );
-  Future<DefaultResponse> createHomeServiceAppointment(
+  Future<HomeServiceAppointmentRes> createHomeServiceAppointment(
     HomeServiceAppointmentRequest request,
   );
   Future<List<GroomingAppointment>> getGroomingAppointments();
@@ -53,7 +56,7 @@ class AppointmentRemoteDatasourceImpl implements AppointmentRemoteDatasource {
        _authHeaderProvider = authHeaderProvider;
 
   @override
-  Future<DefaultResponse> createGroomingAppointment(
+  Future<GroomingAppointmentRes> createGroomingAppointment(
     GroomingAppointmentRequest request,
   ) async {
     try {
@@ -64,7 +67,7 @@ class AppointmentRemoteDatasourceImpl implements AppointmentRemoteDatasource {
       );
 
       if (response.statusCode == 201) {
-        return DefaultResponse.fromJson(response.data);
+        return GroomingAppointmentRes.fromJson(response.data);
       } else {
         throw ServerException(
           message: response.data?['message'] ?? 'Error creating appointment',
@@ -165,7 +168,7 @@ class AppointmentRemoteDatasourceImpl implements AppointmentRemoteDatasource {
   }
 
   @override
-  Future<DefaultResponse> createBoardingAppointment(
+  Future<BoardingAppointmentRes> createBoardingAppointment(
     BoardingAppointmentRequest request,
   ) async {
     try {
@@ -175,7 +178,7 @@ class AppointmentRemoteDatasourceImpl implements AppointmentRemoteDatasource {
         options: Options(headers: await _authHeaderProvider.getHeaders()),
       );
       if (response.statusCode == 201) {
-        return DefaultResponse.fromJson(response.data);
+        return BoardingAppointmentRes.fromJson(response.data);
       } else {
         throw ServerException(
           message: response.data?['message'] ?? 'Error creating appointment',
@@ -223,7 +226,7 @@ class AppointmentRemoteDatasourceImpl implements AppointmentRemoteDatasource {
   }
 
   @override
-  Future<DefaultResponse> createHomeServiceAppointment(
+  Future<HomeServiceAppointmentRes> createHomeServiceAppointment(
     HomeServiceAppointmentRequest request,
   ) async {
     try {
@@ -233,7 +236,7 @@ class AppointmentRemoteDatasourceImpl implements AppointmentRemoteDatasource {
         options: Options(headers: await _authHeaderProvider.getHeaders()),
       );
       if (response.statusCode == 201) {
-        return DefaultResponse.fromJson(response.data);
+        return HomeServiceAppointmentRes.fromJson(response.data);
       } else {
         throw ServerException(
           message: response.data?['message'] ?? 'Error creating appointment',
