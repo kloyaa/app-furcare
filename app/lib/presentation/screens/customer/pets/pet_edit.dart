@@ -24,17 +24,18 @@ class _CompanionEditState extends State<CompanionEdit> {
   final _specieController = TextEditingController();
 
   String _selectedGender = 'Male';
-  final List<String> _genderOptions = ['Male', 'Female', 'Other'];
+  String _selectedSize = 'Small';
 
-  // Track the last error message shown to prevent duplicate snackbars
+  final List<String> _genderOptions = ['Male', 'Female'];
+  final List<String> _petSizeOptions = ['sm', 'md', 'lg'];
+
   String? _lastShownErrorMessage;
 
   @override
   void initState() {
     super.initState();
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _handleFetchPetInfo();
+      _loadPetData();
     });
   }
 
@@ -45,31 +46,28 @@ class _CompanionEditState extends State<CompanionEdit> {
     super.dispose();
   }
 
-  Future<void> _handleFetchPetInfo() async {
+  void _loadPetData() {
     final extras = GoRouterState.of(context).extra as Pet;
-    final pet = extras;
-
-    _nameController.value = TextEditingValue(text: pet.name);
-    _specieController.value = TextEditingValue(text: pet.specie);
+    _nameController.text = extras.name;
+    _specieController.text = extras.specie;
     setState(() {
-      _selectedGender = pet.gender;
+      _selectedGender = extras.gender;
+      _selectedSize = extras.size;
     });
   }
 
-  Future<void> _handleEdit(PetProvider petProvider) async {
+  Future<void> _handleEdit(PetProvider provider) async {
     final extras = GoRouterState.of(context).extra as Pet;
-
     if (_formKey.currentState!.validate()) {
       _lastShownErrorMessage = null;
-
       final UpdatePet pet = UpdatePet(
         id: extras.id,
         name: _nameController.text,
         specie: _specieController.text,
         gender: _selectedGender,
+        size: _selectedSize,
       );
-      await petProvider.updatePet(pet);
-
+      await provider.updatePet(pet);
       if (mounted) {
         showCustomSnackBar(
           context,
@@ -79,9 +77,162 @@ class _CompanionEditState extends State<CompanionEdit> {
     }
   }
 
+  String _readableSize(String size) {
+    switch (size) {
+      case 'sm':
+        return 'Small';
+      case 'md':
+        return 'Medium';
+      default:
+        return 'Large';
+    }
+  }
+
   void _resetForm() {
     _nameController.clear();
     _specieController.clear();
+    setState(() {
+      _selectedGender = 'Male';
+      _selectedSize = 'Small';
+    });
+  }
+
+  Widget _buildRadioGroup({
+    required String title,
+    required List<String> options,
+    required String groupValue,
+    required Function(String?) onChanged,
+  }) {
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        CustomText.title(
+          title,
+          size: AppTextSize.md,
+          fontWeight: AppFontWeight.semibold.value,
+          color: theme.colorScheme.onSurface,
+        ),
+        const SizedBox(height: 12),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: theme.colorScheme.outline.withAlpha(77)),
+          ),
+          child: Column(
+            children: options.map((option) {
+              return RadioListTile<String>(
+                title: CustomText.title(
+                  title == "Size" ? _readableSize(option) : option,
+                  size: AppTextSize.sm,
+                  fontWeight: AppFontWeight.normal.value,
+                  color: theme.colorScheme.onSurface,
+                ),
+                value: option,
+                groupValue: groupValue,
+                onChanged: onChanged,
+                activeColor: theme.colorScheme.primary,
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+              );
+            }).toList(),
+          ),
+        ),
+      ],
+    );
+  }
+  // Inside the _CompanionEditState class
+
+  void _showPreviewDialog(PetProvider provider) {
+    final extras = GoRouterState.of(context).extra as Pet;
+
+    final theme = Theme.of(context);
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: CustomText.title(
+          'Changes',
+          size: AppTextSize.mlg,
+          fontWeight: AppFontWeight.semibold.value,
+          color: theme.colorScheme.onSurface,
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CustomText.title(
+              'Name',
+              size: AppTextSize.sm,
+              fontWeight: AppFontWeight.bold.value,
+              color: theme.colorScheme.onSurface.withAlpha(204),
+            ),
+            CustomText.title(
+              '${extras.name} ➝ ${_nameController.text}',
+              size: AppTextSize.md,
+              fontWeight: AppFontWeight.normal.value,
+              color: theme.colorScheme.onSurface.withAlpha(204),
+            ),
+
+            const SizedBox(height: 8),
+            CustomText.title(
+              'Specie',
+              size: AppTextSize.sm,
+              fontWeight: AppFontWeight.bold.value,
+              color: theme.colorScheme.onSurface.withAlpha(204),
+            ),
+            CustomText.title(
+              '${extras.specie} ➝ ${_specieController.text}',
+              size: AppTextSize.md,
+              fontWeight: AppFontWeight.normal.value,
+              color: theme.colorScheme.onSurface.withAlpha(204),
+            ),
+            const SizedBox(height: 8),
+            CustomText.title(
+              'Gender',
+              size: AppTextSize.sm,
+              fontWeight: AppFontWeight.bold.value,
+              color: theme.colorScheme.onSurface.withAlpha(204),
+            ),
+            CustomText.title(
+              '${extras.gender} ➝ $_selectedGender',
+              size: AppTextSize.md,
+              fontWeight: AppFontWeight.normal.value,
+              color: theme.colorScheme.onSurface.withAlpha(204),
+            ),
+            const SizedBox(height: 8),
+            CustomText.title(
+              'Size',
+              size: AppTextSize.sm,
+              fontWeight: AppFontWeight.bold.value,
+              color: theme.colorScheme.onSurface.withAlpha(204),
+            ),
+            CustomText.title(
+              '${_readableSize(extras.size)} ➝ ${_readableSize(_selectedSize)}',
+              size: AppTextSize.md,
+              fontWeight: AppFontWeight.normal.value,
+              color: theme.colorScheme.onSurface.withAlpha(204),
+            ),
+          ],
+        ),
+        actions: [
+          CustomButton(
+            text: 'Cancel',
+            onPressed: () => Navigator.pop(context),
+            isOutlined: true,
+            isEnabled: true,
+          ),
+          const SizedBox(height: 12),
+          CustomButton(
+            text: 'Confirm',
+            onPressed: () {
+              Navigator.pop(context);
+              _handleEdit(provider);
+            },
+            isEnabled: !provider.isUpdatingPet,
+            isLoading: provider.isUpdatingPet,
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -89,7 +240,7 @@ class _CompanionEditState extends State<CompanionEdit> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: const CustomAppBar(),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),
@@ -98,22 +249,20 @@ class _CompanionEditState extends State<CompanionEdit> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Header
                 CustomText.title(
-                  'Edit',
+                  'Edit Companion',
                   size: AppTextSize.lg,
                   fontWeight: AppFontWeight.semibold.value,
                   color: theme.colorScheme.onSurface,
                 ),
                 const SizedBox(height: 8),
                 CustomText.title(
-                  'Change your pet information',
+                  'Update your pet’s information',
                   size: AppTextSize.sm,
                   fontWeight: AppFontWeight.normal.value,
                   color: theme.colorScheme.onSurface.withAlpha(179),
                 ),
                 const SizedBox(height: 32),
-                // Name Field
                 CustomInputField(
                   label: 'Name',
                   hintText: 'Enter pet name',
@@ -121,11 +270,9 @@ class _CompanionEditState extends State<CompanionEdit> {
                   prefixIcon: Icons.person_outline,
                   validator: validateCompanionName,
                   isRequired: true,
+                  onChanged: (_) => setState(() {}),
                 ),
-
                 const SizedBox(height: 20),
-
-                // Species Field
                 CustomInputField(
                   label: 'Species',
                   hintText: 'Enter pet species',
@@ -133,145 +280,52 @@ class _CompanionEditState extends State<CompanionEdit> {
                   prefixIcon: Icons.pets_outlined,
                   validator: validateSpecie,
                   isRequired: true,
+                  onChanged: (_) => setState(() {}),
                 ),
-
                 const SizedBox(height: 20),
-
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CustomText.title(
-                      'Gender',
-                      size: AppTextSize.md,
-                      fontWeight: AppFontWeight.semibold.value,
-                      color: theme.colorScheme.onSurface,
-                    ),
-
-                    const SizedBox(height: 12),
-
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: theme.colorScheme.outline.withAlpha(77),
-                        ),
-                      ),
-                      child: Column(
-                        children: _genderOptions.map((gender) {
-                          return RadioListTile<String>(
-                            title: CustomText.title(
-                              gender,
-                              size: AppTextSize.sm,
-                              fontWeight: AppFontWeight.normal.value,
-                              color: theme.colorScheme.onSurface,
-                            ),
-                            value: gender,
-                            groupValue: _selectedGender,
-                            onChanged: (value) {
-                              setState(() {
-                                _selectedGender = value!;
-                              });
-                            },
-                            activeColor: theme.colorScheme.primary,
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                  ],
+                _buildRadioGroup(
+                  title: 'Gender',
+                  options: _genderOptions,
+                  groupValue: _selectedGender,
+                  onChanged: (v) => setState(() => _selectedGender = v!),
                 ),
-
-                const SizedBox(height: 40),
-
-                // Action Buttons
+                const SizedBox(height: 20),
+                _buildRadioGroup(
+                  title: 'Size',
+                  options: _petSizeOptions,
+                  groupValue: _selectedSize,
+                  onChanged: (v) => setState(() => _selectedSize = v!),
+                ),
+                const SizedBox(height: 32),
                 Consumer<PetProvider>(
-                  builder: (context, petProvider, child) {
-                    final hasError = petProvider.error != null;
-                    if (hasError &&
-                        petProvider.error != _lastShownErrorMessage) {
-                      _lastShownErrorMessage = petProvider.error;
+                  builder: (context, provider, child) {
+                    if (provider.error != null &&
+                        provider.error != _lastShownErrorMessage) {
+                      _lastShownErrorMessage = provider.error;
                       WidgetsBinding.instance.addPostFrameCallback((_) {
                         showCustomSnackBar(
                           context,
-                          petProvider.error!,
+                          provider.error!,
                           isError: true,
                         );
                       });
                     }
                     return CustomButton(
                       text: "Submit",
-                      onPressed: () => _handleEdit(petProvider),
-                      isEnabled: !petProvider.isUpdatingPet,
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          _lastShownErrorMessage = null;
+                          _showPreviewDialog(provider);
+                        }
+                      },
+                      isEnabled: !provider.isUpdatingPet,
                       icon: Icons.pets_outlined,
-                      isLoading: petProvider.isUpdatingPet,
+                      isLoading: provider.isUpdatingPet,
                     );
                   },
                 ),
-                const SizedBox(height: 16),
-                CustomButton(
-                  text: "Reset",
-                  onPressed: () => _resetForm(),
-                  isEnabled: true,
-                  icon: Icons.refresh_rounded,
-                  isOutlined: true,
-                  isLoading: false,
-                ),
 
                 const SizedBox(height: 24),
-
-                // Preview Section
-                if (_nameController.text.isNotEmpty ||
-                    _specieController.text.isNotEmpty)
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.surfaceContainerHighest
-                          .withAlpha(77),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: theme.colorScheme.outline.withAlpha(51),
-                      ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CustomText.title(
-                          'Preview',
-                          size: AppTextSize.md,
-                          fontWeight: AppFontWeight.semibold.value,
-                          color: theme.colorScheme.onSurface,
-                        ),
-
-                        const SizedBox(height: 8),
-
-                        if (_nameController.text.isNotEmpty)
-                          CustomText.title(
-                            'Name: ${_nameController.text}',
-                            size: AppTextSize.sm,
-                            fontWeight: AppFontWeight.normal.value,
-                            color: theme.colorScheme.onSurface.withAlpha(204),
-                          ),
-
-                        if (_specieController.text.isNotEmpty)
-                          CustomText.title(
-                            'Species: ${_specieController.text}',
-                            size: AppTextSize.sm,
-                            fontWeight: AppFontWeight.normal.value,
-                            color: theme.colorScheme.onSurface.withAlpha(204),
-                          ),
-
-                        CustomText.title(
-                          'Gender: $_selectedGender',
-                          size: AppTextSize.sm,
-                          fontWeight: AppFontWeight.normal.value,
-                          color: theme.colorScheme.onSurface.withAlpha(204),
-                        ),
-                      ],
-                    ),
-                  ),
               ],
             ),
           ),

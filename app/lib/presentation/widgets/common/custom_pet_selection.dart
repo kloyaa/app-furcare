@@ -86,7 +86,8 @@ class _PetSelectionAccordionState extends State<PetSelectionAccordion> {
             ? null
             : petProvider.pets.firstWhere(
                 (pet) => pet.id == widget.selectedPet,
-                orElse: () => Pet(id: '', name: '', specie: '', gender: ''),
+                orElse: () =>
+                    Pet(id: '', name: '', specie: '', gender: '', size: ''),
               );
 
         return Card(

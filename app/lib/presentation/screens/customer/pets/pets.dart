@@ -55,6 +55,16 @@ class _PetsScreenState extends State<PetsScreen> {
     _showRemoveConfirmationDialog(pet);
   }
 
+  String _readablePetSize(String petSize) {
+    if (petSize == 'sm') {
+      return 'Small';
+    } else if (petSize == 'md') {
+      return 'Medium';
+    } else {
+      return 'Large';
+    }
+  }
+
   void _showPetOptionsDialog(Pet pet) {
     final theme = Theme.of(context);
 
@@ -96,7 +106,7 @@ class _PetsScreenState extends State<PetsScreen> {
                             ),
                             const SizedBox(height: 4),
                             CustomText.subtitle(
-                              '${pet.specie} • ${pet.gender}',
+                              '${pet.specie} • ${pet.gender} • ${_readablePetSize(pet.size)}',
                               size: AppTextSize.sm,
                             ),
                           ],

@@ -127,6 +127,7 @@ export interface IPet extends Document {
   name: string;
   gender: string;
   specie: string;
+  size: string;
 }
 
 export interface IGroomingApplication extends Document {

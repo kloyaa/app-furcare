@@ -243,6 +243,7 @@ class ApplicationPet extends Pet {
     required super.name,
     required super.specie,
     required super.gender,
+    required super.size,
   });
 
   factory ApplicationPet.fromJson(Map<String, dynamic> json) {
@@ -251,6 +252,7 @@ class ApplicationPet extends Pet {
       name: json['name'] as String? ?? '',
       specie: json['specie'] as String? ?? '',
       gender: json['gender'] as String? ?? '',
+      size: json['size'] as String? ?? '',
     );
   }
 }

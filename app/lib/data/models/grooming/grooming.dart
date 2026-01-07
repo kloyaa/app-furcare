@@ -55,6 +55,7 @@ class GroomingAppointment extends Equatable {
               id: "",
               name: "Record not found",
               specie: "Unknown",
+              size: "Unknown",
             ),
       branch: Branch.fromJson(json['branch']),
       groomingOptions: (json['groomingOptions'] as List)

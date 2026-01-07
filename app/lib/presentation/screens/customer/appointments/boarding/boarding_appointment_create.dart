@@ -104,10 +104,12 @@ class _BoardingApptScreenState extends State<BoardingApptScreen> {
   }
 
   bool _canBookAppointment() {
+    if (selectedCage == null) return false;
+    if (selectedCage!.occupant >= selectedCage!.max) return false;
+
     return selectedPet != null &&
         selectedTime != null &&
         selectedDay != null &&
-        selectedCage != null &&
         _instructionsController.text.isNotEmpty;
   }
 
@@ -127,6 +129,22 @@ class _BoardingApptScreenState extends State<BoardingApptScreen> {
       requestAntiRabiesVaccination: requestAntiRabiesVaccination,
       totalPrice: totalPrice,
     );
+  }
+
+  String normalizePetSize(String petSize) {
+    switch (petSize.toLowerCase()) {
+      case 'small':
+      case 'sm':
+        return 'small';
+      case 'medium':
+      case 'md':
+        return 'medium';
+      case 'large':
+      case 'lg':
+        return 'large';
+      default:
+        return 'small';
+    }
   }
 
   @override
@@ -164,9 +182,29 @@ class _BoardingApptScreenState extends State<BoardingApptScreen> {
               selectedPetObject: selectedPetObject,
               isPetAccordionExpanded: isPetAccordionExpanded,
               onPetSelected: (petId, petObject) {
+                final cages = context.read<PetServiceProvider>().petCages;
+                final petSize = normalizePetSize(petObject!.size);
+
+                final matchingCage = cages.firstWhere(
+                  (c) => c.size.toLowerCase() == petSize,
+                  orElse: () => cages.first,
+                );
+
                 setState(() {
                   selectedPet = petObject;
+                  selectedCage = matchingCage;
                 });
+
+                if (matchingCage.occupant >= matchingCage.max) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        'Selected cage is already full. Booking cannot proceed.',
+                      ),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
               },
               onAccordionToggle: (isExpanded) {
                 setState(() {
@@ -222,10 +260,20 @@ class _BoardingApptScreenState extends State<BoardingApptScreen> {
             const SizedBox(height: 16),
             Consumer<PetServiceProvider>(
               builder: (context, petServiceProvider, child) {
+                final petSize = selectedPet != null
+                    ? normalizePetSize(selectedPet!.size)
+                    : null;
+
+                final filteredCages = petSize == null
+                    ? <PetCage>[]
+                    : petServiceProvider.petCages
+                          .where((c) => c.size.toLowerCase() == petSize)
+                          .toList();
+
                 return CageSelection(
                   selectedCage: selectedCage,
                   isLoading: petServiceProvider.isFetchingPetCages,
-                  cages: petServiceProvider.petCages,
+                  cages: filteredCages,
                   onCageSelected: handleSelectedCage,
                 );
               },
