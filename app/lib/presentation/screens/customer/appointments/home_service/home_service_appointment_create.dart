@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:furcare_app/core/constants/padding_constant.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
@@ -10,6 +11,7 @@ import 'package:furcare_app/presentation/widgets/common/custom_pet_selection.dar
 import 'package:furcare_app/presentation/widgets/common/custom_select_field.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
 import 'package:furcare_app/presentation/widgets/dialog/appointment_receipt/custom_homeservice_receipt_dialog.dart';
+import 'package:furcare_app/presentation/widgets/dialog/custom_branch_selection_dialog.dart';
 
 class HomeServiceApptScreen extends StatefulWidget {
   const HomeServiceApptScreen({super.key});
@@ -54,6 +56,32 @@ class _HomeServiceApptScreenState extends State<HomeServiceApptScreen> {
     "5:30 PM",
     "6:00 PM",
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      if (mounted) {
+        _showBranchSelectionModal();
+      }
+    });
+  }
+
+  void _showBranchSelectionModal() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => BranchSelectionDialog(
+        onBranchSelected: () {
+          // Optional: Add any additional logic after branch selection
+          // For example, refresh data or show a success message
+          if (kDebugMode) {
+            print('Branch selected');
+          }
+        },
+      ),
+    );
+  }
 
   bool _canBookAppointment() {
     return selectedPet != null && selectedTime != null && selectedDay != null;

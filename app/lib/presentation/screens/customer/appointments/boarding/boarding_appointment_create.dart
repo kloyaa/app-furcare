@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:furcare_app/core/enums/text_enum.dart';
 import 'package:furcare_app/core/utils/currency.dart';
@@ -13,6 +14,7 @@ import 'package:furcare_app/presentation/widgets/common/custom_pet_selection.dar
 import 'package:furcare_app/presentation/widgets/common/custom_select_field.dart';
 import 'package:furcare_app/presentation/widgets/common/custom_text.dart';
 import 'package:furcare_app/presentation/widgets/dialog/appointment_receipt/custom_boarding_receipt_dialog.dart';
+import 'package:furcare_app/presentation/widgets/dialog/custom_branch_selection_dialog.dart';
 import 'package:provider/provider.dart';
 
 class BoardingApptScreen extends StatefulWidget {
@@ -65,6 +67,22 @@ class _BoardingApptScreenState extends State<BoardingApptScreen> {
   bool isPetAccordionExpanded = false;
   bool? requestAntiRabiesVaccination = false;
 
+  void _showBranchSelectionModal() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => BranchSelectionDialog(
+        onBranchSelected: () {
+          // Optional: Add any additional logic after branch selection
+          // For example, refresh data or show a success message
+          if (kDebugMode) {
+            print('Branch selected');
+          }
+        },
+      ),
+    );
+  }
+
   void handleSelectedCage(PetCage? cage) {
     setState(() {
       selectedCage = cage;
@@ -113,6 +131,8 @@ class _BoardingApptScreenState extends State<BoardingApptScreen> {
       Future.microtask(() {
         if (mounted) {
           context.read<PetServiceProvider>().getPetCages();
+
+          _showBranchSelectionModal();
         }
       });
     }
