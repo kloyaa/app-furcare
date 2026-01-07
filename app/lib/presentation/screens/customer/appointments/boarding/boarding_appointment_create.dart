@@ -91,7 +91,14 @@ class _BoardingApptScreenState extends State<BoardingApptScreen> {
 
   int get totalPrice {
     if (selectedCage != null && selectedDay != null) {
-      return DateTimeUtils.parseDays(selectedDay) * selectedCage!.price;
+      final daysCount = DateTimeUtils.parseDays(selectedDay);
+      int totalPrice = daysCount * selectedCage!.price;
+
+      if (requestAntiRabiesVaccination == true) {
+        totalPrice = totalPrice + 300;
+      }
+
+      return totalPrice;
     }
     return 0;
   }

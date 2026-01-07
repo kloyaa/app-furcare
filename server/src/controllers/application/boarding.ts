@@ -31,7 +31,7 @@ export const createBoardingApplication = async (
   }
 
   try {
-    const { pet, branch, cage, schedule } = req.body;
+    const { pet, branch, cage, schedule, requestAntiRabiesVaccination } = req.body;
 
     const [findPet, findBranch, findCage] = await Promise.all([
       Pet.findById(pet),
@@ -59,6 +59,10 @@ export const createBoardingApplication = async (
         message: 'Cage not found.',
       });
     }
+    let totalPrice = findCage.price * schedule.days;
+    if (requestAntiRabiesVaccination) {
+      totalPrice += 300;
+    }
 
     const response = await BoardingApplication.create({
       ...req.body,
@@ -66,7 +70,7 @@ export const createBoardingApplication = async (
       branch,
       pet,
       schedule,
-      totalPrice: findCage.price * schedule.days,
+      totalPrice,
       status: 'pending',
     });
 
